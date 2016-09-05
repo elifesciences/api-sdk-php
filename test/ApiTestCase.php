@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use LogicException;
 use PHPUnit_Framework_TestCase;
 use Webmozart\Json\JsonDecoder;
 
@@ -60,13 +61,9 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
 
     final protected function mockBlogArticleListCall(int $page, int $perPage, int $total)
     {
-        $blogArticles = [];
-
-        for ($i = 1; $i <= $perPage; ++$i) {
-            $id = $i + ($page * $perPage) - $perPage;
-
-            $blogArticles[] = $this->createBlogArticleJson($id, true);
-        }
+        $blogArticles = array_map(function (int $id) {
+            return $this->createBlogArticleJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
             new Request(
@@ -103,13 +100,9 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
 
     final protected function mockSubjectListCall(int $page, int $perPage, int $total)
     {
-        $subjects = [];
-
-        for ($i = 1; $i <= $perPage; ++$i) {
-            $id = $i + ($page * $perPage) - $perPage;
-
-            $subjects[] = $this->createSubjectJson($id);
-        }
+        $subjects = array_map(function (int $id) {
+            return $this->createSubjectJson($id);
+        }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
             new Request(
@@ -142,6 +135,16 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
                 json_encode($this->createSubjectJson($number))
             )
         );
+    }
+
+    private function generateIdList(int $page, int $perPage, int $total) : array
+    {
+        $firstId = ($page * $perPage) - $perPage + 1;
+        if ($firstId > $total) {
+            throw new LogicException('Page should not exist');
+        }
+
+        return range($firstId, $firstId + $perPage - 1);
     }
 
     private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $subject = false) : array

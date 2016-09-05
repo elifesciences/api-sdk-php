@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
+use GuzzleHttp\Promise\PromiseInterface;
 
 trait CreatesObjects
 {
@@ -20,8 +21,11 @@ trait CreatesObjects
         return new Image($image['alt'], $sizes);
     }
 
-    private function createBlogArticle(array $data, callable $full, callable $subjects = null) : BlogArticle
-    {
+    private function createBlogArticle(
+        array $data,
+        PromiseInterface $full,
+        PromiseInterface $subjects = null
+    ) : BlogArticle {
         return new BlogArticle(
             $data['id'],
             $data['title'],

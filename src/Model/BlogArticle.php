@@ -14,7 +14,6 @@ final class BlogArticle
     private $published;
     private $impactStatement;
     private $content;
-    private $full;
     private $subjects;
 
     /**
@@ -25,14 +24,17 @@ final class BlogArticle
         string $title,
         DateTimeImmutable $published,
         string $impactStatement = null,
-        callable $full,
-        callable $subjects = null
+        PromiseInterface $content,
+        PromiseInterface $subjects = null
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->published = $published;
         $this->impactStatement = $impactStatement;
-        $this->full = $full;
+        $this->content = $content
+            ->then(function (array $content) {
+                return $this->denormalizeBlocks($content);
+            });
         if (null === $subjects) {
             $this->subjects = [];
         } else {
@@ -65,7 +67,7 @@ final class BlogArticle
 
     public function hasSubjects() : bool
     {
-        return [] !== $this->subjects || is_callable($this->subjects);
+        return !empty($this->subjects);
     }
 
     /**
@@ -73,15 +75,11 @@ final class BlogArticle
      */
     public function getSubjects() : array
     {
-        if (is_callable($this->subjects)) {
-            $this->subjects = call_user_func($this->subjects, $this->id);
-
-            if ($this->subjects instanceof PromiseInterface) {
-                $this->subjects = $this->subjects->wait();
-            }
+        if (is_array($this->subjects)) {
+            return $this->subjects;
         }
 
-        return $this->subjects;
+        return $this->subjects->wait();
     }
 
     /**
@@ -89,25 +87,6 @@ final class BlogArticle
      */
     public function getContent() : array
     {
-        $this->resolve();
-
-        return $this->content;
-    }
-
-    private function resolve()
-    {
-        if (null === $this->full) {
-            return;
-        }
-
-        $full = call_user_func($this->full, $this->id);
-
-        if ($full instanceof PromiseInterface) {
-            $full = $full->wait();
-        }
-
-        $this->content = $this->denormalizeBlocks($full['content']);
-
-        $this->full = null;
+        return $this->content->wait();
     }
 }

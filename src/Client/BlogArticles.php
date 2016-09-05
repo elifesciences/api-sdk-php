@@ -10,7 +10,9 @@ use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\CreatesObjects;
+use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
+use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use function GuzzleHttp\Promise\all;
@@ -47,15 +49,17 @@ final class BlogArticles implements Iterator, Collection
                 $id
             )
             ->then(function (Result $result) {
-                $full = function () use ($result) {
-                    return $result->toArray();
-                };
+                $content = new FulfilledPromise($result['content']);
 
-                $subjects = function () use ($result) {
-                    return $this->getSubjects($result['subjects'] ?? []);
-                };
+                if (!empty($result->toArray()['subjects'])) {
+                    $subjects = new CallbackPromise(function () use ($result) {
+                        return $this->getSubjects($result['subjects'] ?? [])->wait();
+                    });
+                } else {
+                    $subjects = null;
+                }
 
-                return $this->createBlogArticle($result->toArray(), $full, $subjects);
+                return $this->createBlogArticle($result->toArray(), $content, $subjects);
             });
     }
 
@@ -83,38 +87,48 @@ final class BlogArticles implements Iterator, Collection
             ->then(function (Result $result) {
                 $articles = [];
 
-                $fullPromises = [];
-                $subjectPromises = [];
-
-                foreach ($result['items'] as $article) {
-                    if (false === isset($this->articles[$article['id']])) {
-                        $this->articles[$article['id']] = promise_for($this->createBlogArticle(
-                            $article,
-                            function (string $id) use (&$fullPromises, $result) {
-                                if (empty($fullPromises)) {
-                                    foreach ($result['items'] as $article) {
-                                        $fullPromises[$article['id']] = $this->blogClient->getArticle(
-                                            ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
-                                            $article['id']
-                                        );
-                                    }
-                                }
-
-                                return $fullPromises[$id];
-                            },
-                            !empty($article['subjects']) ? function (string $id) use (&$subjectPromises, $result) {
-                                if (empty($subjectPromises)) {
-                                    foreach ($result['items'] as $article) {
-                                        $subjectPromises[$article['id']] = $this->getSubjects($article['subjects'] ?? []);
-                                    }
-                                }
-
-                                return $subjectPromises[$id];
-                            } : null
-                        ));
+                $fullPromise = new CallbackPromise(function () use ($result) {
+                    $promises = [];
+                    foreach ($result['items'] as $article) {
+                        $promises[$article['id']] = $this->blogClient->getArticle(
+                            ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
+                            $article['id']
+                        );
                     }
 
-                    $articles[] = $this->articles[$article['id']]->wait();
+                    return $promises;
+                });
+
+                $subjectPromise = new CallbackPromise(function () use ($result) {
+                    $promises = [];
+                    foreach ($result['items'] as $article) {
+                        $promises[$article['id']] = $this->getSubjects($article['subjects'] ?? []);
+                    }
+
+                    return $promises;
+                });
+
+                foreach ($result['items'] as $article) {
+                    if (isset($this->articles[$article['id']])) {
+                        $articles[] = $this->articles[$article['id']]->wait();
+                    } else {
+                        $content = $fullPromise
+                            ->then(function (array $promises) use ($article) {
+                                return $promises[$article['id']]->wait()['content'];
+                            });
+
+                        if (!empty($article['subjects'])) {
+                            $subjects = $subjectPromise
+                                ->then(function (array $promises) use ($article) {
+                                    return $promises[$article['id']]->wait();
+                                });
+                        } else {
+                            $subjects = null;
+                        }
+
+                        $articles[] = $article = $this->createBlogArticle($article, $content, $subjects);
+                        $this->articles[$article->getId()] = promise_for($article);
+                    }
                 }
 
                 return new ArrayCollection($articles);

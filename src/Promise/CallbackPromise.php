@@ -32,7 +32,7 @@ final class CallbackPromise implements PromiseInterface
 
         if ($onFulfilled) {
             $clone->callback = function () use ($onFulfilled) {
-                return call_user_func($onFulfilled, call_user_func($this->callback));
+                return call_user_func($onFulfilled, $this->wait());
             };
         }
 

@@ -73,15 +73,24 @@ final class CallbackPromiseTest extends PHPUnit_Framework_TestCase
      */
     public function it_chains_callbacks()
     {
-        $promise = new CallbackPromise(function () {
-            return 'foo';
+        $i = 0;
+
+        $promise = new CallbackPromise(function () use (&$i) {
+            $i++;
+
+            return $i;
         });
 
-        $promise = $promise->then(function (string $string) {
-            return $string.'bar';
+        $promise1 = $promise->then(function (int $count) {
+            return $count.' foo';
         });
 
-        $this->assertSame('foobar', $promise->wait());
+        $promise2 = $promise->then(function (int $count) {
+            return $count.' bar';
+        });
+
+        $this->assertSame('1 foo', $promise1->wait());
+        $this->assertSame('1 bar', $promise2->wait());
     }
 
     /**

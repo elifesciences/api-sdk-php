@@ -45,7 +45,6 @@ class MockMiddleware extends CacheMiddleware
 
             try {
                 if (null === $response = $this->adapter->fetch($request)) {
-                    echo \GuzzleHttp\Psr7\str($request);
                     throw new \RuntimeException('Record not found.');
                 }
 

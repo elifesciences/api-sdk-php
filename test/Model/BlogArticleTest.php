@@ -85,7 +85,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame($hasSubjects, $blogArticle->hasSubjects());
-        $this->assertEquals($expected, $blogArticle->getSubjects());
+        $this->assertEquals($expected, $blogArticle->getSubjects()->toArray());
     }
 
     public function subjectsProvider() : array
@@ -164,6 +164,6 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             rejection_for('Subjects should not be unwrapped')
         );
 
-        $this->assertEquals($contentBlocks, $blogArticle->getContent());
+        $this->assertEquals($contentBlocks, $blogArticle->getContent()->toArray());
     }
 }

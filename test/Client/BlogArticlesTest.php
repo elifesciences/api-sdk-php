@@ -91,13 +91,13 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertInstanceOf(BlogArticle::class, $blogArticle);
         $this->assertSame('blogArticle7', $blogArticle->getId());
 
-        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
-        $this->assertSame('Blog article 7 text', $blogArticle->getContent()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
+        $this->assertSame('Blog article 7 text', $blogArticle->getContent()->toArray()[0]->getText());
 
         $this->mockSubjectCall(1);
 
-        $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()[0]);
-        $this->assertSame('Subject 1 name', $blogArticle->getSubjects()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()->toArray()[0]);
+        $this->assertSame('Subject 1 name', $blogArticle->getSubjects()->toArray()[0]->getName());
     }
 
     /**

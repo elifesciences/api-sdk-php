@@ -3,6 +3,9 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
+use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\PromiseCollection;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class BlogArticle
@@ -31,14 +34,14 @@ final class BlogArticle
         $this->title = $title;
         $this->published = $published;
         $this->impactStatement = $impactStatement;
-        $this->content = $content
+        $this->content = new PromiseCollection($content
             ->then(function (array $content) {
                 return $this->denormalizeBlocks($content);
-            });
+            }));
         if (null === $subjects) {
             $this->subjects = [];
         } else {
-            $this->subjects = $subjects;
+            $this->subjects = new PromiseCollection($subjects);
         }
     }
 
@@ -71,22 +74,22 @@ final class BlogArticle
     }
 
     /**
-     * @return Subject[]
+     * @return Collection|Subject[]
      */
-    public function getSubjects() : array
+    public function getSubjects() : Collection
     {
         if (is_array($this->subjects)) {
-            return $this->subjects;
+            return new ArrayCollection($this->subjects);
         }
 
-        return $this->subjects->wait();
+        return $this->subjects;
     }
 
     /**
-     * @return Block[]
+     * @return Collection|Block[]
      */
-    public function getContent() : array
+    public function getContent() : Collection
     {
-        return $this->content->wait();
+        return $this->content;
     }
 }

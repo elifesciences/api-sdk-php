@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
@@ -154,22 +155,22 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
 
         $actual = $this->normalizer->denormalize($json, BlogArticle::class);
 
+        $normaliseResult = function ($value) {
+            if ($value instanceof Collection) {
+                return new ArrayCollection($value->toArray());
+            } elseif ($value instanceof DateTimeInterface) {
+                return DateTimeImmutable::createFromFormat(DATE_ATOM, $value->format(DATE_ATOM));
+            }
+
+            return $value;
+        };
+
         foreach (get_class_methods(BlogArticle::class) as $method) {
             if ('__' === substr($method, 0, 2)) {
                 continue;
             }
 
-            $actualResult = $actual->{$method}();
-            $expectedResult = $expected->{$method}();
-
-            if ($actualResult instanceof Collection) {
-                $actualResult = new ArrayCollection($actualResult->toArray());
-            }
-            if ($expectedResult instanceof Collection) {
-                $expectedResult = new ArrayCollection($expectedResult->toArray());
-            }
-
-            $this->assertEquals($expectedResult, $actualResult);
+            $this->assertEquals($normaliseResult($expected->{$method}()), $normaliseResult($actual->{$method}()));
         }
     }
 

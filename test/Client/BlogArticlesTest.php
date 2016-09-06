@@ -10,6 +10,11 @@ use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Serializer\Block;
+use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
+use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\SubjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class BlogArticlesTest extends ApiTestCase
@@ -22,9 +27,16 @@ final class BlogArticlesTest extends ApiTestCase
      */
     protected function setUpBlogArticles()
     {
+        $serializer = new Serializer([
+            new BlogArticleNormalizer(),
+            new ImageNormalizer(),
+            new SubjectNormalizer(),
+            new Block\ParagraphNormalizer(),
+        ]);
         $this->blogArticles = new BlogArticles(
             new BlogClient($this->getHttpClient()),
-            new Subjects(new SubjectsClient($this->getHttpClient()))
+            new Subjects(new SubjectsClient($this->getHttpClient()), $serializer),
+            $serializer
         );
     }
 

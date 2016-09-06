@@ -10,27 +10,29 @@ use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
-use eLife\ApiSdk\CreatesObjects;
+use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\SlicedIterator;
-use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use function GuzzleHttp\Promise\promise_for;
 
 final class Subjects implements Iterator, Collection
 {
     use ArrayFromIterator;
-    use CreatesObjects;
     use SlicedIterator;
 
     private $count;
     private $subjects;
     private $descendingOrder = true;
     private $subjectsClient;
+    private $denormalizer;
 
-    public function __construct(SubjectsClient $subjectsClient)
+    public function __construct(SubjectsClient $subjectsClient, DenormalizerInterface $denormalizer)
     {
         $this->subjects = new ArrayObject();
         $this->subjectsClient = $subjectsClient;
+        $this->denormalizer = $denormalizer;
     }
 
     public function __clone()
@@ -50,7 +52,7 @@ final class Subjects implements Iterator, Collection
                 $id
             )
             ->then(function (Result $result) {
-                return $this->createSubject($result->toArray());
+                return $this->denormalizer->denormalize($result->toArray(), Subject::class);
             });
     }
 
@@ -83,8 +85,8 @@ final class Subjects implements Iterator, Collection
                     if (isset($this->subjects[$subject['id']])) {
                         $subjects[] = $this->subjects[$subject['id']]->wait();
                     } else {
-                        $subjects[] = $subject = $this->createSubject($subject);
-                        $this->subjects[$subject->getId()] = new FulfilledPromise($subject);
+                        $subjects[] = $subject = $this->denormalizer->denormalize($subject, Subject::class);
+                        $this->subjects[$subject->getId()] = promise_for($subject);
                     }
                 }
 

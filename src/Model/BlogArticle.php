@@ -5,8 +5,6 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
-use GuzzleHttp\Promise\PromiseInterface;
 
 final class BlogArticle
 {
@@ -27,21 +25,18 @@ final class BlogArticle
         string $title,
         DateTimeImmutable $published,
         string $impactStatement = null,
-        PromiseInterface $content,
-        PromiseInterface $subjects = null
+        Collection $content,
+        Collection $subjects = null
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->published = $published;
         $this->impactStatement = $impactStatement;
-        $this->content = new PromiseCollection($content
-            ->then(function (array $content) {
-                return $this->denormalizeBlocks($content);
-            }));
+        $this->content = $content;
         if (null === $subjects) {
             $this->subjects = [];
         } else {
-            $this->subjects = new PromiseCollection($subjects);
+            $this->subjects = $subjects;
         }
     }
 

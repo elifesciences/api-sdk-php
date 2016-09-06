@@ -214,6 +214,10 @@
             "installer": "composer",
             "env": "dev"
         },
+        "symfony/serializer": {
+            "install-path": "vendor/symfony/serializer",
+            "installer": "composer"
+        },
         "symfony/yaml": {
             "install-path": "vendor/symfony/yaml",
             "installer": "composer",

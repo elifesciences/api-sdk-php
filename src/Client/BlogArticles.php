@@ -10,19 +10,18 @@ use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
-use eLife\ApiSdk\CreatesObjects;
+use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
-use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class BlogArticles implements Iterator, Collection
 {
     use ArrayFromIterator;
-    use CreatesObjects;
     use SlicedIterator;
 
     private $count;
@@ -31,14 +30,14 @@ final class BlogArticles implements Iterator, Collection
     private $subjectsQuery = [];
     private $blogClient;
     private $subjects;
+    private $denormalizer;
 
-    public function __construct(
-        BlogClient $blogClient,
-        Subjects $subjects
-    ) {
+    public function __construct(BlogClient $blogClient, Subjects $subjects, DenormalizerInterface $denormalizer)
+    {
         $this->articles = new ArrayObject();
         $this->blogClient = $blogClient;
         $this->subjects = $subjects;
+        $this->denormalizer = $denormalizer;
     }
 
     public function __clone()
@@ -58,17 +57,15 @@ final class BlogArticles implements Iterator, Collection
                 $id
             )
             ->then(function (Result $result) {
-                $content = new FulfilledPromise($result['content']);
+                $data = $result->toArray();
 
-                if (!empty($result->toArray()['subjects'])) {
-                    $subjects = new CallbackPromise(function () use ($result) {
-                        return $this->getSubjects($result['subjects'] ?? [])->wait();
+                if (!empty($data['subjects'])) {
+                    $data['subjects'] = new CallbackPromise(function () use ($data) {
+                        return $this->getSubjects($data['subjects'] ?? [])->wait();
                     });
-                } else {
-                    $subjects = null;
                 }
 
-                return $this->createBlogArticle($result->toArray(), $content, $subjects);
+                return $this->denormalizer->denormalize($data, BlogArticle::class);
             });
     }
 
@@ -136,21 +133,19 @@ final class BlogArticles implements Iterator, Collection
                     if (isset($this->articles[$article['id']])) {
                         $articles[] = $this->articles[$article['id']]->wait();
                     } else {
-                        $content = $fullPromise
+                        $article['content'] = $fullPromise
                             ->then(function (array $promises) use ($article) {
                                 return $promises[$article['id']]->wait()['content'];
                             });
 
                         if (!empty($article['subjects'])) {
-                            $subjects = $subjectPromise
+                            $article['subjects'] = $subjectPromise
                                 ->then(function (array $promises) use ($article) {
                                     return $promises[$article['id']]->wait();
                                 });
-                        } else {
-                            $subjects = null;
                         }
 
-                        $articles[] = $article = $this->createBlogArticle($article, $content, $subjects);
+                        $articles[] = $article = $this->denormalizer->denormalize($article, BlogArticle::class);
                         $this->articles[$article->getId()] = promise_for($article);
                     }
                 }

@@ -71,9 +71,9 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalize_blog_articles(BlogArticle $blogArticle, array $expected)
+    public function it_normalize_blog_articles(BlogArticle $blogArticle, array $context, array $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->normalize($blogArticle));
+        $this->assertEquals($expected, $this->normalizer->normalize($blogArticle, null, $context));
     }
 
     public function normalizeProvider() : array
@@ -86,6 +86,7 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
                     new ArrayCollection([$subject])),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -104,6 +105,7 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new BlogArticle('id', 'title', $date, null, new ArrayCollection([new Paragraph('text')]), null),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -114,6 +116,31 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
                             'text' => 'text',
                         ],
                     ]),
+                ],
+            ],
+            'complete snippet' => [
+                new BlogArticle('id', 'title', $date, 'impact statement',
+                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
+                    new ArrayCollection([$subject])),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'impactStatement' => 'impact statement',
+                    'subjects' => new ArrayCollection([
+                        'id',
+                    ]),
+                ],
+            ],
+            'minimum snippet' => [
+                new BlogArticle('id', 'title', $date, null,
+                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')), null),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
                 ],
             ],
         ];

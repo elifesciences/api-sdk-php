@@ -56,9 +56,6 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             'id' => $object->getId(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
-            'content' => $object->getContent()->map(function (Block $block) use ($format, $context) {
-                return $this->normalizer->normalize($block, $format, $context);
-            }),
         ];
 
         if ($object->getImpactStatement()) {
@@ -68,6 +65,12 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         if ($object->hasSubjects()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
                 return $subject->getId();
+            });
+        }
+
+        if (empty($context['snippet'])) {
+            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+                return $this->normalizer->normalize($block, $format, $context);
             });
         }
 

@@ -233,7 +233,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_rejected()
+    public function it_cannot_be_rejected()
     {
         $promise = new Promise();
         $collection = new PromiseCollection($promise);

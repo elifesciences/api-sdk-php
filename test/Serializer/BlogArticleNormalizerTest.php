@@ -177,9 +177,6 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_blog_articles(array $json, BlogArticle $expected)
     {
-        $expected->getContent()->toArray();
-        $expected->getSubjects()->toArray();
-
         $actual = $this->normalizer->denormalize($json, BlogArticle::class);
 
         $normaliseResult = function ($value) {

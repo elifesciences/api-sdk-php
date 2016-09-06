@@ -7,9 +7,9 @@ use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
 use Exception;
-use GuzzleHttp\Promise\CancellationException;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
+use LogicException;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -212,6 +212,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertSame(PromiseInterface::PENDING, $collection->getState());
 
         $promise->resolve(true);
+        $collection->wait();
 
         $this->assertSame(PromiseInterface::FULFILLED, $collection->getState());
     }
@@ -219,14 +220,14 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_resolved()
+    public function it_cannot_be_resolved()
     {
         $promise = new Promise();
         $collection = new PromiseCollection($promise);
 
-        $collection->resolve([1, 2, 3, 4, 5]);
+        $this->expectException(LogicException::class);
 
-        $this->assertSame([1, 2, 3, 4, 5], $collection->toArray());
+        $collection->resolve([1, 2, 3, 4, 5]);
     }
 
     /**
@@ -237,27 +238,22 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
         $promise = new Promise();
         $collection = new PromiseCollection($promise);
 
+        $this->expectException(LogicException::class);
+
         $collection->reject(new Exception('foo'));
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('foo');
-
-        $collection->wait();
     }
 
     /**
      * @test
      */
-    public function it_can_be_cancelled()
+    public function it_cannot_be_cancelled()
     {
         $promise = new Promise();
         $collection = new PromiseCollection($promise);
 
+        $this->expectException(LogicException::class);
+
         $collection->cancel();
-
-        $this->expectException(CancellationException::class);
-
-        $collection->wait();
     }
 
     /**

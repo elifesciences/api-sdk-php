@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
+use LogicException;
 use Traversable;
 
 final class PromiseCollection implements IteratorAggregate, Collection, PromiseInterface
@@ -13,7 +14,17 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
 
     public function __construct(PromiseInterface $promise)
     {
-        $this->promise = $promise;
+        $this->promise = $promise->then(function ($value) {
+            if ($value instanceof Collection) {
+                return $value;
+            }
+
+            if ($value instanceof Traversable) {
+                $value = iterator_to_array($value);
+            }
+
+            return new ArrayCollection((array) $value);
+        });
     }
 
     public function getIterator() : Traversable
@@ -34,7 +45,7 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
     public function slice(int $offset, int $length = null) : Collection
     {
         return new self(
-            $this->getPromise()->then(function (Collection $collection) use ($offset, $length) {
+            $this->then(function (Collection $collection) use ($offset, $length) {
                 return $collection->slice($offset, $length);
             })
         );
@@ -76,12 +87,12 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
 
     public function then(callable $onFulfilled = null, callable $onRejected = null) : PromiseInterface
     {
-        return $this->getPromise()->then($onFulfilled, $onRejected);
+        return $this->promise->then($onFulfilled, $onRejected);
     }
 
     public function otherwise(callable $onRejected) : PromiseInterface
     {
-        return $this->getPromise()->otherwise($onRejected);
+        return $this->promise->otherwise($onRejected);
     }
 
     public function getState() : string
@@ -91,36 +102,21 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
 
     public function resolve($value)
     {
-        $this->promise->resolve($value);
+        throw new LogicException('Cannot resolve a PromiseCollection');
     }
 
     public function reject($reason)
     {
-        $this->promise->reject($reason);
+        throw new LogicException('Cannot reject a PromiseCollection');
     }
 
     public function cancel()
     {
-        $this->promise->cancel();
+        throw new LogicException('Cannot cancel a PromiseCollection');
     }
 
     public function wait($unwrap = true)
     {
-        return $this->getPromise()->wait($unwrap);
-    }
-
-    private function getPromise() : PromiseInterface
-    {
-        return $this->promise->then(function ($value) {
-            if ($value instanceof Collection) {
-                return $value;
-            }
-
-            if ($value instanceof Traversable) {
-                $value = iterator_to_array($value);
-            }
-
-            return new ArrayCollection((array) $value);
-        });
+        return $this->promise->wait($unwrap);
     }
 }

@@ -4,6 +4,8 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
@@ -14,14 +16,15 @@ use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
-use PHPUnit_Framework_TestCase;
+use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
-use function GuzzleHttp\Promise\promise_for;
+use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
+final class BlogArticleNormalizerTest extends ApiTestCase
 {
     /** @var BlogArticleNormalizer */
     private $normalizer;
@@ -33,7 +36,13 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new BlogArticleNormalizer();
 
-        new Serializer([$this->normalizer, new Block\ParagraphNormalizer()]);
+        $serializer = new Serializer([
+            $this->normalizer,
+            new ImageNormalizer(),
+            new SubjectNormalizer(),
+            new Block\ParagraphNormalizer(),
+        ]);
+        $this->normalizer->setSubjects(new Subjects(new SubjectsClient($this->getHttpClient()), $serializer));
     }
 
     /**
@@ -189,6 +198,8 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
             return $value;
         };
 
+        $this->mockSubjectCall(1);
+
         foreach (get_class_methods(BlogArticle::class) as $method) {
             if ('__' === substr($method, 0, 2)) {
                 continue;
@@ -201,8 +212,18 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
     public function denormalizeProvider() : array
     {
         $date = new DateTimeImmutable();
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('id', 'name', null, $image);
+        $image = new Image('', [
+            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+            new ImageSize('16:9', [
+                250 => 'https://placehold.it/250x141',
+                500 => 'https://placehold.it/500x281',
+            ]),
+            new ImageSize('1:1', [
+                '70' => 'https://placehold.it/70x70',
+                '140' => 'https://placehold.it/140x140',
+            ]),
+        ]);
+        $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
 
         return [
             'complete' => [
@@ -217,7 +238,7 @@ final class BlogArticleNormalizerTest extends PHPUnit_Framework_TestCase
                             'text' => 'text',
                         ],
                     ],
-                    'subjects' => new PromiseCollection(promise_for([$subject])),
+                    'subjects' => ['subject1'],
                 ],
                 new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
                     new ArrayCollection([$subject])),

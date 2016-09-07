@@ -28,16 +28,17 @@ final class BlogArticlesTest extends ApiTestCase
     protected function setUpBlogArticles()
     {
         $serializer = new Serializer([
-            new BlogArticleNormalizer(),
+            $blogArticleNormalizer = new BlogArticleNormalizer(),
             new ImageNormalizer(),
             new SubjectNormalizer(),
             new Block\ParagraphNormalizer(),
         ]);
         $this->blogArticles = new BlogArticles(
             new BlogClient($this->getHttpClient()),
-            new Subjects(new SubjectsClient($this->getHttpClient()), $serializer),
             $serializer
         );
+        $subjects = new Subjects(new SubjectsClient($this->getHttpClient()), $serializer);
+        $blogArticleNormalizer->setSubjects($subjects);
     }
 
     /**

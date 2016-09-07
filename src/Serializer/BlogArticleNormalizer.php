@@ -20,6 +20,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
+    use SubjectsAware;
 
     public function denormalize($data, $class, $format = null, array $context = []) : BlogArticle
     {
@@ -30,7 +31,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
                 }, $blocks);
             }));
 
-        $data['subjects'] = !empty($data['subjects']) ? new PromiseCollection(promise_for($data['subjects'])) : null;
+        $data['subjects'] = !empty($data['subjects']) ? $this->getSubjects($data['subjects']) : null;
 
         return new BlogArticle(
             $data['id'],

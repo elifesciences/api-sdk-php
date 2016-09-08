@@ -85,6 +85,15 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
         );
     }
 
+    public function reverse() : Collection
+    {
+        return new self(
+            $this->then(function (Collection $collection) {
+                return $collection->reverse();
+            })
+        );
+    }
+
     public function then(callable $onFulfilled = null, callable $onRejected = null) : PromiseInterface
     {
         return $this->promise->then($onFulfilled, $onRejected);

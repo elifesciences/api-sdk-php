@@ -176,6 +176,16 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_reversed()
+    {
+        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+
+        $this->assertSame([5, 4, 3, 2, 1], $collection->reverse()->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_chained()
     {
         $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));

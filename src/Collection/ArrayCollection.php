@@ -61,4 +61,9 @@ final class ArrayCollection implements IteratorAggregate, Collection
 
         return $clone;
     }
+
+    public function reverse() : Collection
+    {
+        return new self(array_reverse($this->array));
+    }
 }

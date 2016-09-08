@@ -235,4 +235,53 @@ final class SubjectsTest extends ApiTestCase
             $this->assertSame('subject'.(5 - $i), $subject->getId());
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_reversed()
+    {
+        $subjects = new Subjects($this->subjectsClient);
+
+        $this->mockSubjectListCall(1, 1, 5, false);
+        $this->mockSubjectListCall(1, 100, 5, false);
+
+        foreach ($subjects->reverse() as $i => $subject) {
+            $this->assertSame('subject'.$i, $subject->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_recount_when_reversed()
+    {
+        $subjects = new Subjects($this->subjectsClient);
+
+        $this->mockSubjectListCall(1, 1, 10);
+
+        $subjects->count();
+
+        $this->assertSame(10, $subjects->reverse()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_reversed()
+    {
+        $subjects = new Subjects($this->subjectsClient);
+
+        $this->mockSubjectListCall(1, 1, 200);
+        $this->mockSubjectListCall(1, 100, 200);
+        $this->mockSubjectListCall(2, 100, 200);
+
+        $subjects->toArray();
+
+        $this->mockSubjectListCall(1, 1, 200, false);
+        $this->mockSubjectListCall(1, 100, 200, false);
+        $this->mockSubjectListCall(2, 100, 200, false);
+
+        $subjects->reverse()->toArray();
+    }
 }

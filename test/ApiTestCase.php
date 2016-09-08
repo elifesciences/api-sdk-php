@@ -59,7 +59,7 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         return $this->httpClient;
     }
 
-    final protected function mockBlogArticleListCall(int $page, int $perPage, int $total)
+    final protected function mockBlogArticleListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $blogArticles = array_map(function (int $id) {
             return $this->createBlogArticleJson($id, true);
@@ -68,7 +68,7 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/blog-articles?page='.$page.'&per-page='.$perPage.'&order=desc',
+                'http://api.elifesciences.org/blog-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)]
             ),
             new Response(
@@ -98,7 +98,7 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         );
     }
 
-    final protected function mockSubjectListCall(int $page, int $perPage, int $total)
+    final protected function mockSubjectListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $subjects = array_map(function (int $id) {
             return $this->createSubjectJson($id);
@@ -107,7 +107,7 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/subjects?page='.$page.'&per-page='.$perPage.'&order=desc',
+                'http://api.elifesciences.org/subjects?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
                 ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
             ),
             new Response(

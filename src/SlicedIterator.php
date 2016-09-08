@@ -39,4 +39,10 @@ trait SlicedIterator
     {
         $this->key = 1;
     }
+
+    final private function resetIterator()
+    {
+        $this->rewind();
+        $this->resetPages();
+    }
 }

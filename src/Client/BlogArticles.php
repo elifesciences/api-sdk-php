@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use ArrayObject;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -25,7 +26,8 @@ final class BlogArticles implements Iterator, Collection
     use SlicedIterator;
 
     private $count;
-    private $articles = [];
+    private $articles;
+    private $descendingOrder = true;
     private $blogClient;
     private $subjects;
 
@@ -33,8 +35,14 @@ final class BlogArticles implements Iterator, Collection
         BlogClient $blogClient,
         Subjects $subjects
     ) {
+        $this->articles = new ArrayObject();
         $this->blogClient = $blogClient;
         $this->subjects = $subjects;
+    }
+
+    public function __clone()
+    {
+        $this->resetIterator();
     }
 
     public function get(string $id) : PromiseInterface
@@ -77,7 +85,8 @@ final class BlogArticles implements Iterator, Collection
             ->listArticles(
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)],
                 ($offset / $length) + 1,
-                $length
+                $length,
+                $this->descendingOrder
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -134,6 +143,15 @@ final class BlogArticles implements Iterator, Collection
                 return new ArrayCollection($articles);
             })
         );
+    }
+
+    public function reverse() : Collection
+    {
+        $clone = clone $this;
+
+        $clone->descendingOrder = !$this->descendingOrder;
+
+        return $clone;
     }
 
     public function count() : int

@@ -29,4 +29,10 @@ trait CanBeSliced
 
         return iterator_to_array($this->pages[$page]);
     }
+
+    final private function resetPages()
+    {
+        $this->pages = [];
+        $this->pageBatch = 100;
+    }
 }

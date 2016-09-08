@@ -18,5 +18,7 @@ interface Collection extends Countable, Traversable
 
     public function sort(callable $callback) : Collection;
 
+    public function reverse() : Collection;
+
     public function toArray() : array;
 }

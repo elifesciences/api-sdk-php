@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use ArrayObject;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -22,12 +23,19 @@ final class Subjects implements Iterator, Collection
     use SlicedIterator;
 
     private $count;
-    private $subjects = [];
+    private $subjects;
+    private $descendingOrder = true;
     private $subjectsClient;
 
     public function __construct(SubjectsClient $subjectsClient)
     {
+        $this->subjects = new ArrayObject();
         $this->subjectsClient = $subjectsClient;
+    }
+
+    public function __clone()
+    {
+        $this->resetIterator();
     }
 
     public function get(string $id) : PromiseInterface
@@ -60,7 +68,8 @@ final class Subjects implements Iterator, Collection
             ->listSubjects(
                 ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)],
                 ($offset / $length) + 1,
-                $length
+                $length,
+                $this->descendingOrder
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -82,6 +91,15 @@ final class Subjects implements Iterator, Collection
                 return new ArrayCollection($subjects);
             })
         );
+    }
+
+    public function reverse() : Collection
+    {
+        $clone = clone $this;
+
+        $clone->descendingOrder = !$this->descendingOrder;
+
+        return $clone;
     }
 
     public function count() : int

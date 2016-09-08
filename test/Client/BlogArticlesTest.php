@@ -228,4 +228,47 @@ final class BlogArticlesTest extends ApiTestCase
             $this->assertSame('blogArticle'.(5 - $i), $blogArticle->getId());
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_reversed()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5, false);
+        $this->mockBlogArticleListCall(1, 100, 5, false);
+
+        foreach ($this->blogArticles->reverse() as $i => $blogArticle) {
+            $this->assertSame('blogArticle'.$i, $blogArticle->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_recount_when_reversed()
+    {
+        $this->mockBlogArticleListCall(1, 1, 10);
+
+        $this->blogArticles->count();
+
+        $this->assertSame(10, $this->blogArticles->reverse()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_reversed()
+    {
+        $this->mockBlogArticleListCall(1, 1, 200);
+        $this->mockBlogArticleListCall(1, 100, 200);
+        $this->mockBlogArticleListCall(2, 100, 200);
+
+        $this->blogArticles->toArray();
+
+        $this->mockBlogArticleListCall(1, 1, 200, false);
+        $this->mockBlogArticleListCall(1, 100, 200, false);
+        $this->mockBlogArticleListCall(2, 100, 200, false);
+
+        $this->blogArticles->reverse()->toArray();
+    }
 }

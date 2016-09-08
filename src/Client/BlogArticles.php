@@ -28,6 +28,7 @@ final class BlogArticles implements Iterator, Collection
     private $count;
     private $articles;
     private $descendingOrder = true;
+    private $subjectsQuery = [];
     private $blogClient;
     private $subjects;
 
@@ -71,6 +72,19 @@ final class BlogArticles implements Iterator, Collection
             });
     }
 
+    public function forSubject(string ...$subjectId) : BlogArticles
+    {
+        $clone = clone $this;
+
+        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
+
+        if ($clone->subjectsQuery !== $this->subjectsQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
     public function slice(int $offset, int $length = null) : Collection
     {
         if (null === $length) {
@@ -86,7 +100,8 @@ final class BlogArticles implements Iterator, Collection
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->descendingOrder
+                $this->descendingOrder,
+                $this->subjectsQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

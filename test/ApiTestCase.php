@@ -59,16 +59,25 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         return $this->httpClient;
     }
 
-    final protected function mockBlogArticleListCall(int $page, int $perPage, int $total, $descendingOrder = true)
-    {
+    final protected function mockBlogArticleListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
         $blogArticles = array_map(function (int $id) {
             return $this->createBlogArticleJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/blog-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                'http://api.elifesciences.org/blog-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)]
             ),
             new Response(

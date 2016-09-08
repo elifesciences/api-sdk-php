@@ -118,6 +118,51 @@ final class BlogArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_filtered_by_subject()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5, true, ['subject']);
+        $this->mockBlogArticleListCall(1, 100, 5, true, ['subject']);
+
+        foreach ($this->blogArticles->forSubject('subject') as $i => $blogArticle) {
+            $this->assertSame('blogArticle'.$i, $blogArticle->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering_by_subject()
+    {
+        $this->mockBlogArticleListCall(1, 1, 10);
+
+        $this->blogArticles->count();
+
+        $this->mockBlogArticleListCall(1, 1, 10, true, ['subject']);
+
+        $this->assertSame(10, $this->blogArticles->forSubject('subject')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_filtering_by_subject()
+    {
+        $this->mockBlogArticleListCall(1, 1, 200);
+        $this->mockBlogArticleListCall(1, 100, 200);
+        $this->mockBlogArticleListCall(2, 100, 200);
+
+        $this->blogArticles->toArray();
+
+        $this->mockBlogArticleListCall(1, 1, 200, true, ['subject']);
+        $this->mockBlogArticleListCall(1, 100, 200, true, ['subject']);
+        $this->mockBlogArticleListCall(2, 100, 200, true, ['subject']);
+
+        $this->blogArticles->forSubject('subject')->toArray();
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

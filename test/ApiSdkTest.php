@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Model\Block;
 
 final class ApiSdkTest extends ApiTestCase
 {
@@ -44,5 +45,23 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockSubjectCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->subjects()->get('subject1')->wait());
+    }
+
+    /**
+     * @test
+     * @dataProvider denormalizeBlocksProvider
+     */
+    public function it_can_denormalize_blocks(string $block)
+    {
+        $this->apiSdk->getSerializer()->supportsDenormalization([], $block);
+    }
+
+    public function denormalizeBlocksProvider() : array
+    {
+        return [
+            [Block\Image::class],
+            [Block\Paragraph::class],
+            [Block\YouTube::class],
+        ];
     }
 }

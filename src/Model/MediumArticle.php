@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
+use DateTimeZone;
 
 final class MediumArticle
 {
@@ -25,7 +26,7 @@ final class MediumArticle
         $this->uri = $uri;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
-        $this->published = $published;
+        $this->published = $published->setTimezone(new DateTimeZone('UTC'));
         $this->image = $image;
     }
 

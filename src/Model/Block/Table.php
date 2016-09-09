@@ -4,6 +4,9 @@ namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 
+/**
+ * @SuppressWarnings(ForbiddenAbleSuffix)
+ */
 final class Table
 {
     private $doi;

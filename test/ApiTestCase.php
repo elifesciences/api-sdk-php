@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
@@ -145,6 +146,45 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
                 json_encode($this->createBlogArticleJson($number, false, $subject))
+            )
+        );
+    }
+
+    final protected function mockInterviewListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    {
+        $interviews = array_map(function (int $id) {
+            return $this->createInterviewJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/interviews?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $interviews,
+                ])
+            )
+        );
+    }
+
+    final protected function mockInterviewCall(int $number)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/interviews/interview'.$number,
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                json_encode($this->createInterviewJson($number, false))
             )
         );
     }
@@ -312,6 +352,41 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $blogArticle;
+    }
+
+    private function createInterviewJson(int $number, bool $isSnippet = false) : array
+    {
+        $interview = [
+            'id' => 'interview'.$number,
+            'interviewee' => [
+                'name' => [
+                    'preferred' => 'preferred name',
+                    'index' => 'index name',
+                ],
+                'orcid' => '0000-0002-1825-0097',
+                'cv' => [
+                    [
+                        'date' => 'date',
+                        'text' => 'text',
+                    ],
+                ],
+            ],
+            'title' => 'Interview '.$number.' title',
+            'impactStatement' => 'Interview '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Interview '.$number.' text',
+                ],
+            ],
+        ];
+
+        if ($isSnippet) {
+            unset($interview['content']);
+        }
+
+        return $interview;
     }
 
     private function createLabsExperimentJson(int $number, bool $isSnippet = false) : array

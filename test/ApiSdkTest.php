@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
@@ -48,6 +49,18 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockSubjectCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_interviews()
+    {
+        $this->assertInstanceOf(Interviews::class, $this->apiSdk->interviews());
+
+        $this->mockInterviewCall(1);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->interviews()->get('interview1')->wait());
     }
 
     /**

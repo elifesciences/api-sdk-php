@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
@@ -22,6 +23,18 @@ final class ApiSdkTest extends ApiTestCase
     protected function setUpBlogArticles()
     {
         $this->apiSdk = new ApiSdk($this->getHttpClient());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_annual_reports()
+    {
+        $this->assertInstanceOf(AnnualReports::class, $this->apiSdk->annualReports());
+
+        $this->mockAnnualReportCall(2012);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->annualReports()->get(2012)->wait());
     }
 
     /**

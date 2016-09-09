@@ -2,15 +2,18 @@
 
 namespace eLife\ApiSdk;
 
+use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
+use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
@@ -23,6 +26,7 @@ final class ApiSdk
 {
     private $httpClient;
     private $serializer;
+    private $annualReports;
     private $blogArticles;
     private $labsExperiments;
     private $mediumArticles;
@@ -33,6 +37,7 @@ final class ApiSdk
         $this->httpClient = $httpClient;
 
         $this->serializer = new Serializer([
+            new AnnualReportNormalizer(),
             $blogArticleNormalizer = new BlogArticleNormalizer(),
             new ImageNormalizer(),
             new LabsExperimentNormalizer(),
@@ -55,6 +60,15 @@ final class ApiSdk
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);
 
         $blogArticleNormalizer->setSubjects($this->subjects);
+    }
+
+    public function annualReports() : AnnualReports
+    {
+        if (empty($this->annualReports)) {
+            $this->annualReports = new AnnualReports(new AnnualReportsClient($this->httpClient), $this->serializer);
+        }
+
+        return $this->annualReports;
     }
 
     public function blogArticles() : BlogArticles

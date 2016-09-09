@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
+use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
@@ -59,6 +60,45 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $this->httpClient;
+    }
+
+    final protected function mockAnnualReportListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    {
+        $annualReports = array_map(function (int $year) {
+            return $this->createAnnualReportJson($year + 2011);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/annual-reports?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $annualReports,
+                ])
+            )
+        );
+    }
+
+    final protected function mockAnnualReportCall(int $year)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/annual-reports/'.$year,
+                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 1)],
+                json_encode($this->createAnnualReportJson($year))
+            )
+        );
     }
 
     final protected function mockBlogArticleListCall(
@@ -218,6 +258,33 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return range($firstId, $firstId + $perPage - 1);
+    }
+
+    final private function createAnnualReportJson(int $year)
+    {
+        return [
+            'year' => $year,
+            'uri' => 'http://www.example.com/annual-reports/'.$year,
+            'title' => 'Annual report '.$year.' title',
+            'impactStatement' => 'Annual report '.$year.' impact statement',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+        ];
     }
 
     private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $subject = false) : array

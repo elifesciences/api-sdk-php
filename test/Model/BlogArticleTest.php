@@ -6,9 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
-use eLife\ApiSdk\Model\Block\Image as ImageBlock;
-use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Model\Block\YouTube;
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
@@ -131,10 +129,15 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_content()
     {
         $content = [
-            new Paragraph('foo'),
-            new ImageBlock('http://www.example.com/image.jpg', 'foo'),
-            new ImageBlock('http://www.example.com/image.jpg', '', 'bar'),
-            new YouTube('foo', 300, 200),
+            new Block\Paragraph('foo'),
+            new Block\Image(
+                new Block\ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], [])
+            ),
+            new Block\Image(
+                new Block\ImageFile('10.1000/182', 'foo', 'bar', 'baz', [new Block\Paragraph('qux')], 'quxx',
+                    'http://www.example.com/image.jpg', ['corge'], ['grault'])
+            ),
+            new Block\YouTube('foo', 300, 200),
         ];
 
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null, new ArrayCollection($content),

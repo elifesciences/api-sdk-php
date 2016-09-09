@@ -75,8 +75,17 @@ final class ApiSdkTest extends ApiTestCase
     public function denormalizeBlocksProvider() : array
     {
         return [
+            [Block\Box::class],
+            [Block\File::class],
             [Block\Image::class],
+            [Block\Listing::class],
+            [Block\MathML::class],
             [Block\Paragraph::class],
+            [Block\Question::class],
+            [Block\Quote::class],
+            [Block\Section::class],
+            [Block\Table::class],
+            [Block\Video::class],
             [Block\YouTube::class],
         ];
     }

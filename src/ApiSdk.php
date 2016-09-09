@@ -33,8 +33,17 @@ final class ApiSdk
             new ImageNormalizer(),
             new MediumArticleNormalizer(),
             new SubjectNormalizer(),
+            new Block\BoxNormalizer(),
+            new Block\FileNormalizer(),
             new Block\ImageNormalizer(),
+            new Block\ListingNormalizer(),
+            new Block\MathMLNormalizer(),
             new Block\ParagraphNormalizer(),
+            new Block\QuestionNormalizer(),
+            new Block\QuoteNormalizer(),
+            new Block\SectionNormalizer(),
+            new Block\TableNormalizer(),
+            new Block\VideoNormalizer(),
             new Block\YouTubeNormalizer(),
         ]);
 

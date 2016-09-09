@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block\Image;
+use eLife\ApiSdk\Model\Block\ImageFile;
 use PHPUnit_Framework_TestCase;
 
 final class ImageTest extends PHPUnit_Framework_TestCase
@@ -10,32 +11,28 @@ final class ImageTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_uri()
+    public function it_has_an_image()
     {
-        $image = new Image('http://www.example.com/image.jpg', '');
+        $primary = new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg');
+        $image = new Image($primary);
 
-        $this->assertSame('http://www.example.com/image.jpg', $image->getUri());
+        $this->assertEquals($primary, $image->getImage());
     }
 
     /**
      * @test
      */
-    public function it_has_alt_text()
+    public function it_may_have_supplements()
     {
-        $image = new Image('http://www.example.com/image.jpg', 'foo');
+        $primary = new ImageFile(null, null, null, 'primary', [], '', 'http://www.example.com/image.jpg');
+        $supplements = [
+            new ImageFile(null, null, null, 'supplement 1', [], '', 'http://www.example.com/image.jpg'),
+            new ImageFile(null, null, null, 'supplement 2', [], '', 'http://www.example.com/image.jpg'),
+        ];
+        $with = new Image(...array_merge([$primary], $supplements));
+        $withOut = new Image($primary);
 
-        $this->assertSame('foo', $image->getAltText());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_caption()
-    {
-        $with = new Image('http://www.example.com/image.jpg', 'foo', 'bar');
-        $withOut = new Image('http://www.example.com/image.jpg', 'foo');
-
-        $this->assertSame('bar', $with->getCaption());
-        $this->assertNull($withOut->getCaption());
+        $this->assertEquals($supplements, $with->getSupplements());
+        $this->assertEmpty($withOut->getSupplements());
     }
 }

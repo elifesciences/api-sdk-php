@@ -6,35 +6,26 @@ use eLife\ApiSdk\Model\Block;
 
 final class Image implements Block
 {
-    private $uri;
-    private $altText;
-    private $caption;
+    private $images;
 
     /**
      * @internal
      */
-    public function __construct(string $uri, string $altText, string $caption = null)
+    public function __construct(ImageFile ...$images)
     {
-        $this->uri = $uri;
-        $this->altText = $altText;
-        $this->caption = $caption;
+        $this->images = $images;
     }
 
-    public function getUri() : string
+    public function getImage() : ImageFile
     {
-        return $this->uri;
-    }
-
-    public function getAltText() : string
-    {
-        return $this->altText;
+        return $this->images[0];
     }
 
     /**
-     * @return string|null
+     * @return ImageFile[]
      */
-    public function getCaption()
+    public function getSupplements() : array
     {
-        return $this->caption;
+        return array_slice($this->images, 1);
     }
 }

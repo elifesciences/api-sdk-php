@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
@@ -107,6 +108,29 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         );
     }
 
+    final protected function mockMediumArticleListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    {
+        $articles = array_map(function (int $id) {
+            return $this->createMediumArticleJson($id);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/medium-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $articles,
+                ])
+            )
+        );
+    }
+
     final protected function mockSubjectListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $subjects = array_map(function (int $id) {
@@ -181,6 +205,33 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $blogArticle;
+    }
+
+    final private function createMediumArticleJson(int $number)
+    {
+        return [
+            'uri' => 'http://www.example.com/mediumArticle'.$number,
+            'title' => 'Medium article '.$number.' title',
+            'impactStatement' => 'Subject '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+        ];
     }
 
     final private function createSubjectJson(int $number)

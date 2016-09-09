@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
 
@@ -33,6 +34,21 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockSubjectCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_medium_articles()
+    {
+        $this->assertInstanceOf(MediumArticles::class, $this->apiSdk->mediumArticles());
+
+        $this->mockMediumArticleListCall(1, 1, 1);
+        $this->mockMediumArticleListCall(1, 100, 1);
+
+        foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
+            $this->apiSdk->getSerializer()->normalize($mediumArticle);
+        }
     }
 
     /**

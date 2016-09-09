@@ -3,15 +3,18 @@
 namespace eLife\ApiSdk;
 
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -21,6 +24,7 @@ final class ApiSdk
     private $httpClient;
     private $serializer;
     private $blogArticles;
+    private $labsExperiments;
     private $mediumArticles;
     private $subjects;
 
@@ -31,6 +35,7 @@ final class ApiSdk
         $this->serializer = new Serializer([
             $blogArticleNormalizer = new BlogArticleNormalizer(),
             new ImageNormalizer(),
+            new LabsExperimentNormalizer(),
             new MediumArticleNormalizer(),
             new SubjectNormalizer(),
             new Block\BoxNormalizer(),
@@ -59,6 +64,15 @@ final class ApiSdk
         }
 
         return $this->blogArticles;
+    }
+
+    public function labsExperiments() : LabsExperiments
+    {
+        if (empty($this->labsExperiments)) {
+            $this->labsExperiments = new LabsExperiments(new LabsClient($this->httpClient), $this->serializer);
+        }
+
+        return $this->labsExperiments;
     }
 
     public function mediumArticles() : MediumArticles

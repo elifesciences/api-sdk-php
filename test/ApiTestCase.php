@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -108,6 +109,45 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         );
     }
 
+    final protected function mockLabsExperimentListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    {
+        $labsExperiments = array_map(function (int $id) {
+            return $this->createLabsExperimentJson($id);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/labs-experiments?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $labsExperiments,
+                ])
+            )
+        );
+    }
+
+    final protected function mockLabsExperimentCall(int $number)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/labs-experiments/'.$number,
+                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
+                json_encode($this->createLabsExperimentJson($number, false))
+            )
+        );
+    }
+
     final protected function mockMediumArticleListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $articles = array_map(function (int $id) {
@@ -205,6 +245,45 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $blogArticle;
+    }
+
+    private function createLabsExperimentJson(int $number, bool $isSnippet = false) : array
+    {
+        $labsExperiment = [
+            'number' => $number,
+            'title' => 'Labs experiment '.$number.' title',
+            'impactStatement' => 'Labs experiment '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Labs experiment '.$number.' text',
+                ],
+            ],
+        ];
+
+        if ($isSnippet) {
+            unset($labsExperiment['content']);
+        }
+
+        return $labsExperiment;
     }
 
     final private function createMediumArticleJson(int $number)

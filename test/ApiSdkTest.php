@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
@@ -49,6 +50,19 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockSubjectCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_events()
+    {
+        $this->assertInstanceOf(Events::class, $this->apiSdk->events());
+
+        /*$this->mockBlogArticleCall(7, true);
+        $this->mockSubjectCall(1);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());*/
     }
 
     /**

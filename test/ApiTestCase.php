@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
@@ -146,6 +147,50 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
                 json_encode($this->createBlogArticleJson($number, false, $subject))
+            )
+        );
+    }
+
+    final protected function mockEventListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        string $type = 'all'
+    ) {
+        $events = array_map(function (int $id) {
+            return $this->createEventJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/events?page='.$page.'&per-page='.$perPage.'&type='.$type.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $events,
+                ])
+            )
+        );
+    }
+
+    final protected function mockEventCall(int $number, bool $venue = false)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/events/event'.$number,
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                json_encode($this->createEventJson($number, false, $venue))
             )
         );
     }
@@ -352,6 +397,35 @@ abstract class ApiTestCase extends PHPUnit_Framework_TestCase
         }
 
         return $blogArticle;
+    }
+
+    private function createEventJson(int $number, bool $isSnippet = false, bool $venue = false) : array
+    {
+        $event = [
+            'id' => 'event'.$number,
+            'title' => 'Event '.$number.' title',
+            'impactStatement' => 'Event '.$number.' impact statement',
+            'starts' => '2000-01-01T00:00:00+00:00',
+            'ends' => '2100-01-01T00:00:00+00:00',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Event '.$number.' text',
+                ],
+            ],
+        ];
+
+        if ($venue) {
+            $event['timezone'] = 'Europe/London';
+            $event['venue'] = ['name' => 'venue'];
+        }
+
+        if ($isSnippet) {
+            unset($event['content']);
+            unset($event['venue']);
+        }
+
+        return $event;
     }
 
     private function createInterviewJson(int $number, bool $isSnippet = false) : array

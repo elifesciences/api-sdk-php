@@ -7,8 +7,6 @@ use eLife\ApiSdk\Collection;
 
 final class LabsExperiment
 {
-    use HasBlocks;
-
     private $number;
     private $title;
     private $published;

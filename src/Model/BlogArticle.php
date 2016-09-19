@@ -8,8 +8,6 @@ use eLife\ApiSdk\Collection\ArrayCollection;
 
 final class BlogArticle
 {
-    use HasBlocks;
-
     private $id;
     private $title;
     private $published;

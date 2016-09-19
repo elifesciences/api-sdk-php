@@ -7,8 +7,6 @@ use eLife\ApiSdk\Collection;
 
 final class Interview
 {
-    use HasBlocks;
-
     private $id;
     private $interviewee;
     private $title;

@@ -2,6 +2,8 @@
 
 namespace eLife\ApiSdk\Model;
 
+use OutOfBoundsException;
+
 final class Image
 {
     private $altText;
@@ -29,5 +31,16 @@ final class Image
     public function getSizes() : array
     {
         return $this->sizes;
+    }
+
+    public function getSize(string $ratio) : ImageSize
+    {
+        foreach ($this->sizes as $size) {
+            if ($ratio === $size->getRatio()) {
+                return $size;
+            }
+        }
+
+        throw new OutOfBoundsException('No images with the size '.$ratio.' available');
     }
 }

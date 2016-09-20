@@ -99,7 +99,7 @@ abstract class ArticleVersion
         return $this->title;
     }
 
-    final public function getPublished(): DateTimeImmutable
+    final public function getPublishedDate(): DateTimeImmutable
     {
         return $this->published;
     }

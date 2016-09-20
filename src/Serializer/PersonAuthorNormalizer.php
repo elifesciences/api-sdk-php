@@ -59,6 +59,55 @@ final class PersonAuthorNormalizer implements NormalizerInterface, DenormalizerI
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
+        $data = [
+            'name' => [
+                'preferred' => $object->getPreferredName(),
+                'index' => $object->getIndexName(),
+            ],
+        ];
+
+        if ($object->getOrcid()) {
+            $data['orcid'] = $object->getOrcid();
+        }
+
+        if ($object->isDeceased()) {
+            $data['deceased'] = $object->isDeceased();
+        }
+
+        if (count($object->getAffiliations())) {
+            $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {
+                return $this->normalizer->normalize($place, $format, $context);
+            }, $object->getAffiliations());
+        }
+
+        if ($object->getCompetingInterests()) {
+            $data['competingInterests'] = $object->getCompetingInterests();
+        }
+        if ($object->getContribution()) {
+            $data['contribution'] = $object->getContribution();
+        }
+
+        if (count($object->getEmailAddresses())) {
+            $data['emailAddresses'] = $object->getEmailAddresses();
+        }
+
+        if (count($object->getEqualContributionGroups())) {
+            $data['equalContributionGroups'] = $object->getEqualContributionGroups();
+        }
+
+        if ($object->getOnBehalfOf()) {
+            $data['onBehalfOf'] = $this->normalizer->normalize($object->getOnBehalfOf(), $format, $context);
+        }
+
+        if (count($object->getPhoneNumbers())) {
+            $data['phoneNumbers'] = $object->getPhoneNumbers();
+        }
+
+        if (count($object->getPostalAddresses())) {
+            $data['postalAddresses'] = $object->getPostalAddresses();
+        }
+
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

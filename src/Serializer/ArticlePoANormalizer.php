@@ -8,14 +8,17 @@ use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\Subject;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -93,12 +96,18 @@ final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInt
     {
         $data = [
             'id' => $object->getId(),
+            'version' => $object->getVersion(),
+            'type' => $object->getType(),
+            'doi' => $object->getDoi(),
+            'authorLine' => $object->getAuthorLine(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'volume' => $object->getVolume(),
+            'elocationId' => $object->getElocationId(),
         ];
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($object->getPdf()) {
+            $data['pdf'] = $object->getPdf();
         }
 
         if ($object->hasSubjects()) {
@@ -107,10 +116,38 @@ final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInt
             });
         }
 
+        if (!empty($object->getResearchOrganisms())) {
+            $data['researchOrganisms'] = $object->getResearchOrganisms();
+        }
+
         if (empty($context['snippet'])) {
-            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
-                return $this->normalizer->normalize($block, $format, $context);
+            $data['copyright'] = [
+                'license' => $object->getCopyright()->getLicense(),
+                'statement' => $object->getCopyright()->getStatement(),
+            ];
+
+            if ($object->getCopyright()->getHolder()) {
+                $data['copyright']['holder'] = $object->getCopyright()->getHolder();
+            }
+
+            $data['authors'] = $object->getAuthors()->map(function (Author $author) use ($format, $context) {
+                return $this->normalizer->normalize($author, $format, $context);
             });
+
+            if ($object->getIssue()) {
+                $data['issue'] = $object->getIssue();
+            }
+
+            if ($object->getAbstract()) {
+                $data['abstract'] = [
+                    'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
+                        $format,
+                        $context
+                    ) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray(),
+                ];
+            }
         }
 
         return all($data)->wait();

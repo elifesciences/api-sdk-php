@@ -48,8 +48,10 @@ final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInt
         }
 
         $data['authors'] = new PromiseCollection(promise_for($data['authors'])
-            ->then(function (array $authors) {
-                return [];
+            ->then(function (array $authors) use ($format, $context) {
+                return array_map(function (array $author) use ($format, $context) {
+                    return $this->denormalizer->denormalize($author, Author::class, $format, $context);
+                }, $authors);
             }));
 
         $data['copyright'] = promise_for($data['copyright'])

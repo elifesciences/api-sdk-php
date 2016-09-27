@@ -52,6 +52,7 @@ final class PersonAuthorNormalizer implements NormalizerInterface, DenormalizerI
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
+            'type' => 'person',
             'name' => [
                 'preferred' => $object->getPreferredName(),
                 'index' => $object->getIndexName(),

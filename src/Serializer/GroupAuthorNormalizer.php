@@ -58,6 +58,7 @@ final class GroupAuthorNormalizer implements NormalizerInterface, DenormalizerIn
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
+            'type' => 'group',
             'name' => $object->getName(),
         ];
 

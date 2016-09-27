@@ -49,7 +49,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $section = new Section('foo', []);
+        $section = new Section('foo', null, []);
 
         return [
             'section' => [$section, null, true],
@@ -60,22 +60,44 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_normalize_sections()
+    public function it_normalize_sections(Section $image, array $expected)
     {
-        $section = new Section('title', [new Paragraph('paragraph')]);
-        $expected = [
-            'type' => 'section',
-            'title' => 'title',
-            'content' => [
+        $this->assertSame($expected, $this->normalizer->normalize($image));
+    }
+
+    public function normalizeProvider() : array
+    {
+        return [
+            'complete' => [
+                new Section('title', 'id', [new Paragraph('paragraph')]),
                 [
-                    'type' => 'paragraph',
-                    'text' => 'paragraph',
+                    'type' => 'section',
+                    'title' => 'title',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'paragraph',
+                        ],
+                    ],
+                    'id' => 'id',
+                ],
+            ],
+            'minimum' => [
+                new Section('title', null, [new Paragraph('paragraph')]),
+                [
+                    'type' => 'section',
+                    'title' => 'title',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'paragraph',
+                        ],
+                    ],
                 ],
             ],
         ];
-
-        $this->assertSame($expected, $this->normalizer->normalize($section));
     }
 
     /**
@@ -107,21 +129,43 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_sections()
+    public function it_denormalize_sections(array $json, Section $expected)
     {
-        $json = [
-            'type' => 'section',
-            'title' => 'title',
-            'content' => [
+        $this->assertEquals($expected, $this->normalizer->denormalize($json, Section::class));
+    }
+
+    public function denormalizeProvider() : array
+    {
+        return [
+            'complete' => [
                 [
-                    'type' => 'paragraph',
-                    'text' => 'paragraph',
+                    'type' => 'section',
+                    'id' => 'id',
+                    'title' => 'title',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'paragraph',
+                        ],
+                    ],
                 ],
+                new Section('title', 'id', [new Paragraph('paragraph')]),
+            ],
+            'minimum' => [
+                [
+                    'type' => 'section',
+                    'title' => 'title',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'paragraph',
+                        ],
+                    ],
+                ],
+                new Section('title', null, [new Paragraph('paragraph')]),
             ],
         ];
-        $expected = new Section('title', [new Paragraph('paragraph')]);
-
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Section::class));
     }
 }

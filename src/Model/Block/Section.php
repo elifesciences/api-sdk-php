@@ -7,14 +7,16 @@ use eLife\ApiSdk\Model\Block;
 final class Section implements Block
 {
     private $title;
+    private $id;
     private $content;
 
     /**
      * @internal
      */
-    public function __construct(string $title, array $content)
+    public function __construct(string $title, string $id = null, array $content)
     {
         $this->title = $title;
+        $this->id = $id;
         $this->content = $content;
     }
 
@@ -24,6 +26,14 @@ final class Section implements Block
     public function getTitle() : string
     {
         return $this->title;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

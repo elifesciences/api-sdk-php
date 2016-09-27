@@ -12,9 +12,18 @@ final class SectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $section = new Section('title', []);
+        $section = new Section('title', null, []);
 
         $this->assertSame('title', $section->getTitle());
+    }
+
+    public function it_may_have_an_id()
+    {
+        $with = new Section('title', 'id', []);
+        $withOut = new Section('title', null, []);
+
+        $this->assertSame('id', $with->getId());
+        $this->assertNull($withOut->getId());
     }
 
     /**
@@ -22,8 +31,8 @@ final class SectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_content()
     {
-        $content = [new Section('sub-title', [])];
-        $section = new Section('title', $content);
+        $content = [new Section('sub-title', null, [])];
+        $section = new Section('title', null, $content);
 
         $this->assertEquals($content, $section->getContent());
     }

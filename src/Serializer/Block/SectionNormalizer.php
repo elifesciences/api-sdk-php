@@ -18,7 +18,7 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
 
     public function denormalize($data, $class, $format = null, array $context = []) : Section
     {
-        return new Section($data['title'], array_map(function (array $block) {
+        return new Section($data['title'], $data['id'] ?? null, array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
         }, $data['content']));
     }
@@ -36,13 +36,19 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        return [
+        $data = [
             'type' => 'section',
             'title' => $object->getTitle(),
             'content' => array_map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             }, $object->getContent()),
         ];
+
+        if ($object->getId()) {
+            $data['id'] = $object->getId();
+        }
+
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

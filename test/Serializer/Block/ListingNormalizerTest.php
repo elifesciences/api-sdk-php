@@ -71,27 +71,32 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Listing(true, ['string', new Paragraph('paragraph')]),
+                new Listing(Listing::PREFIX_NUMBER, ['string', [new Paragraph('paragraph')]]),
                 [
                     'type' => 'list',
+                    'prefix' => 'number',
                     'items' => [
                         'string',
                         [
-                            'type' => 'paragraph',
-                            'text' => 'paragraph',
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'paragraph',
+                            ],
                         ],
                     ],
-                    'ordered' => true,
                 ],
             ],
             'minimum' => [
-                new Listing(false, [new Paragraph('paragraph')]),
+                new Listing(Listing::PREFIX_NONE, [[new Paragraph('paragraph')]]),
                 [
                     'type' => 'list',
+                    'prefix' => 'none',
                     'items' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'paragraph',
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'paragraph',
+                            ],
                         ],
                     ],
                 ],
@@ -141,28 +146,33 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'list',
-                    'ordered' => true,
+                    'prefix' => 'number',
                     'items' => [
                         'string',
                         [
-                            'type' => 'paragraph',
-                            'text' => 'paragraph',
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'paragraph',
+                            ],
                         ],
                     ],
                 ],
-                new Listing(true, ['string', new Paragraph('paragraph')]),
+                new Listing(Listing::PREFIX_NUMBER, ['string', [new Paragraph('paragraph')]]),
             ],
             'minimum' => [
                 [
                     'type' => 'list',
+                    'prefix' => 'none',
                     'items' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'paragraph',
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'paragraph',
+                            ],
                         ],
                     ],
                 ],
-                new Listing(false, [new Paragraph('paragraph')]),
+                new Listing(Listing::PREFIX_NONE, [[new Paragraph('paragraph')]]),
             ],
         ];
     }

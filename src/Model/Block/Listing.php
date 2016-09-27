@@ -6,21 +6,29 @@ use eLife\ApiSdk\Model\Block;
 
 final class Listing implements Block
 {
-    private $ordered;
+    const PREFIX_ALPHA_LOWER = 'alpha-lower';
+    const PREFIX_ALPHA_UPPER = 'alpha-upper';
+    const PREFIX_BULLET = 'bullet';
+    const PREFIX_NONE = 'none';
+    const PREFIX_NUMBER = 'number';
+    const PREFIX_ROMAN_LOWER = 'roman-lower';
+    const PREFIX_ROMAN_UPPER = 'roman-upper';
+
+    private $prefix;
     private $items;
 
     /**
      * @internal
      */
-    public function __construct(bool $ordered, array $items)
+    public function __construct(string $prefix, array $items)
     {
-        $this->ordered = $ordered;
+        $this->prefix = $prefix;
         $this->items = $items;
     }
 
-    public function isOrdered() : bool
+    public function getPrefix() : string
     {
-        return $this->ordered;
+        return $this->prefix;
     }
 
     public function getItems() : array

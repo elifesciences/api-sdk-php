@@ -18,12 +18,14 @@ final class ListingNormalizer implements NormalizerInterface, DenormalizerInterf
 
     public function denormalize($data, $class, $format = null, array $context = []) : Listing
     {
-        return new Listing($data['ordered'] ?? false, array_map(function ($block) {
-            if (is_string($block)) {
-                return $block;
+        return new Listing($data['prefix'], array_map(function ($item) {
+            if (is_string($item)) {
+                return $item;
             }
 
-            return $this->denormalizer->denormalize($block, Block::class);
+            return array_map(function (array $block) {
+                return $this->denormalizer->denormalize($block, Block::class);
+            }, $item);
         }, $data['items']));
     }
 
@@ -40,22 +42,19 @@ final class ListingNormalizer implements NormalizerInterface, DenormalizerInterf
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        $data = [
+        return [
             'type' => 'list',
-            'items' => array_map(function ($block) {
-                if (is_string($block)) {
-                    return $block;
+            'prefix' => $object->getPrefix(),
+            'items' => array_map(function ($item) {
+                if (is_string($item)) {
+                    return $item;
                 }
 
-                return $this->normalizer->normalize($block);
+                return array_map(function (Block $block) {
+                    return $this->normalizer->normalize($block);
+                }, $item);
             }, $object->getItems()),
         ];
-
-        if ($object->isOrdered()) {
-            $data['ordered'] = $object->isOrdered();
-        }
-
-        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

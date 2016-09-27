@@ -8,7 +8,7 @@ use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Model\Author;
+use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Subject;
@@ -50,7 +50,7 @@ final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInt
         $data['authors'] = new PromiseCollection(promise_for($data['authors'])
             ->then(function (array $authors) use ($format, $context) {
                 return array_map(function (array $author) use ($format, $context) {
-                    return $this->denormalizer->denormalize($author, Author::class, $format, $context);
+                    return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);
                 }, $authors);
             }));
 
@@ -132,7 +132,7 @@ final class ArticlePoANormalizer implements NormalizerInterface, DenormalizerInt
                 $data['copyright']['holder'] = $object->getCopyright()->getHolder();
             }
 
-            $data['authors'] = $object->getAuthors()->map(function (Author $author) use ($format, $context) {
+            $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
             });
 

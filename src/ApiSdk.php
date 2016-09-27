@@ -30,6 +30,7 @@ use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
@@ -65,6 +66,7 @@ final class ApiSdk
             new InterviewNormalizer(),
             new LabsExperimentNormalizer(),
             new MediumArticleNormalizer(),
+            new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
             new PersonNormalizer(),
             new PlaceNormalizer(),

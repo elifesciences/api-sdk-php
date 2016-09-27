@@ -22,12 +22,11 @@ final class GroupAuthor extends Author
         string $contribution = null,
         array $emailAddresses = [],
         array $equalContributionGroups = [],
-        Place $onBehalfOf = null,
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) {
         parent::__construct($affiliations, $competingInterests, $contribution, $emailAddresses,
-            $equalContributionGroups, $onBehalfOf, $phoneNumbers, $postalAddresses);
+            $equalContributionGroups, $phoneNumbers, $postalAddresses);
 
         $this->name = $name;
         $this->people = $people;

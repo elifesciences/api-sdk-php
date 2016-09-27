@@ -4,11 +4,22 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
+use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
 
 abstract class AuthorTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    final public function it_is_an_author_entry()
+    {
+        $author = $this->createAuthor();
+
+        $this->assertInstanceOf(AuthorEntry::class, $author);
+    }
+
     /**
      * @test
      */
@@ -72,21 +83,9 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_may_be_on_behalf_of()
-    {
-        $with = $this->createAuthor([], null, null, [], [], $onBehalfOf = new Place(null, null, ['on behalf of']));
-        $withOut = $this->createAuthor();
-
-        $this->assertEquals($onBehalfOf, $with->getOnBehalfOf());
-        $this->assertEmpty($withOut->getOnBehalfOf());
-    }
-
-    /**
-     * @test
-     */
     final public function it_may_have_phone_numbers()
     {
-        $with = $this->createAuthor([], null, null, [], [], null, ['+447700900415']);
+        $with = $this->createAuthor([], null, null, [], [], ['+447700900415']);
         $withOut = $this->createAuthor();
 
         $this->assertSame(['+447700900415'], $with->getPhoneNumbers());
@@ -98,7 +97,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_postal_addresses()
     {
-        $with = $this->createAuthor([], null, null, [], [], null, [], $postalAddresses = [new Address(['address'])]);
+        $with = $this->createAuthor([], null, null, [], [], [], $postalAddresses = [new Address(['address'])]);
         $withOut = $this->createAuthor();
 
         $this->assertEquals($postalAddresses, $with->getPostalAddresses());
@@ -111,7 +110,6 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
         string $contribution = null,
         array $emailAddresses = [],
         array $equalContributionGroups = [],
-        Place $onBehalfOf = null,
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author;

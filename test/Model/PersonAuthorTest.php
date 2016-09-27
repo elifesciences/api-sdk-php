@@ -5,7 +5,6 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
-use eLife\ApiSdk\Model\Place;
 
 final class PersonAuthorTest extends AuthorTest
 {
@@ -59,11 +58,10 @@ final class PersonAuthorTest extends AuthorTest
         string $contribution = null,
         array $emailAddresses = [],
         array $equalContributionGroups = [],
-        Place $onBehalfOf = null,
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author {
         return new PersonAuthor(new Person('preferred name', 'index name'), false, $affiliations, $competingInterests,
-            $contribution, $emailAddresses, $equalContributionGroups, $onBehalfOf, $phoneNumbers, $postalAddresses);
+            $contribution, $emailAddresses, $equalContributionGroups, $phoneNumbers, $postalAddresses);
     }
 }

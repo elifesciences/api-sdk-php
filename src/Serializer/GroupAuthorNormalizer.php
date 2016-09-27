@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Model\Address;
-use eLife\ApiSdk\Model\Author;
+use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
@@ -22,13 +22,6 @@ final class GroupAuthorNormalizer implements NormalizerInterface, DenormalizerIn
 
     public function denormalize($data, $class, $format = null, array $context = []) :GroupAuthor
     {
-        if (empty($data['onBehalfOf'])) {
-            $onBehalfOf = null;
-        } else {
-            $onBehalfOf = $this->denormalizer->denormalize($data['onBehalfOf'], Place::class, $format,
-                $context);
-        }
-
         return new GroupAuthor(
             $data['name'],
             new ArrayCollection(array_map(function (array $person) use ($format, $context) {
@@ -44,7 +37,6 @@ final class GroupAuthorNormalizer implements NormalizerInterface, DenormalizerIn
             $data['contribution'] ?? null,
             $data['emailAddresses'] ?? [],
             $data['equalContributionGroups'] ?? [],
-            $onBehalfOf,
             $data['phoneNumbers'] = [],
             array_map(function (array $address) use ($format, $context) {
                 return $this->denormalizer->denormalize($address, Address::class, $format, $context);
@@ -57,7 +49,7 @@ final class GroupAuthorNormalizer implements NormalizerInterface, DenormalizerIn
         return
             GroupAuthor::class === $type
             ||
-            (Author::class === $type && 'group' === $data['type']);
+            (AuthorEntry::class === $type && 'group' === $data['type']);
     }
 
     /**
@@ -100,10 +92,6 @@ final class GroupAuthorNormalizer implements NormalizerInterface, DenormalizerIn
 
         if (count($object->getEqualContributionGroups())) {
             $data['equalContributionGroups'] = $object->getEqualContributionGroups();
-        }
-
-        if ($object->getOnBehalfOf()) {
-            $data['onBehalfOf'] = $this->normalizer->normalize($object->getOnBehalfOf(), $format, $context);
         }
 
         if (count($object->getPhoneNumbers())) {

@@ -18,6 +18,7 @@ use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -41,7 +42,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             new ImageNormalizer(),
             new SubjectNormalizer(),
             new Block\ParagraphNormalizer(),
-        ]);
+        ], [new JsonEncoder()]);
         $this->normalizer->setSubjects(new Subjects(new SubjectsClient($this->getHttpClient()), $serializer));
     }
 
@@ -101,15 +102,15 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'impact statement',
-                    'content' => new ArrayCollection([
+                    'content' => [
                         [
                             'type' => 'paragraph',
                             'text' => 'text',
                         ],
-                    ]),
-                    'subjects' => new ArrayCollection([
+                    ],
+                    'subjects' => [
                         'id',
-                    ]),
+                    ],
                 ],
             ],
             'minimum' => [
@@ -119,12 +120,12 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'id' => 'id',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
-                    'content' => new ArrayCollection([
+                    'content' => [
                         [
                             'type' => 'paragraph',
                             'text' => 'text',
                         ],
-                    ]),
+                    ],
                 ],
             ],
             'complete snippet' => [
@@ -137,9 +138,9 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'impact statement',
-                    'subjects' => new ArrayCollection([
+                    'subjects' => [
                         'id',
-                    ]),
+                    ],
                 ],
             ],
             'minimum snippet' => [

@@ -4,9 +4,10 @@ namespace eLife\ApiSdk;
 
 use Countable;
 use GuzzleHttp\Promise\PromiseInterface;
+use JsonSerializable;
 use Traversable;
 
-interface Collection extends Countable, Traversable
+interface Collection extends Countable, Traversable, JsonSerializable
 {
     public function slice(int $offset, int $length = null) : Collection;
 

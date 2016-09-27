@@ -128,4 +128,9 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
     {
         return $this->promise->wait($unwrap);
     }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
 }

@@ -66,4 +66,9 @@ final class ArrayCollection implements IteratorAggregate, Collection
     {
         return new self(array_reverse($this->array));
     }
+
+    public function jsonSerialize()
+    {
+        return $this->array;
+    }
 }

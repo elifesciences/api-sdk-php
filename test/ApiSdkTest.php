@@ -11,6 +11,7 @@ use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\BlogArticle;
 
 final class ApiSdkTest extends ApiTestCase
 {
@@ -139,6 +140,32 @@ final class ApiSdkTest extends ApiTestCase
     public function it_can_denormalize_blocks(string $block)
     {
         $this->apiSdk->getSerializer()->supportsDenormalization([], $block);
+    }
+
+    /**
+     * @test
+     */
+    public function is_can_serialize_and_deserialize_blog_articles()
+    {
+        $serializer = $this->apiSdk->getSerializer();
+        // Mock a call that is apparently made? Maybe this should be a part of the JSON serialization.
+        // Certainly in search we will want to create out own Subjects Client -
+        // See: https://github.com/elifesciences/search/pull/13/files#diff-baab24df189be238c73edb1fdd3c90d3R1
+        $this->mockSubjectCall(1);
+        // Plain JSON object representation of resource.
+        $json = '{"content":[{"type":"paragraph","text":"text"}],"id":"id","impactStatement":"impact statement","published":"2016-09-26T16:40:31+01:00","subjects":["subject1"],"title":"title"}';
+        // Double the conversion.
+        $deserialized = $serializer->deserialize($json, BlogArticle::class, 'json');
+        // Can check contents of `$deserialized` here, but it the code creating is should
+        // be covered by the normalize functions.
+        $serialized = $serializer->serialize($deserialized, 'json');
+        // Check that no information was lost.
+        // The body and subjects were lost previously due to the ArrayCollection being
+        // passed through to getSubjects() on the subjects aware.
+        // I'm not sure why this didn't break the tests since on the method below
+        // you are creating an ArrayCollection and normalizing it, but it is not
+        // throwing.
+        $this->assertJsonStringEqualsJsonString($json, $serialized);
     }
 
     public function denormalizeBlocksProvider() : array

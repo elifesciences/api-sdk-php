@@ -29,6 +29,11 @@ trait ArrayFromIterator
         return $this->all()->sort($callback);
     }
 
+    final public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
     final public function toArray() : array
     {
         $array = [];

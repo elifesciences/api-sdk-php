@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Subject;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -88,6 +89,13 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
 
         $data['keywords'] = new PromiseCollection(promise_for($data['keywords'] ?? []));
 
+        $data['references'] = new PromiseCollection(promise_for($data['references'])
+            ->then(function (array $blocks) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, Reference::class, $format, $context);
+                }, $blocks);
+            }));
+
         $data['subjects'] = !empty($data['subjects']) ? $this->getSubjects($data['subjects']) : null;
 
         return new ArticleVoR(
@@ -110,7 +118,8 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
             $data['impactStatement'],
             $data['keywords'],
             $data['digest'],
-            $data['body']
+            $data['body'],
+            $data['references']
         );
     }
 
@@ -202,6 +211,15 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
             $data['body'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             });
+
+            if ($object->getReferences()) {
+                $data['references'] = $object->getReferences()->map(function (Reference $reference) use (
+                    $format,
+                    $context
+                ) {
+                    return $this->normalizer->normalize($reference, $format, $context);
+                })->toArray();
+            }
         }
 
         return all($data)->wait();

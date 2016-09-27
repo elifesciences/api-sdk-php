@@ -11,6 +11,7 @@ use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Reference;
 
 final class ApiSdkTest extends ApiTestCase
 {
@@ -156,6 +157,23 @@ final class ApiSdkTest extends ApiTestCase
             [Block\Table::class],
             [Block\Video::class],
             [Block\YouTube::class],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider denormalizeReferencesProvider
+     */
+    public function it_can_denormalize_references(string $reference)
+    {
+        $this->apiSdk->getSerializer()->supportsDenormalization([], $reference);
+    }
+
+    public function denormalizeReferencesProvider() : array
+    {
+        return [
+            [Reference\BookReference::class],
+            [Reference\BookChapterReference::class],
         ];
     }
 }

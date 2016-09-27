@@ -12,6 +12,7 @@ final class ArticleVoR extends ArticleVersion
     private $keywords;
     private $digest;
     private $content;
+    private $references;
 
     /**
      * @internal
@@ -36,7 +37,8 @@ final class ArticleVoR extends ArticleVersion
         string $impactStatement = null,
         Collection $keywords,
         PromiseInterface $digest,
-        Collection $content
+        Collection $content,
+        Collection $references
     ) {
         parent::__construct($id, $version, $type, $doi, $authorLine, $title, $published, $volume, $elocationId, $pdf,
             $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
@@ -45,6 +47,7 @@ final class ArticleVoR extends ArticleVersion
         $this->keywords = $keywords;
         $this->digest = $digest;
         $this->content = $content;
+        $this->references = $references;
     }
 
     /**
@@ -71,5 +74,13 @@ final class ArticleVoR extends ArticleVersion
     public function getContent() : Collection
     {
         return $this->content;
+    }
+
+    /**
+     * @return Collection|Reference[]
+     */
+    public function getReferences() : Collection
+    {
+        return $this->references;
     }
 }

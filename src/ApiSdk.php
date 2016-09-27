@@ -34,6 +34,7 @@ use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
@@ -83,6 +84,8 @@ final class ApiSdk
             new Block\TableNormalizer(),
             new Block\VideoNormalizer(),
             new Block\YouTubeNormalizer(),
+            new Reference\BookReferenceNormalizer(),
+            new Reference\BookChapterReferenceNormalizer(),
         ], [new JsonEncoder()]);
 
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);

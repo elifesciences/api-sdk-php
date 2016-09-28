@@ -86,6 +86,7 @@ final class ApiSdk
             new Block\YouTubeNormalizer(),
             new Reference\BookReferenceNormalizer(),
             new Reference\BookChapterReferenceNormalizer(),
+            new Reference\ClinicalTrialReferenceNormalizer(),
         ], [new JsonEncoder()]);
 
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);

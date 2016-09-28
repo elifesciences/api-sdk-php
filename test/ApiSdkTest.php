@@ -176,6 +176,7 @@ final class ApiSdkTest extends ApiTestCase
             [Reference\BookChapterReference::class],
             [Reference\ClinicalTrialReference::class],
             [Reference\ConferenceProceedingReference::class],
+            [Reference\DataReference::class],
         ];
     }
 }

@@ -88,6 +88,7 @@ final class ApiSdk
             new Reference\BookChapterReferenceNormalizer(),
             new Reference\ClinicalTrialReferenceNormalizer(),
             new Reference\ConferenceProceedingReferenceNormalizer(),
+            new Reference\DataReferenceNormalizer(),
         ], [new JsonEncoder()]);
 
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);

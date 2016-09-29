@@ -181,6 +181,7 @@ final class ApiSdkTest extends ApiTestCase
             [Reference\PatentReference::class],
             [Reference\PeriodicalReference::class],
             [Reference\PreprintReference::class],
+            [Reference\ReportReference::class],
         ];
     }
 }

@@ -94,6 +94,7 @@ final class ApiSdk
             new Reference\PeriodicalReferenceNormalizer(),
             new Reference\PreprintReferenceNormalizer(),
             new Reference\ReportReferenceNormalizer(),
+            new Reference\SoftwareReferenceNormalizer(),
         ], [new JsonEncoder()]);
 
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);

@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -20,6 +21,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     public function denormalize($data, $class, $format = null, array $context = []) : PatentReference
     {
         return new PatentReference(
+            ReferenceDate::fromString($data['date']),
             array_map(function (array $inventor) {
                 return $this->denormalizer->denormalize($inventor, AuthorEntry::class);
             }, $data['inventors']),
@@ -51,6 +53,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'type' => 'patent',
+            'date' => $object->getDate()->toString(),
             'inventors' => array_map(function (AuthorEntry $inventors) use ($format, $context) {
                 return $this->normalizer->normalize($inventors, $format, $context);
             }, $object->getInventors()),

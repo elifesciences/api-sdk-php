@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class PatentReference implements Reference
 {
+    private $date;
     private $inventors;
     private $inventorsEtAl;
     private $assignees;
@@ -21,6 +22,7 @@ final class PatentReference implements Reference
      * @internal
      */
     public function __construct(
+        ReferenceDate $date,
         array $inventors,
         bool $inventorsEtAl,
         array $assignees,
@@ -31,6 +33,7 @@ final class PatentReference implements Reference
         string $number = null,
         string $uri = null
     ) {
+        $this->date = $date;
         $this->inventors = $inventors;
         $this->inventorsEtAl = $inventorsEtAl;
         $this->assignees = $assignees;
@@ -40,6 +43,11 @@ final class PatentReference implements Reference
         $this->country = $country;
         $this->number = $number;
         $this->uri = $uri;
+    }
+
+    public function getDate() : ReferenceDate
+    {
+        return $this->date;
     }
 
     /**

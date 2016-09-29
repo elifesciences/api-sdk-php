@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class PreprintReference implements Reference
 {
+    private $date;
     private $authors;
     private $authorsEtAl;
     private $articleTitle;
@@ -18,6 +19,7 @@ final class PreprintReference implements Reference
      * @internal
      */
     public function __construct(
+        ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
         string $articleTitle,
@@ -25,12 +27,18 @@ final class PreprintReference implements Reference
         string $doi = null,
         string $uri = null
     ) {
+        $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->articleTitle = $articleTitle;
         $this->source = $source;
         $this->doi = $doi;
         $this->uri = $uri;
+    }
+
+    public function getDate() : ReferenceDate
+    {
+        return $this->date;
     }
 
     /**

@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,6 +22,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
     public function denormalize($data, $class, $format = null, array $context = []) : DataReference
     {
         return new DataReference(
+            ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors'] ?? []),
@@ -58,6 +60,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
     {
         $data = [
             'type' => 'data',
+            'date' => $object->getDate()->toString(),
             'title' => $object->getTitle(),
             'source' => $object->getSource(),
         ];

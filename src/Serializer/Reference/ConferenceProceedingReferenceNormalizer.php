@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,6 +22,7 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
     public function denormalize($data, $class, $format = null, array $context = []) : ConferenceProceedingReference
     {
         return new ConferenceProceedingReference(
+            ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -47,6 +49,7 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
     {
         $data = [
             'type' => 'conference-proceeding',
+            'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),

@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
@@ -54,8 +55,8 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new PreprintReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-            'article title', 'source');
+        $reference = new PreprintReference(ReferenceDate::fromString('2000'),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title', 'source');
 
         return [
             'preprint reference' => [$reference, null, true],
@@ -77,10 +78,12 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new PreprintReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
-                    'article title', 'source', '10.1000/182', 'http://www.example.com/'),
+                new PreprintReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title', 'source',
+                    '10.1000/182', 'http://www.example.com/'),
                 [
                     'type' => 'preprint',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -98,10 +101,11 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new PreprintReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-                    'article title', 'source'),
+                new PreprintReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title', 'source'),
                 [
                     'type' => 'preprint',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -160,6 +164,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'preprint',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -175,12 +180,14 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new PreprintReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
-                    'article title', 'source', '10.1000/182', 'http://www.example.com/'),
+                new PreprintReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title', 'source',
+                    '10.1000/182', 'http://www.example.com/'),
             ],
             'minimum' => [
                 [
                     'type' => 'preprint',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -193,8 +200,8 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'articleTitle' => 'article title',
                     'source' => 'source',
                 ],
-                new PreprintReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-                    'article title', 'source'),
+                new PreprintReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title', 'source'),
             ],
         ];
     }

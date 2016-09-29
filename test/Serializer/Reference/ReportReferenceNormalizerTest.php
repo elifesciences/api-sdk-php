@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\ReportReference;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
@@ -55,8 +56,9 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ReportReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-            'title', new Place(null, null, ['publisher']));
+        $reference = new ReportReference(ReferenceDate::fromString('2000'),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+            new Place(null, null, ['publisher']));
 
         return [
             'report reference' => [$reference, null, true],
@@ -78,11 +80,13 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new ReportReference([new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
+                new ReportReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
                 [
                     'type' => 'report',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -104,10 +108,12 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new ReportReference([new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+                new ReportReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
                 [
                     'type' => 'report',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -168,6 +174,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'report',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -187,13 +194,15 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'isbn' => '978-3-16-148410-0',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ReportReference([new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
+                new ReportReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
             ],
             'minimum' => [
                 [
                     'type' => 'report',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -208,7 +217,8 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         'name' => ['publisher'],
                     ],
                 ],
-                new ReportReference([new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+                new ReportReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
             ],
         ];

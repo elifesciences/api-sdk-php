@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,6 +22,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
     public function denormalize($data, $class, $format = null, array $context = []) : JournalReference
     {
         return new JournalReference(
+            ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -48,6 +50,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
     {
         $data = [
             'type' => 'journal',
+            'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),

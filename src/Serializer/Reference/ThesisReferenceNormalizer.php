@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\ThesisReference;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -21,6 +22,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
     public function denormalize($data, $class, $format = null, array $context = []) : ThesisReference
     {
         return new ThesisReference(
+            ReferenceDate::fromString($data['date']),
             $this->denormalizer->denormalize($data['author'], Person::class),
             $data['title'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
@@ -44,6 +46,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'type' => 'thesis',
+            'date' => $object->getDate()->toString(),
             'author' => $this->normalizer->normalize($object->getAuthor(), $format, $context),
             'title' => $object->getTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),

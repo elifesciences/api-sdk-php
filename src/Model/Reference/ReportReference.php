@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class ReportReference implements Reference
 {
+    private $date;
     private $authors;
     private $authorsEtAl;
     private $title;
@@ -21,6 +22,7 @@ final class ReportReference implements Reference
      * @internal
      */
     public function __construct(
+        ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
         string $title,
@@ -30,6 +32,7 @@ final class ReportReference implements Reference
         string $isbn = null,
         string $uri = null
     ) {
+        $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->title = $title;
@@ -38,6 +41,11 @@ final class ReportReference implements Reference
         $this->pmid = $pmid;
         $this->isbn = $isbn;
         $this->uri = $uri;
+    }
+
+    public function getDate() : ReferenceDate
+    {
+        return $this->date;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -20,6 +21,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
     public function denormalize($data, $class, $format = null, array $context = []) : PreprintReference
     {
         return new PreprintReference(
+            ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -46,6 +48,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
     {
         $data = [
             'type' => 'preprint',
+            'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),

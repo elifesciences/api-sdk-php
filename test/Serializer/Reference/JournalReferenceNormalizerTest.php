@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
@@ -55,8 +56,9 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new JournalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-            'article title', new Place(null, null, ['journal']));
+        $reference = new JournalReference(ReferenceDate::fromString('2000'),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+            new Place(null, null, ['journal']));
 
         return [
             'journal reference' => [$reference, null, true],
@@ -78,10 +80,12 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new JournalReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
-                    'article title', new Place(null, null, ['journal']), 'volume', '10.1000/182', 18183754),
+                new JournalReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
+                    new Place(null, null, ['journal']), 'volume', '10.1000/182', 18183754),
                 [
                     'type' => 'journal',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -102,10 +106,12 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new JournalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-                    'article title', new Place(null, null, ['journal'])),
+                new JournalReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+                    new Place(null, null, ['journal'])),
                 [
                     'type' => 'journal',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -155,7 +161,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_journal_reference(array $json, JournalReference $expected)
+    public function it_denormalize_journal_references(array $json, JournalReference $expected)
     {
         $this->assertEquals($expected, $this->normalizer->denormalize($json, JournalReference::class));
     }
@@ -166,6 +172,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'journal',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -184,12 +191,14 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'pmid' => 18183754,
                 ],
-                new JournalReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
-                    'article title', new Place(null, null, ['journal']), 'volume', '10.1000/182', 18183754),
+                new JournalReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
+                    new Place(null, null, ['journal']), 'volume', '10.1000/182', 18183754),
             ],
             'minimum' => [
                 [
                     'type' => 'journal',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -204,8 +213,9 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         'name' => ['journal'],
                     ],
                 ],
-                new JournalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
-                    'article title', new Place(null, null, ['journal'])),
+                new JournalReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+                    new Place(null, null, ['journal'])),
             ],
         ];
     }

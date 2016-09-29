@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ClinicalTrialReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ClinicalTrialReferenceNormalizer;
@@ -52,7 +53,8 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ClinicalTrialReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+        $reference = new ClinicalTrialReference(ReferenceDate::fromString('2000'),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false,
             ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'clinical trial title', 'http://www.example.com/');
 
         return [
@@ -75,10 +77,12 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
     {
         return [
             'complete' => [
-                new ClinicalTrialReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
+                new ClinicalTrialReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true,
                     ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'clinical trial title', 'http://www.example.com/'),
                 [
                     'type' => 'clinical-trial',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -95,10 +99,12 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
                 ],
             ],
             'minimum' => [
-                new ClinicalTrialReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+                new ClinicalTrialReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false,
                     ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'clinical trial title', 'http://www.example.com/'),
                 [
                     'type' => 'clinical-trial',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -147,7 +153,7 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
      * @test
      * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_clinical_trial_reference(array $json, ClinicalTrialReference $expected)
+    public function it_denormalize_clinical_trial_references(array $json, ClinicalTrialReference $expected)
     {
         $this->assertEquals($expected, $this->normalizer->denormalize($json, ClinicalTrialReference::class));
     }
@@ -158,6 +164,7 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
             'complete' => [
                 [
                     'type' => 'clinical-trial',
+                    'date' => '2000-01-01',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -172,12 +179,14 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
                     'title' => 'clinical trial title',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ClinicalTrialReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
+                new ClinicalTrialReference(ReferenceDate::fromString('2000-01-01'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], true,
                     ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'clinical trial title', 'http://www.example.com/'),
             ],
             'minimum' => [
                 [
                     'type' => 'clinical-trial',
+                    'date' => '2000',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -191,7 +200,8 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
                     'title' => 'clinical trial title',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ClinicalTrialReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+                new ClinicalTrialReference(ReferenceDate::fromString('2000'),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false,
                     ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'clinical trial title', 'http://www.example.com/'),
             ],
         ];

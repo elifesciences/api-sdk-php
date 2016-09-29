@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -101,7 +102,8 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseCollection(rejection_for('No keywords')),
             promise_for($digest = new ArticleSection(new ArrayCollection([new Paragraph('digest')]))),
             new PromiseCollection(rejection_for('No content')), $references = new ArrayCollection([
-                new BookReference([new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                new BookReference(new ReferenceDate(2000),
+                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
             ]));
 

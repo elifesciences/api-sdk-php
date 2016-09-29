@@ -90,6 +90,7 @@ final class ApiSdk
             new Reference\ConferenceProceedingReferenceNormalizer(),
             new Reference\DataReferenceNormalizer(),
             new Reference\JournalReferenceNormalizer(),
+            new Reference\PatentReferenceNormalizer(),
         ], [new JsonEncoder()]);
 
         $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);

@@ -57,11 +57,7 @@ abstract class ArticleVersion
         $this->volume = $volume;
         $this->elocationId = $elocationId;
         $this->pdf = $pdf;
-        if (null === $subjects) {
-            $this->subjects = [];
-        } else {
-            $this->subjects = $subjects;
-        }
+        $this->subjects = $subjects ?? [];
         $this->researchOrganisms = $researchOrganisms;
         $this->abstract = $abstract;
         $this->issue = $issue;

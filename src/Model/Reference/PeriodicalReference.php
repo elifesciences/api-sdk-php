@@ -13,6 +13,7 @@ final class PeriodicalReference implements Reference
     private $authorsEtAl;
     private $articleTitle;
     private $periodical;
+    private $pages;
     private $volume;
     private $uri;
 
@@ -25,6 +26,7 @@ final class PeriodicalReference implements Reference
         bool $authorsEtAl,
         string $articleTitle,
         Place $periodical,
+        ReferencePages $pages,
         string $volume = null,
         string $uri = null
     ) {
@@ -33,6 +35,7 @@ final class PeriodicalReference implements Reference
         $this->authorsEtAl = $authorsEtAl;
         $this->articleTitle = $articleTitle;
         $this->periodical = $periodical;
+        $this->pages = $pages;
         $this->volume = $volume;
         $this->uri = $uri;
     }
@@ -63,6 +66,11 @@ final class PeriodicalReference implements Reference
     public function getPeriodical() : Place
     {
         return $this->periodical;
+    }
+
+    public function getPages() : ReferencePages
+    {
+        return $this->pages;
     }
 
     /**

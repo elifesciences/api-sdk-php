@@ -16,6 +16,7 @@ final class BookChapterReference implements Reference
     private $chapterTitle;
     private $bookTitle;
     private $publisher;
+    private $pages;
     private $volume;
     private $edition;
     private $doi;
@@ -34,6 +35,7 @@ final class BookChapterReference implements Reference
         string $chapterTitle,
         string $bookTitle,
         Place $publisher,
+        ReferencePages $pages,
         string $volume = null,
         string $edition = null,
         string $doi = null,
@@ -48,6 +50,7 @@ final class BookChapterReference implements Reference
         $this->chapterTitle = $chapterTitle;
         $this->bookTitle = $bookTitle;
         $this->publisher = $publisher;
+        $this->pages = $pages;
         $this->volume = $volume;
         $this->edition = $edition;
         $this->doi = $doi;
@@ -99,6 +102,11 @@ final class BookChapterReference implements Reference
     public function getPublisher() : Place
     {
         return $this->publisher;
+    }
+
+    public function getPages() : ReferencePages
+    {
+        return $this->pages;
     }
 
     /**

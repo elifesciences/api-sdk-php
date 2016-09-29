@@ -93,6 +93,7 @@ final class ApiSdk
             new Reference\PatentReferenceNormalizer(),
             new Reference\PeriodicalReferenceNormalizer(),
             new Reference\PreprintReferenceNormalizer(),
+            new Reference\ReferencePagesNormalizer(),
             new Reference\ReportReferenceNormalizer(),
             new Reference\SoftwareReferenceNormalizer(),
             new Reference\ThesisReferenceNormalizer(),

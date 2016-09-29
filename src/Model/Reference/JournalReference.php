@@ -13,6 +13,7 @@ final class JournalReference implements Reference
     private $authorsEtAl;
     private $articleTitle;
     private $journal;
+    private $pages;
     private $volume;
     private $doi;
     private $pmid;
@@ -26,6 +27,7 @@ final class JournalReference implements Reference
         bool $authorsEtAl,
         string $articleTitle,
         Place $journal,
+        ReferencePages $pages,
         string $volume = null,
         string $doi = null,
         int $pmid = null
@@ -35,6 +37,7 @@ final class JournalReference implements Reference
         $this->authorsEtAl = $authorsEtAl;
         $this->articleTitle = $articleTitle;
         $this->journal = $journal;
+        $this->pages = $pages;
         $this->volume = $volume;
         $this->doi = $doi;
         $this->pmid = $pmid;
@@ -66,6 +69,11 @@ final class JournalReference implements Reference
     public function getJournal() : Place
     {
         return $this->journal;
+    }
+
+    public function getPages() : ReferencePages
+    {
+        return $this->pages;
     }
 
     /**

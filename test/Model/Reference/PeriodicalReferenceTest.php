@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use PHPUnit_Framework_TestCase;
 
 final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
@@ -18,7 +19,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference($date = new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -30,7 +31,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference(new ReferenceDate(2000),
             $authors = [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -42,10 +43,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
         $withOut = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -58,7 +59,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertSame('article title', $reference->getArticleTitle());
     }
@@ -70,9 +71,21 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            $periodical = new Place(null, null, ['periodical']));
+            $periodical = new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertEquals($periodical, $reference->getPeriodical());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_pages()
+    {
+        $reference = new PeriodicalReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+            new Place(null, null, ['periodical']), $pages = new StringReferencePage('pages'));
+
+        $this->assertEquals($pages, $reference->getPages());
     }
 
     /**
@@ -82,10 +95,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']), 'volume');
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'), 'volume');
         $withOut = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertSame('volume', $with->getVolume());
         $this->assertNull($withOut->getVolume());
@@ -98,10 +111,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']), null, 'http://www.example.com/');
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'), null, 'http://www.example.com/');
         $withOut = new PeriodicalReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
         $this->assertNull($withOut->getUri());

@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\ReferencePages;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -29,6 +30,9 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
             $data['authorsEtAl'] ?? false,
             $data['articleTitle'],
             $this->denormalizer->denormalize($data['conference'], Place::class, $format, $context),
+            empty($data['pages']) ? null : $this->denormalizer->denormalize($data['pages'], ReferencePages::class,
+                $format,
+                $context),
             $data['doi'] ?? null,
             $data['uri'] ?? null
         );
@@ -59,6 +63,10 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();
+        }
+
+        if ($object->getPages()) {
+            $data['pages'] = $this->normalizer->normalize($object->getPages(), $format, $context);
         }
 
         if ($object->getDoi()) {

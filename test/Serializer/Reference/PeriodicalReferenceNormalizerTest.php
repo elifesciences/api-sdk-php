@@ -8,10 +8,13 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\ReferencePageRange;
+use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PeriodicalReferenceNormalizer;
+use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -34,6 +37,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             new PersonNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
+            new ReferencePagesNormalizer(),
         ]);
     }
 
@@ -58,7 +62,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference(ReferenceDate::fromString('2000'),
             [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']));
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
         return [
             'periodical reference' => [$reference, null, true],
@@ -82,7 +86,8 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new PeriodicalReference(ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['periodical']), 'volume', 'http://www.example.com/'),
+                    new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'http://www.example.com/'),
                 [
                     'type' => 'periodical',
                     'date' => '2000-01-01',
@@ -99,6 +104,11 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'periodical' => [
                         'name' => ['periodical'],
                     ],
+                    'pages' => [
+                        'first' => 'first',
+                        'last' => 'last',
+                        'range' => 'range',
+                    ],
                     'authorsEtAl' => true,
                     'volume' => 'volume',
                     'uri' => 'http://www.example.com/',
@@ -107,7 +117,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new PeriodicalReference(ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['periodical'])),
+                    new Place(null, null, ['periodical']), new StringReferencePage('pages')),
                 [
                     'type' => 'periodical',
                     'date' => '2000',
@@ -124,6 +134,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'periodical' => [
                         'name' => ['periodical'],
                     ],
+                    'pages' => 'pages',
                 ],
             ],
         ];
@@ -186,12 +197,18 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'periodical' => [
                         'name' => ['periodical'],
                     ],
+                    'pages' => [
+                        'first' => 'first',
+                        'last' => 'last',
+                        'range' => 'range',
+                    ],
                     'volume' => 'volume',
                     'uri' => 'http://www.example.com/',
                 ],
                 new PeriodicalReference(ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['periodical']), 'volume', 'http://www.example.com/'),
+                    new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'http://www.example.com/'),
             ],
             'minimum' => [
                 [
@@ -210,10 +227,11 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'periodical' => [
                         'name' => ['periodical'],
                     ],
+                    'pages' => 'pages',
                 ],
                 new PeriodicalReference(ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['periodical'])),
+                    new Place(null, null, ['periodical']), new StringReferencePage('pages')),
             ],
         ];
     }

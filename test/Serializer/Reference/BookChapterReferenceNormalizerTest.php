@@ -8,10 +8,13 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\ReferencePageRange;
+use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\BookChapterReferenceNormalizer;
+use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -34,6 +37,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
             new PersonNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
+            new ReferencePagesNormalizer(),
         ]);
     }
 
@@ -59,7 +63,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
         $reference = new BookChapterReference(ReferenceDate::fromString('2000'),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('pages'));
 
         return [
             'book chapter reference' => [$reference, null, true],
@@ -84,8 +88,9 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                 new BookChapterReference(ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new Person('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], true, 'chapter title',
-                    'book title', new Place(null, null, ['publisher']), 'volume', 'edition',
-                    '10.1000/182', 18183754, '978-3-16-148410-0'),
+                    'book title', new Place(null, null, ['publisher']),
+                    new ReferencePageRange('first', 'last', 'range'), 'volume', 'edition', '10.1000/182', 18183754,
+                    '978-3-16-148410-0'),
                 [
                     'type' => 'book-chapter',
                     'date' => '2000-01-01',
@@ -112,6 +117,11 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     'publisher' => [
                         'name' => ['publisher'],
                     ],
+                    'pages' => [
+                        'first' => 'first',
+                        'last' => 'last',
+                        'range' => 'range',
+                    ],
                     'authorsEtAl' => true,
                     'editorsEtAl' => true,
                     'volume' => 'volume',
@@ -125,7 +135,8 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                 new BookChapterReference(ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
                     [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false,
-                    'chapter title', 'book title', new Place(null, null, ['publisher'])),
+                    'chapter title', 'book title', new Place(null, null, ['publisher']),
+                    new StringReferencePage('pages')),
                 [
                     'type' => 'book-chapter',
                     'date' => '2000',
@@ -152,6 +163,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     'publisher' => [
                         'name' => ['publisher'],
                     ],
+                    'pages' => 'pages',
                 ],
             ],
         ];
@@ -225,6 +237,11 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     'publisher' => [
                         'name' => ['publisher'],
                     ],
+                    'pages' => [
+                        'first' => 'first',
+                        'last' => 'last',
+                        'range' => 'range',
+                    ],
                     'volume' => 'volume',
                     'edition' => 'edition',
                     'doi' => '10.1000/182',
@@ -234,7 +251,8 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                 new BookChapterReference(ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new Person('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], true, 'chapter title',
-                    'book title', new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
+                    'book title', new Place(null, null, ['publisher']),
+                    new ReferencePageRange('first', 'last', 'range'), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
             ],
             'minimum' => [
@@ -264,11 +282,13 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     'publisher' => [
                         'name' => ['publisher'],
                     ],
+                    'pages' => 'pages',
                 ],
                 new BookChapterReference(ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
                     [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false,
-                    'chapter title', 'book title', new Place(null, null, ['publisher'])),
+                    'chapter title', 'book title', new Place(null, null, ['publisher']),
+                    new StringReferencePage('pages')),
             ],
         ];
     }

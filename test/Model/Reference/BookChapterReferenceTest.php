@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use PHPUnit_Framework_TestCase;
 
 final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
@@ -19,7 +20,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference($date = new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -32,7 +33,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference(new ReferenceDate(2000),
             $authors = [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -45,11 +46,11 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], true,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -63,7 +64,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             $editors = [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false,
-            'chapter title', 'book title', new Place(null, null, ['publisher']));
+            'chapter title', 'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertEquals($editors, $reference->getEditors());
     }
@@ -76,11 +77,11 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], true, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
         $withOut = new BookChapterReference(new ReferenceDate(2000), [
             new PersonAuthor(new Person('author preferred name', 'author index name')),
         ], false, [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertTrue($with->editorsEtAl());
         $this->assertFalse($withOut->editorsEtAl());
@@ -94,7 +95,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('chapter title', $reference->getChapterTitle());
     }
@@ -107,7 +108,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('book title', $reference->getBookTitle());
     }
@@ -120,9 +121,22 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', $publisher = new Place(null, null, ['publisher']));
+            'book title', $publisher = new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertEquals($publisher, $reference->getPublisher());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_pages()
+    {
+        $reference = new BookChapterReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
+            [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
+            'book title', new Place(null, null, ['publisher']), $pages = new StringReferencePage('foo'));
+
+        $this->assertEquals($pages, $reference->getPages());
     }
 
     /**
@@ -133,11 +147,11 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), 'volume');
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'), 'volume');
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('volume', $with->getVolume());
         $this->assertNull($withOut->getVolume());
@@ -151,11 +165,11 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), null, 'edition');
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'), null, 'edition');
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('edition', $with->getEdition());
         $this->assertNull($withOut->getEdition());
@@ -169,11 +183,12 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), null, null, '10.1000/182');
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'), null, null,
+            '10.1000/182');
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
@@ -187,11 +202,12 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), null, null, null, 18183754);
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'), null, null, null,
+            18183754);
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame(18183754, $with->getPmid());
         $this->assertNull($withOut->getPmid());
@@ -205,11 +221,12 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
         $with = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), null, null, null, null, '978-3-16-148410-0');
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'), null, null, null, null,
+            '978-3-16-148410-0');
         $withOut = new BookChapterReference(new ReferenceDate(2000),
             [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']));
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
         $this->assertSame('978-3-16-148410-0', $with->getIsbn());
         $this->assertNull($withOut->getIsbn());

@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\ReferencePages;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -34,6 +35,7 @@ final class BookChapterReferenceNormalizer implements NormalizerInterface, Denor
             $data['chapterTitle'],
             $data['bookTitle'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
+            $this->denormalizer->denormalize($data['pages'], ReferencePages::class, $format, $context),
             $data['volume'] ?? null,
             $data['edition'] ?? null,
             $data['doi'] ?? null,
@@ -67,6 +69,7 @@ final class BookChapterReferenceNormalizer implements NormalizerInterface, Denor
             'chapterTitle' => $object->getChapterTitle(),
             'bookTitle' => $object->getBookTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
+            'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
 
         if ($object->authorsEtAl()) {

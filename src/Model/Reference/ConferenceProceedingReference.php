@@ -13,6 +13,7 @@ final class ConferenceProceedingReference implements Reference
     private $authorsEtAl;
     private $articleTitle;
     private $conference;
+    private $pages;
     private $doi;
     private $uri;
 
@@ -25,6 +26,7 @@ final class ConferenceProceedingReference implements Reference
         bool $authorsEtAl,
         string $articleTitle,
         Place $conference,
+        ReferencePages $pages = null,
         string $doi = null,
         string $uri = null
     ) {
@@ -33,6 +35,7 @@ final class ConferenceProceedingReference implements Reference
         $this->authorsEtAl = $authorsEtAl;
         $this->articleTitle = $articleTitle;
         $this->conference = $conference;
+        $this->pages = $pages;
         $this->doi = $doi;
         $this->uri = $uri;
     }
@@ -63,6 +66,14 @@ final class ConferenceProceedingReference implements Reference
     public function getConference() : Place
     {
         return $this->conference;
+    }
+
+    /**
+     * @return ReferencePages|null
+     */
+    public function getPages()
+    {
+        return $this->pages;
     }
 
     /**

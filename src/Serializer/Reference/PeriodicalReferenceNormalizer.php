@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Reference\ReferencePages;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -29,6 +30,7 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
             $data['authorsEtAl'] ?? false,
             $data['articleTitle'],
             $this->denormalizer->denormalize($data['periodical'], Place::class, $format, $context),
+            $this->denormalizer->denormalize($data['pages'], ReferencePages::class, $format, $context),
             $data['volume'] ?? null,
             $data['uri'] ?? null
         );
@@ -55,6 +57,7 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
             }, $object->getAuthors()),
             'articleTitle' => $object->getArticleTitle(),
             'periodical' => $this->normalizer->normalize($object->getPeriodical(), $format, $context),
+            'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
 
         if ($object->authorsEtAl()) {

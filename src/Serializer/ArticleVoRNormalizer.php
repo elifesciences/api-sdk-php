@@ -94,6 +94,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     ) : array {
         $data['status'] = 'vor';
 
+        if ($article->getImpactStatement()) {
+            $data['impactStatement'] = $article->getImpactStatement();
+        }
+
         if (empty($context['snippet'])) {
             if (count($article->getKeywords())) {
                 $data['keywords'] = $article->getKeywords()->toArray();
@@ -101,13 +105,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if ($article->getDigest()) {
                 $data['digest'] = [
-                    'content' => $article->getAbstract()->getContent()->map(function (Block $block) use (
+                    'content' => $article->getDigest()->getContent()->map(function (Block $block) use (
                         $format,
                         $context
                     ) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray(),
-                    'doi' => $article->getAbstract()->getDoi(),
+                    'doi' => $article->getDigest()->getDoi(),
                 ];
             }
 
@@ -115,13 +119,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
 
-            if ($article->getReferences()) {
-                $data['references'] = $article->getReferences()->map(function (Reference $reference) use (
-                    $format,
-                    $context
-                ) {
-                    return $this->normalizer->normalize($reference, $format, $context);
-                })->toArray();
+            $data['references'] = $article->getReferences()->map(function (Reference $reference) use (
+                $format,
+                $context
+            ) {
+                return $this->normalizer->normalize($reference, $format, $context);
+            })->toArray();
+
+            if (empty($data['references'])) {
+                unset($data['references']);
             }
         }
 

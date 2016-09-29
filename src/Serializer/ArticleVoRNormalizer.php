@@ -8,64 +8,20 @@ use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Reference;
-use eLife\ApiSdk\Model\Subject;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
-final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
+final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {
-    use DenormalizerAwareTrait;
-    use NormalizerAwareTrait;
-    use SubjectsAware;
-
-    public function denormalize($data, $class, $format = null, array $context = []) : ArticleVoR
+    public function denormalizeArticle($data, $class, $format = null, array $context = []) : ArticleVersion
     {
-        if (empty($data['abstract'])) {
-            $data['abstract'] = promise_for(null);
-        } else {
-            $data['abstract'] = promise_for($data['abstract'])
-                ->then(function ($abstract) use ($format, $context) {
-                    if (empty($abstract)) {
-                        return null;
-                    }
-
-                    return new ArticleSection(
-                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
-                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                        }, $abstract['content'])),
-                        $abstract['doi'] ?? null
-                    );
-                });
-        }
-
-        $data['authors'] = new PromiseCollection(promise_for($data['authors'])
-            ->then(function (array $authors) use ($format, $context) {
-                return array_map(function (array $author) use ($format, $context) {
-                    return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);
-                }, $authors);
-            }));
-
         $data['body'] = new PromiseCollection(promise_for($data['body'])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                 }, $blocks);
             }));
-
-        $data['copyright'] = promise_for($data['copyright'])
-            ->then(function (array $copyright) {
-                return new Copyright($copyright['license'], $copyright['statement'], $copyright['holder'] ?? null);
-            });
 
         if (empty($data['digest'])) {
             $data['digest'] = promise_for(null);
@@ -85,8 +41,6 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
                 });
         }
 
-        $data['issue'] = promise_for($data['issue'] ?? null);
-
         $data['keywords'] = new PromiseCollection(promise_for($data['keywords'] ?? []));
 
         $data['references'] = new PromiseCollection(promise_for($data['references'])
@@ -95,8 +49,6 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
                     return $this->denormalizer->denormalize($block, Reference::class, $format, $context);
                 }, $blocks);
             }));
-
-        $data['subjects'] = !empty($data['subjects']) ? $this->getSubjects($data['subjects']) : null;
 
         return new ArticleVoR(
             $data['id'],
@@ -132,88 +84,39 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
     }
 
     /**
-     * @param ArticleVoR $object
+     * @param ArticleVoR $article
      */
-    public function normalize($object, $format = null, array $context = []) : array
-    {
-        $data = [
-            'id' => $object->getId(),
-            'version' => $object->getVersion(),
-            'type' => $object->getType(),
-            'doi' => $object->getDoi(),
-            'authorLine' => $object->getAuthorLine(),
-            'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
-            'volume' => $object->getVolume(),
-            'elocationId' => $object->getElocationId(),
-        ];
-
-        if ($object->getPdf()) {
-            $data['pdf'] = $object->getPdf();
-        }
-
-        if ($object->hasSubjects()) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
-                return $subject->getId();
-            });
-        }
-
-        if (!empty($object->getResearchOrganisms())) {
-            $data['researchOrganisms'] = $object->getResearchOrganisms();
-        }
+    protected function normalizeArticle(
+        ArticleVersion $article,
+        array $data,
+        $format = null,
+        array $context = []
+    ) : array {
+        $data['status'] = 'vor';
 
         if (empty($context['snippet'])) {
-            $data['copyright'] = [
-                'license' => $object->getCopyright()->getLicense(),
-                'statement' => $object->getCopyright()->getStatement(),
-            ];
-
-            if ($object->getCopyright()->getHolder()) {
-                $data['copyright']['holder'] = $object->getCopyright()->getHolder();
+            if (count($article->getKeywords())) {
+                $data['keywords'] = $article->getKeywords()->toArray();
             }
 
-            $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            });
-
-            if ($object->getAbstract()) {
-                $data['abstract'] = [
-                    'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
-                        $format,
-                        $context
-                    ) {
-                        return $this->normalizer->normalize($block, $format, $context);
-                    })->toArray(),
-                    'doi' => $object->getAbstract()->getDoi(),
-                ];
-            }
-
-            if ($object->getIssue()) {
-                $data['issue'] = $object->getIssue();
-            }
-
-            if (count($object->getKeywords())) {
-                $data['keywords'] = $object->getKeywords();
-            }
-
-            if ($object->getDigest()) {
+            if ($article->getDigest()) {
                 $data['digest'] = [
-                    'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
+                    'content' => $article->getAbstract()->getContent()->map(function (Block $block) use (
                         $format,
                         $context
                     ) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray(),
-                    'doi' => $object->getAbstract()->getDoi(),
+                    'doi' => $article->getAbstract()->getDoi(),
                 ];
             }
 
-            $data['body'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+            $data['body'] = $article->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
-            });
+            })->toArray();
 
-            if ($object->getReferences()) {
-                $data['references'] = $object->getReferences()->map(function (Reference $reference) use (
+            if ($article->getReferences()) {
+                $data['references'] = $article->getReferences()->map(function (Reference $reference) use (
                     $format,
                     $context
                 ) {
@@ -222,7 +125,7 @@ final class ArticleVoRNormalizer implements NormalizerInterface, DenormalizerInt
             }
         }
 
-        return all($data)->wait();
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

@@ -110,6 +110,6 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
             'title', new Place(null, null, ['publisher']));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
-        $this->assertNull($withOut->getIsbn());
+        $this->assertNull($withOut->getUri());
     }
 }

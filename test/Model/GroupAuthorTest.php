@@ -15,7 +15,7 @@ final class GroupAuthorTest extends AuthorTest
      */
     public function it_has_a_name()
     {
-        $author = new GroupAuthor('name', new ArrayCollection([]), new ArrayCollection([]));
+        $author = new GroupAuthor('name', new ArrayCollection([]));
 
         $this->assertSame('name', $author->getName());
     }
@@ -26,10 +26,8 @@ final class GroupAuthorTest extends AuthorTest
     public function it_may_have_people()
     {
         $with = new GroupAuthor('name',
-            $people = new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
-            new ArrayCollection([])
-        );
-        $withOut = new GroupAuthor('name', new ArrayCollection([]), new ArrayCollection([]));
+            $people = new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]));
+        $withOut = new GroupAuthor('name', new ArrayCollection([]));
 
         $this->assertEquals($people, $with->getPeople());
         $this->assertEmpty($withOut->getPeople());
@@ -41,10 +39,8 @@ final class GroupAuthorTest extends AuthorTest
     public function it_may_have_groups()
     {
         $with = new GroupAuthor('name', new ArrayCollection([]),
-            $groups = new ArrayCollection([
-                new GroupAuthor('group', new ArrayCollection([]), new ArrayCollection([])),
-            ]));
-        $withOut = new GroupAuthor('name', new ArrayCollection([]), new ArrayCollection([]));
+            $groups = ['group' => [new Person('preferred name', 'index name')]]);
+        $withOut = new GroupAuthor('name', new ArrayCollection([]));
 
         $this->assertEquals($groups, $with->getGroups());
         $this->assertEmpty($withOut->getGroups());
@@ -59,7 +55,7 @@ final class GroupAuthorTest extends AuthorTest
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author {
-        return new GroupAuthor('name', new ArrayCollection([]), new ArrayCollection([]), $affiliations,
+        return new GroupAuthor('name', new ArrayCollection([]), [], $affiliations,
             $competingInterests, $contribution, $emailAddresses, $equalContributionGroups, $phoneNumbers,
             $postalAddresses);
     }

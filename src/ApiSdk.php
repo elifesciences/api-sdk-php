@@ -19,6 +19,7 @@ use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
@@ -57,6 +58,7 @@ final class ApiSdk
         $this->httpClient = $httpClient;
 
         $this->serializer = new Serializer([
+            new AddressNormalizer(),
             new AnnualReportNormalizer(),
             $articlePoANormalizer = new ArticlePoANormalizer(),
             $articleVoRNormalizer = new ArticleVoRNormalizer(),

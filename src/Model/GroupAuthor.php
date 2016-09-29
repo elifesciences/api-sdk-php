@@ -16,7 +16,7 @@ final class GroupAuthor extends Author
     public function __construct(
         string $name,
         Collection $people,
-        Collection $groups,
+        array $groups = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,
@@ -43,7 +43,7 @@ final class GroupAuthor extends Author
         return $this->people;
     }
 
-    public function getGroups() : Collection
+    public function getGroups() : array
     {
         return $this->groups;
     }

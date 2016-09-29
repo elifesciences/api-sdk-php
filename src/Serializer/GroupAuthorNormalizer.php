@@ -6,6 +6,7 @@ use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
+use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 
 final class GroupAuthorNormalizer extends AuthorNormalizer
@@ -16,20 +17,24 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
         string $format = null,
         array $context = []
     ) : Author {
+        foreach ($data['groups'] ?? [] as $key => $group) {
+            foreach ($group as $i => $member) {
+                $data['groups'][$key][$i] = $this->denormalizer->denormalize($member, Person::class, $format, $context);
+            }
+        }
+
         return new GroupAuthor(
             $data['name'],
             new ArrayCollection(array_map(function (array $person) use ($format, $context) {
                 return $this->denormalizer->denormalize($person, PersonAuthor::class, $format, $context);
             }, $data['people'] ?? [])),
-            new ArrayCollection(array_map(function (array $group) use ($format, $context) {
-                return $this->denormalizer->denormalize($group, GroupAuthor::class, $format, $context);
-            }, $data['groups'] ?? [])),
+            $data['groups'] ?? [],
             $data['affiliations'],
             $data['competingInterests'] ?? null,
             $data['contribution'] ?? null,
             $data['emailAddresses'] ?? [],
             $data['equalContributionGroups'] ?? [],
-            $data['phoneNumbers'] = [],
+            $data['phoneNumbers'] ?? [],
             $data['postalAddresses']
         );
     }
@@ -53,13 +58,17 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
         if (count($object->getPeople())) {
             $data['people'] = $object->getPeople()->map(function (PersonAuthor $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
-            });
+            })->toArray();
         }
 
         if (count($object->getGroups())) {
-            $data['groups'] = $object->getGroups()->map(function (GroupAuthor $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            });
+            $data['groups'] = [];
+
+            foreach ($object->getGroups() as $key => $group) {
+                foreach ($group as $i => $member) {
+                    $data['groups'][$key][$i] = $this->normalizer->normalize($member, $format, $context);
+                }
+            }
         }
 
         return $data;

@@ -23,7 +23,7 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
             $data['contribution'] ?? null,
             $data['emailAddresses'] ?? [],
             $data['equalContributionGroups'] ?? [],
-            $data['phoneNumbers'] = [],
+            $data['phoneNumbers'] ?? [],
             $data['postalAddresses']
         );
     }

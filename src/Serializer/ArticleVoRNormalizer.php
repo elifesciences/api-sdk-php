@@ -43,7 +43,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         $data['keywords'] = new PromiseCollection(promise_for($data['keywords'] ?? []));
 
-        $data['references'] = new PromiseCollection(promise_for($data['references'])
+        $data['references'] = new PromiseCollection(promise_for($data['references'] ?? [])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Reference::class, $format, $context);
@@ -67,7 +67,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['issue'],
             $data['copyright'],
             $data['authors'],
-            $data['impactStatement'],
+            $data['impactStatement'] ?? null,
             $data['keywords'],
             $data['digest'],
             $data['body'],

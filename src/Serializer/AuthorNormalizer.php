@@ -63,7 +63,9 @@ abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInte
         }
 
         if (count($object->getPostalAddresses())) {
-            $data['postalAddresses'] = $object->getPostalAddresses();
+            $data['postalAddresses'] = array_map(function (Address $address) use ($format, $context) {
+                return $this->normalizer->normalize($address, $format, $context);
+            }, $object->getPostalAddresses());
         }
 
         return $this->normalizeAuthor($object, $data, $format, $context);

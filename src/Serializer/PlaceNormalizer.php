@@ -5,11 +5,18 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class PlaceNormalizer implements NormalizerInterface, DenormalizerInterface
+final class PlaceNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+
     public function denormalize($data, $class, $format = null, array $context = []) : Place
     {
         return new Place(
@@ -17,11 +24,8 @@ final class PlaceNormalizer implements NormalizerInterface, DenormalizerInterfac
             !empty($data['coordinates']) ? new Coordinates($data['coordinates']['latitude'],
                 $data['coordinates']['longitude']) : null,
             $data['name'],
-            !empty($data['address']) ? new Address($data['address']['formatted'],
-                $data['address']['components']['streetAddress'] ?? [],
-                $data['address']['components']['locality'] ?? [], $data['address']['components']['area'] ?? [],
-                $data['address']['components']['country'] ?? null,
-                $data['address']['components']['postalCode'] ?? null) : null
+            !empty($data['address']) ? $this->denormalizer->denormalize($data['address'], Address::class, $format,
+                $context) : null
         );
     }
 
@@ -51,30 +55,7 @@ final class PlaceNormalizer implements NormalizerInterface, DenormalizerInterfac
         }
 
         if ($object->getAddress()) {
-            $data['address'] = [
-                'formatted' => $object->getAddress()->getFormatted(),
-                'components' => [],
-            ];
-
-            if ($object->getAddress()->getStreetAddress()) {
-                $data['address']['components']['streetAddress'] = $object->getAddress()->getStreetAddress();
-            }
-
-            if ($object->getAddress()->getLocality()) {
-                $data['address']['components']['locality'] = $object->getAddress()->getLocality();
-            }
-
-            if ($object->getAddress()->getArea()) {
-                $data['address']['components']['area'] = $object->getAddress()->getArea();
-            }
-
-            if ($object->getAddress()->getCountry()) {
-                $data['address']['components']['country'] = $object->getAddress()->getCountry();
-            }
-
-            if ($object->getAddress()->getPostalCode()) {
-                $data['address']['components']['postalCode'] = $object->getAddress()->getPostalCode();
-            }
+            $data['address'] = $this->normalizer->normalize($object->getAddress(), $format, $context);
         }
 
         return $data;

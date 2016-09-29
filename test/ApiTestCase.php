@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
+use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
@@ -99,6 +100,70 @@ abstract class ApiTestCase extends TestCase
                 ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 1)],
                 json_encode($this->createAnnualReportJson($year))
             )
+        );
+    }
+
+    final protected function mockArticleListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        bool $descendingOrder = true,
+        array $subjects = [],
+        bool $vor = false
+    ) {
+        $articles = array_map(function (int $id) {
+            return $this->createArticleVoRJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $articles,
+                ])
+            )
+        );
+    }
+
+    final protected function mockArticleCall(int $number, bool $subject = false, bool $vor = false)
+    {
+        if ($vor) {
+            $response = new Response(
+                200,
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1)],
+                json_encode($this->createArticleVoRJson($number, false, $subject))
+            );
+        } else {
+            $response = new Response(
+                200,
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1)],
+                json_encode($this->createArticlePoAJson($number, false, $subject))
+            );
+        }
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/articles/article'.$number,
+                [
+                    'Accept' => [
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                    ],
+                ]
+            ),
+            $response
         );
     }
 
@@ -369,6 +434,102 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+    }
+
+    private function createArticlePoAJson(int $number, bool $isSnippet = false, bool $subject = false) : array
+    {
+        $article = [
+            'status' => 'poa',
+            'id' => 'article'.$number,
+            'version' => 1,
+            'type' => 'research-article',
+            'doi' => '10.7554/eLife.'.$number,
+            'title' => 'Article '.$number.' title',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'volume' => 1,
+            'elocationId' => 'e'.$number,
+            'copyright' => [
+                'license' => 'CC-BY-4.0',
+                'holder' => 'Author et al',
+                'statement' => 'This article is distributed under the terms of the <a href=\'http://creativecommons.org/licenses/by/4.0/\'>Creative Commons Attribution License</a> permitting unrestricted use and redistribution provided that the original author and source are credited.',
+            ],
+            'authorLine' => 'Author et al',
+            'authors' => [
+                [
+                    'type' => 'person',
+                    'name' => [
+                        'preferred' => 'Author',
+                        'index' => 'Author',
+                    ],
+                ],
+            ],
+        ];
+
+        if ($subject) {
+            $article['subjects'][] = 'subject1';
+        }
+
+        if ($isSnippet) {
+            unset($article['copyright']);
+            unset($article['authors']);
+        }
+
+        return $article;
+    }
+
+    private function createArticleVoRJson(int $number, bool $isSnippet = false, bool $subject = false) : array
+    {
+        $article = [
+            'status' => 'vor',
+            'id' => 'article'.$number,
+            'version' => 1,
+            'type' => 'research-article',
+            'doi' => '10.7554/eLife.'.$number,
+            'title' => 'Article '.$number.' title',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'volume' => 1,
+            'elocationId' => 'e'.$number,
+            'copyright' => [
+                'license' => 'CC-BY-4.0',
+                'holder' => 'Author et al',
+                'statement' => 'This article is distributed under the terms of the <a href=\'http://creativecommons.org/licenses/by/4.0/\'>Creative Commons Attribution License</a> permitting unrestricted use and redistribution provided that the original author and source are credited.',
+            ],
+            'authorLine' => 'Author et al',
+            'authors' => [
+                [
+                    'type' => 'person',
+                    'name' => [
+                        'preferred' => 'Author',
+                        'index' => 'Author',
+                    ],
+                ],
+            ],
+            'body' => [
+                [
+                    'type' => 'section',
+                    'title' => 'Article '.$number.' section title',
+                    'id' => 'article'.$number.'section',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'Article '.$number.' text',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        if ($subject) {
+            $article['subjects'][] = 'subject1';
+        }
+
+        if ($isSnippet) {
+            unset($article['copyright']);
+            unset($article['authors']);
+            unset($article['content']);
+        }
+
+        return $article;
     }
 
     private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $subject = false) : array

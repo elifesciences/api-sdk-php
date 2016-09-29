@@ -1,0 +1,210 @@
+<?php
+
+namespace test\eLife\ApiSdk\Serializer\Reference;
+
+use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\Reference;
+use eLife\ApiSdk\Model\Reference\PeriodicalReference;
+use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
+use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\Reference\PeriodicalReferenceNormalizer;
+use PHPUnit_Framework_TestCase;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
+
+final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+{
+    /** @var PeriodicalReferenceNormalizer */
+    private $normalizer;
+
+    /**
+     * @before
+     */
+    protected function setUpNormalizer()
+    {
+        $this->normalizer = new PeriodicalReferenceNormalizer();
+
+        new Serializer([
+            $this->normalizer,
+            new PersonNormalizer(),
+            new PersonAuthorNormalizer(),
+            new PlaceNormalizer(),
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_a_normalizer()
+    {
+        $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canNormalizeProvider
+     */
+    public function it_can_normalize_periodical_references($data, $format, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
+    }
+
+    public function canNormalizeProvider() : array
+    {
+        $reference = new PeriodicalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+            'article title', new Place(null, null, ['periodical']));
+
+        return [
+            'periodical reference' => [$reference, null, true],
+            'periodical reference with format' => [$reference, 'foo', true],
+            'non-periodical reference' => [$this, null, false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider normalizeProvider
+     */
+    public function it_normalize_periodical_references(PeriodicalReference $reference, array $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->normalize($reference));
+    }
+
+    public function normalizeProvider() : array
+    {
+        return [
+            'complete' => [
+                new PeriodicalReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
+                    'article title', new Place(null, null, ['periodical']), 'volume', 'http://www.example.com/'),
+                [
+                    'type' => 'periodical',
+                    'authors' => [
+                        [
+                            'type' => 'person',
+                            'name' => [
+                                'preferred' => 'preferred name',
+                                'index' => 'index name',
+                            ],
+                        ],
+                    ],
+                    'articleTitle' => 'article title',
+                    'periodical' => [
+                        'name' => ['periodical'],
+                    ],
+                    'authorsEtAl' => true,
+                    'volume' => 'volume',
+                    'uri' => 'http://www.example.com/',
+                ],
+            ],
+            'minimum' => [
+                new PeriodicalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+                    'article title', new Place(null, null, ['periodical'])),
+                [
+                    'type' => 'periodical',
+                    'authors' => [
+                        [
+                            'type' => 'person',
+                            'name' => [
+                                'preferred' => 'preferred name',
+                                'index' => 'index name',
+                            ],
+                        ],
+                    ],
+                    'articleTitle' => 'article title',
+                    'periodical' => [
+                        'name' => ['periodical'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_a_denormalizer()
+    {
+        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canDenormalizeProvider
+     */
+    public function it_can_denormalize_periodical_references($data, $format, array $context, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+    }
+
+    public function canDenormalizeProvider() : array
+    {
+        return [
+            'periodical reference' => [[], PeriodicalReference::class, [], true],
+            'reference that is a periodical' => [['type' => 'periodical'], Reference::class, [], true],
+            'reference that isn\'t a periodical' => [['type' => 'foo'], Reference::class, [], false],
+            'non-periodical reference' => [[], get_class($this), [], false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider denormalizeProvider
+     */
+    public function it_denormalize_periodical_references(array $json, PeriodicalReference $expected)
+    {
+        $this->assertEquals($expected, $this->normalizer->denormalize($json, PeriodicalReference::class));
+    }
+
+    public function denormalizeProvider() : array
+    {
+        return [
+            'complete' => [
+                [
+                    'type' => 'periodical',
+                    'authors' => [
+                        [
+                            'type' => 'person',
+                            'name' => [
+                                'preferred' => 'preferred name',
+                                'index' => 'index name',
+                            ],
+                        ],
+                    ],
+                    'authorsEtAl' => true,
+                    'articleTitle' => 'article title',
+                    'periodical' => [
+                        'name' => ['periodical'],
+                    ],
+                    'volume' => 'volume',
+                    'uri' => 'http://www.example.com/',
+                ],
+                new PeriodicalReference([new PersonAuthor(new Person('preferred name', 'index name'))], true,
+                    'article title', new Place(null, null, ['periodical']), 'volume', 'http://www.example.com/'),
+            ],
+            'minimum' => [
+                [
+                    'type' => 'periodical',
+                    'authors' => [
+                        [
+                            'type' => 'person',
+                            'name' => [
+                                'preferred' => 'preferred name',
+                                'index' => 'index name',
+                            ],
+                        ],
+                    ],
+                    'articleTitle' => 'article title',
+                    'periodical' => [
+                        'name' => ['periodical'],
+                    ],
+                ],
+                new PeriodicalReference([new PersonAuthor(new Person('preferred name', 'index name'))], false,
+                    'article title', new Place(null, null, ['periodical'])),
+            ],
+        ];
+    }
+}

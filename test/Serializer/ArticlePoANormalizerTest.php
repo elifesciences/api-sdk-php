@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -26,6 +27,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
@@ -85,9 +87,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalize_article_poas(ArticlePoA $articlePoA, array $expected)
+    public function it_normalize_article_poas(ArticlePoA $articlePoA, array $context, array $expected)
     {
-        $this->assertSame($expected, $this->normalizer->normalize($articlePoA));
+        $this->assertSame($expected, $this->normalizer->normalize($articlePoA, null, $context));
     }
 
     /**
@@ -117,20 +119,29 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     /**
      * @test
-     * @dataProvider normalizeProvider
+     * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_article_poas(ArticlePoA $expected, array $json)
+    public function it_denormalize_article_poas(ArticlePoA $expected, array $context, array $json)
     {
-        $actual = $this->normalizer->denormalize($json, ArticlePoA::class);
+        $actual = $this->normalizer->denormalize($json, ArticlePoA::class, null, $context);
 
         $this->mockSubjectCall(1);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
+    public function denormalizeProvider() : array
+    {
+        $data = $this->normalizeProvider();
+
+        unset($data['complete snippet']);
+        unset($data['minimum snippet']);
+
+        return $data;
+    }
+
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable();
         $image = new Image('', [
             new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
             new ImageSize('16:9', [
@@ -142,6 +153,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
+        $date = new DateTimeImmutable();
         $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
 
         return [
@@ -151,6 +163,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
                     promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                [],
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -195,6 +208,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                [],
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -218,6 +232,49 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'status' => 'poa',
+                ],
+            ],
+            'complete snippet' => [
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 2, 'elocationId',
+                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                    rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
+                    rejection_for('Copyright should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'version' => 1,
+                    'type' => 'type',
+                    'doi' => 'doi',
+                    'authorLine' => 'author line',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'volume' => 2,
+                    'elocationId' => 'elocationId',
+                    'pdf' => 'http://www.example.com/',
+                    'subjects' => ['subject1'],
+                    'researchOrganisms' => ['research organism'],
+                    'status' => 'poa',
+                ],
+            ],
+            'minimum snippet' => [
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                    null, null, [], rejection_for('Abstract should not be unwrapped'),
+                    rejection_for('Issue should not be unwrapped'),
+                    rejection_for('Copyright should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'version' => 1,
+                    'type' => 'type',
+                    'doi' => 'doi',
+                    'authorLine' => 'author line',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'volume' => 1,
+                    'elocationId' => 'elocationId',
                     'status' => 'poa',
                 ],
             ],

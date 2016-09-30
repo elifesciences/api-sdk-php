@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -33,6 +34,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
@@ -98,9 +100,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalize_article_vors(ArticleVoR $articleVoR, array $expected)
+    public function it_normalize_article_vors(ArticleVoR $articleVoR, array $context, array $expected)
     {
-        $this->assertSame($expected, $this->normalizer->normalize($articleVoR));
+        $this->assertSame($expected, $this->normalizer->normalize($articleVoR, null, $context));
     }
 
     /**
@@ -130,20 +132,29 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     /**
      * @test
-     * @dataProvider normalizeProvider
+     * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_article_vors(ArticleVoR $expected, array $json)
+    public function it_denormalize_article_vors(ArticleVoR $expected, array $context, array $json)
     {
-        $actual = $this->normalizer->denormalize($json, ArticleVoR::class);
+        $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
 
         $this->mockSubjectCall(1);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
+    public function denormalizeProvider() : array
+    {
+        $data = $this->normalizeProvider();
+
+        unset($data['complete snippet']);
+        unset($data['minimum snippet']);
+
+        return $data;
+    }
+
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable();
         $image = new Image('', [
             new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
             new ImageSize('16:9', [
@@ -156,6 +167,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ]),
         ]);
         $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
+        $date = new DateTimeImmutable();
 
         return [
             'complete' => [
@@ -176,6 +188,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'decisionLetterDoi')), new ArrayCollection([new Paragraph('Decision letter description')]),
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Author response content')]),
                         'authorResponseDoi'))),
+                [],
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -314,6 +327,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArrayCollection([]), promise_for(null),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null)),
+                [],
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -351,6 +365,80 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'id' => 'section',
                         ],
                     ],
+                ],
+            ],
+            'complete snippet' => [
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                    rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
+                    rejection_for('Copyright should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped')), 'impact statement', $image,
+                    new PromiseCollection(rejection_for('Keywords should not be unwrapped')),
+                    rejection_for('Digest should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Content should not be unwrapped')),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped')),
+                    rejection_for('Decision letter should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Decision letter description should not be unwrapped')),
+                    rejection_for('Author response should not be unwrapped')),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'version' => 1,
+                    'type' => 'type',
+                    'doi' => 'doi',
+                    'authorLine' => 'author line',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'volume' => 1,
+                    'elocationId' => 'elocationId',
+                    'pdf' => 'http://www.example.com/',
+                    'subjects' => ['subject1'],
+                    'researchOrganisms' => ['research organism'],
+                    'status' => 'vor',
+                    'impactStatement' => 'impact statement',
+                    'image' => [
+                        'alt' => '',
+                        'sizes' => [
+                            '2:1' => [
+                                900 => 'https://placehold.it/900x450',
+                                1800 => 'https://placehold.it/1800x900',
+                            ],
+                            '16:9' => [
+                                250 => 'https://placehold.it/250x141',
+                                500 => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                70 => 'https://placehold.it/70x70',
+                                140 => 'https://placehold.it/140x140',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'minimum snippet' => [
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
+                    'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
+                    rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped')), null, null,
+                    new PromiseCollection(rejection_for('Keywords should not be unwrapped')),
+                    rejection_for('Digest should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Content should not be unwrapped')),
+                    new PromiseCollection(rejection_for('Authors should not be unwrapped')),
+                    rejection_for('Decision letter should not be unwrapped'),
+                    new PromiseCollection(rejection_for('Decision letter description should not be unwrapped')),
+                    rejection_for('Author response should not be unwrapped')),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'version' => 1,
+                    'type' => 'type',
+                    'doi' => 'doi',
+                    'authorLine' => 'author line',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'volume' => 1,
+                    'elocationId' => 'elocationId',
+                    'status' => 'vor',
                 ],
             ],
         ];

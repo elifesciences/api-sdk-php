@@ -31,6 +31,7 @@ use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\BookReferenceNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use GuzzleHttp\Promise\PromiseInterface;
+use ReflectionMethod;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -85,7 +86,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
             'elocationId', null, new ArrayCollection([]), [], promise_for(null), promise_for(null),
             promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null,
+            new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
             new ArrayCollection([]), promise_for(null),
             new ArrayCollection([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
             new ArrayCollection([]));
@@ -119,7 +120,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
-                    'impact statement', new ArrayCollection(['keyword']),
+                    'impact statement', $image, new ArrayCollection(['keyword']),
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('digest')]), 'digestDoi')),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArrayCollection([
@@ -167,6 +168,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                     'status' => 'vor',
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'alt' => '',
+                        'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']],
+                    ],
                     'keywords' => ['keyword'],
                     'digest' => [
                         'content' => [
@@ -221,7 +226,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null,
+                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
                     new ArrayCollection([]), promise_for(null),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArrayCollection([])),
@@ -318,6 +323,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     continue;
                 }
 
+                if ((new ReflectionMethod($actual, $method))->getNumberOfParameters() > 0) {
+                    continue;
+                }
+
                 $actualMethod = $normaliseResult($actual->{$method}());
                 $expectedMethod = $normaliseResult($expected->{$method}());
 
@@ -392,6 +401,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                     'status' => 'vor',
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'alt' => 'alt',
+                        'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']],
+                    ],
                     'keywords' => ['keyword'],
                     'digest' => [
                         'content' => [
@@ -446,7 +459,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
-                    'impact statement', new ArrayCollection(['keyword']),
+                    'impact statement',
+                    new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]),
+                    new ArrayCollection(['keyword']),
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('digest')]), 'digestDoi')),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArrayCollection([
@@ -498,7 +513,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null,
+                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
                     new ArrayCollection([]), promise_for(null),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArrayCollection([])),

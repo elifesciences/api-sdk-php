@@ -9,6 +9,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Reference;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -41,6 +42,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 });
         }
 
+        if (false === empty($data['image'])) {
+            $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
+        }
+
         $data['keywords'] = new PromiseCollection(promise_for($data['keywords'] ?? []));
 
         $data['references'] = new PromiseCollection(promise_for($data['references'] ?? [])
@@ -68,6 +73,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['copyright'],
             $data['authors'],
             $data['impactStatement'] ?? null,
+            $data['image'] ?? null,
             $data['keywords'],
             $data['digest'],
             $data['body'],
@@ -96,6 +102,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if ($article->getImpactStatement()) {
             $data['impactStatement'] = $article->getImpactStatement();
+        }
+
+        if ($article->getImage()) {
+            $data['image'] = $this->normalizer->normalize($article->getImage(), $format, $context);
         }
 
         if (empty($context['snippet'])) {

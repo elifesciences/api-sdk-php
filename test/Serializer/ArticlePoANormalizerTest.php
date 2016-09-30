@@ -93,92 +93,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         $this->assertSame($expected, $this->normalizer->normalize($articlePoA));
     }
 
-    public function normalizeProvider() : array
-    {
-        $date = new DateTimeImmutable();
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('subject1', 'Subject 1', null, $image);
-
-        return [
-            'complete' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
-                    promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
-                [
-                    'id' => 'id',
-                    'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
-                    'pdf' => 'http://www.example.com/',
-                    'subjects' => ['subject1'],
-                    'researchOrganisms' => ['research organism'],
-                    'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                        'holder' => 'holder',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
-                            ],
-                        ],
-                    ],
-                    'issue' => 1,
-                    'abstract' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'abstract',
-                            ],
-                        ],
-                    ],
-                    'status' => 'poa',
-                ],
-            ],
-            'minimum' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
-                    null, null, [], promise_for(null), promise_for(null),
-                    promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
-                [
-                    'id' => 'id',
-                    'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
-                    'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
-                            ],
-                        ],
-                    ],
-                    'status' => 'poa',
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -206,9 +120,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_article_poas(array $json, ArticlePoA $expected)
+    public function it_denormalize_article_poas(ArticlePoA $expected, array $json)
     {
         $actual = $this->normalizer->denormalize($json, ArticlePoA::class);
 
@@ -247,7 +161,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         $assertObject($actual, $expected);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
         $image = new Image('', [
@@ -265,8 +179,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 2, 'elocationId',
+                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
+                    promise_for(new Copyright('license', 'statement', 'holder')),
+                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
                 [
-                    'status' => 'poa',
                     'id' => 'id',
                     'version' => 1,
                     'type' => 'type',
@@ -274,7 +192,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
-                    'volume' => 1,
+                    'volume' => 2,
                     'elocationId' => 'elocationId',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => ['subject1'],
@@ -302,16 +220,15 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'status' => 'poa',
                 ],
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
-                    promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
             ],
             'minimum' => [
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                    null, null, [], promise_for(null), promise_for(null),
+                    promise_for(new Copyright('license', 'statement')),
+                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
                 [
-                    'status' => 'poa',
                     'id' => 'id',
                     'version' => 1,
                     'type' => 'type',
@@ -334,11 +251,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'status' => 'poa',
                 ],
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
-                    null, null, [], promise_for(null), promise_for(null),
-                    promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
             ],
         ];
     }

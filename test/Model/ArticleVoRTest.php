@@ -56,7 +56,7 @@ final class ArticleVoRTest extends ArticleTest
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null,
             $image = new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
-            new PromiseCollection(rejection_for('No content')), new PromiseCollection(rejection_for('No references')),
+            new PromiseCollection(rejection_for('No contents')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),
             rejection_for('No author response'));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),

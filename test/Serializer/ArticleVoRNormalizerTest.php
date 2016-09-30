@@ -107,11 +107,93 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $this->assertSame($expected, $this->normalizer->normalize($articleVoR));
     }
 
+    /**
+     * @test
+     */
+    public function it_is_a_denormalizer()
+    {
+        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canDenormalizeProvider
+     */
+    public function it_can_denormalize_article_vors($data, $format, array $context, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+    }
+
+    public function canDenormalizeProvider() : array
+    {
+        return [
+            'article vor' => [[], ArticleVoR::class, [], true],
+            'non-article vor' => [[], get_class($this), [], false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider normalizeProvider
+     */
+    public function it_denormalize_article_vors(ArticleVoR $expected, array $json)
+    {
+        $actual = $this->normalizer->denormalize($json, ArticleVoR::class);
+
+        $normaliseResult = function ($value) use (&$normaliseResult) {
+            if ($value instanceof Collection) {
+                return $value->toArray();
+            } elseif ($value instanceof DateTimeInterface) {
+                return $value->format(DATE_ATOM);
+            } elseif ($value instanceof PromiseInterface) {
+                return $normaliseResult($value->wait());
+            }
+
+            return $value;
+        };
+
+        $assertObject = function ($actual, $expected) use ($normaliseResult, &$assertObject) {
+            foreach (get_class_methods($actual) as $method) {
+                if ('__' === substr($method, 0, 2)) {
+                    continue;
+                }
+
+                if ((new ReflectionMethod($actual, $method))->getNumberOfParameters() > 0) {
+                    continue;
+                }
+
+                $actualMethod = $normaliseResult($actual->{$method}());
+                $expectedMethod = $normaliseResult($expected->{$method}());
+
+                if (is_object($actualMethod)) {
+                    $this->assertInstanceOf(get_class($actualMethod), $expectedMethod);
+                    $assertObject($actualMethod, $expectedMethod);
+                } else {
+                    $this->assertEquals($actualMethod, $expectedMethod);
+                }
+            }
+        };
+
+        $this->mockSubjectCall(1);
+
+        $assertObject($actual, $expected);
+    }
+
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('subject1', 'Subject 1', null, $image);
+        $image = new Image('', [
+            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+            new ImageSize('16:9', [
+                250 => 'https://placehold.it/250x141',
+                500 => 'https://placehold.it/500x281',
+            ]),
+            new ImageSize('1:1', [
+                '70' => 'https://placehold.it/70x70',
+                '140' => 'https://placehold.it/140x140',
+            ]),
+        ]);
+        $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
 
         return [
             'complete' => [
@@ -173,7 +255,20 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'impactStatement' => 'impact statement',
                     'image' => [
                         'alt' => '',
-                        'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']],
+                        'sizes' => [
+                            '2:1' => [
+                                900 => 'https://placehold.it/900x450',
+                                1800 => 'https://placehold.it/1800x900',
+                            ],
+                            '16:9' => [
+                                250 => 'https://placehold.it/250x141',
+                                500 => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                70 => 'https://placehold.it/70x70',
+                                140 => 'https://placehold.it/140x140',
+                            ],
+                        ],
                     ],
                     'keywords' => ['keyword'],
                     'digest' => [
@@ -295,282 +390,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_is_a_denormalizer()
-    {
-        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
-    }
-
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
-    public function it_can_denormalize_article_vors($data, $format, array $context, bool $expected)
-    {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
-    }
-
-    public function canDenormalizeProvider() : array
-    {
-        return [
-            'article vor' => [[], ArticleVoR::class, [], true],
-            'non-article vor' => [[], get_class($this), [], false],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
-    public function it_denormalize_article_vors(array $json, ArticleVoR $expected)
-    {
-        $actual = $this->normalizer->denormalize($json, ArticleVoR::class);
-
-        $normaliseResult = function ($value) use (&$normaliseResult) {
-            if ($value instanceof Collection) {
-                return $value->toArray();
-            } elseif ($value instanceof DateTimeInterface) {
-                return $value->format(DATE_ATOM);
-            } elseif ($value instanceof PromiseInterface) {
-                return $normaliseResult($value->wait());
-            }
-
-            return $value;
-        };
-
-        $assertObject = function ($actual, $expected) use ($normaliseResult, &$assertObject) {
-            foreach (get_class_methods($actual) as $method) {
-                if ('__' === substr($method, 0, 2)) {
-                    continue;
-                }
-
-                if ((new ReflectionMethod($actual, $method))->getNumberOfParameters() > 0) {
-                    continue;
-                }
-
-                $actualMethod = $normaliseResult($actual->{$method}());
-                $expectedMethod = $normaliseResult($expected->{$method}());
-
-                if (is_object($actualMethod)) {
-                    $this->assertInstanceOf(get_class($actualMethod), $expectedMethod);
-                    $assertObject($actualMethod, $expectedMethod);
-                } else {
-                    $this->assertEquals($actualMethod, $expectedMethod);
-                }
-            }
-        };
-
-        $this->mockSubjectCall(1);
-
-        $assertObject($actual, $expected);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $date = new DateTimeImmutable();
-        $image = new Image('', [
-            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
-        $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
-
-        return [
-            'complete' => [
-                [
-                    'id' => 'id',
-                    'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
-                    'pdf' => 'http://www.example.com/',
-                    'subjects' => ['subject1'],
-                    'researchOrganisms' => ['research organism'],
-                    'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                        'holder' => 'holder',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
-                            ],
-                        ],
-                    ],
-                    'issue' => 1,
-                    'abstract' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'abstract',
-                            ],
-                        ],
-                        'doi' => 'abstractDoi',
-                    ],
-                    'status' => 'vor',
-                    'impactStatement' => 'impact statement',
-                    'image' => [
-                        'alt' => 'alt',
-                        'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']],
-                    ],
-                    'keywords' => ['keyword'],
-                    'digest' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'digest',
-                            ],
-                        ],
-                        'doi' => 'digestDoi',
-                    ],
-                    'body' => [
-                        [
-                            'type' => 'section',
-                            'title' => 'Section',
-                            'content' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'content',
-                                ],
-                            ],
-                            'id' => 'section',
-                        ],
-                    ],
-                    'references' => [
-                        [
-                            'type' => 'book',
-                            'date' => '2000-01-01',
-                            'authors' => [
-                                [
-                                    'type' => 'person',
-                                    'name' => [
-                                        'preferred' => 'preferred name',
-                                        'index' => 'index name',
-                                    ],
-                                ],
-                            ],
-                            'bookTitle' => 'book title',
-                            'publisher' => [
-                                'name' => ['publisher'],
-                            ],
-                            'authorsEtAl' => true,
-                            'volume' => 'volume',
-                            'edition' => 'edition',
-                            'doi' => '10.1000/182',
-                            'pmid' => 18183754,
-                            'isbn' => '978-3-16-148410-0',
-                        ],
-                    ],
-                    'decisionLetter' => [
-                        'description' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Decision letter description',
-                            ],
-                        ],
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Decision letter content',
-                            ],
-                        ],
-                        'doi' => 'decisionLetterDoi',
-                    ],
-                    'authorResponse' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Author response content',
-                            ],
-                        ],
-                        'doi' => 'authorResponseDoi',
-                    ],
-                ],
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
-                    promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
-                    'impact statement',
-                    new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]),
-                    new ArrayCollection(['keyword']),
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('digest')]), 'digestDoi')),
-                    new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([
-                        new BookReference(ReferenceDate::fromString('2000-01-01'),
-                            [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
-                            new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
-                            '978-3-16-148410-0'),
-                    ]), promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Decision letter content')]),
-                        'decisionLetterDoi')), new ArrayCollection([new Paragraph('Decision letter description')]),
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Author response content')]),
-                        'authorResponseDoi'))),
-            ],
-            'minimum' => [
-                [
-                    'id' => 'id',
-                    'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
-                    'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
-                            ],
-                        ],
-                    ],
-                    'status' => 'vor',
-                    'body' => [
-                        [
-                            'type' => 'section',
-                            'title' => 'Section',
-                            'content' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'content',
-                                ],
-                            ],
-                            'id' => 'section',
-                        ],
-                    ],
-                ],
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
-                    'elocationId', null, null, [], promise_for(null), promise_for(null),
-                    promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
-                    new ArrayCollection([]), promise_for(null),
-                    new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null)),
             ],
         ];
     }

@@ -14,6 +14,9 @@ final class ArticleVoR extends ArticleVersion
     private $digest;
     private $content;
     private $references;
+    private $decisionLetter;
+    private $decisionLetterDescription;
+    private $authorResponse;
 
     /**
      * @internal
@@ -40,7 +43,10 @@ final class ArticleVoR extends ArticleVersion
         Collection $keywords,
         PromiseInterface $digest,
         Collection $content,
-        Collection $references
+        Collection $references,
+        PromiseInterface $decisionLetter,
+        Collection $decisionLetterDescription,
+        PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $version, $type, $doi, $authorLine, $title, $published, $volume, $elocationId, $pdf,
             $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
@@ -51,6 +57,9 @@ final class ArticleVoR extends ArticleVersion
         $this->digest = $digest;
         $this->content = $content;
         $this->references = $references;
+        $this->decisionLetter = $decisionLetter;
+        $this->decisionLetterDescription = $decisionLetterDescription;
+        $this->authorResponse = $authorResponse;
     }
 
     /**
@@ -93,5 +102,29 @@ final class ArticleVoR extends ArticleVersion
     public function getReferences() : Collection
     {
         return $this->references;
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getDecisionLetter()
+    {
+        return $this->decisionLetter->wait();
+    }
+
+    /**
+     * @return Collection|Block[]
+     */
+    public function getDecisionLetterDescription() : Collection
+    {
+        return $this->decisionLetterDescription;
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getAuthorResponse()
+    {
+        return $this->authorResponse->wait();
     }
 }

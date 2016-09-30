@@ -17,12 +17,55 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {
     public function denormalizeArticle($data, $class, $format = null, array $context = []) : ArticleVersion
     {
+        if (empty($data['authorResponse'])) {
+            $data['authorResponse'] = promise_for(null);
+        } else {
+            $data['authorResponse'] = promise_for($data['authorResponse'])
+                ->then(function ($authorResponse) use ($format, $context) {
+                    if (empty($authorResponse)) {
+                        return null;
+                    }
+
+                    return new ArticleSection(
+                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                        }, $authorResponse['content'])),
+                        $authorResponse['doi']
+                    );
+                });
+        }
+
         $data['body'] = new PromiseCollection(promise_for($data['body'])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                 }, $blocks);
             }));
+
+        if (empty($data['decisionLetter'])) {
+            $data['decisionLetter'] = promise_for(null);
+            $decisionLetterDescription = new ArrayCollection([]);
+        } else {
+            $decisionLetterDescription = new PromiseCollection(promise_for($data['decisionLetter'])
+                ->then(function (array $decisionLetter) use ($format, $context) {
+                    return array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $decisionLetter['description']);
+                }));
+            $data['decisionLetter'] = promise_for($data['decisionLetter'])
+                ->then(function (array $decisionLetter) use ($format, $context) {
+                    if (empty($decisionLetter)) {
+                        return null;
+                    }
+
+                    return new ArticleSection(
+                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                        }, $decisionLetter['content'])),
+                        $decisionLetter['doi']
+                    );
+                });
+        }
 
         if (empty($data['digest'])) {
             $data['digest'] = promise_for(null);
@@ -77,7 +120,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['keywords'],
             $data['digest'],
             $data['body'],
-            $data['references']
+            $data['references'],
+            $data['decisionLetter'],
+            $decisionLetterDescription,
+            $data['authorResponse']
         );
     }
 
@@ -138,6 +184,32 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if (empty($data['references'])) {
                 unset($data['references']);
+            }
+            if ($article->getDecisionLetter()) {
+                $data['decisionLetter'] = [
+                    'description' => $article->getDecisionLetterDescription()
+                        ->map(function (Block $block) use ($format, $context) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                    'content' => $article->getDecisionLetter()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                    'doi' => $article->getDecisionLetter()->getDoi(),
+                ];
+            }
+
+            if ($article->getAuthorResponse()) {
+                $data['authorResponse'] = [
+                    'content' => $article->getAuthorResponse()->getContent()
+                        ->map(function (Block $block) use ($format, $context) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                    'doi' => $article->getAuthorResponse()->getDoi(),
+                ];
             }
         }
 

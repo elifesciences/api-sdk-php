@@ -89,7 +89,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
             new ArrayCollection([]), promise_for(null),
             new ArrayCollection([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
-            new ArrayCollection([]));
+            new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null));
 
         return [
             'article vor' => [$articleVoR, null, true],
@@ -128,7 +128,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
-                    ])),
+                    ]), promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Decision letter content')]),
+                        'decisionLetterDoi')), new ArrayCollection([new Paragraph('Decision letter description')]),
+                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Author response content')]),
+                        'authorResponseDoi'))),
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -220,6 +223,30 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'isbn' => '978-3-16-148410-0',
                         ],
                     ],
+                    'decisionLetter' => [
+                        'description' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Decision letter description',
+                            ],
+                        ],
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Decision letter content',
+                            ],
+                        ],
+                        'doi' => 'decisionLetterDoi',
+                    ],
+                    'authorResponse' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Author response content',
+                            ],
+                        ],
+                        'doi' => 'authorResponseDoi',
+                    ],
                 ],
             ],
             'minimum' => [
@@ -229,7 +256,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
                     new ArrayCollection([]), promise_for(null),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([])),
+                    new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null)),
                 [
                     'id' => 'id',
                     'version' => 1,
@@ -453,6 +480,30 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'isbn' => '978-3-16-148410-0',
                         ],
                     ],
+                    'decisionLetter' => [
+                        'description' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Decision letter description',
+                            ],
+                        ],
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Decision letter content',
+                            ],
+                        ],
+                        'doi' => 'decisionLetterDoi',
+                    ],
+                    'authorResponse' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Author response content',
+                            ],
+                        ],
+                        'doi' => 'authorResponseDoi',
+                    ],
                 ],
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
                     'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
@@ -469,7 +520,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
-                    ])),
+                    ]), promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Decision letter content')]),
+                        'decisionLetterDoi')), new ArrayCollection([new Paragraph('Decision letter description')]),
+                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Author response content')]),
+                        'authorResponseDoi'))),
             ],
             'minimum' => [
                 [
@@ -516,7 +570,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
                     new ArrayCollection([]), promise_for(null),
                     new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([])),
+                    new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null)),
             ],
         ];
     }

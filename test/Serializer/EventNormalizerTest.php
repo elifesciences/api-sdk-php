@@ -3,9 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use DateTimeZone;
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -14,15 +12,14 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
-use GuzzleHttp\Promise\PromiseInterface;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class EventNormalizerTest extends PHPUnit_Framework_TestCase
+final class EventNormalizerTest extends TestCase
 {
     /** @var EventNormalizer */
     private $normalizer;
@@ -80,79 +77,6 @@ final class EventNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->normalizer->normalize($event, null, $context));
     }
 
-    public function normalizeProvider() : array
-    {
-        $starts = new DateTimeImmutable();
-        $ends = new DateTimeImmutable();
-        $timezone = new DateTimeZone('Europe/London');
-        $venue = new Place(null, null, ['venue']);
-
-        return [
-            'complete' => [
-                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new ArrayCollection([new Paragraph('text')]), promise_for($venue)),
-                [],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'starts' => $starts->format(DATE_ATOM),
-                    'ends' => $ends->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'timezone' => $timezone->getName(),
-                    'content' => new ArrayCollection([
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ]),
-                    'venue' => ['name' => ['venue']],
-                ],
-            ],
-            'minimum' => [
-                new Event('id', 'title', null, $starts, $ends, null, new ArrayCollection([new Paragraph('text')])),
-                [],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'starts' => $starts->format(DATE_ATOM),
-                    'ends' => $ends->format(DATE_ATOM),
-                    'content' => new ArrayCollection([
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ]),
-                ],
-            ],
-            'complete snippet' => [
-                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
-                    rejection_for('Event venue should not be unwrapped')),
-                ['snippet' => true],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'starts' => $starts->format(DATE_ATOM),
-                    'ends' => $ends->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'timezone' => $timezone->getName(),
-                ],
-            ],
-            'minimum snippet' => [
-                new Event('id', 'title', null, $starts, $ends, null,
-                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
-                    rejection_for('Event venue should not be unwrapped')),
-                ['snippet' => true],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'starts' => $starts->format(DATE_ATOM),
-                    'ends' => $ends->format(DATE_ATOM),
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -182,46 +106,24 @@ final class EventNormalizerTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_events(array $json, Event $expected)
+    public function it_denormalize_events(Event $expected, array $context, array $json)
     {
-        $actual = $this->normalizer->denormalize($json, Event::class);
+        $actual = $this->normalizer->denormalize($json, Event::class, null, $context);
 
-        $normaliseResult = function ($value) use (&$normaliseResult) {
-            if ($value instanceof Collection) {
-                return $value->toArray();
-            } elseif ($value instanceof DateTimeInterface) {
-                return $value->format(DATE_ATOM);
-            } elseif ($value instanceof DateTimeZone) {
-                return $value->getName();
-            } elseif ($value instanceof PromiseInterface) {
-                return $normaliseResult($value->wait());
-            }
-
-            return $value;
-        };
-
-        $assertObject = function ($actual, $expected) use ($normaliseResult, &$assertObject) {
-            foreach (get_class_methods($actual) as $method) {
-                if ('__' === substr($method, 0, 2)) {
-                    continue;
-                }
-
-                $actualMethod = $normaliseResult($actual->{$method}());
-                $expectedMethod = $normaliseResult($expected->{$method}());
-
-                if (is_object($actualMethod)) {
-                    $this->assertInstanceOf(get_class($actualMethod), $expectedMethod);
-                    $assertObject($actualMethod, $expectedMethod);
-                } else {
-                    $this->assertEquals($actualMethod, $expectedMethod);
-                }
-            }
-        };
-
-        $assertObject($actual, $expected);
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
     public function denormalizeProvider() : array
+    {
+        $data = $this->normalizeProvider();
+
+        unset($data['complete snippet']);
+        unset($data['minimum snippet']);
+
+        return $data;
+    }
+
+    public function normalizeProvider() : array
     {
         $starts = new DateTimeImmutable();
         $ends = new DateTimeImmutable();
@@ -230,6 +132,9 @@ final class EventNormalizerTest extends PHPUnit_Framework_TestCase
 
         return [
             'complete' => [
+                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
+                    new ArrayCollection([new Paragraph('text')]), promise_for($venue)),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -245,10 +150,10 @@ final class EventNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'venue' => ['name' => ['venue']],
                 ],
-                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new ArrayCollection([new Paragraph('text')]), promise_for($venue)),
             ],
             'minimum' => [
+                new Event('id', 'title', null, $starts, $ends, null, new ArrayCollection([new Paragraph('text')])),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -261,7 +166,32 @@ final class EventNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Event('id', 'title', null, $starts, $ends, null, new ArrayCollection([new Paragraph('text')])),
+            ],
+            'complete snippet' => [
+                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
+                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+                    rejection_for('Event venue should not be unwrapped')),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'starts' => $starts->format(DATE_ATOM),
+                    'ends' => $ends->format(DATE_ATOM),
+                    'impactStatement' => 'impact statement',
+                    'timezone' => $timezone->getName(),
+                ],
+            ],
+            'minimum snippet' => [
+                new Event('id', 'title', null, $starts, $ends, null,
+                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+                    rejection_for('Event venue should not be unwrapped')),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'starts' => $starts->format(DATE_ATOM),
+                    'ends' => $ends->format(DATE_ATOM),
+                ],
             ],
         ];
     }

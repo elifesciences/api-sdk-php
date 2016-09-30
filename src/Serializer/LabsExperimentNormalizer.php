@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class LabsExperimentNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -64,10 +63,10 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         if (empty($context['snippet'])) {
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
-            });
+            })->toArray();
         }
 
-        return all($data)->wait();
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

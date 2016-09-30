@@ -7,12 +7,12 @@ use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class SubjectNormalizerTest extends PHPUnit_Framework_TestCase
+final class SubjectNormalizerTest extends TestCase
 {
     /** @var SubjectNormalizer */
     private $normalizer;
@@ -65,31 +65,6 @@ final class SubjectNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($subject));
     }
 
-    public function normalizeProvider() : array
-    {
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-
-        return [
-            'complete' => [
-                new Subject('id', 'name', 'impact statement', $image),
-                [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                    'impactStatement' => 'impact statement',
-                ],
-            ],
-            'without impact statement' => [
-                new Subject('id', 'name', null, $image),
-                [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -117,34 +92,36 @@ final class SubjectNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_subjects(array $json, Subject $expected)
+    public function it_denormalize_subjects(Subject $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Subject::class));
+        $actual = $this->normalizer->denormalize($json, Subject::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
 
         return [
             'complete' => [
+                new Subject('id', 'name', 'impact statement', $image),
                 [
                     'id' => 'id',
                     'name' => 'name',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                     'impactStatement' => 'impact statement',
                 ],
-                new Subject('id', 'name', 'impact statement', $image),
             ],
-            'minimum' => [
+            'without impact statement' => [
+                new Subject('id', 'name', null, $image),
                 [
                     'id' => 'id',
                     'name' => 'name',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 ],
-                new Subject('id', 'name', null, $image),
             ],
         ];
     }

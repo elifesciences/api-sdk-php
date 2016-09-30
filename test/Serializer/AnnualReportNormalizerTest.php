@@ -7,12 +7,12 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class AnnualReportNormalizerTest extends PHPUnit_Framework_TestCase
+final class AnnualReportNormalizerTest extends TestCase
 {
     /** @var AnnualReportNormalizer */
     private $normalizer;
@@ -65,33 +65,6 @@ final class AnnualReportNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($annualReport));
     }
 
-    public function normalizeProvider() : array
-    {
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-
-        return [
-            'complete' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', 'impact statement', $image),
-                [
-                    'year' => 2012,
-                    'uri' => 'http://www.example.com/2012',
-                    'title' => 'title',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                    'impactStatement' => 'impact statement',
-                ],
-            ],
-            'minimum' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image),
-                [
-                    'year' => 2012,
-                    'uri' => 'http://www.example.com/2012',
-                    'title' => 'title',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -119,36 +92,38 @@ final class AnnualReportNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_annual_reports(array $json, AnnualReport $expected)
+    public function it_denormalize_annual_reports(AnnualReport $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, AnnualReport::class));
+        $actual = $this->normalizer->denormalize($json, AnnualReport::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
 
         return [
             'complete' => [
+                new AnnualReport(2012, 'http://www.example.com/2012', 'title', 'impact statement', $image),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
-                    'impactStatement' => 'impact statement',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'impactStatement' => 'impact statement',
                 ],
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', 'impact statement', $image),
             ],
             'minimum' => [
+                new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 ],
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image),
             ],
         ];
     }

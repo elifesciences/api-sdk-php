@@ -20,10 +20,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use LogicException;
-use PHPUnit_Framework_TestCase;
 use Webmozart\Json\JsonDecoder;
 
-abstract class ApiTestCase extends PHPUnit_Framework_TestCase
+abstract class ApiTestCase extends TestCase
 {
     use PuliAwareTestCase;
 

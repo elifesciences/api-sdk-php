@@ -80,7 +80,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         if (empty($context['snippet'])) {
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
-            });
+            })->toArray();
 
             if ($object->hasVenue()) {
                 $data['venue'] = $object->getVenue()->then(function (Place $venue) use ($format, $context) {

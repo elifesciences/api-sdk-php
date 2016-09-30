@@ -15,7 +15,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class InterviewNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -76,27 +75,22 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
         }
 
         if (empty($context['snippet'])) {
-            $data['interviewee'] = promise_for($data['interviewee'])
-                ->then(function (array $interviewee) use ($object) {
-                    if ($object->getInterviewee()->hasCvLines()) {
-                        $interviewee['cv'] = $object->getInterviewee()->getCvLines()
-                            ->map(function (IntervieweeCvLine $cvLine) {
-                                return [
-                                    'date' => $cvLine->getDate(),
-                                    'text' => $cvLine->getText(),
-                                ];
-                            })->toArray();
-                    }
-
-                    return $interviewee;
-                });
+            if ($object->getInterviewee()->hasCvLines()) {
+                $data['interviewee']['cv'] = $object->getInterviewee()->getCvLines()
+                    ->map(function (IntervieweeCvLine $cvLine) {
+                        return [
+                            'date' => $cvLine->getDate(),
+                            'text' => $cvLine->getText(),
+                        ];
+                    })->toArray();
+            }
 
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
-            });
+            })->toArray();
         }
 
-        return all($data)->wait();
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

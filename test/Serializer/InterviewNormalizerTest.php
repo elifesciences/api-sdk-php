@@ -3,8 +3,6 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use DateTimeInterface;
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -15,13 +13,13 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class InterviewNormalizerTest extends PHPUnit_Framework_TestCase
+final class InterviewNormalizerTest extends TestCase
 {
     /** @var InterviewNormalizer */
     private $normalizer;
@@ -82,6 +80,52 @@ final class InterviewNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->normalizer->normalize($interview, null, $context));
     }
 
+    /**
+     * @test
+     */
+    public function it_is_a_denormalizer()
+    {
+        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canDenormalizeProvider
+     */
+    public function it_can_denormalize_interviews($data, $format, array $context, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+    }
+
+    public function canDenormalizeProvider() : array
+    {
+        return [
+            'interview' => [[], Interview::class, [], true],
+            'non-interview' => [[], get_class($this), [], false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider denormalizeProvider
+     */
+    public function it_denormalize_interviews(Interview $expected, array $context, array $json)
+    {
+        $actual = $this->normalizer->denormalize($json, Interview::class, null, $context);
+
+        $this->assertObjectsAreEqual($expected, $actual);
+    }
+
+    public function denormalizeProvider() : array
+    {
+        $data = $this->normalizeProvider();
+
+        unset($data['complete snippet']);
+        unset($data['minimum snippet']);
+
+        return $data;
+    }
+
     public function normalizeProvider() : array
     {
         return [
@@ -110,12 +154,12 @@ final class InterviewNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'impact statement',
-                    'content' => new ArrayCollection([
+                    'content' => [
                         [
                             'type' => 'paragraph',
                             'text' => 'text',
                         ],
-                    ]),
+                    ],
                 ],
             ],
             'minimum' => [
@@ -132,12 +176,12 @@ final class InterviewNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
-                    'content' => new ArrayCollection([
+                    'content' => [
                         [
                             'type' => 'paragraph',
                             'text' => 'text',
                         ],
-                    ]),
+                    ],
                 ],
             ],
             'complete snippet' => [
@@ -179,131 +223,6 @@ final class InterviewNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_is_a_denormalizer()
-    {
-        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
-    }
-
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
-    public function it_can_denormalize_interviews($data, $format, array $context, bool $expected)
-    {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
-    }
-
-    public function canDenormalizeProvider() : array
-    {
-        return [
-            'interview' => [[], Interview::class, [], true],
-            'non-interview' => [[], get_class($this), [], false],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
-    public function it_denormalize_interviews(array $json, Interview $expected)
-    {
-        $actual = $this->normalizer->denormalize($json, Interview::class);
-
-        $normaliseResult = function ($value) {
-            if ($value instanceof Collection) {
-                return $value->toArray();
-            } elseif ($value instanceof DateTimeInterface) {
-                return $value->format(DATE_ATOM);
-            }
-
-            return $value;
-        };
-
-        $assertObject = function ($actual, $expected) use ($normaliseResult, &$assertObject) {
-            foreach (get_class_methods($actual) as $method) {
-                if ('__' === substr($method, 0, 2)) {
-                    continue;
-                }
-
-                $actualMethod = $normaliseResult($actual->{$method}());
-                $expectedMethod = $normaliseResult($expected->{$method}());
-
-                if (is_object($actualMethod)) {
-                    $this->assertInstanceOf(get_class($actualMethod), $expectedMethod);
-                    $assertObject($actualMethod, $expectedMethod);
-                } else {
-                    $this->assertEquals($actualMethod, $expectedMethod);
-                }
-            }
-        };
-
-        $assertObject($actual, $expected);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $date = new DateTimeImmutable();
-
-        return [
-            'complete' => [
-                [
-                    'id' => 'id',
-                    'interviewee' => [
-                        'name' => [
-                            'preferred' => 'preferred name',
-                            'index' => 'index name',
-                        ],
-                        'orcid' => '0000-0002-1825-0097',
-                        'cv' => [
-                            [
-                                'date' => 'date',
-                                'text' => 'text',
-                            ],
-                        ],
-                    ],
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ],
-                ],
-                $interview = new Interview('id',
-                    new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
-                        new ArrayCollection([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $date, 'impact statement', new ArrayCollection([new Paragraph('text')])
-                ),
-            ],
-            'minimum' => [
-                [
-                    'id' => 'id',
-                    'interviewee' => [
-                        'name' => [
-                            'preferred' => 'preferred name',
-                            'index' => 'index name',
-                        ],
-                    ],
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ],
-                ],
-                new Interview('id', new Interviewee(new Person('preferred name', 'index name')), 'title', $date, null,
-                    new ArrayCollection([new Paragraph('text')])),
             ],
         ];
     }

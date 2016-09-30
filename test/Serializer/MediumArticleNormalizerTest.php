@@ -9,12 +9,12 @@ use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class MediumArticleNormalizerTest extends PHPUnit_Framework_TestCase
+final class MediumArticleNormalizerTest extends TestCase
 {
     /** @var MediumArticleNormalizer */
     private $normalizer;
@@ -66,33 +66,6 @@ final class MediumArticleNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($mediumArticle));
     }
 
-    public function normalizeProvider() : array
-    {
-        $date = (new DateTimeImmutable())->setTimezone(new DateTimeZone('UTC'));
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-
-        return [
-            'complete' => [
-                new MediumArticle('http://www.example.com/', 'title', 'impact statement', $date, $image),
-                [
-                    'uri' => 'http://www.example.com/',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                ],
-            ],
-            'minimum' => [
-                new MediumArticle('http://www.example.com/', 'title', null, $date, null),
-                [
-                    'uri' => 'http://www.example.com/',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -120,36 +93,38 @@ final class MediumArticleNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_medium_articles(array $json, MediumArticle $expected)
+    public function it_denormalize_medium_articles(MediumArticle $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, MediumArticle::class));
+        $actual = $this->normalizer->denormalize($json, MediumArticle::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable();
+        $date = (new DateTimeImmutable())->setTimezone(new DateTimeZone('UTC'));
         $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
 
         return [
             'complete' => [
+                new MediumArticle('http://www.example.com/', 'title', 'impact statement', $date, $image),
                 [
                     'uri' => 'http://www.example.com/',
                     'title' => 'title',
-                    'impactStatement' => 'impact statement',
                     'published' => $date->format(DATE_ATOM),
+                    'impactStatement' => 'impact statement',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 ],
-                new MediumArticle('http://www.example.com/', 'title', 'impact statement', $date, $image),
             ],
             'minimum' => [
+                new MediumArticle('http://www.example.com/', 'title', null, $date, null),
                 [
                     'uri' => 'http://www.example.com/',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
                 ],
-                new MediumArticle('http://www.example.com/', 'title', null, $date, null),
             ],
         ];
     }

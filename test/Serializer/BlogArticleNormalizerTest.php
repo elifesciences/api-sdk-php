@@ -3,10 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Collection\PromiseCollection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -85,76 +83,6 @@ final class BlogArticleNormalizerTest extends ApiTestCase
         $this->assertEquals($expected, $this->normalizer->normalize($blogArticle, null, $context));
     }
 
-    public function normalizeProvider() : array
-    {
-        $date = new DateTimeImmutable();
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('id', 'name', null, $image);
-
-        return [
-            'complete' => [
-                new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
-                    new ArrayCollection([$subject])),
-                [],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ],
-                    'subjects' => [
-                        'id',
-                    ],
-                ],
-            ],
-            'minimum' => [
-                new BlogArticle('id', 'title', $date, null, new ArrayCollection([new Paragraph('text')]), null),
-                [],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
-                    ],
-                ],
-            ],
-            'complete snippet' => [
-                new BlogArticle('id', 'title', $date, 'impact statement',
-                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-                    new ArrayCollection([$subject])),
-                ['snippet' => true],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
-                    'subjects' => [
-                        'id',
-                    ],
-                ],
-            ],
-            'minimum snippet' => [
-                new BlogArticle('id', 'title', $date, null,
-                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')), null),
-                ['snippet' => true],
-                [
-                    'id' => 'id',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -184,32 +112,26 @@ final class BlogArticleNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider denormalizeProvider
      */
-    public function it_denormalize_blog_articles(array $json, BlogArticle $expected)
+    public function it_denormalize_blog_articles(BlogArticle $expected, array $context, array $json)
     {
-        $actual = $this->normalizer->denormalize($json, BlogArticle::class);
-
-        $normaliseResult = function ($value) {
-            if ($value instanceof Collection) {
-                return new ArrayCollection($value->toArray());
-            } elseif ($value instanceof DateTimeInterface) {
-                return DateTimeImmutable::createFromFormat(DATE_ATOM, $value->format(DATE_ATOM));
-            }
-
-            return $value;
-        };
+        $actual = $this->normalizer->denormalize($json, BlogArticle::class, null, $context);
 
         $this->mockSubjectCall(1);
 
-        foreach (get_class_methods(BlogArticle::class) as $method) {
-            if ('__' === substr($method, 0, 2)) {
-                continue;
-            }
-
-            $this->assertEquals($normaliseResult($expected->{$method}()), $normaliseResult($actual->{$method}()));
-        }
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
     public function denormalizeProvider() : array
+    {
+        $data = $this->normalizeProvider();
+
+        unset($data['complete snippet']);
+        unset($data['minimum snippet']);
+
+        return $data;
+    }
+
+    public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
         $image = new Image('', [
@@ -227,6 +149,9 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
+                new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
+                    new ArrayCollection([$subject])),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -238,12 +163,14 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                             'text' => 'text',
                         ],
                     ],
-                    'subjects' => ['subject1'],
+                    'subjects' => [
+                        'subject1',
+                    ],
                 ],
-                new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
-                    new ArrayCollection([$subject])),
             ],
             'minimum' => [
+                new BlogArticle('id', 'title', $date, null, new ArrayCollection([new Paragraph('text')]), null),
+                [],
                 [
                     'id' => 'id',
                     'title' => 'title',
@@ -255,7 +182,31 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
-                new BlogArticle('id', 'title', $date, null, new ArrayCollection([new Paragraph('text')]), null),
+            ],
+            'complete snippet' => [
+                new BlogArticle('id', 'title', $date, 'impact statement',
+                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
+                    new ArrayCollection([$subject])),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                    'impactStatement' => 'impact statement',
+                    'subjects' => [
+                        'subject1',
+                    ],
+                ],
+            ],
+            'minimum snippet' => [
+                new BlogArticle('id', 'title', $date, null,
+                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')), null),
+                ['snippet' => true],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'published' => $date->format(DATE_ATOM),
+                ],
             ],
         ];
     }

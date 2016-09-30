@@ -5,11 +5,11 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
+final class ImageNormalizerTest extends TestCase
 {
     /** @var ImageNormalizer */
     private $normalizer;
@@ -59,34 +59,6 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($image));
     }
 
-    public function normalizeProvider() : array
-    {
-        return [
-            'complete' => [
-                new Image('alt', [
-                    new ImageSize('2:1',
-                        [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
-                    new ImageSize('4:1',
-                        [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450']),
-                ]),
-                [
-                    'alt' => 'alt',
-                    'sizes' => [
-                        '2:1' => [
-                            900 => 'https://placehold.it/900x450',
-                            1800 => 'https://placehold.it/1800x900',
-                        ],
-                        '4:1' => [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450'],
-                    ],
-                ],
-            ],
-            'minimum' => [
-                new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]),
-                ['alt' => '', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -114,17 +86,25 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_images(array $json, Image $expected)
+    public function it_denormalize_images(Image $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Image::class));
+        $actual = $this->normalizer->denormalize($json, Image::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         return [
             'complete' => [
+                new Image('alt', [
+                    new ImageSize('2:1',
+                        [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+                    new ImageSize('4:1',
+                        [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450']),
+                ]),
                 [
                     'alt' => 'alt',
                     'sizes' => [
@@ -135,16 +115,10 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
                         '4:1' => [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450'],
                     ],
                 ],
-                new Image('alt', [
-                    new ImageSize('2:1',
-                        [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
-                    new ImageSize('4:1',
-                        [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450']),
-                ]),
             ],
             'minimum' => [
-                ['alt' => '', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]),
+                ['alt' => '', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
             ],
         ];
     }

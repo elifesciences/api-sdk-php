@@ -4,11 +4,11 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class PersonNormalizerTest extends PHPUnit_Framework_TestCase
+final class PersonNormalizerTest extends TestCase
 {
     /** @var PersonNormalizer */
     private $normalizer;
@@ -58,31 +58,6 @@ final class PersonNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($person));
     }
 
-    public function normalizeProvider() : array
-    {
-        return [
-            'complete' => [
-                new Person('preferred name', 'index name', '0000-0002-1825-0097'),
-                [
-                    'name' => [
-                        'preferred' => 'preferred name',
-                        'index' => 'index name',
-                    ],
-                    'orcid' => '0000-0002-1825-0097',
-                ],
-            ],
-            'minimum' => [
-                $person = new Person('preferred name', 'index name'),
-                [
-                    'name' => [
-                        'preferred' => 'preferred name',
-                        'index' => 'index name',
-                    ],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -110,17 +85,20 @@ final class PersonNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_people(array $json, Person $expected)
+    public function it_denormalize_people(Person $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Person::class));
+        $actual = $this->normalizer->denormalize($json, Person::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         return [
             'complete' => [
+                new Person('preferred name', 'index name', '0000-0002-1825-0097'),
                 [
                     'name' => [
                         'preferred' => 'preferred name',
@@ -128,16 +106,15 @@ final class PersonNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'orcid' => '0000-0002-1825-0097',
                 ],
-                new Person('preferred name', 'index name', '0000-0002-1825-0097'),
             ],
             'minimum' => [
+                $person = new Person('preferred name', 'index name'),
                 [
                     'name' => [
                         'preferred' => 'preferred name',
                         'index' => 'index name',
                     ],
                 ],
-                $person = new Person('preferred name', 'index name'),
             ],
         ];
     }

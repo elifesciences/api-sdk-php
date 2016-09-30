@@ -3,10 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArrayCollection;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
@@ -23,7 +21,6 @@ use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -126,39 +123,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     {
         $actual = $this->normalizer->denormalize($json, ArticlePoA::class);
 
-        $normaliseResult = function ($value) use (&$normaliseResult) {
-            if ($value instanceof Collection) {
-                return $value->toArray();
-            } elseif ($value instanceof DateTimeInterface) {
-                return $value->format(DATE_ATOM);
-            } elseif ($value instanceof PromiseInterface) {
-                return $normaliseResult($value->wait());
-            }
-
-            return $value;
-        };
-
-        $assertObject = function ($actual, $expected) use ($normaliseResult, &$assertObject) {
-            foreach (get_class_methods($actual) as $method) {
-                if ('__' === substr($method, 0, 2)) {
-                    continue;
-                }
-
-                $actualMethod = $normaliseResult($actual->{$method}());
-                $expectedMethod = $normaliseResult($expected->{$method}());
-
-                if (is_object($actualMethod)) {
-                    $this->assertInstanceOf(get_class($actualMethod), $expectedMethod);
-                    $assertObject($actualMethod, $expectedMethod);
-                } else {
-                    $this->assertEquals($actualMethod, $expectedMethod);
-                }
-            }
-        };
-
         $this->mockSubjectCall(1);
 
-        $assertObject($actual, $expected);
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
     public function normalizeProvider() : array

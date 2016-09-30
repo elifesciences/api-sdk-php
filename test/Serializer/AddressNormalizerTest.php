@@ -4,11 +4,11 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class AddressNormalizerTest extends PHPUnit_Framework_TestCase
+final class AddressNormalizerTest extends TestCase
 {
     /** @var AddressNormalizer */
     private $normalizer;
@@ -58,32 +58,6 @@ final class AddressNormalizerTest extends PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->normalizer->normalize($address));
     }
 
-    public function normalizeProvider() : array
-    {
-        return [
-            'complete' => [
-                new Address(['address'], ['street address'], ['locality'], ['area'], 'country', 'postal code'),
-                [
-                    'formatted' => ['address'],
-                    'components' => [
-                        'streetAddress' => ['street address'],
-                        'locality' => ['locality'],
-                        'area' => ['area'],
-                        'country' => 'country',
-                        'postalCode' => 'postal code',
-                    ],
-                ],
-            ],
-            'minimum' => [
-                new Address(['address']),
-                [
-                    'formatted' => ['address'],
-                    'components' => [],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @test
      */
@@ -111,17 +85,20 @@ final class AddressNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_addresses(array $json, Address $expected)
+    public function it_denormalize_addresses(Address $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Address::class));
+        $actual = $this->normalizer->denormalize($json, Address::class);
+
+        $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function denormalizeProvider() : array
+    public function normalizeProvider() : array
     {
         return [
             'complete' => [
+                new Address(['address'], ['street address'], ['locality'], ['area'], 'country', 'postal code'),
                 [
                     'formatted' => ['address'],
                     'components' => [
@@ -132,13 +109,13 @@ final class AddressNormalizerTest extends PHPUnit_Framework_TestCase
                         'postalCode' => 'postal code',
                     ],
                 ],
-                new Address(['address'], ['street address'], ['locality'], ['area'], 'country', 'postal code'),
             ],
             'minimum' => [
+                new Address(['address']),
                 [
                     'formatted' => ['address'],
+                    'components' => [],
                 ],
-                new Address(['address']),
             ],
         ];
     }

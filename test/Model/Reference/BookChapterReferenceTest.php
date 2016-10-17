@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
@@ -12,6 +13,19 @@ use PHPUnit_Framework_TestCase;
 
 final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_reference()
+    {
+        $reference = new BookChapterReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('author preferred name', 'author index name'))], false,
+            [new PersonAuthor(new Person('editor preferred name', 'editor index name'))], false, 'chapter title',
+            'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
+
+        $this->assertInstanceOf(Reference::class, $reference);
+    }
+
     /**
      * @test
      */

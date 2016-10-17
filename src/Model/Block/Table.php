@@ -7,7 +7,7 @@ use eLife\ApiSdk\Model\Block;
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table
+final class Table implements Block
 {
     private $doi;
     private $id;

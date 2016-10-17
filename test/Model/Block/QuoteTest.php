@@ -2,12 +2,23 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Quote;
 use PHPUnit_Framework_TestCase;
 
 final class QuoteTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $quote = new Quote([new Paragraph('foo')]);
+
+        $this->assertInstanceOf(Block::class, $quote);
+    }
+
     /**
      * @test
      */

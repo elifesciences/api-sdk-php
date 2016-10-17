@@ -2,11 +2,22 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
 use PHPUnit_Framework_TestCase;
 
 final class MathMLTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $mathML = new MathML(null, null, '<math></math>');
+
+        $this->assertInstanceOf(Block::class, $mathML);
+    }
+
     /**
      * @test
      */

@@ -2,11 +2,22 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\YouTube;
 use PHPUnit_Framework_TestCase;
 
 final class YouTubeTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $video = new YouTube('foo', 300, 200);
+
+        $this->assertInstanceOf(Block::class, $video);
+    }
+
     /**
      * @test
      */

@@ -2,11 +2,22 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Section;
 use PHPUnit_Framework_TestCase;
 
 final class SectionTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $section = new Section('title', null, []);
+
+        $this->assertInstanceOf(Block::class, $section);
+    }
+
     /**
      * @test
      */

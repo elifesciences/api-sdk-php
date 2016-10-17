@@ -2,12 +2,24 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\ImageFile;
 use PHPUnit_Framework_TestCase;
 
 final class ImageTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $primary = new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg');
+        $image = new Image($primary);
+
+        $this->assertInstanceOf(Block::class, $image);
+    }
+
     /**
      * @test
      */

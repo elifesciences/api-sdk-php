@@ -2,11 +2,22 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
 use PHPUnit_Framework_TestCase;
 
 final class BoxTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $box = new Box(null, null, null, 'title', []);
+
+        $this->assertInstanceOf(Block::class, $box);
+    }
+
     /**
      * @test
      */

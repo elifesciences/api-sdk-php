@@ -4,12 +4,24 @@ namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use PHPUnit_Framework_TestCase;
 
 final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_reference()
+    {
+        $reference = new PreprintReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title', 'source');
+
+        $this->assertInstanceOf(Reference::class, $reference);
+    }
+
     /**
      * @test
      */

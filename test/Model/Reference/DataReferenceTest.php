@@ -5,12 +5,25 @@ namespace test\eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use PHPUnit_Framework_TestCase;
 
 final class DataReferenceTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_reference()
+    {
+        $reference = new DataReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, [], false, 'title',
+            'source');
+
+        $this->assertInstanceOf(Reference::class, $reference);
+    }
+
     /**
      * @test
      */

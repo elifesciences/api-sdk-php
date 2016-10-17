@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
@@ -9,6 +10,16 @@ use PHPUnit_Framework_TestCase;
 
 final class TableTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_block()
+    {
+        $table = new Table(null, null, null, null, [], ['<table></table>'], [], []);
+
+        $this->assertInstanceOf(Block::class, $table);
+    }
+
     /**
      * @test
      */

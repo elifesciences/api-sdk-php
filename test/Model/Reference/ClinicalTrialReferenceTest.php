@@ -4,12 +4,25 @@ namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ClinicalTrialReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use PHPUnit_Framework_TestCase;
 
 final class ClinicalTrialReferenceTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_reference()
+    {
+        $reference = new ClinicalTrialReference(new ReferenceDate(2000),
+            [new PersonAuthor(new Person('preferred name', 'index name'))], false,
+            ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, 'title', 'http://www.example.com/');
+
+        $this->assertInstanceOf(Reference::class, $reference);
+    }
+
     /**
      * @test
      */

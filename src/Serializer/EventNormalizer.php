@@ -14,7 +14,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class EventNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -83,13 +82,11 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             })->toArray();
 
             if ($object->hasVenue()) {
-                $data['venue'] = $object->getVenue()->then(function (Place $venue) use ($format, $context) {
-                    return $this->normalizer->normalize($venue, $format, $context);
-                });
+                $data['venue'] = $this->normalizer->normalize($object->getVenue(), $format, $context);
             }
         }
 
-        return all($data)->wait();
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

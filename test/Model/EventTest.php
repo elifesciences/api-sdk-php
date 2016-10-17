@@ -123,8 +123,8 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertTrue($with->hasVenue());
-        $this->assertEquals($venue, $with->getVenue()->wait());
+        $this->assertEquals($venue, $with->getVenue());
         $this->assertFalse($withOut->hasVenue());
-        $this->assertNull($withOut->getVenue()->wait());
+        $this->assertNull($withOut->getVenue());
     }
 }

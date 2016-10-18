@@ -2,20 +2,20 @@
 
 namespace test\eLife\ApiSdk\Collection;
 
-use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\Sequence;
 use PHPUnit_Framework_TestCase;
 
-final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
+final class ArraySequenceTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $collection = new ArrayCollection([]);
+        $collection = new ArraySequence([]);
 
-        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertInstanceOf(Sequence::class, $collection);
     }
 
     /**
@@ -23,7 +23,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_traversed()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         foreach ($collection as $i => $element) {
             $this->assertSame($i + 1, $element);
@@ -35,7 +35,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_counted()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $this->assertSame(5, $collection->count());
     }
@@ -47,7 +47,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
     {
         $array = [1, 2, 3, 4, 5];
 
-        $collection = new ArrayCollection($array);
+        $collection = new ArraySequence($array);
 
         $this->assertSame($array, $collection->toArray());
     }
@@ -58,7 +58,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected)
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $this->assertSame($expected, $collection->slice($offset, $length)->toArray());
     }
@@ -78,7 +78,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_mapped()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $map = function (int $number) {
             return $number * 100;
@@ -92,7 +92,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_filtered()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $filter = function (int $number) {
             return $number > 3;
@@ -106,7 +106,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_reduced()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $reduce = function (int $carry = null, int $number) {
             return $carry + $number;
@@ -120,7 +120,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_sorted()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $sort = function (int $a, int $b) {
             return $b <=> $a;
@@ -134,7 +134,7 @@ final class ArrayCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_reversed()
     {
-        $collection = new ArrayCollection([1, 2, 3, 4, 5]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $this->assertSame([5, 4, 3, 2, 1], $collection->reverse()->toArray());
     }

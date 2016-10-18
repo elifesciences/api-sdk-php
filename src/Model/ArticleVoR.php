@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticleVoR extends ArticleVersion
@@ -34,20 +34,20 @@ final class ArticleVoR extends ArticleVersion
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Collection $subjects = null,
+        Sequence $subjects = null,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,
         PromiseInterface $copyright,
-        Collection $authors,
+        Sequence $authors,
         string $impactStatement = null,
         Image $image = null,
-        Collection $keywords,
+        Sequence $keywords,
         PromiseInterface $digest,
-        Collection $content,
-        Collection $references,
+        Sequence $content,
+        Sequence $references,
         PromiseInterface $decisionLetter,
-        Collection $decisionLetterDescription,
+        Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $statusDate,
@@ -80,7 +80,7 @@ final class ArticleVoR extends ArticleVersion
         return $this->image;
     }
 
-    public function getKeywords() : Collection
+    public function getKeywords() : Sequence
     {
         return $this->keywords;
     }
@@ -93,15 +93,15 @@ final class ArticleVoR extends ArticleVersion
         return $this->digest->wait();
     }
 
-    public function getContent() : Collection
+    public function getContent() : Sequence
     {
         return $this->content;
     }
 
     /**
-     * @return Collection|Reference[]
+     * @return Sequence|Reference[]
      */
-    public function getReferences() : Collection
+    public function getReferences() : Sequence
     {
         return $this->references;
     }
@@ -115,9 +115,9 @@ final class ArticleVoR extends ArticleVersion
     }
 
     /**
-     * @return Collection|Block[]
+     * @return Sequence|Block[]
      */
-    public function getDecisionLetterDescription() : Collection
+    public function getDecisionLetterDescription() : Sequence
     {
         return $this->decisionLetterDescription;
     }

@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -23,12 +23,12 @@ final class ArticlePoATest extends ArticleTest
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Collection $subjects = null,
+        Sequence $subjects = null,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,
         PromiseInterface $copyright,
-        Collection $authors
+        Sequence $authors
     ) : ArticleVersion {
         return new ArticlePoA($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $statusDate,
             $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);

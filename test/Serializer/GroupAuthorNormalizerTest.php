@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
@@ -59,7 +59,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $groupAuthor = new GroupAuthor('group', new ArrayCollection([]));
+        $groupAuthor = new GroupAuthor('group', new ArraySequence([]));
 
         return [
             'group author' => [$groupAuthor, null, true],
@@ -81,7 +81,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new GroupAuthor('group', new ArrayCollection([
+                new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
@@ -154,7 +154,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new GroupAuthor('group', new ArrayCollection([])),
+                new GroupAuthor('group', new ArraySequence([])),
                 [
                     'type' => 'group',
                     'name' => 'group',
@@ -265,7 +265,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new GroupAuthor('group', new ArrayCollection([
+                new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
@@ -280,7 +280,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                     'type' => 'group',
                     'name' => 'group',
                 ],
-                $groupAuthor = new GroupAuthor('group', new ArrayCollection([])),
+                $groupAuthor = new GroupAuthor('group', new ArraySequence([])),
             ],
         ];
     }

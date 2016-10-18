@@ -4,8 +4,8 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
@@ -22,8 +22,8 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_an_id()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertSame('id', $blogArticle->getId());
@@ -35,8 +35,8 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_title()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertSame('title', $blogArticle->getTitle());
@@ -48,12 +48,12 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_impact_statement()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable(), 'impact statement',
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertSame('impact statement', $with->getImpactStatement());
@@ -66,8 +66,8 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_published_date()
     {
         $blogArticle = new BlogArticle('id', 'title', $date = new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertEquals($date, $blogArticle->getPublishedDate());
@@ -80,7 +80,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_may_have_subjects(Collection $subjects = null, bool $hasSubjects, array $expected)
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')), $subjects
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
         );
 
         $this->assertSame($hasSubjects, $blogArticle->hasSubjects());
@@ -103,7 +103,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
                 [],
             ],
             'collection' => [
-                new ArrayCollection($subjects),
+                new ArraySequence($subjects),
                 true,
                 $subjects,
             ],
@@ -116,8 +116,8 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_does_not_unwrap_subjects_when_checking_if_it_has_any()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertTrue($blogArticle->hasSubjects());
@@ -140,8 +140,8 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new Block\YouTube('foo', 300, 200),
         ];
 
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null, new ArrayCollection($content),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null, new ArraySequence($content),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         $this->assertEquals($content, $blogArticle->getContent()->toArray());

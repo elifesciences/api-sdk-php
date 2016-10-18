@@ -7,9 +7,9 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ArrayFromIterator;
-use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -17,7 +17,7 @@ use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
-final class AnnualReports implements Iterator, Collection
+final class AnnualReports implements Iterator, Sequence
 {
     use ArrayFromIterator;
     use SlicedIterator;
@@ -56,17 +56,17 @@ final class AnnualReports implements Iterator, Collection
             });
     }
 
-    public function slice(int $offset, int $length = null) : Collection
+    public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
-            return new PromiseCollection($this->all()
-                ->then(function (Collection $collection) use ($offset) {
-                    return $collection->slice($offset);
+            return new PromiseSequence($this->all()
+                ->then(function (Sequence $sequence) use ($offset) {
+                    return $sequence->slice($offset);
                 })
             );
         }
 
-        return new PromiseCollection($this->annualReportsClient
+        return new PromiseSequence($this->annualReportsClient
             ->listReports(
                 ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)],
                 ($offset / $length) + 1,
@@ -90,12 +90,12 @@ final class AnnualReports implements Iterator, Collection
                     }
                 }
 
-                return new ArrayCollection($reports);
+                return new ArraySequence($reports);
             })
         );
     }
 
-    public function reverse() : Collection
+    public function reverse() : Sequence
     {
         $clone = clone $this;
 

@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Collection;
 
 use ArrayObject;
-use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use Exception;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -14,16 +14,16 @@ use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
+final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $collection = new PromiseCollection(promise_for([]));
+        $collection = new PromiseSequence(promise_for([]));
 
-        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertInstanceOf(Sequence::class, $collection);
     }
 
     /**
@@ -31,7 +31,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_promise()
     {
-        $collection = new PromiseCollection(promise_for([]));
+        $collection = new PromiseSequence(promise_for([]));
 
         $this->assertInstanceOf(PromiseInterface::class, $collection);
     }
@@ -41,7 +41,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_traversed()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         foreach ($collection as $i => $element) {
             $this->assertSame($i + 1, $element);
@@ -53,7 +53,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_counted()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $this->assertSame(5, $collection->count());
     }
@@ -64,7 +64,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_casts_to_an_array($value, array $expected)
     {
-        $collection = new PromiseCollection(promise_for($value));
+        $collection = new PromiseSequence(promise_for($value));
 
         $this->assertSame($expected, $collection->toArray());
     }
@@ -73,7 +73,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     {
         return [
             'array' => [['foo'], ['foo']],
-            'collection' => [new ArrayCollection(['foo']), ['foo']],
+            'collection' => [new ArraySequence(['foo']), ['foo']],
             'traversable' => [new ArrayObject(['foo']), ['foo']],
             'string' => ['foo', ['foo']],
         ];
@@ -86,7 +86,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_can_be_sliced(int $offset, int $length = null, array $expected)
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $sliced = $collection->slice($offset, $length);
 
@@ -111,7 +111,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_can_be_mapped()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $map = function (int $number) {
             return $number * 100;
@@ -130,7 +130,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_can_be_filtered()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $filter = function (int $number) {
             return $number > 3;
@@ -148,7 +148,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_reduced()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $reduce = function (int $carry = null, int $number) {
             return $carry + $number;
@@ -162,7 +162,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_sorted()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $sort = function (int $a, int $b) {
             return $b <=> $a;
@@ -178,7 +178,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_reversed()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $this->assertSame([5, 4, 3, 2, 1], $collection->reverse()->toArray());
     }
@@ -188,7 +188,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_chained()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $result = $collection->then(function () {
             return 'foo';
@@ -202,7 +202,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_handle_exceptions()
     {
-        $collection = new PromiseCollection(rejection_for('foo'));
+        $collection = new PromiseSequence(rejection_for('foo'));
 
         $result = $collection->otherwise(function () {
             return 'bar';
@@ -217,7 +217,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_state()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $this->assertSame(PromiseInterface::PENDING, $collection->getState());
 
@@ -233,7 +233,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_cannot_be_resolved()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $this->expectException(LogicException::class);
 
@@ -246,7 +246,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_cannot_be_rejected()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $this->expectException(LogicException::class);
 
@@ -259,7 +259,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
     public function it_cannot_be_cancelled()
     {
         $promise = new Promise();
-        $collection = new PromiseCollection($promise);
+        $collection = new PromiseSequence($promise);
 
         $this->expectException(LogicException::class);
 
@@ -271,7 +271,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_waited_on()
     {
-        $collection = new PromiseCollection(rejection_for('foo'));
+        $collection = new PromiseSequence(rejection_for('foo'));
 
         $this->assertNull($collection->wait(false));
     }
@@ -281,7 +281,7 @@ final class PromiseCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_unwrapped()
     {
-        $collection = new PromiseCollection(promise_for([1, 2, 3, 4, 5]));
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
 
         $this->assertSame([1, 2, 3, 4, 5], $collection->wait()->toArray());
     }

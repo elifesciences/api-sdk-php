@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 
 final class GroupAuthor extends Author
 {
@@ -15,7 +15,7 @@ final class GroupAuthor extends Author
      */
     public function __construct(
         string $name,
-        Collection $people,
+        Sequence $people,
         array $groups = [],
         array $affiliations = [],
         string $competingInterests = null,
@@ -38,7 +38,7 @@ final class GroupAuthor extends Author
         return $this->name;
     }
 
-    public function getPeople() : Collection
+    public function getPeople() : Sequence
     {
         return $this->people;
     }

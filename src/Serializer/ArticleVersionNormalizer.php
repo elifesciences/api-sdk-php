@@ -2,8 +2,8 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\AuthorEntry;
@@ -33,14 +33,14 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 }
 
                 return new ArticleSection(
-                    new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $abstract['content'])),
                     $abstract['doi'] ?? null
                 );
             });
 
-        $data['authors'] = new PromiseCollection(promise_for($data['authors'])
+        $data['authors'] = new PromiseSequence(promise_for($data['authors'])
             ->then(function (array $authors) use ($format, $context) {
                 return array_map(function (array $author) use ($format, $context) {
                     return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);

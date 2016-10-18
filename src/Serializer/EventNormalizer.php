@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Place;
@@ -24,7 +24,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function denormalize($data, $class, $format = null, array $context = []) : Event
     {
-        $data['content'] = new PromiseCollection(promise_for($data['content'])
+        $data['content'] = new PromiseSequence(promise_for($data['content'])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);

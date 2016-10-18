@@ -8,14 +8,14 @@ use IteratorAggregate;
 use LogicException;
 use Traversable;
 
-final class PromiseCollection implements IteratorAggregate, Collection, PromiseInterface
+final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInterface
 {
     private $promise;
 
     public function __construct(PromiseInterface $promise)
     {
         $this->promise = $promise->then(function ($value) {
-            if ($value instanceof Collection) {
+            if ($value instanceof Sequence) {
                 return $value;
             }
 
@@ -23,7 +23,7 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
                 $value = iterator_to_array($value);
             }
 
-            return new ArrayCollection((array) $value);
+            return new ArraySequence((array) $value);
         });
     }
 
@@ -42,19 +42,19 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
         return $this->wait()->toArray();
     }
 
-    public function slice(int $offset, int $length = null) : Collection
+    public function slice(int $offset, int $length = null) : Sequence
     {
         return new self(
-            $this->then(function (Collection $collection) use ($offset, $length) {
+            $this->then(function (Sequence $collection) use ($offset, $length) {
                 return $collection->slice($offset, $length);
             })
         );
     }
 
-    public function map(callable $callback) : Collection
+    public function map(callable $callback) : Sequence
     {
         return new self(
-            $this->then(function (Collection $collection) use ($callback) {
+            $this->then(function (Sequence $collection) use ($callback) {
                 return $collection->map($callback);
             })
         );
@@ -63,7 +63,7 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
     public function filter(callable $callback) : Collection
     {
         return new self(
-            $this->then(function (Collection $collection) use ($callback) {
+            $this->then(function (Sequence $collection) use ($callback) {
                 return $collection->filter($callback);
             })
         );
@@ -71,24 +71,24 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
 
     public function reduce(callable $callback, $initial = null) : PromiseInterface
     {
-        return $this->then(function (Collection $collection) use ($callback, $initial) {
+        return $this->then(function (Sequence $collection) use ($callback, $initial) {
             return $collection->reduce($callback, $initial);
         });
     }
 
-    public function sort(callable $callback) : Collection
+    public function sort(callable $callback) : Sequence
     {
         return new self(
-            $this->then(function (Collection $collection) use ($callback) {
+            $this->then(function (Sequence $collection) use ($callback) {
                 return $collection->sort($callback);
             })
         );
     }
 
-    public function reverse() : Collection
+    public function reverse() : Sequence
     {
         return new self(
-            $this->then(function (Collection $collection) {
+            $this->then(function (Sequence $collection) {
                 return $collection->reverse();
             })
         );
@@ -111,17 +111,17 @@ final class PromiseCollection implements IteratorAggregate, Collection, PromiseI
 
     public function resolve($value)
     {
-        throw new LogicException('Cannot resolve a PromiseCollection');
+        throw new LogicException('Cannot resolve a PromiseSequence');
     }
 
     public function reject($reason)
     {
-        throw new LogicException('Cannot reject a PromiseCollection');
+        throw new LogicException('Cannot reject a PromiseSequence');
     }
 
     public function cancel()
     {
-        throw new LogicException('Cannot cancel a PromiseCollection');
+        throw new LogicException('Cannot cancel a PromiseSequence');
     }
 
     public function wait($unwrap = true)

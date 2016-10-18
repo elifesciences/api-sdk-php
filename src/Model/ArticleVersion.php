@@ -3,8 +3,8 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
 abstract class ArticleVersion
@@ -44,12 +44,12 @@ abstract class ArticleVersion
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Collection $subjects = null,
+        Sequence $subjects = null,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,
         PromiseInterface $copyright,
-        Collection $authors
+        Sequence $authors
     ) {
         $this->id = $id;
         $this->version = $version;
@@ -148,12 +148,12 @@ abstract class ArticleVersion
     }
 
     /**
-     * @return Collection|Subject[]
+     * @return Sequence|Subject[]
      */
-    final public function getSubjects() : Collection
+    final public function getSubjects() : Sequence
     {
         if (is_array($this->subjects)) {
-            return new ArrayCollection($this->subjects);
+            return new ArraySequence($this->subjects);
         }
 
         return $this->subjects;
@@ -188,7 +188,7 @@ abstract class ArticleVersion
         return $this->copyright->wait();
     }
 
-    final public function getAuthors(): Collection
+    final public function getAuthors(): Sequence
     {
         return $this->authors;
     }

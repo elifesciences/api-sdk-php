@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk;
 
+use eLife\ApiSdk\Collection\Sequence;
 use LogicException;
 
 trait CanBeSliced
@@ -9,7 +10,7 @@ trait CanBeSliced
     private $pages = [];
     private $pageBatch = 100;
 
-    abstract public function slice(int $offset, int $length = null) : Collection;
+    abstract public function slice(int $offset, int $length = null) : Sequence;
 
     abstract public function count() : int;
 

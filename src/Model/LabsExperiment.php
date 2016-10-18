@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 
 final class LabsExperiment
 {
@@ -23,7 +23,7 @@ final class LabsExperiment
         DateTimeImmutable $published,
         string $impactStatement = null,
         Image $image,
-        Collection $content
+        Sequence $content
     ) {
         $this->number = $number;
         $this->title = $title;
@@ -62,9 +62,9 @@ final class LabsExperiment
     }
 
     /**
-     * @return Collection|Block[]
+     * @return Sequence|Block[]
      */
-    public function getContent() : Collection
+    public function getContent() : Sequence
     {
         return $this->content;
     }

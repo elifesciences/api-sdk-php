@@ -2,14 +2,15 @@
 
 namespace eLife\ApiSdk;
 
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 
 trait ArrayFromIterator
 {
-    final public function map(callable $callback) : Collection
+    final public function map(callable $callback) : Sequence
     {
         return $this->all()->map($callback);
     }
@@ -24,7 +25,7 @@ trait ArrayFromIterator
         return $this->all()->reduce($callback, $initial);
     }
 
-    final public function sort(callable $callback) : Collection
+    final public function sort(callable $callback) : Sequence
     {
         return $this->all()->sort($callback);
     }
@@ -40,12 +41,12 @@ trait ArrayFromIterator
         return $array;
     }
 
-    final private function all() : PromiseCollection
+    final private function all() : PromiseSequence
     {
-        return new PromiseCollection(
+        return new PromiseSequence(
             $promise = new Promise(
                 function () use (&$promise) {
-                    $promise->resolve(new ArrayCollection($this->toArray()));
+                    $promise->resolve(new ArraySequence($this->toArray()));
                 }
             )
         );

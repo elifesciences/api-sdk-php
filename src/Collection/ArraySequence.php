@@ -9,7 +9,7 @@ use IteratorAggregate;
 use Traversable;
 use function GuzzleHttp\Promise\promise_for;
 
-final class ArrayCollection implements IteratorAggregate, Collection
+final class ArraySequence implements IteratorAggregate, Sequence
 {
     private $array;
 
@@ -33,12 +33,12 @@ final class ArrayCollection implements IteratorAggregate, Collection
         return $this->array;
     }
 
-    public function slice(int $offset, int $length = null) : Collection
+    public function slice(int $offset, int $length = null) : Sequence
     {
         return new self(array_slice($this->array, $offset, $length));
     }
 
-    public function map(callable $callback) : Collection
+    public function map(callable $callback) : Sequence
     {
         return new self(array_map($callback, $this->array));
     }
@@ -53,7 +53,7 @@ final class ArrayCollection implements IteratorAggregate, Collection
         return promise_for(array_reduce($this->array, $callback, $initial));
     }
 
-    public function sort(callable $callback) : Collection
+    public function sort(callable $callback) : Sequence
     {
         $clone = clone $this;
 
@@ -62,7 +62,7 @@ final class ArrayCollection implements IteratorAggregate, Collection
         return $clone;
     }
 
-    public function reverse() : Collection
+    public function reverse() : Sequence
     {
         return new self(array_reverse($this->array));
     }

@@ -3,8 +3,8 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -27,7 +27,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     }
 
                     return new ArticleSection(
-                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
                             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                         }, $authorResponse['content'])),
                         $authorResponse['doi']
@@ -35,7 +35,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 });
         }
 
-        $data['body'] = new PromiseCollection(promise_for($data['body'])
+        $data['body'] = new PromiseSequence(promise_for($data['body'])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);
@@ -44,9 +44,9 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if (empty($data['decisionLetter'])) {
             $data['decisionLetter'] = promise_for(null);
-            $decisionLetterDescription = new ArrayCollection([]);
+            $decisionLetterDescription = new ArraySequence([]);
         } else {
-            $decisionLetterDescription = new PromiseCollection(promise_for($data['decisionLetter'])
+            $decisionLetterDescription = new PromiseSequence(promise_for($data['decisionLetter'])
                 ->then(function (array $decisionLetter) use ($format, $context) {
                     return array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
@@ -59,7 +59,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     }
 
                     return new ArticleSection(
-                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
                             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                         }, $decisionLetter['content'])),
                         $decisionLetter['doi']
@@ -77,7 +77,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     }
 
                     return new ArticleSection(
-                        new ArrayCollection(array_map(function (array $block) use ($format, $context) {
+                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
                             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                         }, $digest['content'])),
                         $digest['doi']
@@ -89,9 +89,9 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
         }
 
-        $data['keywords'] = new PromiseCollection(promise_for($data['keywords'] ?? []));
+        $data['keywords'] = new PromiseSequence(promise_for($data['keywords'] ?? []));
 
-        $data['references'] = new PromiseCollection(promise_for($data['references'] ?? [])
+        $data['references'] = new PromiseSequence(promise_for($data['references'] ?? [])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Reference::class, $format, $context);

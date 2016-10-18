@@ -3,8 +3,8 @@
 namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsExperiment;
@@ -20,7 +20,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null,
             new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         $this->assertSame(1, $labsExperiment->getNumber());
@@ -33,7 +33,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null,
             new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         $this->assertSame('title', $labsExperiment->getTitle());
@@ -46,11 +46,11 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $with = new LabsExperiment(1, 'title', new DateTimeImmutable(), 'impact statement',
             new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
         $withOut = new LabsExperiment(1, 'title', new DateTimeImmutable(), null,
             new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         $this->assertSame('impact statement', $with->getImpactStatement());
@@ -64,7 +64,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $labsExperiment = new LabsExperiment(1, 'title', $date = new DateTimeImmutable(), null,
             new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         $this->assertEquals($date, $labsExperiment->getPublishedDate());
@@ -77,7 +77,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null,
             $image = new Image('', [900 => 'https://placehold.it/900x450']),
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         $this->assertEquals($image, $labsExperiment->getImage());
@@ -91,7 +91,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
         $content = [new Block\Paragraph('foo')];
 
         $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null,
-            new Image('', [900 => 'https://placehold.it/900x450']), new ArrayCollection($content)
+            new Image('', [900 => 'https://placehold.it/900x450']), new ArraySequence($content)
         );
 
         $this->assertEquals($content, $labsExperiment->getContent()->toArray());

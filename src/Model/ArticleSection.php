@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 
 final class ArticleSection
 {
@@ -12,16 +12,16 @@ final class ArticleSection
     /**
      * @internal
      */
-    public function __construct(Collection $content, string $doi = null)
+    public function __construct(Sequence $content, string $doi = null)
     {
         $this->content = $content;
         $this->doi = $doi;
     }
 
     /**
-     * @return Collection|Block[]
+     * @return Sequence|Block[]
      */
-    public function getContent() : Collection
+    public function getContent() : Sequence
     {
         return $this->content;
     }

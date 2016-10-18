@@ -7,9 +7,9 @@ use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ArrayFromIterator;
-use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\LabsExperiment;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
@@ -18,7 +18,7 @@ use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
-final class LabsExperiments implements Iterator, Collection
+final class LabsExperiments implements Iterator, Sequence
 {
     use ArrayFromIterator;
     use SlicedIterator;
@@ -57,17 +57,17 @@ final class LabsExperiments implements Iterator, Collection
             });
     }
 
-    public function slice(int $offset, int $length = null) : Collection
+    public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
-            return new PromiseCollection($this->all()
-                ->then(function (Collection $collection) use ($offset) {
-                    return $collection->slice($offset);
+            return new PromiseSequence($this->all()
+                ->then(function (Sequence $sequence) use ($offset) {
+                    return $sequence->slice($offset);
                 })
             );
         }
 
-        return new PromiseCollection($this->labsClient
+        return new PromiseSequence($this->labsClient
             ->listExperiments(
                 ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)],
                 ($offset / $length) + 1,
@@ -109,12 +109,12 @@ final class LabsExperiments implements Iterator, Collection
                     }
                 }
 
-                return new ArrayCollection($experiments);
+                return new ArraySequence($experiments);
             })
         );
     }
 
-    public function reverse() : Collection
+    public function reverse() : Sequence
     {
         $clone = clone $this;
 

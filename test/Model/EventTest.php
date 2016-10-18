@@ -4,8 +4,8 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Place;
@@ -21,7 +21,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_has_an_id()
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertSame('id', $event->getId());
@@ -33,7 +33,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_has_a_title()
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertSame('title', $event->getTitle());
@@ -45,10 +45,10 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_impact_statement()
     {
         $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
         $withOut = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertSame('impact statement', $with->getImpactStatement());
@@ -61,7 +61,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_has_a_start_date()
     {
         $event = new Event('id', 'title', null, $starts = new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertEquals($starts, $event->getStarts());
@@ -73,7 +73,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_has_an_end_date()
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable(), $ends = new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertEquals($ends, $event->getEnds());
@@ -86,10 +86,10 @@ final class EventTest extends PHPUnit_Framework_TestCase
     {
         $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable(), new DateTimeImmutable(),
             $timeZone = new DateTimeZone('Europe/London'),
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
         $withOut = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertEquals($timeZone, $with->getTimeZone());
@@ -104,7 +104,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
         $content = [new Block\Paragraph('foo')];
 
         $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new ArrayCollection($content),
+            new ArraySequence($content),
             rejection_for('Event venue should not be unwrapped'));
 
         $this->assertEquals($content, $event->getContent()->toArray());
@@ -118,9 +118,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
         $venue = new Place(null, null, ['foo']);
 
         $with = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')), promise_for($venue));
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')), promise_for($venue));
         $withOut = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')));
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertTrue($with->hasVenue());
         $this->assertEquals($venue, $with->getVenue()->wait());

@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\Person;
@@ -15,7 +15,7 @@ final class GroupAuthorTest extends AuthorTest
      */
     public function it_has_a_name()
     {
-        $author = new GroupAuthor('name', new ArrayCollection([]));
+        $author = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertSame('name', $author->getName());
     }
@@ -26,8 +26,8 @@ final class GroupAuthorTest extends AuthorTest
     public function it_may_have_people()
     {
         $with = new GroupAuthor('name',
-            $people = new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]));
-        $withOut = new GroupAuthor('name', new ArrayCollection([]));
+            $people = new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
+        $withOut = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertEquals($people, $with->getPeople());
         $this->assertEmpty($withOut->getPeople());
@@ -38,9 +38,9 @@ final class GroupAuthorTest extends AuthorTest
      */
     public function it_may_have_groups()
     {
-        $with = new GroupAuthor('name', new ArrayCollection([]),
+        $with = new GroupAuthor('name', new ArraySequence([]),
             $groups = ['group' => [new Person('preferred name', 'index name')]]);
-        $withOut = new GroupAuthor('name', new ArrayCollection([]));
+        $withOut = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertEquals($groups, $with->getGroups());
         $this->assertEmpty($withOut->getGroups());
@@ -55,7 +55,7 @@ final class GroupAuthorTest extends AuthorTest
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author {
-        return new GroupAuthor('name', new ArrayCollection([]), [], $affiliations,
+        return new GroupAuthor('name', new ArraySequence([]), [], $affiliations,
             $competingInterests, $contribution, $emailAddresses, $equalContributionGroups, $phoneNumbers,
             $postalAddresses);
     }

@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Subject;
@@ -23,7 +23,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 
     public function denormalize($data, $class, $format = null, array $context = []) : BlogArticle
     {
-        $data['content'] = new PromiseCollection(promise_for($data['content'])
+        $data['content'] = new PromiseSequence(promise_for($data['content'])
             ->then(function (array $blocks) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);

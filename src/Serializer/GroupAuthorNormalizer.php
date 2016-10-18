@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Collection\ArrayCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
@@ -25,7 +25,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
 
         return new GroupAuthor(
             $data['name'],
-            new ArrayCollection(array_map(function (array $person) use ($format, $context) {
+            new ArraySequence(array_map(function (array $person) use ($format, $context) {
                 return $this->denormalizer->denormalize($person, PersonAuthor::class, $format, $context);
             }, $data['people'] ?? [])),
             $data['groups'] ?? [],

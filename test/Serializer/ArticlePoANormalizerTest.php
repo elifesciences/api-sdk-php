@@ -5,8 +5,8 @@ namespace test\eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -72,9 +72,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, new ArrayCollection([]), [], promise_for(null),
+            new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]));
+            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
 
         return [
             'article poa' => [$articlePoA, null, true],
@@ -160,10 +160,10 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
-                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
+                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]))), promise_for(1),
                     promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))])),
                 [],
                 [
                     'id' => 'id',
@@ -210,7 +210,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))])),
                 [],
                 [
                     'id' => 'id',
@@ -241,10 +241,10 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
-                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped'))),
                 ['snippet' => true],
                 [
                     'id' => 'id',
@@ -269,7 +269,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped'))),
                 ['snippet' => true],
                 [
                     'id' => 'id',

@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -29,7 +29,7 @@ final class Event
         DateTimeImmutable $starts,
         DateTimeImmutable $ends,
         DateTimeZone $timeZone = null,
-        Collection $content,
+        Sequence $content,
         PromiseInterface $venue = null
     ) {
         $this->id = $id;
@@ -78,7 +78,7 @@ final class Event
         return $this->timeZone;
     }
 
-    public function getContent(): Collection
+    public function getContent(): Sequence
     {
         return $this->content;
     }

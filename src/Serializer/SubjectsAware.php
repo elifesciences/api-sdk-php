@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\all;
@@ -36,7 +36,7 @@ trait SubjectsAware
             });
         }
 
-        return new PromiseCollection($this->globalSubjectsCallback
+        return new PromiseSequence($this->globalSubjectsCallback
             ->then(function (array $foundSubjects) use ($subjects) {
                 return array_intersect_key($foundSubjects, array_flip($subjects));
             })

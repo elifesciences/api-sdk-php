@@ -5,8 +5,8 @@ namespace test\eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -82,12 +82,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, new ArrayCollection([]), [], promise_for(null),
+            new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
-            new ArrayCollection([]), promise_for(null),
-            new ArrayCollection([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
-            new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null));
+            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
+            new ArraySequence([]), promise_for(null),
+            new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
+            new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
 
         return [
             'article vor' => [$articleVoR, null, true],
@@ -173,21 +173,21 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
-                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
+                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
-                    'impact statement', $image, new ArrayCollection(['keyword']),
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('digest')]), 'digestDoi')),
-                    new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([
+                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]),
+                    'impact statement', $image, new ArraySequence(['keyword']),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
+                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
+                    new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000-01-01'),
                             [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
-                    ]), promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Decision letter content')]),
-                        'decisionLetterDoi')), new ArrayCollection([new Paragraph('Decision letter description')]),
-                    promise_for(new ArticleSection(new ArrayCollection([new Paragraph('Author response content')]),
+                    ]), promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter content')]),
+                        'decisionLetterDoi')), new ArraySequence([new Paragraph('Decision letter description')]),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response content')]),
                         'authorResponseDoi'))),
                 [],
                 [
@@ -326,10 +326,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
-                    new ArrayCollection([]), promise_for(null),
-                    new ArrayCollection([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArrayCollection([]), promise_for(null), new ArrayCollection([]), promise_for(null)),
+                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
+                    new ArraySequence([]), promise_for(null),
+                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
+                    new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 [],
                 [
                     'id' => 'id',
@@ -373,16 +373,16 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
-                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped')), 'impact statement', $image,
-                    new PromiseCollection(rejection_for('Keywords should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped')), 'impact statement', $image,
+                    new PromiseSequence(rejection_for('Keywords should not be unwrapped')),
                     rejection_for('Digest should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Content should not be unwrapped')),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Content should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped')),
                     rejection_for('Decision letter should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Decision letter description should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Decision letter description should not be unwrapped')),
                     rejection_for('Author response should not be unwrapped')),
                 ['snippet' => true],
                 [
@@ -425,13 +425,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped')), null, null,
-                    new PromiseCollection(rejection_for('Keywords should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped')), null, null,
+                    new PromiseSequence(rejection_for('Keywords should not be unwrapped')),
                     rejection_for('Digest should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Content should not be unwrapped')),
-                    new PromiseCollection(rejection_for('Authors should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Content should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Authors should not be unwrapped')),
                     rejection_for('Decision letter should not be unwrapped'),
-                    new PromiseCollection(rejection_for('Decision letter description should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Decision letter description should not be unwrapped')),
                     rejection_for('Author response should not be unwrapped')),
                 ['snippet' => true],
                 [

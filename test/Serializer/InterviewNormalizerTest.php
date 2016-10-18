@@ -3,8 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
@@ -59,9 +59,9 @@ final class InterviewNormalizerTest extends TestCase
     {
         $person = new Person('preferred name', 'index name');
         $interviewee = new Interviewee($person,
-            new PromiseCollection(rejection_for('Full interviewee should not be unwrapped')));
+            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full interview should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
         return [
@@ -132,8 +132,8 @@ final class InterviewNormalizerTest extends TestCase
             'complete' => [
                 $interview = new Interview('id',
                     new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
-                        new ArrayCollection([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $date = new DateTimeImmutable(), 'impact statement', new ArrayCollection([new Paragraph('text')])
+                        new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
+                    $date = new DateTimeImmutable(), 'impact statement', new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [
@@ -164,7 +164,7 @@ final class InterviewNormalizerTest extends TestCase
             ],
             'minimum' => [
                 new Interview('id', new Interviewee(new Person('preferred name', 'index name')), 'title', $date, null,
-                    new ArrayCollection([new Paragraph('text')])),
+                    new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -187,9 +187,9 @@ final class InterviewNormalizerTest extends TestCase
             'complete snippet' => [
                 $interview = new Interview('id',
                     new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
-                        new PromiseCollection(rejection_for('Full interviewee should not be unwrapped'))), 'title',
+                        new PromiseSequence(rejection_for('Full interviewee should not be unwrapped'))), 'title',
                     $date, 'impact statement',
-                    new PromiseCollection(rejection_for('Full interview should not be unwrapped'))
+                    new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
                 ),
                 ['snippet' => true],
                 [
@@ -209,7 +209,7 @@ final class InterviewNormalizerTest extends TestCase
             'minimum snippet' => [
                 $interview = new Interview('id',
                     new Interviewee(new Person('preferred name', 'index name')), 'title', $date, null,
-                    new PromiseCollection(rejection_for('Full interview should not be unwrapped'))
+                    new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
                 ),
                 ['snippet' => true],
                 [

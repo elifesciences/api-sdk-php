@@ -3,8 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
@@ -58,7 +58,7 @@ final class LabsExperimentNormalizerTest extends TestCase
     {
         $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
         $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null, $image,
-            new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         return [
@@ -131,7 +131,7 @@ final class LabsExperimentNormalizerTest extends TestCase
         return [
             'complete' => [
                 new LabsExperiment(1, 'title', $date, 'impact statement', $image,
-                    new ArrayCollection([new Paragraph('text')])),
+                    new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
@@ -148,7 +148,7 @@ final class LabsExperimentNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new LabsExperiment(1, 'title', $date, null, $image, new ArrayCollection([new Paragraph('text')])),
+                new LabsExperiment(1, 'title', $date, null, $image, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
@@ -165,7 +165,7 @@ final class LabsExperimentNormalizerTest extends TestCase
             ],
             'complete snippet' => [
                 new LabsExperiment(1, 'title', $date, 'impact statement', $image,
-                    new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))),
+                    new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))),
                 ['snippet' => true],
                 [
                     'number' => 1,
@@ -177,7 +177,7 @@ final class LabsExperimentNormalizerTest extends TestCase
             ],
             'minimum snippet' => [
                 new LabsExperiment(1, 'title', $date, null, $image,
-                    new PromiseCollection(rejection_for('Full Labs experiment should not be unwrapped'))),
+                    new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))),
                 ['snippet' => true],
                 [
                     'number' => 1,

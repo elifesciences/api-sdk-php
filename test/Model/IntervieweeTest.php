@@ -3,8 +3,8 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Person;
@@ -20,7 +20,7 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
     {
         $person = new Person('preferred name', 'index name');
         $interviewee = new Interviewee($person,
-            new PromiseCollection(rejection_for('Full interviewee should not be unwrapped')));
+            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
         $this->assertEquals($person, $interviewee->getPerson());
     }
@@ -49,7 +49,7 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
                 [],
             ],
             'collection' => [
-                new ArrayCollection($cvLines),
+                new ArraySequence($cvLines),
                 true,
                 $cvLines,
             ],
@@ -63,7 +63,7 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
     {
         $person = new Person('preferred name', 'index name');
         $interviewee = new Interviewee($person,
-            new PromiseCollection(rejection_for('CV lines should not be unwrapped')));
+            new PromiseSequence(rejection_for('CV lines should not be unwrapped')));
 
         $this->assertTrue($interviewee->hasCvLines());
     }

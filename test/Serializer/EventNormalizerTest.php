@@ -4,8 +4,8 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Place;
@@ -58,7 +58,7 @@ final class EventNormalizerTest extends TestCase
     public function canNormalizeProvider() : array
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
         return [
@@ -133,7 +133,7 @@ final class EventNormalizerTest extends TestCase
         return [
             'complete' => [
                 new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new ArrayCollection([new Paragraph('text')]), promise_for($venue)),
+                    new ArraySequence([new Paragraph('text')]), promise_for($venue)),
                 [],
                 [
                     'id' => 'id',
@@ -152,7 +152,7 @@ final class EventNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new Event('id', 'title', null, $starts, $ends, null, new ArrayCollection([new Paragraph('text')])),
+                new Event('id', 'title', null, $starts, $ends, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -169,7 +169,7 @@ final class EventNormalizerTest extends TestCase
             ],
             'complete snippet' => [
                 new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Event content should not be unwrapped')),
                     rejection_for('Event venue should not be unwrapped')),
                 ['snippet' => true],
                 [
@@ -183,7 +183,7 @@ final class EventNormalizerTest extends TestCase
             ],
             'minimum snippet' => [
                 new Event('id', 'title', null, $starts, $ends, null,
-                    new PromiseCollection(rejection_for('Event content should not be unwrapped')),
+                    new PromiseSequence(rejection_for('Event content should not be unwrapped')),
                     rejection_for('Event venue should not be unwrapped')),
                 ['snippet' => true],
                 [

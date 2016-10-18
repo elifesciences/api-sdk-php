@@ -5,8 +5,8 @@ namespace test\eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Collection\ArrayCollection;
-use eLife\ApiSdk\Collection\PromiseCollection;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
@@ -63,8 +63,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseCollection(rejection_for('Subjects should not be unwrapped'))
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
         return [
@@ -149,8 +149,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new BlogArticle('id', 'title', $date, 'impact statement', new ArrayCollection([new Paragraph('text')]),
-                    new ArrayCollection([$subject])),
+                new BlogArticle('id', 'title', $date, 'impact statement', new ArraySequence([new Paragraph('text')]),
+                    new ArraySequence([$subject])),
                 [],
                 [
                     'id' => 'id',
@@ -169,7 +169,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new BlogArticle('id', 'title', $date, null, new ArrayCollection([new Paragraph('text')]), null),
+                new BlogArticle('id', 'title', $date, null, new ArraySequence([new Paragraph('text')]), null),
                 [],
                 [
                     'id' => 'id',
@@ -185,8 +185,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new BlogArticle('id', 'title', $date, 'impact statement',
-                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')),
-                    new ArrayCollection([$subject])),
+                    new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+                    new ArraySequence([$subject])),
                 ['snippet' => true],
                 [
                     'id' => 'id',
@@ -200,7 +200,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new BlogArticle('id', 'title', $date, null,
-                    new PromiseCollection(rejection_for('Full blog article should not be unwrapped')), null),
+                    new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), null),
                 ['snippet' => true],
                 [
                     'id' => 'id',

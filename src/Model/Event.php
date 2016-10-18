@@ -6,7 +6,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Event
 {
@@ -88,8 +87,15 @@ final class Event
         return null !== $this->venue;
     }
 
-    public function getVenue(): PromiseInterface
+    /**
+     * @return Place|null
+     */
+    public function getVenue()
     {
-        return promise_for($this->venue);
+        if (null === $this->venue) {
+            return null;
+        }
+
+        return $this->venue->wait();
     }
 }

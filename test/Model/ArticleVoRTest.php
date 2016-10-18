@@ -27,14 +27,14 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), 'impact statement', null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseCollection(rejection_for('No content')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),
             rejection_for('No author response'));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -51,7 +51,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_an_image()
     {
-        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null,
             $image = new Image('', [900 => 'https://placehold.it/900x450']),
@@ -59,7 +59,7 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseCollection(rejection_for('No contents')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),
             rejection_for('No author response'));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -76,7 +76,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_keywords()
     {
-        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             $keywords = new ArrayCollection(['keyword']), rejection_for('No digest'),
@@ -92,7 +92,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_a_digest()
     {
-        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')),
@@ -100,7 +100,7 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseCollection(rejection_for('No content')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),
             rejection_for('No author response'));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), promise_for(null),
@@ -117,7 +117,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_has_content()
     {
-        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -134,7 +134,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_references()
     {
-        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')),
@@ -155,7 +155,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_a_decision_letter()
     {
-        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -163,7 +163,7 @@ final class ArticleVoRTest extends ArticleTest
             promise_for($decisionLetter = new ArticleSection(new ArrayCollection([new Paragraph('Decision letter')]))),
             new PromiseCollection(rejection_for('No decision letter description')),
             rejection_for('No author response'));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -180,7 +180,7 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_a_decision_letter_description()
     {
-        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -197,14 +197,14 @@ final class ArticleVoRTest extends ArticleTest
      */
     public function it_may_have_an_author_response()
     {
-        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseCollection(rejection_for('No content')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),
             promise_for($authorResponse = new ArticleSection(new ArrayCollection([new Paragraph('Author response')]))));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             1, 'elocationId', null, null, [], rejection_for('No abstract'), rejection_for('No issue'),
             rejection_for('No copyright'), new PromiseCollection(rejection_for('No authors')), null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
@@ -222,6 +222,7 @@ final class ArticleVoRTest extends ArticleTest
         string $type,
         string $doi,
         string $authorLine,
+        string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published,
         int $volume,
@@ -234,8 +235,8 @@ final class ArticleVoRTest extends ArticleTest
         PromiseInterface $copyright,
         Collection $authors
     ) : ArticleVersion {
-        return new ArticleVoR($id, $version, $type, $doi, $authorLine, $title, $published, $volume, $elocationId, $pdf,
-            $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, null, null,
+        return new ArticleVoR($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $volume,
+            $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, null, null,
             new PromiseCollection(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseCollection(rejection_for('No content')), new PromiseCollection(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseCollection(rejection_for('No decision letter description')),

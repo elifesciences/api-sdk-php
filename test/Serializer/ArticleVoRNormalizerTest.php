@@ -81,7 +81,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
+        $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
             'elocationId', null, new ArrayCollection([]), [], promise_for(null), promise_for(null),
             promise_for(new Copyright('license', 'statement', 'holder')),
             new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
@@ -171,7 +171,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 1, 'elocationId',
                     'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
@@ -199,6 +199,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => ['subject1'],
                     'researchOrganisms' => ['research organism'],
@@ -320,7 +321,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
@@ -368,7 +369,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 1, 'elocationId',
                     'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
@@ -391,6 +392,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => ['subject1'],
                     'researchOrganisms' => ['research organism'],
@@ -416,7 +418,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
                     'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
                     new PromiseCollection(rejection_for('Authors should not be unwrapped')), null, null,

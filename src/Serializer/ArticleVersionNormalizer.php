@@ -76,6 +76,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'elocationId' => $object->getElocationId(),
         ];
 
+        if ($object->getTitlePrefix()) {
+            $data['titlePrefix'] = $object->getTitlePrefix();
+        }
+
         if ($object->getPdf()) {
             $data['pdf'] = $object->getPdf();
         }

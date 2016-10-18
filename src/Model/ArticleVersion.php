@@ -14,6 +14,7 @@ abstract class ArticleVersion
     private $type;
     private $doi;
     private $authorLine;
+    private $titlePrefix;
     private $title;
     private $published;
     private $volume;
@@ -35,6 +36,7 @@ abstract class ArticleVersion
         string $type,
         string $doi,
         string $authorLine,
+        string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published,
         int $volume,
@@ -52,6 +54,7 @@ abstract class ArticleVersion
         $this->type = $type;
         $this->doi = $doi;
         $this->authorLine = $authorLine;
+        $this->titlePrefix = $titlePrefix;
         $this->title = $title;
         $this->published = $published;
         $this->volume = $volume;
@@ -90,9 +93,22 @@ abstract class ArticleVersion
         return $this->authorLine;
     }
 
+    /**
+     * @return string|null
+     */
+    final public function getTitlePrefix()
+    {
+        return $this->titlePrefix;
+    }
+
     final public function getTitle(): string
     {
         return $this->title;
+    }
+
+    final public function getFullTitle() : string
+    {
+        return implode(': ', array_filter([$this->titlePrefix, $this->title]));
     }
 
     final public function getPublishedDate(): DateTimeImmutable

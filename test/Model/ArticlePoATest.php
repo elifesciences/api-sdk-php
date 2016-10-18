@@ -16,6 +16,7 @@ final class ArticlePoATest extends ArticleTest
         string $type,
         string $doi,
         string $authorLine,
+        string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published,
         int $volume,
@@ -28,7 +29,7 @@ final class ArticlePoATest extends ArticleTest
         PromiseInterface $copyright,
         Collection $authors
     ) : ArticleVersion {
-        return new ArticlePoA($id, $version, $type, $doi, $authorLine, $title, $published, $volume, $elocationId, $pdf,
-            $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
+        return new ArticlePoA($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $volume,
+            $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
     }
 }

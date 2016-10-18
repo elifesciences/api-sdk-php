@@ -71,7 +71,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', new DateTimeImmutable(), 1,
+        $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
             'elocationId', null, new ArrayCollection([]), [], promise_for(null), promise_for(null),
             promise_for(new Copyright('license', 'statement', 'holder')),
             new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]));
@@ -158,7 +158,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 2, 'elocationId',
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 2, 'elocationId',
                     'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
                     promise_for(new Copyright('license', 'statement', 'holder')),
@@ -174,6 +174,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                     'volume' => 2,
                     'elocationId' => 'elocationId',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => ['subject1'],
                     'researchOrganisms' => ['research organism'],
@@ -204,7 +205,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, 1, 'elocationId',
                     null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
@@ -236,7 +237,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 2, 'elocationId',
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 2, 'elocationId',
                     'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
@@ -252,6 +253,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                     'volume' => 2,
                     'elocationId' => 'elocationId',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => ['subject1'],
                     'researchOrganisms' => ['research organism'],
@@ -259,7 +261,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title', $date, 1, 'elocationId',
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, 1, 'elocationId',
                     null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),

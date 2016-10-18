@@ -17,6 +17,7 @@ abstract class ArticleVersion
     private $titlePrefix;
     private $title;
     private $published;
+    private $statusDate;
     private $volume;
     private $elocationId;
     private $pdf;
@@ -39,6 +40,7 @@ abstract class ArticleVersion
         string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published,
+        DateTimeImmutable $statusDate,
         int $volume,
         string $elocationId,
         string $pdf = null,
@@ -57,6 +59,7 @@ abstract class ArticleVersion
         $this->titlePrefix = $titlePrefix;
         $this->title = $title;
         $this->published = $published;
+        $this->statusDate = $statusDate;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
         $this->pdf = $pdf;
@@ -114,6 +117,11 @@ abstract class ArticleVersion
     final public function getPublishedDate(): DateTimeImmutable
     {
         return $this->published;
+    }
+
+    final public function getStatusDate(): DateTimeImmutable
+    {
+        return $this->statusDate;
     }
 
     final public function getVolume(): int

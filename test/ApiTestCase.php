@@ -446,6 +446,7 @@ abstract class ApiTestCase extends TestCase
             'doi' => '10.7554/eLife.'.$number,
             'title' => 'Article '.$number.' title',
             'published' => '2000-01-01T00:00:00+00:00',
+            'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
             'elocationId' => 'e'.$number,
             'copyright' => [
@@ -487,6 +488,7 @@ abstract class ApiTestCase extends TestCase
             'doi' => '10.7554/eLife.'.$number,
             'title' => 'Article '.$number.' title',
             'published' => '2000-01-01T00:00:00+00:00',
+            'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
             'elocationId' => 'e'.$number,
             'copyright' => [

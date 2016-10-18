@@ -19,6 +19,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['titlePrefix'] ?? null,
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']),
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,

@@ -81,9 +81,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
-            'elocationId', null, new ArrayCollection([]), [], promise_for(null), promise_for(null),
-            promise_for(new Copyright('license', 'statement', 'holder')),
+        $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
+            new DateTimeImmutable(), 1, 'elocationId', null, new ArrayCollection([]), [], promise_for(null),
+            promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
             new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
             new ArrayCollection([]), promise_for(null),
             new ArrayCollection([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
@@ -168,11 +168,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         ]);
         $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
         $date = new DateTimeImmutable();
+        $statusDate = new DateTimeImmutable('-1 day');
 
         return [
             'complete' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 1, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
+                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]),
@@ -197,6 +198,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
@@ -321,7 +323,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
@@ -337,6 +339,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'copyright' => [
@@ -369,8 +372,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 1, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
+                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
                     new PromiseCollection(rejection_for('Authors should not be unwrapped')), 'impact statement', $image,
@@ -390,6 +393,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
@@ -418,7 +422,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
+                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
                     new PromiseCollection(rejection_for('Authors should not be unwrapped')), null, null,
@@ -438,6 +442,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'status' => 'vor',

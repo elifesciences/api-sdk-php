@@ -71,9 +71,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(), 1,
-            'elocationId', null, new ArrayCollection([]), [], promise_for(null), promise_for(null),
-            promise_for(new Copyright('license', 'statement', 'holder')),
+        $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
+            new DateTimeImmutable(), 1, 'elocationId', null, new ArrayCollection([]), [], promise_for(null),
+            promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
             new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))]));
 
         return [
@@ -154,12 +154,13 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             ]),
         ]);
         $date = new DateTimeImmutable();
+        $statusDate = new DateTimeImmutable('-1 day');
         $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
 
         return [
             'complete' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 2, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
+                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArrayCollection([new Paragraph('abstract')]))), promise_for(1),
                     promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
@@ -172,6 +173,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 2,
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
@@ -205,8 +207,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, 1, 'elocationId',
-                    null, null, [], promise_for(null), promise_for(null),
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
+                    'elocationId', null, null, [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArrayCollection([new PersonAuthor(new Person('preferred name', 'index name'))])),
                 [],
@@ -218,6 +220,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'copyright' => [
@@ -237,8 +240,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, 2, 'elocationId',
-                    'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
+                    'elocationId', 'http://www.example.com/', new ArrayCollection([$subject]), ['research organism'],
                     rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
                     new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
@@ -251,6 +254,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 2,
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
@@ -261,8 +265,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, 1, 'elocationId',
-                    null, null, [], rejection_for('Abstract should not be unwrapped'),
+                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
+                    'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'),
                     rejection_for('Copyright should not be unwrapped'),
                     new PromiseCollection(rejection_for('Authors should not be unwrapped'))),
@@ -275,6 +279,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'authorLine' => 'author line',
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
+                    'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
                     'elocationId' => 'elocationId',
                     'status' => 'poa',

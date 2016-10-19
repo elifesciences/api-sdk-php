@@ -8,6 +8,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 use LogicException;
 use RuntimeException;
 use function GuzzleHttp\Promise\exception_for;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 
 /**
  * @internal
@@ -28,6 +30,17 @@ final class CallbackPromise implements PromiseInterface
 
     public function then(callable $onFulfilled = null, callable $onRejected = null)
     {
+        switch ($this->getState()) {
+            case PromiseInterface::FULFILLED:
+                return $onFulfilled
+                    ? promise_for($this->result)->then($onFulfilled)
+                    : promise_for($this->result);
+            case PromiseInterface::REJECTED:
+                return $onRejected
+                    ? rejection_for($this->result)->otherwise($onRejected)
+                    : rejection_for($this->result);
+        }
+
         $clone = clone $this;
 
         if ($onFulfilled) {

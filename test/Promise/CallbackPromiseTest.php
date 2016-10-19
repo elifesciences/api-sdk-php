@@ -25,6 +25,42 @@ final class CallbackPromiseTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function it_returns_a_callback_after_being_resolved()
+    {
+        $promise = new CallbackPromise(function () {
+            return 'foo';
+        });
+
+        $promise->wait();
+
+        $promise = $promise->then(function () {
+            return 'bar';
+        });
+
+        $this->assertSame('bar', $promise->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_a_callback_after_being_rejected()
+    {
+        $promise = new CallbackPromise(function () {
+            return 'foo';
+        });
+
+        $promise->reject('bar');
+
+        $promise = $promise->otherwise(function () {
+            return 'baz';
+        });
+
+        $this->assertSame('baz', $promise->wait());
+    }
+
+    /**
+     * @test
      * @dataProvider stateProvider
      */
     public function it_has_a_state(callable $callback, string $outcome)

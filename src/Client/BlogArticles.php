@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -97,28 +96,12 @@ final class BlogArticles implements Iterator, Sequence
             ->then(function (Result $result) {
                 $articles = [];
 
-                $fullPromise = new CallbackPromise(function () use ($result) {
-                    $promises = [];
-                    foreach ($result['items'] as $article) {
-                        $promises[$article['id']] = $this->blogClient->getArticle(
-                            ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
-                            $article['id']
-                        );
-                    }
-
-                    return $promises;
-                });
-
                 foreach ($result['items'] as $article) {
                     if (isset($this->articles[$article['id']])) {
                         $articles[] = $this->articles[$article['id']]->wait();
                     } else {
-                        $article['content'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['content'];
-                            });
-
-                        $articles[] = $article = $this->denormalizer->denormalize($article, BlogArticle::class);
+                        $articles[] = $article = $this->denormalizer->denormalize($article, BlogArticle::class, null,
+                            ['snippet' => true]);
                         $this->articles[$article->getId()] = promise_for($article);
                     }
                 }

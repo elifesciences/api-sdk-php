@@ -44,6 +44,7 @@ final class ApiSdk
 {
     private $httpClient;
     private $subjectsClient;
+    private $blogClient;
     private $serializer;
     private $annualReports;
     private $articles;
@@ -58,13 +59,14 @@ final class ApiSdk
     {
         $this->httpClient = $httpClient;
         $this->subjectsClient = new SubjectsClient($this->httpClient);
+        $this->blogClient = new BlogClient($this->httpClient);
 
         $this->serializer = new Serializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
             new ArticlePoANormalizer(),
             new ArticleVoRNormalizer(),
-            new BlogArticleNormalizer(),
+            new BlogArticleNormalizer($this->blogClient),
             new EventNormalizer(),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),
@@ -126,7 +128,7 @@ final class ApiSdk
     public function blogArticles() : BlogArticles
     {
         if (empty($this->blogArticles)) {
-            $this->blogArticles = new BlogArticles(new BlogClient($this->httpClient), $this->serializer);
+            $this->blogArticles = new BlogArticles($this->blogClient, $this->serializer);
         }
 
         return $this->blogArticles;

@@ -199,7 +199,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockBlogArticleCall(int $number, bool $subject = false)
+    final protected function mockBlogArticleCall(int $number, bool $complete = false)
     {
         $this->storage->save(
             new Request(
@@ -210,7 +210,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
-                json_encode($this->createBlogArticleJson($number, false, $subject))
+                json_encode($this->createBlogArticleJson($number, false, $complete))
             )
         );
     }
@@ -406,7 +406,12 @@ abstract class ApiTestCase extends TestCase
             throw new LogicException('Page should not exist');
         }
 
-        return range($firstId, $firstId + $perPage - 1);
+        $lastId = $firstId + $perPage - 1;
+        if ($lastId > $total) {
+            $lastId = $total;
+        }
+
+        return range($firstId, $lastId);
     }
 
     final private function createAnnualReportJson(int $year)
@@ -534,14 +539,12 @@ abstract class ApiTestCase extends TestCase
         return $article;
     }
 
-    private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $subject = false) : array
+    private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
         $blogArticle = [
             'id' => 'blogArticle'.$number,
             'title' => 'Blog article '.$number.' title',
-            'impactStatement' => 'Blog article '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00+00:00',
-            'subjects' => [],
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -550,7 +553,8 @@ abstract class ApiTestCase extends TestCase
             ],
         ];
 
-        if ($subject) {
+        if ($complete) {
+            $blogArticle['impactStatement'] = 'Blog article '.$number.' impact statement';
             $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
 

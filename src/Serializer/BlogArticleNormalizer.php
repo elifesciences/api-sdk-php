@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -19,7 +20,6 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
-    use SubjectsAware;
 
     public function denormalize($data, $class, $format = null, array $context = []) : BlogArticle
     {
@@ -30,7 +30,11 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
                 }, $blocks);
             }));
 
-        $data['subjects'] = $this->getSubjects($data['subjects'] ?? []);
+        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
+            $context['snippet'] = true;
+
+            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
+        }, $data['subjects'] ?? []));
 
         return new BlogArticle(
             $data['id'],
@@ -63,8 +67,10 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         }
 
         if (count($object->getSubjects()) > 0) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
-                return ['id' => $subject->getId(), 'name' => $subject->getName()];
+            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
+                $context['snippet'] = true;
+
+                return $this->normalizer->normalize($subject, $format, $context);
             })->toArray();
         }
 

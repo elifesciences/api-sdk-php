@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
@@ -10,9 +11,10 @@ use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
-use test\eLife\ApiSdk\TestCase;
+use test\eLife\ApiSdk\ApiTestCase;
+use function GuzzleHttp\Promise\promise_for;
 
-final class SubjectNormalizerTest extends TestCase
+final class SubjectNormalizerTest extends ApiTestCase
 {
     /** @var SubjectNormalizer */
     private $normalizer;
@@ -22,7 +24,7 @@ final class SubjectNormalizerTest extends TestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new SubjectNormalizer();
+        $this->normalizer = new SubjectNormalizer(new ApiSdk($this->getHttpClient()));
 
         new Serializer([$this->normalizer, new ImageNormalizer()]);
     }
@@ -47,7 +49,7 @@ final class SubjectNormalizerTest extends TestCase
     public function canNormalizeProvider() : array
     {
         $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('id', 'name', null, $image);
+        $subject = new Subject('id', 'name', promise_for(null), promise_for($image));
 
         return [
             'subject' => [$subject, null, true],
@@ -60,9 +62,13 @@ final class SubjectNormalizerTest extends TestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalize_subjects(Subject $subject, array $expected)
+    public function it_normalize_subjects(Subject $subject, array $context, array $expected)
     {
-        $this->assertSame($expected, $this->normalizer->normalize($subject));
+        if (!empty($context['snippet'])) {
+            $this->mockSubjectCall(1);
+        }
+
+        $this->assertSame($expected, $this->normalizer->normalize($subject, null, $context));
     }
 
     /**
@@ -94,33 +100,91 @@ final class SubjectNormalizerTest extends TestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalize_subjects(Subject $expected, array $json)
+    public function it_denormalize_subjects(Subject $expected, array $context, array $json)
     {
-        $actual = $this->normalizer->denormalize($json, Subject::class);
+        $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
+
+        if (!empty($context['snippet'])) {
+            $this->mockSubjectCall(1);
+        }
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
     public function normalizeProvider() : array
     {
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = new Image('', [
+            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+            new ImageSize('16:9', [
+                250 => 'https://placehold.it/250x141',
+                500 => 'https://placehold.it/500x281',
+            ]),
+            new ImageSize('1:1', [
+                '70' => 'https://placehold.it/70x70',
+                '140' => 'https://placehold.it/140x140',
+            ]),
+        ]);
 
         return [
             'complete' => [
-                new Subject('id', 'name', 'impact statement', $image),
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+                    promise_for($image)),
+                [],
                 [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                    'impactStatement' => 'impact statement',
+                    'id' => 'subject1',
+                    'name' => 'Subject 1 name',
+                    'image' => [
+                        'alt' => '',
+                        'sizes' => [
+                            '2:1' => [
+                                '900' => 'https://placehold.it/900x450',
+                                '1800' => 'https://placehold.it/1800x900',
+                            ],
+                            '16:9' => [
+                                '250' => 'https://placehold.it/250x141',
+                                '500' => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                '70' => 'https://placehold.it/70x70',
+                                '140' => 'https://placehold.it/140x140',
+                            ],
+                        ],
+                    ],
+                    'impactStatement' => 'Subject 1 impact statement',
                 ],
             ],
-            'without impact statement' => [
-                new Subject('id', 'name', null, $image),
+            'minimum' => [
+                new Subject('subject1', 'Subject 1 name', promise_for(null), promise_for($image)),
+                [],
                 [
-                    'id' => 'id',
-                    'name' => 'name',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'id' => 'subject1',
+                    'name' => 'Subject 1 name',
+                    'image' => [
+                        'alt' => '',
+                        'sizes' => [
+                            '2:1' => [
+                                '900' => 'https://placehold.it/900x450',
+                                '1800' => 'https://placehold.it/1800x900',
+                            ],
+                            '16:9' => [
+                                '250' => 'https://placehold.it/250x141',
+                                '500' => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                '70' => 'https://placehold.it/70x70',
+                                '140' => 'https://placehold.it/140x140',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'snippet' => [
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+                    promise_for($image)),
+                ['snippet' => true],
+                [
+                    'id' => 'subject1',
+                    'name' => 'Subject 1 name',
                 ],
             ],
         ];

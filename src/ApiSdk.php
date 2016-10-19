@@ -60,9 +60,9 @@ final class ApiSdk
         $this->serializer = new Serializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
-            $articlePoANormalizer = new ArticlePoANormalizer(),
-            $articleVoRNormalizer = new ArticleVoRNormalizer(),
-            $blogArticleNormalizer = new BlogArticleNormalizer(),
+            new ArticlePoANormalizer(),
+            new ArticleVoRNormalizer(),
+            new BlogArticleNormalizer(),
             new EventNormalizer(),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),
@@ -73,7 +73,7 @@ final class ApiSdk
             new PersonAuthorNormalizer(),
             new PersonNormalizer(),
             new PlaceNormalizer(),
-            new SubjectNormalizer(),
+            new SubjectNormalizer($this),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),
             new Block\ImageNormalizer(),
@@ -101,12 +101,6 @@ final class ApiSdk
             new Reference\ThesisReferenceNormalizer(),
             new Reference\WebReferenceNormalizer(),
         ], [new JsonEncoder()]);
-
-        $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);
-
-        $articlePoANormalizer->setSubjects($this->subjects);
-        $articleVoRNormalizer->setSubjects($this->subjects);
-        $blogArticleNormalizer->setSubjects($this->subjects);
     }
 
     public function annualReports() : AnnualReports
@@ -174,6 +168,10 @@ final class ApiSdk
 
     public function subjects() : Subjects
     {
+        if (empty($this->subjects)) {
+            $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);
+        }
+
         return $this->subjects;
     }
 

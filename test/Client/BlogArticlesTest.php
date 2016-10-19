@@ -2,19 +2,12 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\BlogClient;
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class BlogArticlesTest extends ApiTestCase
@@ -27,18 +20,7 @@ final class BlogArticlesTest extends ApiTestCase
      */
     protected function setUpBlogArticles()
     {
-        $serializer = new Serializer([
-            $blogArticleNormalizer = new BlogArticleNormalizer(),
-            new ImageNormalizer(),
-            new SubjectNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
-        $this->blogArticles = new BlogArticles(
-            new BlogClient($this->getHttpClient()),
-            $serializer
-        );
-        $subjects = new Subjects(new SubjectsClient($this->getHttpClient()), $serializer);
-        $blogArticleNormalizer->setSubjects($subjects);
+        $this->blogArticles = (new ApiSdk($this->getHttpClient()))->blogArticles();
     }
 
     /**
@@ -107,10 +89,13 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
         $this->assertSame('Blog article 7 text', $blogArticle->getContent()->toArray()[0]->getText());
 
-        $this->mockSubjectCall(1);
-
         $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()->toArray()[0]);
         $this->assertSame('Subject 1 name', $blogArticle->getSubjects()->toArray()[0]->getName());
+
+        $this->mockSubjectCall(1);
+
+        $this->assertSame('Subject 1 impact statement',
+            $blogArticle->getSubjects()->toArray()[0]->getImpactStatement());
     }
 
     /**

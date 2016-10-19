@@ -22,7 +22,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
-    use SubjectsAware;
 
     final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion
     {
@@ -54,7 +53,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
         $data['issue'] = promise_for($data['issue'] ?? null);
 
-        $data['subjects'] = $this->getSubjects($data['subjects'] ?? []);
+        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
+            $context['snippet'] = true;
+
+            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
+        }, $data['subjects'] ?? []));
 
         return $this->denormalizeArticle($data, $format, $context);
     }
@@ -86,8 +89,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         }
 
         if (count($object->getSubjects()) > 0) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
-                return ['id' => $subject->getId(), 'name' => $subject->getName()];
+            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
+                $context['snippet'] = true;
+
+                return $this->normalizer->normalize($subject, $format, $context);
             })->toArray();
         }
 

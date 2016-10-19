@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -21,17 +21,8 @@ use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
-use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
-use eLife\ApiSdk\Serializer\Block\SectionNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
-use eLife\ApiSdk\Serializer\PlaceNormalizer;
-use eLife\ApiSdk\Serializer\Reference\BookReferenceNormalizer;
-use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -48,18 +39,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     {
         $this->normalizer = new ArticleVoRNormalizer();
 
-        $serializer = new Serializer([
-            $this->normalizer,
-            new BookReferenceNormalizer(),
-            new ImageNormalizer(),
-            new ParagraphNormalizer(),
-            new PersonNormalizer(),
-            new PersonAuthorNormalizer(),
-            new PlaceNormalizer(),
-            new SectionNormalizer(),
-            new SubjectNormalizer(),
-        ]);
-        $this->normalizer->setSubjects(new Subjects(new SubjectsClient($this->getHttpClient()), $serializer));
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -166,7 +148,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+            promise_for($image));
         $date = new DateTimeImmutable();
         $statusDate = new DateTimeImmutable('-1 day');
 

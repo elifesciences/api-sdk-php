@@ -467,7 +467,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $article['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
+            $article['subjects'][] = $this->createSubjectJson(1, true);
         }
 
         if ($isSnippet) {
@@ -522,7 +522,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $article['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
+            $article['subjects'][] = $this->createSubjectJson(1, true);
         }
 
         if ($isSnippet) {
@@ -551,7 +551,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $blogArticle['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
+            $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
 
         if ($isSnippet) {
@@ -691,9 +691,9 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    final private function createSubjectJson(int $number)
+    final private function createSubjectJson(int $number, bool $isSnippet = false) : array
     {
-        return [
+        $subject = [
             'id' => 'subject'.$number,
             'name' => 'Subject '.$number.' name',
             'impactStatement' => 'Subject '.$number.' impact statement',
@@ -715,5 +715,12 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+
+        if ($isSnippet) {
+            unset($subject['impactStatement']);
+            unset($subject['image']);
+        }
+
+        return $subject;
     }
 }

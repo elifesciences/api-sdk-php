@@ -2,21 +2,13 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\ArticlesClient;
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
-use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class ArticlesTest extends ApiTestCase
@@ -29,21 +21,7 @@ final class ArticlesTest extends ApiTestCase
      */
     protected function setUpArticles()
     {
-        $serializer = new Serializer([
-            $articlePoANormalizer = new ArticlePoANormalizer(),
-            $articleVoRNormalizer = new ArticleVoRNormalizer(),
-            new ImageNormalizer(),
-            new SubjectNormalizer(),
-            new Block\ParagraphNormalizer(),
-            new Block\SectionNormalizer(),
-        ]);
-        $this->articles = new Articles(
-            new ArticlesClient($this->getHttpClient()),
-            $serializer
-        );
-        $subjects = new Subjects(new SubjectsClient($this->getHttpClient()), $serializer);
-        $articlePoANormalizer->setSubjects($subjects);
-        $articleVoRNormalizer->setSubjects($subjects);
+        $this->articles = (new ApiSdk($this->getHttpClient()))->articles();
     }
 
     /**

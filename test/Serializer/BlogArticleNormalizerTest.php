@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -12,14 +12,11 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class BlogArticleNormalizerTest extends ApiTestCase
@@ -34,13 +31,9 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     {
         $this->normalizer = new BlogArticleNormalizer();
 
-        $serializer = new Serializer([
-            $this->normalizer,
-            new ImageNormalizer(),
-            new SubjectNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
-        $this->normalizer->setSubjects(new Subjects(new SubjectsClient($this->getHttpClient()), $serializer));
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -145,7 +138,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', 'Subject 1 impact statement', $image);
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+            promise_for($image));
 
         return [
             'complete' => [

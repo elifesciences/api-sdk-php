@@ -209,8 +209,8 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
         $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
 
         $subjects = [
-            new Subject('subject1', 'Subject 1', null, $image),
-            new Subject('subject2', 'Subject 2', null, $image),
+            new Subject('subject1', 'Subject 1', promise_for(null), promise_for($image)),
+            new Subject('subject2', 'Subject 2', promise_for(null), promise_for($image)),
         ];
 
         return [

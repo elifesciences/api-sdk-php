@@ -2,13 +2,10 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class SubjectsTest extends ApiTestCase
@@ -21,10 +18,7 @@ final class SubjectsTest extends ApiTestCase
      */
     protected function setUpSubjects()
     {
-        $this->subjects = new Subjects(
-            new SubjectsClient($this->getHttpClient()),
-            new Serializer([new SubjectNormalizer(), new ImageNormalizer()])
-        );
+        $this->subjects = (new ApiSdk($this->getHttpClient()))->subjects();
     }
 
     /**

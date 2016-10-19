@@ -9,7 +9,6 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
@@ -88,11 +87,11 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
 
     public function subjectsProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-
         $subjects = [
-            new Subject('subject1', 'Subject 1', null, $image),
-            new Subject('subject2', 'Subject 2', null, $image),
+            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
+                rejection_for('Subject image should not be unwrapped')),
+            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
+                rejection_for('Subject image should not be unwrapped')),
         ];
 
         return [

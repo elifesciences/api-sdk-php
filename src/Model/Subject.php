@@ -2,6 +2,8 @@
 
 namespace eLife\ApiSdk\Model;
 
+use GuzzleHttp\Promise\PromiseInterface;
+
 final class Subject
 {
     private $id;
@@ -12,7 +14,7 @@ final class Subject
     /**
      * @internal
      */
-    public function __construct(string $id, string $name, string $impactStatement = null, Image $image)
+    public function __construct(string $id, string $name, PromiseInterface $impactStatement, PromiseInterface $image)
     {
         $this->id = $id;
         $this->name = $name;
@@ -35,11 +37,11 @@ final class Subject
      */
     public function getImpactStatement()
     {
-        return $this->impactStatement;
+        return $this->impactStatement->wait();
     }
 
     public function getImage() : Image
     {
-        return $this->image;
+        return $this->image->wait();
     }
 }

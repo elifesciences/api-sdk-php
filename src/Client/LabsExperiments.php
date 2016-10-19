@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\LabsExperiment;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -82,29 +81,12 @@ final class LabsExperiments implements Iterator, Sequence
             ->then(function (Result $result) {
                 $experiments = [];
 
-                $fullPromise = new CallbackPromise(function () use ($result) {
-                    $promises = [];
-                    foreach ($result['items'] as $experiment) {
-                        $promises[$experiment['number']] = $this->labsClient->getExperiment(
-                            ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
-                            $experiment['number']
-                        );
-                    }
-
-                    return $promises;
-                });
-
                 foreach ($result['items'] as $experiment) {
                     if (isset($this->experiments[$experiment['number']])) {
                         $experiments[] = $this->experiments[$experiment['number']]->wait();
                     } else {
-                        $experiment['content'] = $fullPromise
-                            ->then(function (array $promises) use ($experiment) {
-                                return $promises[$experiment['number']]->wait()['content'];
-                            });
-
-                        $experiments[] = $experiment = $this->denormalizer
-                            ->denormalize($experiment, LabsExperiment::class);
+                        $experiments[] = $experiment = $this->denormalizer->denormalize($experiment,
+                            LabsExperiment::class, null, ['snippet' => true]);
                         $this->experiments[$experiment->getNumber()] = promise_for($experiment);
                     }
                 }

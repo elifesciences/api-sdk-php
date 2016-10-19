@@ -2,15 +2,11 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\LabsExperiment;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class LabsExperimentsTest extends ApiTestCase
@@ -23,15 +19,7 @@ final class LabsExperimentsTest extends ApiTestCase
      */
     protected function setUpLabsExperiments()
     {
-        $serializer = new Serializer([
-            new LabsExperimentNormalizer(),
-            new ImageNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
-        $this->labsExperiments = new LabsExperiments(
-            new LabsClient($this->getHttpClient()),
-            $serializer
-        );
+        $this->labsExperiments = (new ApiSdk($this->getHttpClient()))->labsExperiments();
     }
 
     /**
@@ -106,15 +94,20 @@ final class LabsExperimentsTest extends ApiTestCase
      */
     public function it_reuses_already_known_labs_experiments()
     {
-        $this->mockLabsExperimentListCall(1, 1, 10);
-        $this->mockLabsExperimentListCall(1, 100, 10);
+        $this->mockLabsExperimentListCall(1, 1, 1);
+        $this->mockLabsExperimentListCall(1, 100, 1);
 
         $this->labsExperiments->toArray();
 
-        $labsExperiment = $this->labsExperiments->get(7)->wait();
+        $labsExperiment = $this->labsExperiments->get(1)->wait();
 
         $this->assertInstanceOf(LabsExperiment::class, $labsExperiment);
-        $this->assertSame(7, $labsExperiment->getNumber());
+        $this->assertSame(1, $labsExperiment->getNumber());
+
+        $this->mockLabsExperimentCall(1);
+
+        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()->toArray()[0]);
+        $this->assertSame('Labs experiment 1 text', $labsExperiment->getContent()->toArray()[0]->getText());
     }
 
     /**

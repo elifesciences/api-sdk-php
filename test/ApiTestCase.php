@@ -321,7 +321,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockLabsExperimentCall(int $number)
+    final protected function mockLabsExperimentCall(int $number, bool $complete = false)
     {
         $this->storage->save(
             new Request(
@@ -332,7 +332,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
-                json_encode($this->createLabsExperimentJson($number, false))
+                json_encode($this->createLabsExperimentJson($number, false, $complete))
             )
         );
     }
@@ -629,7 +629,7 @@ abstract class ApiTestCase extends TestCase
         return $interview;
     }
 
-    private function createLabsExperimentJson(int $number, bool $isSnippet = false) : array
+    private function createLabsExperimentJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
         $labsExperiment = [
             'number' => $number,
@@ -663,6 +663,10 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($labsExperiment['content']);
+        }
+
+        if (!$complete) {
+            unset($labsExperiment['impactStatement']);
         }
 
         return $labsExperiment;

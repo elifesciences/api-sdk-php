@@ -3,31 +3,54 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\all;
 
 final class LabsExperimentNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
+    private $labsClient;
+    private $found = [];
+    private $globalCallback;
+
+    public function __construct(LabsClient $labsClient)
+    {
+        $this->labsClient = $labsClient;
+    }
+
     public function denormalize($data, $class, $format = null, array $context = []) : LabsExperiment
     {
-        $data['content'] = new PromiseSequence(promise_for($data['content'])
-            ->then(function (array $blocks) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                }, $blocks);
-            }));
+        if (!empty($context['snippet'])) {
+            $experiment = $this->denormalizeSnippet($data);
+
+            $data['content'] = new PromiseSequence($experiment
+                ->then(function (Result $experiment) {
+                    return $experiment['content'];
+                }));
+        } else {
+            $data['content'] = new ArraySequence($data['content']);
+        }
+
+        $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
 
         return new LabsExperiment(
             $data['number'],
@@ -37,6 +60,37 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
             $this->denormalizer->denormalize($data['image'], Image::class, $format, $context),
             $data['content']
         );
+    }
+
+    private function denormalizeSnippet(array $experiment) : PromiseInterface
+    {
+        if (isset($this->found[$experiment['number']])) {
+            return $this->found[$experiment['number']];
+        }
+
+        $this->found[$experiment['number']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $number => $experiment) {
+                    if (null === $experiment) {
+                        $this->found[$number] = $this->labsClient->getExperiment(
+                            ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
+                            $number
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $experiments) use ($experiment) {
+                return $experiments[$experiment['number']];
+            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

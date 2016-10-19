@@ -3,22 +3,21 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\LabsExperiment;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
-use test\eLife\ApiSdk\TestCase;
+use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class LabsExperimentNormalizerTest extends TestCase
+final class LabsExperimentNormalizerTest extends ApiTestCase
 {
     /** @var LabsExperimentNormalizer */
     private $normalizer;
@@ -28,13 +27,10 @@ final class LabsExperimentNormalizerTest extends TestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new LabsExperimentNormalizer();
-
-        new Serializer([
-            $this->normalizer,
-            new ImageNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer = new LabsExperimentNormalizer(new LabsClient($this->getHttpClient()));
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -104,23 +100,21 @@ final class LabsExperimentNormalizerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_labs_experiments(LabsExperiment $expected, array $context, array $json)
-    {
+    public function it_denormalize_labs_experiments(
+        LabsExperiment $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
         $actual = $this->normalizer->denormalize($json, LabsExperiment::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $data = $this->normalizeProvider();
-
-        unset($data['complete snippet']);
-        unset($data['minimum snippet']);
-
-        return $data;
     }
 
     public function normalizeProvider() : array
@@ -164,27 +158,33 @@ final class LabsExperimentNormalizerTest extends TestCase
                 ],
             ],
             'complete snippet' => [
-                new LabsExperiment(1, 'title', $date, 'impact statement', $image,
-                    new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))),
+                new LabsExperiment(1, 'Labs experiment 1 title', $date, 'Labs experiment 1 impact statement', $image,
+                    new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
-                    'title' => 'title',
+                    'title' => 'Labs experiment 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
-                    'impactStatement' => 'impact statement',
+                    'impactStatement' => 'Labs experiment 1 impact statement',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockLabsExperimentCall(1, true);
+                },
             ],
             'minimum snippet' => [
-                new LabsExperiment(1, 'title', $date, null, $image,
-                    new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))),
+                new LabsExperiment(1, 'Labs experiment 1 title', $date, null, $image,
+                    new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
-                    'title' => 'title',
+                    'title' => 'Labs experiment 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockLabsExperimentCall(1);
+                },
             ],
         ];
     }

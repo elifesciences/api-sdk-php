@@ -44,6 +44,7 @@ final class ApiSdk
 {
     private $httpClient;
     private $blogClient;
+    private $labsClient;
     private $subjectsClient;
     private $serializer;
     private $annualReports;
@@ -59,6 +60,7 @@ final class ApiSdk
     {
         $this->httpClient = $httpClient;
         $this->blogClient = new BlogClient($this->httpClient);
+        $this->labsClient = new LabsClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new Serializer([
@@ -71,7 +73,7 @@ final class ApiSdk
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer(),
-            new LabsExperimentNormalizer(),
+            new LabsExperimentNormalizer($this->labsClient),
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
@@ -155,7 +157,7 @@ final class ApiSdk
     public function labsExperiments() : LabsExperiments
     {
         if (empty($this->labsExperiments)) {
-            $this->labsExperiments = new LabsExperiments(new LabsClient($this->httpClient), $this->serializer);
+            $this->labsExperiments = new LabsExperiments($this->labsClient, $this->serializer);
         }
 
         return $this->labsExperiments;

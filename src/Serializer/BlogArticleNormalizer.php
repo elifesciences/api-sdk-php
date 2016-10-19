@@ -41,18 +41,16 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $article = $this->denormalizeSnippet($data);
 
             $data['content'] = new PromiseSequence($article
-                ->then(function (Result $article) use ($format, $context) {
-                    unset($context['snippet']);
-
-                    return array_map(function (array $block) use ($format, $context) {
-                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $article['content']);
+                ->then(function (Result $article) {
+                    return $article['content'];
                 }));
         } else {
-            $data['content'] = new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-            }, $data['content']));
+            $data['content'] = new ArraySequence($data['content']);
         }
+
+        $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
 
         $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
             $context['snippet'] = true;

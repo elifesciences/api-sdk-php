@@ -43,8 +43,8 @@ use Symfony\Component\Serializer\Serializer;
 final class ApiSdk
 {
     private $httpClient;
-    private $subjectsClient;
     private $blogClient;
+    private $subjectsClient;
     private $serializer;
     private $annualReports;
     private $articles;
@@ -58,8 +58,8 @@ final class ApiSdk
     public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->subjectsClient = new SubjectsClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
+        $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new Serializer([
             new AddressNormalizer(),

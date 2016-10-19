@@ -49,6 +49,8 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            unset($context['snippet']);
+
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 

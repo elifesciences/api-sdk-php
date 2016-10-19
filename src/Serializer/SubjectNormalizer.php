@@ -41,16 +41,18 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
                 return $subject['impactStatement'] ?? null;
             });
             $data['image'] = $subject->then(function (Result $subject) use ($format, $context) {
-                unset($context['snippet']);
-
-                return $this->denormalizer->denormalize($subject['image'], Image::class, $format, $context);
+                return $subject['image'];
             });
         } else {
             $data['impactStatement'] = promise_for($data['impactStatement'] ?? null);
-            $data['image'] = promise_for($data['image'])->then(function (array $image) use ($format, $context) {
-                return $this->denormalizer->denormalize($image, Image::class, $format, $context);
-            });
+            $data['image'] = promise_for($data['image']);
         }
+
+        $data['image'] = $data['image']->then(function (array $image) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($image, Image::class, $format, $context);
+        });
 
         return new Subject(
             $data['id'],

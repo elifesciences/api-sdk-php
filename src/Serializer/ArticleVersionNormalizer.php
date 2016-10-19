@@ -54,7 +54,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
         $data['issue'] = promise_for($data['issue'] ?? null);
 
-        $data['subjects'] = !empty($data['subjects']) ? $this->getSubjects($data['subjects']) : null;
+        $data['subjects'] = $this->getSubjects($data['subjects'] ?? []);
 
         return $this->denormalizeArticle($data, $format, $context);
     }
@@ -85,7 +85,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['pdf'] = $object->getPdf();
         }
 
-        if ($object->hasSubjects()) {
+        if (count($object->getSubjects()) > 0) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
                 return $subject->getId();
             })->toArray();

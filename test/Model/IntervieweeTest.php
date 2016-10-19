@@ -2,9 +2,9 @@
 
 namespace test\eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Person;
@@ -29,12 +29,11 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider cvLinesProvider
      */
-    public function it_may_have_cv_lines(Collection $cvLines = null, bool $hasCvLines, array $expected)
+    public function it_may_have_cv_lines(Sequence $cvLines, array $expected)
     {
         $person = new Person('preferred name', 'index name');
         $interviewee = new Interviewee($person, $cvLines);
 
-        $this->assertSame($hasCvLines, $interviewee->hasCvLines());
         $this->assertEquals($expected, $interviewee->getCvLines()->toArray());
     }
 
@@ -44,27 +43,13 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                null,
-                false,
+                new ArraySequence([]),
                 [],
             ],
             'collection' => [
                 new ArraySequence($cvLines),
-                true,
                 $cvLines,
             ],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_does_not_unwrap_cv_lines_when_checking_if_it_has_any()
-    {
-        $person = new Person('preferred name', 'index name');
-        $interviewee = new Interviewee($person,
-            new PromiseSequence(rejection_for('CV lines should not be unwrapped')));
-
-        $this->assertTrue($interviewee->hasCvLines());
     }
 }

@@ -169,7 +169,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new BlogArticle('id', 'title', $date, null, new ArraySequence([new Paragraph('text')]), null),
+                new BlogArticle('id', 'title', $date, null, new ArraySequence([new Paragraph('text')]),
+                    new ArraySequence([])),
                 [],
                 [
                     'id' => 'id',
@@ -200,7 +201,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new BlogArticle('id', 'title', $date, null,
-                    new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), null),
+                    new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+                    new ArraySequence([])),
                 ['snippet' => true],
                 [
                     'id' => 'id',

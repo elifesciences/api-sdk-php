@@ -3,9 +3,10 @@
 namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Promise\CallbackPromise;
-use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\all;
 
 trait SubjectsAware
@@ -19,8 +20,12 @@ trait SubjectsAware
         $this->subjects = $subjects;
     }
 
-    final private function getSubjects(array $subjects) : PromiseInterface
+    final private function getSubjects(array $subjects) : Sequence
     {
+        if (empty($subjects)) {
+            return new ArraySequence([]);
+        }
+
         $this->recordedSubjects = array_merge($this->recordedSubjects, $subjects);
 
         if (empty($this->globalSubjectsCallback)) {

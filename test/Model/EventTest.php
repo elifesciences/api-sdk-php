@@ -120,11 +120,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
         $with = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
             new PromiseSequence(rejection_for('Event content should not be unwrapped')), promise_for($venue));
         $withOut = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')), promise_for(null));
 
-        $this->assertTrue($with->hasVenue());
         $this->assertEquals($venue, $with->getVenue());
-        $this->assertFalse($withOut->hasVenue());
         $this->assertNull($withOut->getVenue());
     }
 }

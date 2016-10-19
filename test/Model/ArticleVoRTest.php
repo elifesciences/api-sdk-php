@@ -28,16 +28,16 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_an_impact_statement()
     {
         $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), 'impact statement', null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -54,8 +54,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_an_image()
     {
         $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null,
             $image = new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
@@ -63,8 +63,8 @@ final class ArticleVoRTest extends ArticleTest
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -81,8 +81,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_keywords()
     {
         $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             $keywords = new ArraySequence(['keyword']), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -98,8 +98,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_a_digest()
     {
         $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')),
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
@@ -107,8 +107,8 @@ final class ArticleVoRTest extends ArticleTest
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), promise_for(null),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -125,8 +125,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_has_content()
     {
         $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             $content = new ArraySequence([new Paragraph('content')]),
@@ -143,8 +143,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_references()
     {
         $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')),
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
@@ -165,8 +165,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_a_decision_letter()
     {
         $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -174,8 +174,8 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -192,8 +192,8 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_a_decision_letter_description()
     {
         $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -210,16 +210,16 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_an_author_response()
     {
         $with = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             promise_for($authorResponse = new ArticleSection(new ArraySequence([new Paragraph('Author response')]))));
         $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, null, [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, null,
             new PromiseSequence(rejection_for('No keywords')), rejection_for('No digest'),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
@@ -243,7 +243,7 @@ final class ArticleVoRTest extends ArticleTest
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Sequence $subjects = null,
+        Sequence $subjects,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,

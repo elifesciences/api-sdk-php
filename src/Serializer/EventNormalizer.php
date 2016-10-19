@@ -30,14 +30,14 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
                 }, $blocks);
             }));
 
-        $data['venue'] = !empty($data['venue']) ? promise_for($data['venue'])
+        $data['venue'] = promise_for($data['venue'] ?? null)
             ->then(function (array $venue = null) use ($format, $context) {
                 if (null === $venue) {
                     return null;
                 }
 
                 return $this->denormalizer->denormalize($venue, Place::class, $format, $context);
-            }) : null;
+            });
 
         return new Event(
             $data['id'],
@@ -81,8 +81,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
 
-            if ($object->hasVenue()) {
-                $data['venue'] = $this->normalizer->normalize($object->getVenue(), $format, $context);
+            if ($venue = $object->getVenue()) {
+                $data['venue'] = $this->normalizer->normalize($venue, $format, $context);
             }
         }
 

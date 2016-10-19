@@ -163,8 +163,8 @@ final class InterviewNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new Interview('id', new Interviewee(new Person('preferred name', 'index name')), 'title', $date, null,
-                    new ArraySequence([new Paragraph('text')])),
+                new Interview('id', new Interviewee(new Person('preferred name', 'index name'), new ArraySequence([])),
+                    'title', $date, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -208,8 +208,9 @@ final class InterviewNormalizerTest extends TestCase
             ],
             'minimum snippet' => [
                 $interview = new Interview('id',
-                    new Interviewee(new Person('preferred name', 'index name')), 'title', $date, null,
-                    new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+                    new Interviewee(new Person('preferred name', 'index name'),
+                        new PromiseSequence(rejection_for('Full interviewee should not be unwrapped'))), 'title', $date,
+                    null, new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
                 ),
                 ['snippet' => true],
                 [

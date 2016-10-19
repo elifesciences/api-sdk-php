@@ -30,7 +30,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
                 }, $blocks);
             }));
 
-        $data['subjects'] = !empty($data['subjects']) ? $this->getSubjects($data['subjects']) : null;
+        $data['subjects'] = $this->getSubjects($data['subjects'] ?? []);
 
         return new BlogArticle(
             $data['id'],
@@ -62,7 +62,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if ($object->hasSubjects()) {
+        if (count($object->getSubjects()) > 0) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
                 return $subject->getId();
             })->toArray();

@@ -34,7 +34,7 @@ final class ArticleVoR extends ArticleVersion
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Sequence $subjects = null,
+        Sequence $subjects,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,

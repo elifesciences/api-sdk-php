@@ -28,7 +28,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_an_id()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -41,7 +41,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_version()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -54,7 +54,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_type()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -67,7 +67,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_doi()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -80,7 +80,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_an_author_line()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -93,11 +93,11 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_a_title_prefix()
     {
         $with = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
         $withOut = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -113,7 +113,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_title()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -126,9 +126,9 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_published_date()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            $date = new DateTimeImmutable(), new DateTimeImmutable('-1 day'), 1, 'elocationId', null, null, [],
-            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
-            new PromiseSequence(rejection_for('No authors')));
+            $date = new DateTimeImmutable(), new DateTimeImmutable('-1 day'), 1, 'elocationId', null,
+            new ArraySequence([]), [], rejection_for('No abstract'), rejection_for('No issue'),
+            rejection_for('No copyright'), new PromiseSequence(rejection_for('No authors')));
 
         $this->assertEquals($date, $article->getPublishedDate());
     }
@@ -139,9 +139,9 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_status_date()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), $statusDate = new DateTimeImmutable('-1 day'), 1, 'elocationId', null, null, [],
-            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
-            new PromiseSequence(rejection_for('No authors')));
+            new DateTimeImmutable(), $statusDate = new DateTimeImmutable('-1 day'), 1, 'elocationId', null,
+            new ArraySequence([]), [], rejection_for('No abstract'), rejection_for('No issue'),
+            rejection_for('No copyright'), new PromiseSequence(rejection_for('No authors')));
 
         $this->assertEquals($statusDate, $article->getStatusDate());
     }
@@ -152,7 +152,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_volume()
     {
         $article = $this->createArticleVersion('id', 2, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -165,7 +165,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_an_elocation_id()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -179,10 +179,10 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     {
         $with = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
             new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', 'http://www.example.com/article.pdf',
-            null, [], rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
-            new PromiseSequence(rejection_for('No authors')));
+            new ArraySequence([]), [], rejection_for('No abstract'), rejection_for('No issue'),
+            rejection_for('No copyright'), new PromiseSequence(rejection_for('No authors')));
         $withOut = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -194,14 +194,13 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider subjectsProvider
      */
-    final public function it_may_have_subjects(Sequence $subjects = null, bool $hasSubjects, array $expected)
+    final public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
             new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, $subjects, [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
-        $this->assertSame($hasSubjects, $article->hasSubjects());
         $this->assertEquals($expected, $article->getSubjects()->toArray());
     }
 
@@ -216,13 +215,11 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                null,
-                false,
+                new ArraySequence([]),
                 [],
             ],
             'Sequence' => [
                 new ArraySequence($subjects),
-                true,
                 $subjects,
             ],
         ];
@@ -231,28 +228,14 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_does_not_unwrap_subjects_when_checking_if_it_has_any()
-    {
-        $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null,
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')), [], rejection_for('No abstract'),
-            rejection_for('No issue'), rejection_for('No copyright'),
-            new PromiseSequence(rejection_for('No authors')));
-
-        $this->assertTrue($article->hasSubjects());
-    }
-
-    /**
-     * @test
-     */
     final public function it_may_have_research_organisms()
     {
         $with = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, ['organism'],
-            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]),
+            ['organism'], rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
         $withOut = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -266,12 +249,13 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_an_abstract()
     {
         $with = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             promise_for($abstract = new ArticleSection(new ArraySequence([new Paragraph('abstract')]))),
             rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
         $withOut = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [], promise_for(null),
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
+            promise_for(null),
             rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -285,11 +269,11 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_an_issue()
     {
         $with = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), promise_for(3), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
         $withOut = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), promise_for(null), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')));
 
@@ -303,7 +287,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_a_copyright()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), promise_for(3),
             promise_for($copyright = new Copyright('license', 'statement')),
             new PromiseSequence(rejection_for('No authors')));
@@ -317,7 +301,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_has_authors()
     {
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
-            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, null, [],
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), promise_for(3), rejection_for('No copyright'),
             $authors = new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
 
@@ -337,7 +321,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Sequence $subjects = null,
+        Sequence $subjects,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,

@@ -23,7 +23,7 @@ final class ArticlePoATest extends ArticleTest
         int $volume,
         string $elocationId,
         string $pdf = null,
-        Sequence $subjects = null,
+        Sequence $subjects,
         array $researchOrganisms,
         PromiseInterface $abstract,
         PromiseInterface $issue,

@@ -324,7 +324,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, null, [], promise_for(null), promise_for(null),
+                    'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
                     new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
                     new ArraySequence([]), promise_for(null),
@@ -423,7 +423,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, null, [], rejection_for('Abstract should not be unwrapped'),
+                    'elocationId', null, new ArraySequence([]), [], rejection_for('Abstract should not be unwrapped'),
                     rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
                     new PromiseSequence(rejection_for('Authors should not be unwrapped')), null, null,
                     new PromiseSequence(rejection_for('Keywords should not be unwrapped')),

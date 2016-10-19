@@ -152,7 +152,8 @@ final class EventNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new Event('id', 'title', null, $starts, $ends, null, new ArraySequence([new Paragraph('text')])),
+                new Event('id', 'title', null, $starts, $ends, null, new ArraySequence([new Paragraph('text')]),
+                    promise_for(null)),
                 [],
                 [
                     'id' => 'id',

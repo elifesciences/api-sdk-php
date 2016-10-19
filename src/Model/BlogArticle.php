@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 
 final class BlogArticle
@@ -24,18 +23,14 @@ final class BlogArticle
         DateTimeImmutable $published,
         string $impactStatement = null,
         Sequence $content,
-        Sequence $subjects = null
+        Sequence $subjects
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->published = $published;
         $this->impactStatement = $impactStatement;
         $this->content = $content;
-        if (null === $subjects) {
-            $this->subjects = [];
-        } else {
-            $this->subjects = $subjects;
-        }
+        $this->subjects = $subjects;
     }
 
     public function getId() : string
@@ -61,20 +56,11 @@ final class BlogArticle
         return $this->published;
     }
 
-    public function hasSubjects() : bool
-    {
-        return !empty($this->subjects);
-    }
-
     /**
      * @return Sequence|Subject[]
      */
     public function getSubjects() : Sequence
     {
-        if (is_array($this->subjects)) {
-            return new ArraySequence($this->subjects);
-        }
-
         return $this->subjects;
     }
 

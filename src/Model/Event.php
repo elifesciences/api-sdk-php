@@ -29,7 +29,7 @@ final class Event
         DateTimeImmutable $ends,
         DateTimeZone $timeZone = null,
         Sequence $content,
-        PromiseInterface $venue = null
+        PromiseInterface $venue
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -82,20 +82,11 @@ final class Event
         return $this->content;
     }
 
-    public function hasVenue(): bool
-    {
-        return null !== $this->venue;
-    }
-
     /**
      * @return Place|null
      */
     public function getVenue()
     {
-        if (null === $this->venue) {
-            return null;
-        }
-
         return $this->venue->wait();
     }
 }

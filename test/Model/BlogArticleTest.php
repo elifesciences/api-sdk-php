@@ -77,13 +77,12 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider subjectsProvider
      */
-    public function it_may_have_subjects(Collection $subjects = null, bool $hasSubjects, array $expected)
+    public function it_may_have_subjects(Collection $subjects = null, array $expected)
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
         );
 
-        $this->assertSame($hasSubjects, $blogArticle->hasSubjects());
         $this->assertEquals($expected, $blogArticle->getSubjects()->toArray());
     }
 
@@ -98,29 +97,14 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                null,
-                false,
+                new ArraySequence([]),
                 [],
             ],
             'collection' => [
                 new ArraySequence($subjects),
-                true,
                 $subjects,
             ],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_does_not_unwrap_subjects_when_checking_if_it_has_any()
-    {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
-        );
-
-        $this->assertTrue($blogArticle->hasSubjects());
     }
 
     /**

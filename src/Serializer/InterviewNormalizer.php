@@ -31,20 +31,18 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
                 }, $blocks);
             }));
 
-        if (!empty($data['interviewee']['cv'])) {
-            $data['interviewee']['cv'] = new PromiseSequence(promise_for($data['interviewee']['cv'])
-                ->then(function (array $cvLines) {
-                    return array_map(function (array $cvLine) {
-                        return new IntervieweeCvLine($cvLine['date'], $cvLine['text']);
-                    }, $cvLines);
-                }));
-        }
+        $data['interviewee']['cv'] = new PromiseSequence(promise_for($data['interviewee']['cv'] ?? [])
+            ->then(function (array $cvLines) {
+                return array_map(function (array $cvLine) {
+                    return new IntervieweeCvLine($cvLine['date'], $cvLine['text']);
+                }, $cvLines);
+            }));
 
         return new Interview(
             $data['id'],
             new Interviewee(
                 $this->denormalizer->denormalize($data['interviewee'], Person::class, $format, $context),
-                $data['interviewee']['cv'] ?? null
+                $data['interviewee']['cv']
             ),
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
@@ -75,7 +73,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getInterviewee()->hasCvLines()) {
+            if (count($object->getInterviewee()->getCvLines()) > 0) {
                 $data['interviewee']['cv'] = $object->getInterviewee()->getCvLines()
                     ->map(function (IntervieweeCvLine $cvLine) {
                         return [

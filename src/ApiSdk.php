@@ -43,6 +43,7 @@ use Symfony\Component\Serializer\Serializer;
 final class ApiSdk
 {
     private $httpClient;
+    private $subjectsClient;
     private $serializer;
     private $annualReports;
     private $articles;
@@ -56,6 +57,7 @@ final class ApiSdk
     public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
+        $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new Serializer([
             new AddressNormalizer(),
@@ -73,7 +75,7 @@ final class ApiSdk
             new PersonAuthorNormalizer(),
             new PersonNormalizer(),
             new PlaceNormalizer(),
-            new SubjectNormalizer($this),
+            new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),
             new Block\ImageNormalizer(),
@@ -169,7 +171,7 @@ final class ApiSdk
     public function subjects() : Subjects
     {
         if (empty($this->subjects)) {
-            $this->subjects = new Subjects(new SubjectsClient($this->httpClient), $this->serializer);
+            $this->subjects = new Subjects($this->subjectsClient, $this->serializer);
         }
 
         return $this->subjects;

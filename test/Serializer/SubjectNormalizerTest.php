@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\ApiSdk;
+use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
@@ -24,7 +24,7 @@ final class SubjectNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new SubjectNormalizer(new ApiSdk($this->getHttpClient()));
+        $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
 
         new Serializer([$this->normalizer, new ImageNormalizer()]);
     }

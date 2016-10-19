@@ -2,7 +2,9 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\ApiSdk;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Promise\CallbackPromise;
@@ -21,13 +23,13 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $apiSdk;
+    private $subjectsClient;
     private $found = [];
     private $globalCallback;
 
-    public function __construct(ApiSdk $apiSdk)
+    public function __construct(SubjectsClient $subjectsClient)
     {
-        $this->apiSdk = $apiSdk;
+        $this->subjectsClient = $subjectsClient;
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Subject
@@ -35,11 +37,13 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         if (!empty($context['snippet'])) {
             $subject = $this->denormalizeSnippet($data);
 
-            $data['impactStatement'] = $subject->then(function (Subject $subject) {
-                return $subject->getImpactStatement();
+            $data['impactStatement'] = $subject->then(function (Result $subject) {
+                return $subject['impactStatement'] ?? null;
             });
-            $data['image'] = $subject->then(function (Subject $subject) {
-                return $subject->getImage();
+            $data['image'] = $subject->then(function (Result $subject) use ($format, $context) {
+                unset($context['snippet']);
+
+                return $this->denormalizer->denormalize($subject['image'], Image::class, $format, $context);
             });
         } else {
             $data['impactStatement'] = promise_for($data['impactStatement'] ?? null);
@@ -68,7 +72,10 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             $this->globalCallback = new CallbackPromise(function () {
                 foreach ($this->found as $id => $subject) {
                     if (null === $subject) {
-                        $this->found[$id] = $this->apiSdk->subjects()->get($id);
+                        $this->found[$id] = $this->subjectsClient->getSubject(
+                            ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                            $id
+                        );
                     }
                 }
 

@@ -71,7 +71,7 @@ final class CallbackPromise implements PromiseInterface
     {
         if ($this->result instanceof Exception) {
             return PromiseInterface::REJECTED;
-        } elseif ($this->result) {
+        } elseif (!$this->callback) {
             return PromiseInterface::FULFILLED;
         }
 

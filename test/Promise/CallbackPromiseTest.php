@@ -83,6 +83,12 @@ final class CallbackPromiseTest extends PHPUnit_Framework_TestCase
                 },
                 PromiseInterface::FULFILLED,
             ],
+            'fulfilled with null' => [
+                function () {
+                    return null;
+                },
+                PromiseInterface::FULFILLED,
+            ],
             'rejected' => [
                 function () {
                     throw new Exception();

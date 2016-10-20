@@ -509,37 +509,15 @@ abstract class ApiTestCase extends TestCase
 
     private function createArticleVoRJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
-        $article = [
-            'status' => 'vor',
-            'id' => 'article'.$number,
-            'version' => 1,
-            'type' => 'research-article',
-            'doi' => '10.7554/eLife.'.$number,
-            'title' => 'Article '.$number.' title',
-            'titlePrefix' => 'Article '.$number.' title prefix',
-            'published' => '2000-01-01T00:00:00+00:00',
-            'statusDate' => '1999-12-31T00:00:00+00:00',
-            'volume' => 1,
-            'issue' => 1,
-            'elocationId' => 'e'.$number,
-            'pdf' => 'http://www.example.com/',
-            'subjects' => [$this->createSubjectJson(1, true)],
-            'researchOrganisms' => ['Article '.$number.' research organism'],
-            'copyright' => [
-                'license' => 'CC-BY-4.0',
-                'holder' => 'Author et al',
-                'statement' => 'Statement',
-            ],
-            'authorLine' => 'Author et al',
-            'authors' => [
-                [
-                    'type' => 'person',
-                    'name' => [
-                        'preferred' => 'Author',
-                        'index' => 'Author',
-                    ],
-                ],
-            ],
+        $article = $this->createArticlePoAJson($number, $isSnippet, $complete);
+
+        $article['status'] = 'vor';
+
+        if (false === empty($article['abstract'])) {
+            $article['abstract']['doi'] = '10.7554/eLife.'.$number.'abstract';
+        }
+
+        $article += [
             'impactStatement' => 'Article '.$number.' impact statement',
             'image' => [
                 'alt' => '',
@@ -557,15 +535,6 @@ abstract class ApiTestCase extends TestCase
                         '140' => 'https://placehold.it/140x140',
                     ],
                 ],
-            ],
-            'abstract' => [
-                'content' => [
-                    [
-                        'type' => 'paragraph',
-                        'text' => 'Article '.$number.' abstract text',
-                    ],
-                ],
-                'doi' => '10.7554/eLife.'.$number.'abstract',
             ],
             'keywords' => ['Article '.$number.' keyword'],
             'digest' => [
@@ -637,14 +606,8 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if (!$complete) {
-            unset($article['titlePrefix']);
-            unset($article['issue']);
-            unset($article['pdf']);
-            unset($article['subjects']);
-            unset($article['researchOrganisms']);
             unset($article['impactStatement']);
             unset($article['image']);
-            unset($article['abstract']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['references']);
@@ -653,10 +616,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            unset($article['issue']);
-            unset($article['copyright']);
-            unset($article['authors']);
-            unset($article['abstract']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);

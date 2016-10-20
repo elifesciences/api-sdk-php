@@ -10,6 +10,7 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Reference;
@@ -117,6 +118,18 @@ final class ApiSdkTest extends ApiTestCase
         foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
             $this->apiSdk->getSerializer()->normalize($mediumArticle);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_podcast_episodes()
+    {
+        $this->assertInstanceOf(PodcastEpisodes::class, $this->apiSdk->podcastEpisodes());
+
+        $this->mockPodcastEpisodeCall(1);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->podcastEpisodes()->get(1)->wait());
     }
 
     /**

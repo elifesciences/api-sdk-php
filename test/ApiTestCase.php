@@ -10,6 +10,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
@@ -360,6 +361,54 @@ abstract class ApiTestCase extends TestCase
                     'total' => $total,
                     'items' => $articles,
                 ])
+            )
+        );
+    }
+
+    final protected function mockPodcastEpisodeListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
+        $podcastEpisodes = array_map(function (int $id) {
+            return $this->createPodcastEpisodeJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/podcast-episodes?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $podcastEpisodes,
+                ])
+            )
+        );
+    }
+
+    final protected function mockPodcastEpisodeCall(int $number, bool $complete = false)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/podcast-episodes/'.$number,
+                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
+                json_encode($this->createPodcastEpisodeJson($number, false, $complete))
             )
         );
     }
@@ -791,6 +840,61 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+    }
+
+    private function createPodcastEpisodeJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $podcastEpisode = [
+            'number' => $number,
+            'title' => 'Podcast episode '.$number.' title',
+            'impactStatement' => 'Podcast episode '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00+00:00',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+            'sources' => [
+                [
+                    'mediaType' => 'audio/mpeg',
+                    'uri' => 'https://www.example.com/episode.mp3',
+                ],
+            ],
+            'subjects' => [$this->createSubjectJson(1, true)],
+            'chapters' => [
+                [
+                    'number' => 1,
+                    'title' => 'Chapter title',
+                    'time' => 0,
+                    'impactStatement' => 'Chapter impact statement',
+                    'content' => [$this->createArticlePoAJson(1, true, $complete)],
+                ],
+            ],
+        ];
+
+        if (!$complete) {
+            unset($podcastEpisode['impactStatement']);
+            unset($podcastEpisode['subjects']);
+            unset($podcastEpisode['chapters'][0]['impactStatement']);
+        }
+
+        if ($isSnippet) {
+            unset($podcastEpisode['content']);
+        }
+
+        return $podcastEpisode;
     }
 
     final private function createSubjectJson(int $number, bool $isSnippet = false) : array

@@ -9,6 +9,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiSdk\Client\AnnualReports;
@@ -18,6 +19,7 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
@@ -35,6 +37,7 @@ use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -48,6 +51,7 @@ final class ApiSdk
     private $eventsClient;
     private $interviewsClient;
     private $labsClient;
+    private $podcastClient;
     private $subjectsClient;
     private $serializer;
     private $annualReports;
@@ -57,6 +61,7 @@ final class ApiSdk
     private $interviews;
     private $labsExperiments;
     private $mediumArticles;
+    private $podcastEpisodes;
     private $subjects;
 
     public function __construct(HttpClient $httpClient)
@@ -67,6 +72,7 @@ final class ApiSdk
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
+        $this->podcastClient = new PodcastClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new Serializer([
@@ -85,6 +91,7 @@ final class ApiSdk
             new PersonAuthorNormalizer(),
             new PersonNormalizer(),
             new PlaceNormalizer(),
+            new PodcastEpisodeNormalizer($this->podcastClient),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),
@@ -176,6 +183,15 @@ final class ApiSdk
         }
 
         return $this->mediumArticles;
+    }
+
+    public function podcastEpisodes() : PodcastEpisodes
+    {
+        if (empty($this->podcastEpisodes)) {
+            $this->podcastEpisodes = new PodcastEpisodes($this->podcastClient, $this->serializer);
+        }
+
+        return $this->podcastEpisodes;
     }
 
     public function subjects() : Subjects

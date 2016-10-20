@@ -3,6 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -10,16 +12,13 @@ use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Person;
-use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
-use test\eLife\ApiSdk\TestCase;
+use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class InterviewNormalizerTest extends TestCase
+final class InterviewNormalizerTest extends ApiTestCase
 {
     /** @var InterviewNormalizer */
     private $normalizer;
@@ -29,13 +28,10 @@ final class InterviewNormalizerTest extends TestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new InterviewNormalizer();
-
-        new Serializer([
-            $this->normalizer,
-            new PersonNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer = new InterviewNormalizer(new InterviewsClient($this->getHttpClient()));
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -107,23 +103,21 @@ final class InterviewNormalizerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_interviews(Interview $expected, array $context, array $json)
-    {
+    public function it_denormalize_interviews(
+        Interview $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
         $actual = $this->normalizer->denormalize($json, Interview::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $data = $this->normalizeProvider();
-
-        unset($data['complete snippet']);
-        unset($data['minimum snippet']);
-
-        return $data;
     }
 
     public function normalizeProvider() : array
@@ -185,15 +179,14 @@ final class InterviewNormalizerTest extends TestCase
                 ],
             ],
             'complete snippet' => [
-                $interview = new Interview('id',
+                $interview = new Interview('interview1',
                     new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
-                        new PromiseSequence(rejection_for('Full interviewee should not be unwrapped'))), 'title',
-                    $date, 'impact statement',
-                    new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+                        new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $date,
+                    'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview 1 text')])
                 ),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'interview1',
                     'interviewee' => [
                         'name' => [
                             'preferred' => 'preferred name',
@@ -201,29 +194,34 @@ final class InterviewNormalizerTest extends TestCase
                         ],
                         'orcid' => '0000-0002-1825-0097',
                     ],
-                    'title' => 'title',
+                    'title' => 'Interview 1 title',
                     'published' => $date->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
+                    'impactStatement' => 'Interview 1 impact statement',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockInterviewCall(1, true);
+                },
             ],
             'minimum snippet' => [
-                $interview = new Interview('id',
-                    new Interviewee(new Person('preferred name', 'index name'),
-                        new PromiseSequence(rejection_for('Full interviewee should not be unwrapped'))), 'title', $date,
-                    null, new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+                $interview = new Interview('interview1',
+                    new Interviewee(new Person('preferred name', 'index name'), new ArraySequence([])),
+                    'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview 1 text')])
                 ),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'interview1',
                     'interviewee' => [
                         'name' => [
                             'preferred' => 'preferred name',
                             'index' => 'index name',
                         ],
                     ],
-                    'title' => 'title',
+                    'title' => 'Interview 1 title',
                     'published' => $date->format(DATE_ATOM),
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockInterviewCall(1);
+                },
             ],
         ];
     }

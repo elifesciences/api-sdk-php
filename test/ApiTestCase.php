@@ -282,7 +282,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockInterviewCall(int $number)
+    final protected function mockInterviewCall(int $number, bool $complete = false)
     {
         $this->storage->save(
             new Request(
@@ -293,7 +293,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
-                json_encode($this->createInterviewJson($number, false))
+                json_encode($this->createInterviewJson($number, false, $complete))
             )
         );
     }
@@ -594,7 +594,7 @@ abstract class ApiTestCase extends TestCase
         return $event;
     }
 
-    private function createInterviewJson(int $number, bool $isSnippet = false) : array
+    private function createInterviewJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
         $interview = [
             'id' => 'interview'.$number,
@@ -624,6 +624,12 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($interview['content']);
+            unset($interview['interviewee']['cv']);
+        }
+
+        if (!$complete) {
+            unset($interview['impactStatement']);
+            unset($interview['interviewee']['cv']);
         }
 
         return $interview;

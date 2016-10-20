@@ -98,22 +98,8 @@ final class Interviews implements Iterator, Sequence
                     if (isset($this->interviews[$interview['id']])) {
                         $interviews[] = $this->interviews[$interview['id']]->wait();
                     } else {
-                        $interview['interviewee']['cv'] = $fullPromise
-                            ->then(function (array $promises) use ($interview) {
-                                $fullInterview = $promises[$interview['id']]->wait();
-
-                                if (empty($fullInterview['interviewee']['cv'])) {
-                                    return [];
-                                }
-
-                                return $fullInterview['interviewee']['cv'];
-                            });
-                        $interview['content'] = $fullPromise
-                            ->then(function (array $promises) use ($interview) {
-                                return $promises[$interview['id']]->wait()['content'];
-                            });
-
-                        $interviews[] = $interview = $this->denormalizer->denormalize($interview, Interview::class);
+                        $interviews[] = $interview = $this->denormalizer->denormalize($interview, Interview::class,
+                            null, ['snippet' => true]);
                         $this->interviews[$interview->getId()] = promise_for($interview);
                     }
                 }

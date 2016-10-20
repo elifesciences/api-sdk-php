@@ -2,15 +2,11 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\InterviewNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class InterviewsTest extends ApiTestCase
@@ -23,15 +19,7 @@ final class InterviewsTest extends ApiTestCase
      */
     protected function setUpInterviews()
     {
-        $serializer = new Serializer([
-            new InterviewNormalizer(),
-            new PersonNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
-        $this->interviews = new Interviews(
-            new InterviewsClient($this->getHttpClient()),
-            $serializer
-        );
+        $this->interviews = (new ApiSdk($this->getHttpClient()))->interviews();
     }
 
     /**
@@ -106,15 +94,20 @@ final class InterviewsTest extends ApiTestCase
      */
     public function it_reuses_already_known_interviews()
     {
-        $this->mockInterviewListCall(1, 1, 10);
-        $this->mockInterviewListCall(1, 100, 10);
+        $this->mockInterviewListCall(1, 1, 1);
+        $this->mockInterviewListCall(1, 100, 1);
 
         $this->interviews->toArray();
 
-        $interview = $this->interviews->get('interview7')->wait();
+        $interview = $this->interviews->get('interview1')->wait();
 
         $this->assertInstanceOf(Interview::class, $interview);
-        $this->assertSame('interview7', $interview->getId());
+        $this->assertSame('interview1', $interview->getId());
+
+        $this->mockInterviewCall(1);
+
+        $this->assertInstanceOf(Paragraph::class, $interview->getContent()->toArray()[0]);
+        $this->assertSame('Interview 1 text', $interview->getContent()->toArray()[0]->getText());
     }
 
     /**

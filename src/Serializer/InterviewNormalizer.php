@@ -3,40 +3,67 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\all;
 
 final class InterviewNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
+    private $interviewsClient;
+    private $found = [];
+    private $globalCallback;
+
+    public function __construct(InterviewsClient $interviewsClient)
+    {
+        $this->interviewsClient = $interviewsClient;
+    }
+
     public function denormalize($data, $class, $format = null, array $context = []) : Interview
     {
-        $data['content'] = new PromiseSequence(promise_for($data['content'])
-            ->then(function (array $blocks) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                }, $blocks);
-            }));
+        if (!empty($context['snippet'])) {
+            $interview = $this->denormalizeSnippet($data);
 
-        $data['interviewee']['cv'] = new PromiseSequence(promise_for($data['interviewee']['cv'] ?? [])
-            ->then(function (array $cvLines) {
-                return array_map(function (array $cvLine) {
-                    return new IntervieweeCvLine($cvLine['date'], $cvLine['text']);
-                }, $cvLines);
-            }));
+            $data['content'] = new PromiseSequence($interview
+                ->then(function (Result $interview) {
+                    return $interview['content'];
+                }));
+
+            $data['interviewee']['cv'] = new PromiseSequence($interview
+                ->then(function (Result $interview) {
+                    return $interview['interviewee']['cv'] ?? [];
+                }));
+        } else {
+            $data['content'] = new ArraySequence($data['content']);
+
+            $data['interviewee']['cv'] = new ArraySequence($data['interviewee']['cv'] ?? []);
+        }
+
+        $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $data['interviewee']['cv'] = $data['interviewee']['cv']->map(function (array $cvLine) {
+            return new IntervieweeCvLine($cvLine['date'], $cvLine['text']);
+        });
 
         return new Interview(
             $data['id'],
@@ -49,6 +76,37 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             $data['impactStatement'] ?? null,
             $data['content']
         );
+    }
+
+    private function denormalizeSnippet(array $interview) : PromiseInterface
+    {
+        if (isset($this->found[$interview['id']])) {
+            return $this->found[$interview['id']];
+        }
+
+        $this->found[$interview['id']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $id => $interview) {
+                    if (null === $interview) {
+                        $this->found[$id] = $this->interviewsClient->getInterview(
+                            ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                            $id
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $interviews) use ($interview) {
+                return $interviews[$interview['id']];
+            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

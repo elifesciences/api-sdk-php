@@ -467,7 +467,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $article['subjects'][] = 'subject1';
+            $article['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
         }
 
         if ($isSnippet) {
@@ -522,7 +522,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $article['subjects'][] = 'subject1';
+            $article['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
         }
 
         if ($isSnippet) {
@@ -551,7 +551,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($subject) {
-            $blogArticle['subjects'][] = 'subject1';
+            $blogArticle['subjects'][] = ['id' => 'subject1', 'name' => 'Subject 1 name'];
         }
 
         if ($isSnippet) {

@@ -26,6 +26,10 @@ trait SubjectsAware
             return new ArraySequence([]);
         }
 
+        $subjects = array_map(function (array $subject) {
+            return $subject['id'];
+        }, $subjects);
+
         $this->recordedSubjects = array_merge($this->recordedSubjects, $subjects);
 
         if (empty($this->globalSubjectsCallback)) {

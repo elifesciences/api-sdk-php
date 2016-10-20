@@ -178,7 +178,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
-                    'subjects' => ['subject1'],
+                    'subjects' => [
+                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                    ],
                     'researchOrganisms' => ['research organism'],
                     'copyright' => [
                         'license' => 'license',
@@ -259,7 +261,9 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'elocationId' => 'elocationId',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
-                    'subjects' => ['subject1'],
+                    'subjects' => [
+                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                    ],
                     'researchOrganisms' => ['research organism'],
                     'status' => 'poa',
                 ],

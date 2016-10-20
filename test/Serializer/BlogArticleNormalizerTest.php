@@ -164,7 +164,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'subjects' => [
-                        'subject1',
+                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
                     ],
                 ],
             ],
@@ -195,7 +195,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'impact statement',
                     'subjects' => [
-                        'subject1',
+                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
                     ],
                 ],
             ],

@@ -64,7 +64,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 
         if (count($object->getSubjects()) > 0) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) {
-                return $subject->getId();
+                return ['id' => $subject->getId(), 'name' => $subject->getName()];
             })->toArray();
         }
 

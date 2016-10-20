@@ -4,22 +4,21 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Place;
-use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\EventNormalizer;
-use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
-use test\eLife\ApiSdk\TestCase;
+use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class EventNormalizerTest extends TestCase
+final class EventNormalizerTest extends ApiTestCase
 {
     /** @var EventNormalizer */
     private $normalizer;
@@ -29,13 +28,10 @@ final class EventNormalizerTest extends TestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new EventNormalizer();
-
-        $serializer = new Serializer([
-            $this->normalizer,
-            new PlaceNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer = new EventNormalizer(new EventsClient($this->getHttpClient()));
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -104,23 +100,21 @@ final class EventNormalizerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_events(Event $expected, array $context, array $json)
-    {
+    public function it_denormalize_events(
+        Event $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
         $actual = $this->normalizer->denormalize($json, Event::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $data = $this->normalizeProvider();
-
-        unset($data['complete snippet']);
-        unset($data['minimum snippet']);
-
-        return $data;
     }
 
     public function normalizeProvider() : array
@@ -169,30 +163,34 @@ final class EventNormalizerTest extends TestCase
                 ],
             ],
             'complete snippet' => [
-                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new PromiseSequence(rejection_for('Event content should not be unwrapped')),
-                    rejection_for('Event venue should not be unwrapped')),
+                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $starts, $ends, $timezone,
+                    new ArraySequence([new Paragraph('Event 1 text')]), promise_for($venue)),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
-                    'title' => 'title',
+                    'id' => 'event1',
+                    'title' => 'Event 1 title',
                     'starts' => $starts->format(DATE_ATOM),
                     'ends' => $ends->format(DATE_ATOM),
-                    'impactStatement' => 'impact statement',
+                    'impactStatement' => 'Event 1 impact statement',
                     'timezone' => $timezone->getName(),
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockEventCall(1, true);
+                },
             ],
             'minimum snippet' => [
-                new Event('id', 'title', null, $starts, $ends, null,
-                    new PromiseSequence(rejection_for('Event content should not be unwrapped')),
-                    rejection_for('Event venue should not be unwrapped')),
+                new Event('event1', 'Event 1 title', null, $starts, $ends, null,
+                    new ArraySequence([new Paragraph('Event 1 text')]), promise_for(null)),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
-                    'title' => 'title',
+                    'id' => 'event1',
+                    'title' => 'Event 1 title',
                     'starts' => $starts->format(DATE_ATOM),
                     'ends' => $ends->format(DATE_ATOM),
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockEventCall(1);
+                },
             ],
         ];
     }

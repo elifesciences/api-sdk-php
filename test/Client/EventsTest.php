@@ -2,15 +2,11 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
-use eLife\ApiSdk\Serializer\Block;
-use eLife\ApiSdk\Serializer\EventNormalizer;
-use eLife\ApiSdk\Serializer\PlaceNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class EventsTest extends ApiTestCase
@@ -23,15 +19,7 @@ final class EventsTest extends ApiTestCase
      */
     protected function setUpEvents()
     {
-        $serializer = new Serializer([
-            new EventNormalizer(),
-            new PlaceNormalizer(),
-            new Block\ParagraphNormalizer(),
-        ]);
-        $this->events = new Events(
-            new EventsClient($this->getHttpClient()),
-            $serializer
-        );
+        $this->events = (new ApiSdk($this->getHttpClient()))->events();
     }
 
     /**
@@ -106,15 +94,20 @@ final class EventsTest extends ApiTestCase
      */
     public function it_reuses_already_known_events()
     {
-        $this->mockEventListCall(1, 1, 10);
-        $this->mockEventListCall(1, 100, 10);
+        $this->mockEventListCall(1, 1, 1);
+        $this->mockEventListCall(1, 100, 1);
 
         $this->events->toArray();
 
-        $event = $this->events->get('event7')->wait();
+        $event = $this->events->get('event1')->wait();
 
         $this->assertInstanceOf(Event::class, $event);
-        $this->assertSame('event7', $event->getId());
+        $this->assertSame('event1', $event->getId());
+
+        $this->mockEventCall(1);
+
+        $this->assertInstanceOf(Paragraph::class, $event->getContent()->toArray()[0]);
+        $this->assertSame('Event 1 text', $event->getContent()->toArray()[0]->getText());
     }
 
     /**

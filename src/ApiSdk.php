@@ -44,6 +44,7 @@ final class ApiSdk
 {
     private $httpClient;
     private $blogClient;
+    private $eventsClient;
     private $interviewsClient;
     private $labsClient;
     private $subjectsClient;
@@ -61,6 +62,7 @@ final class ApiSdk
     {
         $this->httpClient = $httpClient;
         $this->blogClient = new BlogClient($this->httpClient);
+        $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
@@ -71,7 +73,7 @@ final class ApiSdk
             new ArticlePoANormalizer(),
             new ArticleVoRNormalizer(),
             new BlogArticleNormalizer($this->blogClient),
-            new EventNormalizer(),
+            new EventNormalizer($this->eventsClient),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
@@ -141,7 +143,7 @@ final class ApiSdk
     public function events() : Events
     {
         if (empty($this->events)) {
-            $this->events = new Events(new EventsClient($this->httpClient), $this->serializer);
+            $this->events = new Events($this->eventsClient, $this->serializer);
         }
 
         return $this->events;

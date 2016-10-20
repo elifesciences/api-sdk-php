@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Event;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -97,28 +96,12 @@ final class Events implements Iterator, Sequence
             ->then(function (Result $result) {
                 $events = [];
 
-                $fullPromise = new CallbackPromise(function () use ($result) {
-                    $promises = [];
-                    foreach ($result['items'] as $event) {
-                        $promises[$event['id']] = $this->eventsClient->getEvent(
-                            ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
-                            $event['id']
-                        );
-                    }
-
-                    return $promises;
-                });
-
                 foreach ($result['items'] as $event) {
                     if (isset($this->events[$event['id']])) {
                         $events[] = $this->events[$event['id']]->wait();
                     } else {
-                        $event['content'] = $fullPromise
-                            ->then(function (array $promises) use ($event) {
-                                return $promises[$event['id']]->wait()['content'];
-                            });
-
-                        $events[] = $event = $this->denormalizer->denormalize($event, Event::class);
+                        $events[] = $event = $this->denormalizer->denormalize($event, Event::class, null,
+                            ['snippet' => true]);
                         $this->events[$event->getId()] = promise_for($event);
                     }
                 }

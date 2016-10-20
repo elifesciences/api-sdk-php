@@ -4,16 +4,23 @@ namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class EventNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -21,16 +28,40 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
+    private $eventsClient;
+    private $found = [];
+    private $globalCallback;
+
+    public function __construct(EventsClient $eventsClient)
+    {
+        $this->eventsClient = $eventsClient;
+    }
+
     public function denormalize($data, $class, $format = null, array $context = []) : Event
     {
-        $data['content'] = new PromiseSequence(promise_for($data['content'])
-            ->then(function (array $blocks) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                }, $blocks);
-            }));
+        if (!empty($context['snippet'])) {
+            $event = $this->denormalizeSnippet($data);
 
-        $data['venue'] = promise_for($data['venue'] ?? null)
+            $data['content'] = new PromiseSequence($event
+                ->then(function (Result $event) {
+                    return $event['content'];
+                }));
+
+            $data['venue'] = $event
+                ->then(function (Result $event) {
+                    return $event['venue'] ?? null;
+                });
+        } else {
+            $data['content'] = new ArraySequence($data['content']);
+
+            $data['venue'] = promise_for($data['venue'] ?? null);
+        }
+
+        $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $data['venue'] = $data['venue']
             ->then(function (array $venue = null) use ($format, $context) {
                 if (null === $venue) {
                     return null;
@@ -49,6 +80,37 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['content'],
             $data['venue']
         );
+    }
+
+    private function denormalizeSnippet(array $event) : PromiseInterface
+    {
+        if (isset($this->found[$event['id']])) {
+            return $this->found[$event['id']];
+        }
+
+        $this->found[$event['id']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $id => $event) {
+                    if (null === $event) {
+                        $this->found[$id] = $this->eventsClient->getEvent(
+                            ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                            $id
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $events) use ($event) {
+                return $events[$event['id']];
+            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

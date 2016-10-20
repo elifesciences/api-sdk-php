@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Interview;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -81,18 +80,6 @@ final class Interviews implements Iterator, Sequence
             })
             ->then(function (Result $result) {
                 $interviews = [];
-
-                $fullPromise = new CallbackPromise(function () use ($result) {
-                    $promises = [];
-                    foreach ($result['items'] as $interview) {
-                        $promises[$interview['id']] = $this->interviewsClient->getInterview(
-                            ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
-                            $interview['id']
-                        );
-                    }
-
-                    return $promises;
-                });
 
                 foreach ($result['items'] as $interview) {
                     if (isset($this->interviews[$interview['id']])) {

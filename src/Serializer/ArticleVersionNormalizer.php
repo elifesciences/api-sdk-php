@@ -2,6 +2,9 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
@@ -10,12 +13,15 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 abstract class ArticleVersionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -23,9 +29,52 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
+    private $articlesClient;
+    private $found = [];
+    private $globalCallback;
+
+    public function __construct(ArticlesClient $articlesClient)
+    {
+        $this->articlesClient = $articlesClient;
+    }
+
     final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion
     {
-        $data['abstract'] = promise_for($data['abstract'] ?? null)
+        if (!empty($context['snippet'])) {
+            $complete = $this->denormalizeSnippet($data);
+
+            $data['abstract'] = $complete
+                ->then(function (Result $article) {
+                    return $article['abstract'] ?? null;
+                });
+
+            $data['authors'] = new PromiseSequence($complete
+                ->then(function (Result $article) {
+                    return $article['authors'];
+                }));
+
+            $data['copyright'] = $complete
+                ->then(function (Result $article) {
+                    return $article['copyright'];
+                });
+
+            $data['issue'] = $complete
+                ->then(function (Result $article) {
+                    return $article['issue'] ?? null;
+                });
+        } else {
+            $complete = null;
+
+            $data['abstract'] = promise_for($data['abstract'] ?? null);
+
+            $data['authors'] = new ArraySequence($data['authors']);
+
+            $data['copyright'] = promise_for($data['copyright']);
+
+            $data['issue'] = promise_for($data['issue'] ?? null);
+        }
+
+        $data['abstract'] = $data['abstract']
             ->then(function ($abstract) use ($format, $context) {
                 if (empty($abstract)) {
                     return null;
@@ -39,19 +88,14 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 );
             });
 
-        $data['authors'] = new PromiseSequence(promise_for($data['authors'])
-            ->then(function (array $authors) use ($format, $context) {
-                return array_map(function (array $author) use ($format, $context) {
-                    return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);
-                }, $authors);
-            }));
+        $data['authors'] = $data['authors']->map(function (array $author) use ($format, $context) {
+            return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);
+        });
 
-        $data['copyright'] = promise_for($data['copyright'])
+        $data['copyright'] = $data['copyright']
             ->then(function (array $copyright) {
                 return new Copyright($copyright['license'], $copyright['statement'], $copyright['holder'] ?? null);
             });
-
-        $data['issue'] = promise_for($data['issue'] ?? null);
 
         $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
             $context['snippet'] = true;
@@ -59,7 +103,43 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
-        return $this->denormalizeArticle($data, $format, $context);
+        return $this->denormalizeArticle($data, $complete, $format, $context);
+    }
+
+    private function denormalizeSnippet(array $article) : PromiseInterface
+    {
+        if (isset($this->found[$article['id']])) {
+            return $this->found[$article['id']];
+        }
+
+        $this->found[$article['id']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $id => $article) {
+                    if (null === $article) {
+                        $this->found[$id] = $this->articlesClient->getArticleLatestVersion(
+                            [
+                                'Accept' => [
+                                    new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
+                                    new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                                ],
+                            ],
+                            $id
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $articles) use ($article) {
+                return $articles[$article['id']];
+            });
     }
 
     /**
@@ -137,7 +217,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return $this->normalizeArticle($object, $data, $format, $context);
     }
 
-    abstract protected function denormalizeArticle($data, $class, $format = null, array $context = []) : ArticleVersion;
+    abstract protected function denormalizeArticle(
+        $data,
+        PromiseInterface $article = null,
+        $class,
+        $format = null,
+        array $context = []
+    ) : ArticleVersion;
 
     abstract protected function normalizeArticle(
         ArticleVersion $article,

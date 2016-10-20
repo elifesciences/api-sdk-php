@@ -103,15 +103,20 @@ final class ArticlesTest extends ApiTestCase
      */
     public function it_reuses_already_known_articles()
     {
-        $this->mockArticleListCall(1, 1, 10);
-        $this->mockArticleListCall(1, 100, 10);
+        $this->mockArticleListCall(1, 1, 1, true, [], true);
+        $this->mockArticleListCall(1, 100, 1, true, [], true);
 
         $this->articles->toArray();
 
-        $article = $this->articles->get('article7')->wait();
+        $article = $this->articles->get('article1')->wait();
 
         $this->assertInstanceOf(ArticleVersion::class, $article);
-        $this->assertSame('article7', $article->getId());
+        $this->assertSame('article1', $article->getId());
+
+        $this->mockArticleCall(1, false, true);
+
+        $this->assertInstanceOf(Section::class, $article->getContent()->toArray()[0]);
+        $this->assertSame('Article 1 section title', $article->getContent()->toArray()[0]->getTitle());
     }
 
     /**

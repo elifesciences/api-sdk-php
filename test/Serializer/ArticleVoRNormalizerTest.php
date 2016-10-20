@@ -3,10 +3,9 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -25,7 +24,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
@@ -37,9 +35,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new ArticleVoRNormalizer();
-
         $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer = new ArticleVoRNormalizer(new ArticlesClient($this->getHttpClient()));
         $this->normalizer->setNormalizer($apiSdk->getSerializer());
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
@@ -114,25 +111,23 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_article_vors(ArticleVoR $expected, array $context, array $json)
-    {
+    public function it_denormalize_article_vors(
+        ArticleVoR $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
 
         $this->mockSubjectCall(1);
 
         $this->assertObjectsAreEqual($expected, $actual);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $data = $this->normalizeProvider();
-
-        unset($data['complete snippet']);
-        unset($data['minimum snippet']);
-
-        return $data;
     }
 
     public function normalizeProvider() : array
@@ -357,38 +352,47 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
-                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
-                    rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
-                    rejection_for('Copyright should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped')), 'impact statement', $image,
-                    new PromiseSequence(rejection_for('Keywords should not be unwrapped')),
-                    rejection_for('Digest should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Content should not be unwrapped')),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped')),
-                    rejection_for('Decision letter should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Decision letter description should not be unwrapped')),
-                    rejection_for('Author response should not be unwrapped')),
+                new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
+                    'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
+                    new ArraySequence([$subject]), ['Article 1 research organism'],
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]),
+                        '10.7554/eLife.1abstract')), promise_for(1),
+                    promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), 'Article 1 impact statement',
+                    $image, new ArraySequence(['Article 1 keyword']),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 digest')]),
+                        '10.7554/eLife.1digest')), new ArraySequence([
+                        new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
+                    ]), new ArraySequence([
+                        new BookReference(ReferenceDate::fromString('2000'),
+                            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                            new Place(null, null, ['publisher'])),
+                    ]),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 decision letter text')]),
+                        '10.7554/eLife.1decisionLetter')),
+                    new ArraySequence([new Paragraph('Article 1 decision letter description')]),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 author response text')]),
+                        '10.7554/eLife.1authorResponse'))),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'article1',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife1',
+                    'authorLine' => 'Author et al',
+                    'title' => 'Article 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
-                    'elocationId' => 'elocationId',
-                    'titlePrefix' => 'title prefix',
+                    'elocationId' => 'e1',
+                    'titlePrefix' => 'Article 1 title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1 name'],
                     ],
-                    'researchOrganisms' => ['research organism'],
+                    'researchOrganisms' => ['Article 1 research organism'],
                     'status' => 'vor',
-                    'impactStatement' => 'impact statement',
+                    'impactStatement' => 'Article 1 impact statement',
                     'image' => [
                         'alt' => '',
                         'sizes' => [
@@ -407,33 +411,57 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockArticleCall(1, true, true);
+                },
             ],
             'minimum snippet' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, new ArraySequence([]), [], rejection_for('Abstract should not be unwrapped'),
-                    rejection_for('Issue should not be unwrapped'), rejection_for('Copyright should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped')), null, null,
-                    new PromiseSequence(rejection_for('Keywords should not be unwrapped')),
-                    rejection_for('Digest should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Content should not be unwrapped')),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped')),
-                    rejection_for('Decision letter should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Decision letter description should not be unwrapped')),
-                    rejection_for('Author response should not be unwrapped')),
+                new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
+                    'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
+                    promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), 'Article 1 impact statement',
+                    $image, new ArraySequence([]), promise_for(null), new ArraySequence([
+                        new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
+                    ]), new ArraySequence([
+                        new BookReference(ReferenceDate::fromString('2000'),
+                            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                            new Place(null, null, ['publisher'])),
+                    ]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'article1',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife1',
+                    'authorLine' => 'Author et al',
+                    'title' => 'Article 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
-                    'elocationId' => 'elocationId',
+                    'elocationId' => 'e1',
                     'status' => 'vor',
+                    'impactStatement' => 'Article 1 impact statement',
+                    'image' => [
+                        'alt' => '',
+                        'sizes' => [
+                            '2:1' => [
+                                900 => 'https://placehold.it/900x450',
+                                1800 => 'https://placehold.it/1800x900',
+                            ],
+                            '16:9' => [
+                                250 => 'https://placehold.it/250x141',
+                                500 => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                70 => 'https://placehold.it/70x70',
+                                140 => 'https://placehold.it/140x140',
+                            ],
+                        ],
+                    ],
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockArticleCall(1, false, true);
+                },
             ],
         ];
     }

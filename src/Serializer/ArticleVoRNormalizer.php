@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleSection;
@@ -11,92 +12,127 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Reference;
+use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
 
 final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {
-    public function denormalizeArticle($data, $class, $format = null, array $context = []) : ArticleVersion
-    {
-        if (empty($data['authorResponse'])) {
-            $data['authorResponse'] = promise_for(null);
-        } else {
-            $data['authorResponse'] = promise_for($data['authorResponse'])
-                ->then(function ($authorResponse) use ($format, $context) {
-                    if (empty($authorResponse)) {
-                        return null;
-                    }
-
-                    return new ArticleSection(
-                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                        }, $authorResponse['content'])),
-                        $authorResponse['doi']
-                    );
+    protected function denormalizeArticle(
+        $data,
+        PromiseInterface $article = null,
+        $class,
+        $format = null,
+        array $context = []
+    ) : ArticleVersion {
+        if ($article) {
+            $data['authorResponse'] = $article
+                ->then(function (Result $article) {
+                    return $article['authorResponse'] ?? null;
                 });
+
+            $data['body'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['body'];
+                }));
+
+            $data['decisionLetter'] = $article
+                ->then(function (Result $article) {
+                    return $article['decisionLetter'] ?? null;
+                });
+
+            $data['digest'] = $article
+                ->then(function (Result $article) {
+                    return $article['digest'] ?? null;
+                });
+
+            $data['keywords'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['keywords'] ?? [];
+                }));
+
+            $data['references'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['references'] ?? [];
+                }));
+        } else {
+            $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
+
+            $data['body'] = new ArraySequence($data['body']);
+
+            $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
+
+            $data['digest'] = promise_for($data['digest'] ?? null);
+
+            $data['keywords'] = new ArraySequence($data['keywords'] ?? []);
+
+            $data['references'] = new ArraySequence($data['references'] ?? []);
         }
 
-        $data['body'] = new PromiseSequence(promise_for($data['body'])
-            ->then(function (array $blocks) use ($format, $context) {
+        $data['authorResponse'] = $data['authorResponse']
+            ->then(function ($authorResponse) use ($format, $context) {
+                if (empty($authorResponse)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $authorResponse['content'])),
+                    $authorResponse['doi']
+                );
+            });
+
+        $data['body'] = $data['body']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
+            ->then(function (array $decisionLetter = null) use ($format, $context) {
+                if (empty($decisionLetter)) {
+                    return [];
+                }
+
                 return array_map(function (array $block) use ($format, $context) {
                     return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                }, $blocks);
+                }, $decisionLetter['description']);
             }));
 
-        if (empty($data['decisionLetter'])) {
-            $data['decisionLetter'] = promise_for(null);
-            $decisionLetterDescription = new ArraySequence([]);
-        } else {
-            $decisionLetterDescription = new PromiseSequence(promise_for($data['decisionLetter'])
-                ->then(function (array $decisionLetter) use ($format, $context) {
-                    return array_map(function (array $block) use ($format, $context) {
+        $data['decisionLetter'] = $data['decisionLetter']
+            ->then(function (array $decisionLetter = null) use ($format, $context) {
+                if (empty($decisionLetter)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $decisionLetter['description']);
-                }));
-            $data['decisionLetter'] = promise_for($data['decisionLetter'])
-                ->then(function (array $decisionLetter) use ($format, $context) {
-                    if (empty($decisionLetter)) {
-                        return null;
-                    }
+                    }, $decisionLetter['content'])),
+                    $decisionLetter['doi']
+                );
+            });
 
-                    return new ArticleSection(
-                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                        }, $decisionLetter['content'])),
-                        $decisionLetter['doi']
-                    );
-                });
-        }
+        $data['digest'] = $data['digest']
+            ->then(function (array $digest = null) use ($format, $context) {
+                if (empty($digest)) {
+                    return null;
+                }
 
-        if (empty($data['digest'])) {
-            $data['digest'] = promise_for(null);
-        } else {
-            $data['digest'] = promise_for($data['digest'])
-                ->then(function ($digest) use ($format, $context) {
-                    if (empty($digest)) {
-                        return null;
-                    }
-
-                    return new ArticleSection(
-                        new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                        }, $digest['content'])),
-                        $digest['doi']
-                    );
-                });
-        }
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $digest['content'])),
+                    $digest['doi']
+                );
+            });
 
         if (false === empty($data['image'])) {
             $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
         }
 
-        $data['keywords'] = new PromiseSequence(promise_for($data['keywords'] ?? []));
-
-        $data['references'] = new PromiseSequence(promise_for($data['references'] ?? [])
-            ->then(function (array $blocks) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, Reference::class, $format, $context);
-                }, $blocks);
-            }));
+        $data['references'] = $data['references']
+            ->map(function (array $reference) use ($format, $context) {
+                return $this->denormalizer->denormalize($reference, Reference::class, $format, $context);
+            });
 
         return new ArticleVoR(
             $data['id'],

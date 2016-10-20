@@ -3,10 +3,9 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -21,7 +20,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
@@ -33,9 +31,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
-        $this->normalizer = new ArticlePoANormalizer();
-
         $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->normalizer = new ArticlePoANormalizer(new ArticlesClient($this->getHttpClient()));
         $this->normalizer->setNormalizer($apiSdk->getSerializer());
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
@@ -107,25 +104,23 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_article_poas(ArticlePoA $expected, array $context, array $json)
-    {
+    public function it_denormalize_article_poas(
+        ArticlePoA $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
         $actual = $this->normalizer->denormalize($json, ArticlePoA::class, null, $context);
 
         $this->mockSubjectCall(1);
 
         $this->assertObjectsAreEqual($expected, $actual);
-    }
-
-    public function denormalizeProvider() : array
-    {
-        $data = $this->normalizeProvider();
-
-        unset($data['complete snippet']);
-        unset($data['minimum snippet']);
-
-        return $data;
     }
 
     public function normalizeProvider() : array
@@ -231,52 +226,58 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
-                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
-                    rejection_for('Abstract should not be unwrapped'), rejection_for('Issue should not be unwrapped'),
-                    rejection_for('Copyright should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped'))),
+                new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
+                    'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
+                    new ArraySequence([$subject]), ['Article 1 research organism'],
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
+                    promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'article1',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife1',
+                    'authorLine' => 'Author et al',
+                    'title' => 'Article 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 2,
-                    'elocationId' => 'elocationId',
-                    'titlePrefix' => 'title prefix',
+                    'volume' => 1,
+                    'elocationId' => 'e1',
+                    'titlePrefix' => 'Article 1 title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1 name'],
                     ],
-                    'researchOrganisms' => ['research organism'],
+                    'researchOrganisms' => ['Article 1 research organism'],
                     'status' => 'poa',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockArticleCall(1, true);
+                },
             ],
             'minimum snippet' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, new ArraySequence([]), [], rejection_for('Abstract should not be unwrapped'),
-                    rejection_for('Issue should not be unwrapped'),
-                    rejection_for('Copyright should not be unwrapped'),
-                    new PromiseSequence(rejection_for('Authors should not be unwrapped'))),
+                new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
+                    'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
+                    promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
                 ['snippet' => true],
                 [
-                    'id' => 'id',
+                    'id' => 'article1',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife1',
+                    'authorLine' => 'Author et al',
+                    'title' => 'Article 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'statusDate' => $statusDate->format(DATE_ATOM),
                     'volume' => 1,
-                    'elocationId' => 'elocationId',
+                    'elocationId' => 'e1',
                     'status' => 'poa',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockArticleCall(1);
+                },
             ],
         ];
     }

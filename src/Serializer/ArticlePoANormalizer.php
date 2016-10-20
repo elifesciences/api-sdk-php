@@ -5,11 +5,17 @@ namespace eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
+use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticlePoANormalizer extends ArticleVersionNormalizer
 {
-    protected function denormalizeArticle($data, $class, $format = null, array $context = []) : ArticleVersion
-    {
+    protected function denormalizeArticle(
+        $data,
+        PromiseInterface $article = null,
+        $class,
+        $format = null,
+        array $context = []
+    ) : ArticleVersion {
         return new ArticlePoA(
             $data['id'],
             $data['version'],

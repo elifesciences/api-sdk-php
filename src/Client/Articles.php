@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -125,63 +124,12 @@ final class Articles implements Iterator, Sequence
             ->then(function (Result $result) {
                 $articles = [];
 
-                $fullPromise = new CallbackPromise(function () use ($result) {
-                    $promises = [];
-                    foreach ($result['items'] as $article) {
-                        $promises[$article['id']] = $this->articlesClient->getArticleLatestVersion(
-                            [
-                                'Accept' => [
-                                    new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
-                                    new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
-                                ],
-                            ],
-                            $article['id']
-                        );
-                    }
-
-                    return $promises;
-                });
-
                 foreach ($result['items'] as $article) {
                     if (isset($this->articles[$article['id']])) {
                         $articles[] = $this->articles[$article['id']]->wait();
                     } else {
-                        $article['abstract'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['abstract'] ?? null;
-                            });
-                        $article['authors'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['authors'];
-                            });
-                        $article['body'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['body'] ?? null;
-                            });
-                        $article['copyright'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['copyright'];
-                            });
-                        $article['digest'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['digest'] ?? null;
-                            });
-                        $article['issue'] = $fullPromise
-                            ->then(function (array $promises) use ($article) {
-                                return $promises[$article['id']]->wait()['issue'];
-                            });
-
-                        switch ($article['status']) {
-                            case 'vor':
-                                $article['keywords'] = $fullPromise
-                                    ->then(function (array $promises) use ($article) {
-                                        return $promises[$article['id']]->wait()['keywords'];
-                                    });
-
-                                break;
-                        }
-
-                        $articles[] = $article = $this->denormalizer->denormalize($article, ArticleVersion::class);
+                        $articles[] = $article = $this->denormalizer->denormalize($article, ArticleVersion::class, null,
+                            ['snippet' => true]);
                         $this->articles[$article->getId()] = promise_for($article);
                     }
                 }

@@ -111,8 +111,12 @@ abstract class ApiTestCase extends TestCase
         array $subjects = [],
         bool $vor = false
     ) {
-        $articles = array_map(function (int $id) {
-            return $this->createArticleVoRJson($id, true);
+        $articles = array_map(function (int $id) use ($vor) {
+            if ($vor) {
+                return $this->createArticleVoRJson($id, true);
+            }
+
+            return $this->createArticlePoAJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -136,19 +140,19 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockArticleCall(int $number, bool $subject = false, bool $vor = false)
+    final protected function mockArticleCall(int $number, bool $complete = false, bool $vor = false)
     {
         if ($vor) {
             $response = new Response(
                 200,
                 ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1)],
-                json_encode($this->createArticleVoRJson($number, false, $subject))
+                json_encode($this->createArticleVoRJson($number, false, $complete))
             );
         } else {
             $response = new Response(
                 200,
                 ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1)],
-                json_encode($this->createArticlePoAJson($number, false, $subject))
+                json_encode($this->createArticlePoAJson($number, false, $complete))
             );
         }
 
@@ -441,7 +445,7 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    private function createArticlePoAJson(int $number, bool $isSnippet = false, bool $subject = false) : array
+    private function createArticlePoAJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
         $article = [
             'status' => 'poa',
@@ -450,14 +454,19 @@ abstract class ApiTestCase extends TestCase
             'type' => 'research-article',
             'doi' => '10.7554/eLife.'.$number,
             'title' => 'Article '.$number.' title',
+            'titlePrefix' => 'Article '.$number.' title prefix',
             'published' => '2000-01-01T00:00:00+00:00',
             'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
+            'issue' => 1,
             'elocationId' => 'e'.$number,
+            'pdf' => 'http://www.example.com/',
+            'subjects' => [$this->createSubjectJson(1, true)],
+            'researchOrganisms' => ['Article '.$number.' research organism'],
             'copyright' => [
                 'license' => 'CC-BY-4.0',
                 'holder' => 'Author et al',
-                'statement' => 'This article is distributed under the terms of the <a href=\'http://creativecommons.org/licenses/by/4.0/\'>Creative Commons Attribution License</a> permitting unrestricted use and redistribution provided that the original author and source are credited.',
+                'statement' => 'Statement',
             ],
             'authorLine' => 'Author et al',
             'authors' => [
@@ -469,21 +478,36 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'abstract' => [
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' abstract text',
+                    ],
+                ],
+            ],
         ];
 
-        if ($subject) {
-            $article['subjects'][] = $this->createSubjectJson(1, true);
+        if (!$complete) {
+            unset($article['titlePrefix']);
+            unset($article['issue']);
+            unset($article['pdf']);
+            unset($article['subjects']);
+            unset($article['researchOrganisms']);
+            unset($article['abstract']);
         }
 
         if ($isSnippet) {
+            unset($article['issue']);
             unset($article['copyright']);
             unset($article['authors']);
+            unset($article['abstract']);
         }
 
         return $article;
     }
 
-    private function createArticleVoRJson(int $number, bool $isSnippet = false, bool $subject = false) : array
+    private function createArticleVoRJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
         $article = [
             'status' => 'vor',
@@ -492,14 +516,19 @@ abstract class ApiTestCase extends TestCase
             'type' => 'research-article',
             'doi' => '10.7554/eLife.'.$number,
             'title' => 'Article '.$number.' title',
+            'titlePrefix' => 'Article '.$number.' title prefix',
             'published' => '2000-01-01T00:00:00+00:00',
             'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
+            'issue' => 1,
             'elocationId' => 'e'.$number,
+            'pdf' => 'http://www.example.com/',
+            'subjects' => [$this->createSubjectJson(1, true)],
+            'researchOrganisms' => ['Article '.$number.' research organism'],
             'copyright' => [
                 'license' => 'CC-BY-4.0',
                 'holder' => 'Author et al',
-                'statement' => 'This article is distributed under the terms of the <a href=\'http://creativecommons.org/licenses/by/4.0/\'>Creative Commons Attribution License</a> permitting unrestricted use and redistribution provided that the original author and source are credited.',
+                'statement' => 'Statement',
             ],
             'authorLine' => 'Author et al',
             'authors' => [
@@ -510,6 +539,43 @@ abstract class ApiTestCase extends TestCase
                         'index' => 'Author',
                     ],
                 ],
+            ],
+            'impactStatement' => 'Article '.$number.' impact statement',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+            'abstract' => [
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' abstract text',
+                    ],
+                ],
+                'doi' => '10.7554/eLife.'.$number.'abstract',
+            ],
+            'keywords' => ['Article '.$number.' keyword'],
+            'digest' => [
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' digest',
+                    ],
+                ],
+                'doi' => '10.7554/eLife.'.$number.'digest',
             ],
             'body' => [
                 [
@@ -524,16 +590,79 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'references' => [
+                [
+                    'id' => 'ref1',
+                    'type' => 'book',
+                    'date' => '2000',
+                    'authors' => [
+                        [
+                            'type' => 'person',
+                            'name' => [
+                                'preferred' => 'preferred name',
+                                'index' => 'index name',
+                            ],
+                        ],
+                    ],
+                    'bookTitle' => 'book title',
+                    'publisher' => [
+                        'name' => ['publisher'],
+                    ],
+                ],
+            ],
+            'decisionLetter' => [
+                'doi' => '10.7554/eLife.'.$number.'decisionLetter',
+                'description' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' decision letter description',
+                    ],
+                ],
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' decision letter text',
+                    ],
+                ],
+            ],
+            'authorResponse' => [
+                'doi' => '10.7554/eLife.'.$number.'authorResponse',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$number.' author response text',
+                    ],
+                ],
+            ],
         ];
 
-        if ($subject) {
-            $article['subjects'][] = $this->createSubjectJson(1, true);
+        if (!$complete) {
+            unset($article['titlePrefix']);
+            unset($article['issue']);
+            unset($article['pdf']);
+            unset($article['subjects']);
+            unset($article['researchOrganisms']);
+            unset($article['impactStatement']);
+            unset($article['image']);
+            unset($article['abstract']);
+            unset($article['keywords']);
+            unset($article['digest']);
+            unset($article['references']);
+            unset($article['decisionLetter']);
+            unset($article['authorResponse']);
         }
 
         if ($isSnippet) {
+            unset($article['issue']);
             unset($article['copyright']);
             unset($article['authors']);
-            unset($article['content']);
+            unset($article['abstract']);
+            unset($article['keywords']);
+            unset($article['digest']);
+            unset($article['body']);
+            unset($article['references']);
+            unset($article['decisionLetter']);
+            unset($article['authorResponse']);
         }
 
         return $article;

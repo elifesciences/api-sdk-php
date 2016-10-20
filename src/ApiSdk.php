@@ -43,6 +43,7 @@ use Symfony\Component\Serializer\Serializer;
 final class ApiSdk
 {
     private $httpClient;
+    private $articlesClient;
     private $blogClient;
     private $eventsClient;
     private $interviewsClient;
@@ -61,6 +62,7 @@ final class ApiSdk
     public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
+        $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
@@ -70,8 +72,8 @@ final class ApiSdk
         $this->serializer = new Serializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
-            new ArticlePoANormalizer(),
-            new ArticleVoRNormalizer(),
+            new ArticlePoANormalizer($this->articlesClient),
+            new ArticleVoRNormalizer($this->articlesClient),
             new BlogArticleNormalizer($this->blogClient),
             new EventNormalizer($this->eventsClient),
             new GroupAuthorNormalizer(),
@@ -125,7 +127,7 @@ final class ApiSdk
     public function articles() : Articles
     {
         if (empty($this->articles)) {
-            $this->articles = new Articles(new ArticlesClient($this->httpClient), $this->serializer);
+            $this->articles = new Articles($this->articlesClient, $this->serializer);
         }
 
         return $this->articles;

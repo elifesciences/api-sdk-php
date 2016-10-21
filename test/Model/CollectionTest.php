@@ -35,8 +35,20 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertSame('Tropical disease', $collection->getTitle());
     }
 
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease')
+    /**
+     * @test
+     */
+    public function it_may_have_an_impact_statement()
     {
-        return new Collection('tropical-disease', 'Tropical disease');
+        $with = $this->anEmptyCollection('tropical-disease', 'Tropical disease', 'impact statement');
+        $withOut = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null);
+
+        $this->assertSame('impact statement', $with->getImpactStatement());
+        $this->assertNull($withOut->getImpactStatement());
+    }
+
+    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null)
+    {
+        return new Collection($id, $title, $impactStatement);
     }
 }

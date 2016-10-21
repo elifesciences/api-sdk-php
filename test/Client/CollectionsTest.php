@@ -28,10 +28,10 @@ final class CollectionsTest extends ApiTestCase
     public function it_gets_a_collection()
     {
         $this->mockCollectionCall('tropical-disease', true);
+
+        $collection = $this->collections->get('tropical-disease')->wait();
+
         return;
-
-        $podcastEpisode = $this->podcastEpisodes->get(7)->wait();
-
         $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
         $this->assertSame(7, $podcastEpisode->getNumber());
 

@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
-#use DateTimeImmutable;
+use DateTimeImmutable;
 #use eLife\ApiSdk\Collection\ArraySequence;
 #use eLife\ApiSdk\Collection\PromiseSequence;
 #use eLife\ApiSdk\Collection\Sequence;
@@ -47,8 +47,22 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null)
+    /**
+     * @test
+     */
+    public function it_has_a_published_date()
     {
-        return new Collection($id, $title, $impactStatement);
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, $published = new DateTimeImmutable());
+
+        $this->assertEquals($published, $collection->getPublishedDate());
+    }
+
+
+    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null)
+    {
+        if ($published === null) {
+            $published = new DateTimeImmutable();
+        }
+        return new Collection($id, $title, $impactStatement, $published);
     }
 }

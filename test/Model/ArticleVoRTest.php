@@ -35,7 +35,7 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No references')),
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
-        $withOut = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
+        $withOut = new ArticleVoR('id', 2, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, rejection_for('No banner'), null,

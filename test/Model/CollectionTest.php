@@ -12,8 +12,8 @@ use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\PodcastEpisodeSource;
 #use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
-#use function GuzzleHttp\Promise\promise_for;
-#use function GuzzleHttp\Promise\rejection_for;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 
 final class CollectionTest extends PHPUnit_Framework_TestCase
 {
@@ -60,21 +60,35 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_banner()
+    {
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
+
+        $this->assertEquals($image, $collection->getBanner());
+    }
+
+
+    /**
+     * @test
+     */
     public function it_has_a_thumbnail()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), $image = new Image('', [900 => 'https://placehold.it/900x450']));
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']));
 
         $this->assertEquals($image, $collection->getThumbnail());
     }
 
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null, $thumbnail = null)
+    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null, $banner = null, $thumbnail = null)
     {
         if ($published === null) {
             $published = new DateTimeImmutable();
         }
+        if ($banner === null) {
+            $banner = rejection_for('No banner');
+        }
         if ($thumbnail === null) {
             $thumbnail = new Image('', [900 => 'https://placehold.it/900x450']);
         }
-        return new Collection($id, $title, $impactStatement, $published, $thumbnail);
+        return new Collection($id, $title, $impactStatement, $published, $banner, $thumbnail);
     }
 }

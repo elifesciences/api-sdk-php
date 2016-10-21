@@ -6,6 +6,7 @@ use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
@@ -465,6 +466,22 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
                 json_encode($this->createPodcastEpisodeJson($number, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockCollectionCall(string $id, bool $complete = true)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/collections/'.$id,
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                json_encode($this->createCollectionJson($id, false, $complete))
             )
         );
     }
@@ -1032,6 +1049,129 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $podcastEpisode;
+    }
+
+    private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $collection = [
+            'id' => $id,
+            'title' => ucfirst($id),
+            'impactStatement' => ucfirst($id).' impact statement',
+            'updated' => '2000-01-01T00:00:00+00:00',
+            'image' => [
+                'banner' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '2:1' => [
+                            '900' => 'https://placehold.it/900x450',
+                            '1800' => 'https://placehold.it/1800x900',
+                        ],
+                    ],
+                ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://placehold.it/250x141',
+                            '500' => 'https://placehold.it/500x281',
+                        ],
+                        '1:1' => [
+                            '70' => 'https://placehold.it/70x70',
+                            '140' => 'https://placehold.it/140x140',
+                        ],
+                    ],
+                ],
+            ],
+            /*
+            'sources' => [
+                [
+                    'mediaType' => 'audio/mpeg',
+                    'uri' => 'https://www.example.com/episode.mp3',
+                ],
+            ],
+             */
+            "selectedCurator" => [
+                "id" => "pjha",
+                "type" => "senior-editor",
+                "name" => [
+                    "preferred" => "Prabhat Jha",
+                    "index" => "Jha, Prabhat"
+                ],
+                "image" => [
+                    "alt" => "",
+                    "sizes" => [
+                        "16:9" => [
+                            "250" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141",
+                            "500" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281"
+                        ],
+                        "1:1" => [
+                            "70" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70",
+                            "140" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140"
+                        ]
+                    ]
+                ],
+                "etAl" => true
+            ],
+            "curators" => [
+                [
+                    "id" => "bcooper",
+                    "type" => "reviewing-editor",
+                    "name" => [
+                        "preferred" => "Ben Cooper",
+                        "index" => "Cooper, Ben"
+                    ]
+                ],
+                [
+                    "id" => "pjha",
+                    "type" => "senior-editor",
+                    "name" => [
+                        "preferred" => "Prabhat Jha",
+                        "index" => "Jha, Prabhat"
+                    ],
+                    "image" => [
+                    "alt" => "",
+                        "sizes" => [
+                            "16:9" => [
+                                "250" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141",
+                                "500" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281"
+                            ],
+                            "1:1" => [
+                                "70" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70",
+                                "140" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            "content" => [
+                [
+                    "type" => "blog-article",
+                    "id" => "359325",
+                    "title" => "Media coverage => Slime can see",
+                    "impactStatement" => "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
+                    "published" => "2016-07-08T08:33:25+00:00",
+                    "subjects" => [
+                        [
+                            "id" => "biophysics-structural-biology",
+                            "name" => "Biophysics and Structural Biology",
+                        ]
+                    ]
+                ]
+            ],
+            'subjects' => [$this->createSubjectJson(1, true)],
+        ];
+
+        if (!$complete) {
+            unset($collection['impactStatement']);
+            unset($collection['subjects']);
+        }
+
+        if ($isSnippet) {
+            unset($collection['image']['banner']);
+            unset($collection['content']);
+        }
+
+        return $collection;
     }
 
     final private function createSubjectJson(int $number, bool $isSnippet = false) : array

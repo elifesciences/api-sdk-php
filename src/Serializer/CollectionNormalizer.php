@@ -11,7 +11,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 #use eLife\ApiSdk\Model\ArticlePoA;
 #use eLife\ApiSdk\Model\ArticleVoR;
 #use eLife\ApiSdk\Model\Image;
-#use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\CollectionChapter;
 #use eLife\ApiSdk\Model\CollectionSource;
 #use eLife\ApiSdk\Model\Subject;
@@ -50,7 +50,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return PodcastEpisode::class === $type;
+        return Collection::class === $type;
     }
 
     public function supportsNormalization($data, $format = null) : bool

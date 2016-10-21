@@ -3,14 +3,14 @@
 namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-#use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\ArraySequence;
 #use eLife\ApiSdk\Collection\PromiseSequence;
-#use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 #use eLife\ApiSdk\Model\PodcastEpisodeSource;
-#use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -76,6 +76,41 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']));
 
         $this->assertEquals($image, $collection->getThumbnail());
+    }
+
+    /**
+     * @test
+     * @dataProvider subjectsProvider
+     */
+    public function it_may_have_subjects(Sequence $subjects = null, array $expected)
+    {
+        $collection = $this
+            ->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']))
+            ->withSubjects($subjects)
+        ;
+
+        $this->assertEquals($expected, $collection->getSubjects()->toArray());
+    }
+
+    public function subjectsProvider() : array
+    {
+        $subjects = [
+            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
+                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
+            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
+                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
+        ];
+
+        return [
+            'none' => [
+                new ArraySequence([]),
+                [],
+            ],
+            'collection' => [
+                new ArraySequence($subjects),
+                $subjects,
+            ],
+        ];
     }
 
     private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null, $banner = null, $thumbnail = null)

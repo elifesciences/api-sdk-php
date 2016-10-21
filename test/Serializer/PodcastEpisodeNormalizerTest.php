@@ -13,8 +13,8 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
@@ -165,7 +165,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
                                     promise_for(1),
                                     promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                             ])),
                     ])),
                 ['complete' => true],
@@ -245,7 +245,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                 new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
                                 new ArraySequence([]), [], promise_for(null), promise_for(null),
                                 promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                         ])),
                     ])),
                 [],
@@ -320,7 +320,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                 new ArraySequence([$subject]), ['Article 1 research organism'],
                                 promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
                                 promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                         ])),
                     ])),
                 ['snippet' => true, 'complete' => true],
@@ -365,7 +365,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                 new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
                                 new ArraySequence([]), [], promise_for(null), promise_for(null),
                                 promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                         ])),
                     ])),
                 ['snippet' => true],

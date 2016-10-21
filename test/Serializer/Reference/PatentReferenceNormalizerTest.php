@@ -2,13 +2,13 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PatentReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -29,7 +29,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
         ]);
     }
@@ -54,7 +54,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $reference = new PatentReference(ReferenceDate::fromString('2000'),
-            [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, 'title', 'type',
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
         return [
@@ -78,8 +78,9 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new PatentReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('inventor preferred name', 'inventor index name'))], true,
-                    [new PersonAuthor(new Person('assignee preferred name', 'assignee index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], true,
+                    [new PersonAuthor(new PersonDetails('assignee preferred name', 'assignee index name'))], true,
+                    'title',
                     'type', 'country', 'number', 'http://www.example.com/'),
                 [
                     'type' => 'patent',
@@ -113,7 +114,8 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new PatentReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, 'title', 'type',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title',
+                    'type',
                     'country'),
                 [
                     'type' => 'patent',
@@ -205,8 +207,9 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'uri' => 'http://www.example.com/',
                 ],
                 new PatentReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('inventor preferred name', 'inventor index name'))], true,
-                    [new PersonAuthor(new Person('assignee preferred name', 'assignee index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], true,
+                    [new PersonAuthor(new PersonDetails('assignee preferred name', 'assignee index name'))], true,
+                    'title',
                     'type', 'country', 'number', 'http://www.example.com/'),
             ],
             'minimum' => [
@@ -227,7 +230,8 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'country' => 'country',
                 ],
                 new PatentReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, 'title', 'type',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title',
+                    'type',
                     'country'),
             ],
         ];

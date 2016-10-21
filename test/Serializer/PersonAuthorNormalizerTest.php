@@ -4,12 +4,12 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\AuthorEntry;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -31,7 +31,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
         new Serializer([
             $this->normalizer,
             new AddressNormalizer(),
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PlaceNormalizer(),
         ]);
     }
@@ -55,7 +55,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $personAuthor = new PersonAuthor(new Person('preferred name', 'index name'));
+        $personAuthor = new PersonAuthor(new PersonDetails('preferred name', 'index name'));
 
         return [
             'person author' => [$personAuthor, null, true],
@@ -77,7 +77,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
+                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [new Address(['somewhere'], [], ['somewhere'])]),
@@ -110,7 +110,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new PersonAuthor(new Person('preferred name', 'index name')),
+                new PersonAuthor(new PersonDetails('preferred name', 'index name')),
                 [
                     'type' => 'person',
                     'name' => [
@@ -189,7 +189,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
+                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [new Address(['somewhere'], [], ['somewhere'])]),
@@ -202,7 +202,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                         'index' => 'index name',
                     ],
                 ],
-                $personAuthor = new PersonAuthor(new Person('preferred name', 'index name')),
+                $personAuthor = new PersonAuthor(new PersonDetails('preferred name', 'index name')),
             ],
         ];
     }

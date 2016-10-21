@@ -2,8 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
@@ -11,7 +11,7 @@ use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\JournalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
@@ -34,7 +34,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
             new ReferencePagesNormalizer(),
@@ -61,7 +61,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $reference = new JournalReference(ReferenceDate::fromString('2000'),
-            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('foo'));
 
         return [
@@ -85,7 +85,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new JournalReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
                 [
@@ -117,7 +117,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new JournalReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['journal']), new StringReferencePage('pages')),
                 [
                     'type' => 'journal',
@@ -208,7 +208,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'pmid' => 18183754,
                 ],
                 new JournalReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'article title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
             ],
@@ -232,7 +232,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'pages' => 'pages',
                 ],
                 new JournalReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'article title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['journal']), new StringReferencePage('pages')),
             ],
         ];

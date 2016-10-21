@@ -9,6 +9,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -19,6 +20,7 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -35,6 +37,7 @@ use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
@@ -51,6 +54,7 @@ final class ApiSdk
     private $eventsClient;
     private $interviewsClient;
     private $labsClient;
+    private $peopleClient;
     private $podcastClient;
     private $subjectsClient;
     private $serializer;
@@ -61,6 +65,7 @@ final class ApiSdk
     private $interviews;
     private $labsExperiments;
     private $mediumArticles;
+    private $people;
     private $podcastEpisodes;
     private $subjects;
 
@@ -72,6 +77,7 @@ final class ApiSdk
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
+        $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
@@ -89,7 +95,8 @@ final class ApiSdk
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
+            new PersonNormalizer($this->peopleClient),
             new PlaceNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
             new SubjectNormalizer($this->subjectsClient),
@@ -183,6 +190,15 @@ final class ApiSdk
         }
 
         return $this->mediumArticles;
+    }
+
+    public function people() : People
+    {
+        if (empty($this->people)) {
+            $this->people = new People($this->peopleClient, $this->serializer);
+        }
+
+        return $this->people;
     }
 
     public function podcastEpisodes() : PodcastEpisodes

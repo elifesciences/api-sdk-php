@@ -7,7 +7,7 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -18,7 +18,7 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_person()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
@@ -31,7 +31,7 @@ final class IntervieweeTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_cv_lines(Sequence $cvLines, array $expected)
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person, $cvLines);
 
         $this->assertEquals($expected, $interviewee->getCvLines()->toArray());

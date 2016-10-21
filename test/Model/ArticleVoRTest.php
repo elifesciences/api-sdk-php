@@ -11,8 +11,8 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
@@ -177,7 +177,7 @@ final class ArticleVoRTest extends ArticleTest
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
             new PromiseSequence(rejection_for('No content')), $references = new ArraySequence([
                 new BookReference(new ReferenceDate(2000),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
             ]), rejection_for('No decision letter'),
             new PromiseSequence(rejection_for('No decision letter description')),

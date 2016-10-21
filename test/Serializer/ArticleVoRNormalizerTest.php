@@ -13,8 +13,8 @@ use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
@@ -63,8 +63,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, promise_for(null),
-            null, new ArraySequence([]), promise_for(null),
+            new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
+            promise_for(null), null, new ArraySequence([]), promise_for(null),
             new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
             new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
 
@@ -155,13 +155,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]),
                     'impact statement', promise_for($banner), $thumbnail, new ArraySequence(['keyword']),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000-01-01'),
-                            [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
+                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
                     ]), promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter content')]),
@@ -314,7 +314,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null,
+                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
@@ -366,14 +366,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]),
                         '10.7554/eLife.1abstract')), promise_for(1),
                     promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), 'Article 1 impact statement',
-                    promise_for($banner), $thumbnail, new ArraySequence(['Article 1 keyword']),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
+                    'Article 1 impact statement', promise_for($banner), $thumbnail,
+                    new ArraySequence(['Article 1 keyword']),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 digest')]),
                         '10.7554/eLife.1digest')), new ArraySequence([
                         new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
                     ]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000'),
-                            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
                     ]),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 decision letter text')]),
@@ -425,12 +426,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
                     'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
                     promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), null, promise_for(null),
-                    null, new ArraySequence([]), promise_for(null), new ArraySequence([
+                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
+                    promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
                         new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
                     ]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000'),
-                            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
                     ]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],

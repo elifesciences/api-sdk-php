@@ -2,37 +2,84 @@
 
 namespace eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
+
 final class Person
 {
-    private $preferredName;
-    private $indexName;
-    private $orcid;
+    private $id;
+    private $details;
+    private $type;
+    private $image;
+    private $research;
+    private $profile;
+    private $competingInterests;
 
     /**
      * @internal
      */
-    public function __construct(string $preferredName, string $indexName, string $orcid = null)
-    {
-        $this->preferredName = $preferredName;
-        $this->indexName = $indexName;
-        $this->orcid = $orcid;
+    public function __construct(
+        string $id,
+        PersonDetails $details,
+        string $type,
+        Image $image = null,
+        PromiseInterface $research,
+        Sequence $profile,
+        PromiseInterface $competingInterests
+    ) {
+        $this->id = $id;
+        $this->details = $details;
+        $this->type = $type;
+        $this->image = $image;
+        $this->research = $research;
+        $this->profile = $profile;
+        $this->competingInterests = $competingInterests;
     }
 
-    public function getPreferredName() : string
+    public function getId() : string
     {
-        return $this->preferredName;
+        return $this->id;
     }
 
-    public function getIndexName() : string
+    public function getDetails() : PersonDetails
     {
-        return $this->indexName;
+        return $this->details;
+    }
+
+    public function getType() : string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @return PersonResearch|null
+     */
+    public function getResearch()
+    {
+        return $this->research->wait();
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getProfile() : Sequence
+    {
+        return $this->profile;
     }
 
     /**
      * @return string|null
      */
-    public function getOrcid()
+    public function getCompetingInterests()
     {
-        return $this->orcid;
+        return $this->competingInterests->wait();
     }
 }

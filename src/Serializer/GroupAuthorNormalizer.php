@@ -6,8 +6,8 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 
 final class GroupAuthorNormalizer extends AuthorNormalizer
 {
@@ -19,7 +19,8 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
     ) : Author {
         foreach ($data['groups'] ?? [] as $key => $group) {
             foreach ($group as $i => $member) {
-                $data['groups'][$key][$i] = $this->denormalizer->denormalize($member, Person::class, $format, $context);
+                $data['groups'][$key][$i] = $this->denormalizer->denormalize($member, PersonDetails::class, $format,
+                    $context);
             }
         }
 

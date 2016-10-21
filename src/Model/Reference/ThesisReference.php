@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model\Reference;
 
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 
@@ -20,7 +20,7 @@ final class ThesisReference implements Reference
      */
     public function __construct(
         ReferenceDate $date,
-        Person $author,
+        PersonDetails $author,
         string $title,
         Place $publisher,
         string $doi = null,
@@ -39,7 +39,7 @@ final class ThesisReference implements Reference
         return $this->date;
     }
 
-    public function getAuthor() : Person
+    public function getAuthor() : PersonDetails
     {
         return $this->author;
     }

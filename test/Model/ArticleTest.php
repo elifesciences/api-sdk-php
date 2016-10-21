@@ -12,8 +12,8 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
 use PHPUnit_Framework_TestCase;
@@ -303,7 +303,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
         $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
             new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
             rejection_for('No abstract'), promise_for(3), rejection_for('No copyright'),
-            $authors = new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
+            $authors = new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]));
 
         $this->assertEquals($authors, $article->getAuthors());
     }

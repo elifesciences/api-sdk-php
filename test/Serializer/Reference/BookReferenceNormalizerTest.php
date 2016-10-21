@@ -2,14 +2,14 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\BookReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
@@ -31,7 +31,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
         ]);
@@ -57,7 +57,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $reference = new BookReference(ReferenceDate::fromString('2000'),
-            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
             new Place(null, null, ['publisher']));
 
         return [
@@ -81,7 +81,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new BookReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                     new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
                 [
@@ -110,7 +110,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new BookReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
                 [
                     'type' => 'book',
@@ -197,7 +197,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'isbn' => '978-3-16-148410-0',
                 ],
                 new BookReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'book title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                     new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
             ],
@@ -220,7 +220,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                 ],
                 new BookReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'book title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
             ],
         ];

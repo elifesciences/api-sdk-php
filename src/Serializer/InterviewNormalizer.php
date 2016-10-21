@@ -12,7 +12,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -68,7 +68,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
         return new Interview(
             $data['id'],
             new Interviewee(
-                $this->denormalizer->denormalize($data['interviewee'], Person::class, $format, $context),
+                $this->denormalizer->denormalize($data['interviewee'], PersonDetails::class, $format, $context),
                 $data['interviewee']['cv']
             ),
             $data['title'],

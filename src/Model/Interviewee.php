@@ -9,13 +9,13 @@ final class Interviewee
     private $person;
     private $cvLines;
 
-    public function __construct(Person $person, Sequence $cvLines)
+    public function __construct(PersonDetails $person, Sequence $cvLines)
     {
         $this->person = $person;
         $this->cvLines = $cvLines;
     }
 
-    public function getPerson() : Person
+    public function getPerson() : PersonDetails
     {
         return $this->person;
     }

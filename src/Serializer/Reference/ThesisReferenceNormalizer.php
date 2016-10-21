@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
@@ -23,7 +23,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         return new ThesisReference(
             ReferenceDate::fromString($data['date']),
-            $this->denormalizer->denormalize($data['author'], Person::class),
+            $this->denormalizer->denormalize($data['author'], PersonDetails::class),
             $data['title'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
             $data['doi'] ?? null,

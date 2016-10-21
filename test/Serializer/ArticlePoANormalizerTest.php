@@ -12,8 +12,8 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -59,7 +59,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
+            new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]));
 
         return [
             'article poa' => [$articlePoA, null, true],
@@ -148,7 +148,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]))), promise_for(1),
                     promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))])),
                 [],
                 [
                     'id' => 'id',
@@ -197,7 +197,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))])),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))])),
                 [],
                 [
                     'id' => 'id',
@@ -232,7 +232,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     new ArraySequence([$subject]), ['Article 1 research organism'],
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
                     promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                 ['snippet' => true],
                 [
                     'id' => 'article1',
@@ -261,7 +261,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
                     'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
                     promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))])),
+                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                 ['snippet' => true],
                 [
                     'id' => 'article1',

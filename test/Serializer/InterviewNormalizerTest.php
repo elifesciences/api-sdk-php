@@ -11,7 +11,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -53,7 +53,7 @@ final class InterviewNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
@@ -125,7 +125,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 $interview = new Interview('id',
-                    new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
+                    new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
                     $date = new DateTimeImmutable(), 'impact statement', new ArraySequence([new Paragraph('text')])
                 ),
@@ -157,7 +157,8 @@ final class InterviewNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Interview('id', new Interviewee(new Person('preferred name', 'index name'), new ArraySequence([])),
+                new Interview('id',
+                    new Interviewee(new PersonDetails('preferred name', 'index name'), new ArraySequence([])),
                     'title', $date, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -180,7 +181,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 $interview = new Interview('interview1',
-                    new Interviewee(new Person('preferred name', 'index name', '0000-0002-1825-0097'),
+                    new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $date,
                     'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview 1 text')])
                 ),
@@ -204,7 +205,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 $interview = new Interview('interview1',
-                    new Interviewee(new Person('preferred name', 'index name'), new ArraySequence([])),
+                    new Interviewee(new PersonDetails('preferred name', 'index name'), new ArraySequence([])),
                     'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview 1 text')])
                 ),
                 ['snippet' => true],

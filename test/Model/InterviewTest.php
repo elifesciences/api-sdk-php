@@ -8,7 +8,7 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -19,7 +19,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
@@ -34,7 +34,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_interviewee()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
@@ -49,7 +49,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
@@ -64,7 +64,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $intervieweeWith = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $intervieweeWithOut = new Interviewee($person,
@@ -86,7 +86,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
         $interview = new Interview('id', $interviewee, 'title', $date = new DateTimeImmutable(), null,
@@ -103,7 +103,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
     {
         $content = [new Block\Paragraph('foo')];
 
-        $person = new Person('preferred name', 'index name');
+        $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 

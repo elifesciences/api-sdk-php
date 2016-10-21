@@ -11,7 +11,7 @@ final class PersonAuthor extends Author
      * @internal
      */
     public function __construct(
-        Person $person,
+        PersonDetails $person,
         bool $deceased = false,
         array $affiliations = [],
         string $competingInterests = null,

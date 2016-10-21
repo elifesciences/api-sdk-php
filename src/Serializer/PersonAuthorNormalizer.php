@@ -4,8 +4,8 @@ namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 
 final class PersonAuthorNormalizer extends AuthorNormalizer
 {
@@ -16,7 +16,7 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
         array $context = []
     ) : Author {
         return new PersonAuthor(
-            $this->denormalizer->denormalize($data, Person::class, $format, $context),
+            $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
             $data['deceased'] ?? false,
             $data['affiliations'],
             $data['competingInterests'] ?? null,

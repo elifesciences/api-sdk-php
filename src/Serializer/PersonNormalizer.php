@@ -2,15 +2,136 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiClient\ApiClient\PeopleClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\PersonResearch;
+use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use function GuzzleHttp\Promise\all;
+use function GuzzleHttp\Promise\promise_for;
 
-final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface
+final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+
+    private $peopleClient;
+    private $found = [];
+    private $globalCallback;
+
+    public function __construct(PeopleClient $peopleClient)
+    {
+        $this->peopleClient = $peopleClient;
+    }
+
     public function denormalize($data, $class, $format = null, array $context = []) : Person
     {
-        return new Person($data['name']['preferred'], $data['name']['index'], $data['orcid'] ?? null);
+        if (!empty($context['snippet'])) {
+            $person = $this->denormalizeSnippet($data);
+
+            $data['competingInterests'] = $person
+                ->then(function (Result $person) {
+                    return $person['competingInterests'] ?? null;
+                });
+
+            $data['profile'] = new PromiseSequence($person
+                ->then(function (Result $person) {
+                    return $person['profile'] ?? [];
+                }));
+
+            $data['research'] = $person
+                ->then(function (Result $person) {
+                    return $person['research'] ?? [];
+                });
+        } else {
+            $data['competingInterests'] = promise_for($data['competingInterests'] ?? null);
+
+            $data['profile'] = new ArraySequence($data['profile'] ?? []);
+
+            $data['research'] = promise_for($data['research'] ?? []);
+        }
+
+        if (isset($data['image'])) {
+            $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
+        }
+
+        $data['profile'] = $data['profile']->map(function (array $block) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $data['research'] = $data['research']
+            ->then(function (array $research = null) use ($format, $context) {
+                if (empty($research)) {
+                    return null;
+                }
+
+                return new PersonResearch(
+                    new ArraySequence(array_map(function (array $subject) use ($format, $context) {
+                        $context['snippet'] = true;
+
+                        return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
+                    }, $research['expertises'] ?? [])),
+                    $research['focuses'] ?? [],
+                    $research['organisms'] ?? []
+                );
+            });
+
+        return new Person(
+            $data['id'],
+            $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
+            $data['type'],
+            $data['image'] ?? null,
+            $data['research'],
+            $data['profile'],
+            $data['competingInterests']
+        );
+    }
+
+    private function denormalizeSnippet(array $person) : PromiseInterface
+    {
+        if (isset($this->found[$person['id']])) {
+            return $this->found[$person['id']];
+        }
+
+        $this->found[$person['id']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $id => $person) {
+                    if (null === $person) {
+                        $this->found[$id] = $this->peopleClient->getPerson(
+                            ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                            $id
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $people) use ($person) {
+                return $people[$person['id']];
+            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool
@@ -23,15 +144,43 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        $data = [
-            'name' => [
-                'preferred' => $object->getPreferredName(),
-                'index' => $object->getIndexName(),
-            ],
-        ];
+        $data = $this->normalizer->normalize($object->getDetails(), $format, $context);
 
-        if ($object->getOrcid()) {
-            $data['orcid'] = $object->getOrcid();
+        $data['id'] = $object->getId();
+        $data['type'] = $object->getType();
+
+        if ($object->getImage()) {
+            $data['image'] = $this->normalizer->normalize($object->getImage(), $format, $context);
+        }
+
+        if (empty($context['snippet'])) {
+            if ($object->getResearch()) {
+                if (count($object->getResearch()->getExpertises()) > 0) {
+                    $data['research']['expertises'] = $object->getResearch()->getExpertises()
+                        ->map(function (Subject $subject) use ($format, $context) {
+                            $context['snippet'] = true;
+
+                            return $this->normalizer->normalize($subject, $format, $context);
+                        })->toArray();
+                }
+                if ($object->getResearch()->getFocuses()) {
+                    $data['research']['focuses'] = $object->getResearch()->getFocuses();
+                }
+                if ($object->getResearch()->getOrganisms()) {
+                    $data['research']['organisms'] = $object->getResearch()->getOrganisms();
+                }
+            }
+
+            if (count($object->getProfile()) > 0) {
+                $data['profile'] = $object->getProfile()
+                    ->map(function (Block $block) use ($format, $context) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray();
+            }
+
+            if ($object->getCompetingInterests()) {
+                $data['competingInterests'] = $object->getCompetingInterests();
+            }
         }
 
         return $data;

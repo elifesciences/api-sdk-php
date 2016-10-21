@@ -10,6 +10,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -361,6 +362,61 @@ abstract class ApiTestCase extends TestCase
                     'total' => $total,
                     'items' => $articles,
                 ])
+            )
+        );
+    }
+
+    final protected function mockPersonListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = [],
+        string $type = null
+    ) {
+        $people = array_map(function (int $id) {
+            return $this->createPersonJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        if ($type) {
+            $typeQuery = '&type='.$type;
+        } else {
+            $typeQuery = '';
+        }
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/people?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typeQuery,
+                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $people,
+                ])
+            )
+        );
+    }
+
+    final protected function mockPersonCall(int $number, bool $complete = false)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/people/person'.$number,
+                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                json_encode($this->createPersonJson($number, false, $complete))
             )
         );
     }
@@ -850,6 +906,69 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+    }
+
+    private function createPersonJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $person = [
+            'id' => 'person'.$number,
+            'type' => 'senior-editor',
+            'name' => [
+                'preferred' => 'Person '.$number.' preferred',
+                'index' => 'Person '.$number.' index',
+            ],
+            'orcid' => '0000-0002-1825-0097',
+            'research' => [
+                'expertises' => [
+                    [
+                        'id' => 'subject1',
+                        'name' => 'Subject 1 name',
+                    ],
+                ],
+                'focuses' => [
+                    'Focus',
+                ],
+                'organisms' => [
+                    'Organism',
+                ],
+            ],
+            'profile' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Person '.$number.' profile text',
+                ],
+            ],
+            'competingInterests' => 'Person '.$number.' competing interests',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+        ];
+
+        if (!$complete) {
+            unset($person['orcid']);
+            unset($person['research']);
+            unset($person['profile']);
+            unset($person['competingInterests']);
+            unset($person['image']);
+        }
+
+        if ($isSnippet) {
+            unset($person['research']);
+            unset($person['profile']);
+            unset($person['competingInterests']);
+        }
+
+        return $person;
     }
 
     private function createPodcastEpisodeJson(int $number, bool $isSnippet = false, bool $complete = false) : array

@@ -6,13 +6,13 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -34,7 +34,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
         new Serializer([
             $this->normalizer,
             new AddressNormalizer(),
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
         ]);
@@ -82,11 +82,11 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new GroupAuthor('group', new ArraySequence([
-                    new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
+                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [new Address(['somewhere'], [], ['somewhere'])]),
-                ]), ['sub-group' => [new Person('preferred name', 'index name', '0000-0002-1825-0097')]],
+                ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [new Address(['somewhere'], [], ['somewhere'])]),
@@ -266,11 +266,11 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                 ],
                 new GroupAuthor('group', new ArraySequence([
-                    new PersonAuthor(new Person('preferred name', 'index name', '0000-0002-1825-0097'), true,
+                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [new Address(['somewhere'], [], ['somewhere'])]),
-                ]), ['sub-group' => [new Person('preferred name', 'index name', '0000-0002-1825-0097')]],
+                ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [new Address(['somewhere'], [], ['somewhere'])]),

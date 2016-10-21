@@ -5,8 +5,8 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\GroupAuthor;
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 
 final class GroupAuthorTest extends AuthorTest
 {
@@ -26,7 +26,7 @@ final class GroupAuthorTest extends AuthorTest
     public function it_may_have_people()
     {
         $with = new GroupAuthor('name',
-            $people = new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]));
+            $people = new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]));
         $withOut = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertEquals($people, $with->getPeople());
@@ -39,7 +39,7 @@ final class GroupAuthorTest extends AuthorTest
     public function it_may_have_groups()
     {
         $with = new GroupAuthor('name', new ArraySequence([]),
-            $groups = ['group' => [new Person('preferred name', 'index name')]]);
+            $groups = ['group' => [new PersonDetails('preferred name', 'index name')]]);
         $withOut = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertEquals($groups, $with->getGroups());

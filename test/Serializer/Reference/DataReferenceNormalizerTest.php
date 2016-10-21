@@ -2,14 +2,14 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\DataReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
@@ -31,7 +31,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
         ]);
@@ -57,7 +57,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $reference = new DataReference(ReferenceDate::fromString('2000'),
-            [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, [], false, 'title',
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
         return [
@@ -81,9 +81,10 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new DataReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('author preferred name', 'author index name'))], true,
-                    [new PersonAuthor(new Person('compiler preferred name', 'compiler index name'))], true,
-                    [new PersonAuthor(new Person('curator preferred name', 'curator index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
+                    [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
+                    [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
+                    'title',
                     'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
                 [
@@ -133,7 +134,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new DataReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, [], false,
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false,
                     'title', 'source'),
                 [
                     'type' => 'data',
@@ -239,9 +240,10 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'uri' => 'http://www.example.com/',
                 ],
                 new DataReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('author preferred name', 'author index name'))], true,
-                    [new PersonAuthor(new Person('compiler preferred name', 'compiler index name'))], true,
-                    [new PersonAuthor(new Person('curator preferred name', 'curator index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
+                    [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
+                    [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
+                    'title',
                     'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
             ],
@@ -262,7 +264,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'source' => 'source',
                 ],
                 new DataReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, [], false, [], false,
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false,
                     'title', 'source'),
             ],
         ];

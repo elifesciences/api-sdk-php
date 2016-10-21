@@ -2,14 +2,14 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\SoftwareReference;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
-use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\SoftwareReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
@@ -31,7 +31,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
-            new PersonNormalizer(),
+            new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
         ]);
@@ -57,7 +57,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $reference = new SoftwareReference(ReferenceDate::fromString('2000'),
-            [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
         return [
@@ -81,7 +81,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new SoftwareReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '1.0', 'http://www.example.com/'),
                 [
                     'type' => 'software',
@@ -106,7 +106,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new SoftwareReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
                 [
                     'type' => 'software',
@@ -190,7 +190,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'uri' => 'http://www.example.com/',
                 ],
                 new SoftwareReference(ReferenceDate::fromString('2000-01-01'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], true, 'title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '1.0', 'http://www.example.com/'),
             ],
             'minimum' => [
@@ -212,7 +212,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                 ],
                 new SoftwareReference(ReferenceDate::fromString('2000'),
-                    [new PersonAuthor(new Person('preferred name', 'index name'))], false, 'title',
+                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
             ],
         ];

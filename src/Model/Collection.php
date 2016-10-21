@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
+use eLife\ApiSdk\Model\Image;
 
 final class Collection
 {
@@ -11,12 +12,13 @@ final class Collection
     private $impactStatement;
     private $publishedDate;
 
-    public function __construct($id, $title, $impactStatement, DateTimeImmutable $publishedDate)
+    public function __construct($id, $title, $impactStatement, DateTimeImmutable $publishedDate, Image $thumbnail)
     {
         $this->id = $id;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
         $this->publishedDate = $publishedDate;
+        $this->thumbnail = $thumbnail;
     }
 
     public function getId()
@@ -37,5 +39,10 @@ final class Collection
     public function getPublishedDate()
     {
         return $this->publishedDate; 
+    }
+
+    public function getThumbnail() : Image
+    {
+        return $this->thumbnail; 
     }
 }

@@ -6,7 +6,7 @@ use DateTimeImmutable;
 #use eLife\ApiSdk\Collection\ArraySequence;
 #use eLife\ApiSdk\Collection\PromiseSequence;
 #use eLife\ApiSdk\Collection\Sequence;
-#use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 #use eLife\ApiSdk\Model\PodcastEpisodeSource;
@@ -57,12 +57,24 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($published, $collection->getPublishedDate());
     }
 
+    /**
+     * @test
+     */
+    public function it_has_a_thumbnail()
+    {
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), $image = new Image('', [900 => 'https://placehold.it/900x450']));
 
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null)
+        $this->assertEquals($image, $collection->getThumbnail());
+    }
+
+    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null, $thumbnail = null)
     {
         if ($published === null) {
             $published = new DateTimeImmutable();
         }
-        return new Collection($id, $title, $impactStatement, $published);
+        if ($thumbnail === null) {
+            $thumbnail = new Image('', [900 => 'https://placehold.it/900x450']);
+        }
+        return new Collection($id, $title, $impactStatement, $published, $thumbnail);
     }
 }

@@ -45,6 +45,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['digest'] ?? null;
                 });
 
+            if (empty($data['image'])) {
+                $data['image']['banner'] = promise_for(null);
+            } else {
+                $data['image']['banner'] = $article
+                    ->then(function (Result $article) {
+                        return $article['image']['banner'] ?? null;
+                    });
+            }
+
             $data['keywords'] = new PromiseSequence($article
                 ->then(function (Result $article) {
                     return $article['keywords'] ?? [];
@@ -62,6 +71,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
+
+            $data['image']['banner'] = promise_for($data['image']['banner'] ?? null);
 
             $data['keywords'] = new ArraySequence($data['keywords'] ?? []);
 
@@ -125,8 +136,19 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
-        if (false === empty($data['image'])) {
-            $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
+        $data['image']['banner'] = $data['image']['banner']
+            ->then(function (array $banner = null) use ($format, $context) {
+                if (empty($banner)) {
+                    return null;
+                }
+
+                return $this->denormalizer->denormalize($banner, Image::class,
+                    $format, $context);
+            });
+
+        if (false === empty($data['image']['thumbnail'])) {
+            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
+                $format, $context);
         }
 
         $data['references'] = $data['references']
@@ -154,7 +176,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['copyright'],
             $data['authors'],
             $data['impactStatement'] ?? null,
-            $data['image'] ?? null,
+            $data['image']['banner'],
+            $data['image']['thumbnail'] ?? null,
             $data['keywords'],
             $data['digest'],
             $data['body'],
@@ -188,11 +211,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['impactStatement'] = $article->getImpactStatement();
         }
 
-        if ($article->getImage()) {
-            $data['image'] = $this->normalizer->normalize($article->getImage(), $format, $context);
+        if ($article->getThumbnail()) {
+            $data['image']['thumbnail'] = $this->normalizer->normalize($article->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {
+            if ($article->getBanner()) {
+                $data['image']['banner'] = $this->normalizer->normalize($article->getBanner(), $format, $context);
+            }
+
             if (count($article->getKeywords())) {
                 $data['keywords'] = $article->getKeywords()->toArray();
             }

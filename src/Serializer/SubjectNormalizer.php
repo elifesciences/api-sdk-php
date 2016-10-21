@@ -48,17 +48,24 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             $data['image'] = promise_for($data['image']);
         }
 
-        $data['image'] = $data['image']->then(function (array $image) use ($format, $context) {
+        $banner = $data['image']->then(function (array $image) use ($format, $context) {
             unset($context['snippet']);
 
-            return $this->denormalizer->denormalize($image, Image::class, $format, $context);
+            return $this->denormalizer->denormalize($image['banner'], Image::class, $format, $context);
+        });
+
+        $thumbnail = $data['image']->then(function (array $image) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($image['thumbnail'], Image::class, $format, $context);
         });
 
         return new Subject(
             $data['id'],
             $data['name'],
             $data['impactStatement'],
-            $data['image']
+            $banner,
+            $thumbnail
         );
     }
 
@@ -109,7 +116,10 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         ];
 
         if (empty($context['snippet'])) {
-            $data['image'] = $this->normalizer->normalize($object->getImage(), $format, $context);
+            $data['image'] = [
+                'banner' => $this->normalizer->normalize($object->getBanner(), $format, $context),
+                'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
+            ];
 
             if ($object->getImpactStatement()) {
                 $data['impactStatement'] = $object->getImpactStatement();

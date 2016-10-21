@@ -9,7 +9,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 final class ArticleVoR extends ArticleVersion
 {
     private $impactStatement;
-    private $image;
+    private $banner;
+    private $thumbnail;
     private $keywords;
     private $digest;
     private $content;
@@ -41,7 +42,8 @@ final class ArticleVoR extends ArticleVersion
         PromiseInterface $copyright,
         Sequence $authors,
         string $impactStatement = null,
-        Image $image = null,
+        PromiseInterface $banner,
+        Image $thumbnail = null,
         Sequence $keywords,
         PromiseInterface $digest,
         Sequence $content,
@@ -54,7 +56,8 @@ final class ArticleVoR extends ArticleVersion
             $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
 
         $this->impactStatement = $impactStatement;
-        $this->image = $image;
+        $this->banner = $banner;
+        $this->thumbnail = $thumbnail;
         $this->keywords = $keywords;
         $this->digest = $digest;
         $this->content = $content;
@@ -75,9 +78,17 @@ final class ArticleVoR extends ArticleVersion
     /**
      * @return Image|null
      */
-    public function getImage()
+    public function getBanner()
     {
-        return $this->image;
+        return $this->banner->wait();
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 
     public function getKeywords() : Sequence

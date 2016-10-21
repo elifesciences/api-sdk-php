@@ -61,7 +61,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable(),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable(), rejection_for('No banner'),
             new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -133,8 +133,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
-        $image = new Image('', [
-            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
             new ImageSize('16:9', [
                 250 => 'https://placehold.it/250x141',
                 500 => 'https://placehold.it/500x281',
@@ -145,11 +146,12 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
             ]),
         ]);
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-            promise_for($image));
+            promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date, $image,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                    promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter 1 title', 0, 'Chapter impact statement',
@@ -172,19 +174,26 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'title' => 'Podcast episode 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        ],
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
                             ],
                         ],
                     ],
@@ -227,7 +236,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, $image,
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
@@ -245,19 +254,26 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'title' => 'Podcast episode 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        ],
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
                             ],
                         ],
                     ],
@@ -292,7 +308,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date, $image,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                    promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
@@ -313,19 +330,17 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'impactStatement' => 'Podcast episode 1 impact statement',
                     'published' => $date->format(DATE_ATOM),
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
-                            ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
                         ],
                     ],
@@ -341,7 +356,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, $image,
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
@@ -359,19 +374,17 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'title' => 'Podcast episode 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
-                            ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
                         ],
                     ],

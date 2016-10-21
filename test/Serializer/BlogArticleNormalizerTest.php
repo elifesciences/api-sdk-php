@@ -124,8 +124,9 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
-        $image = new Image('', [
-            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
             new ImageSize('16:9', [
                 250 => 'https://placehold.it/250x141',
                 500 => 'https://placehold.it/500x281',
@@ -136,7 +137,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ]),
         ]);
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-            promise_for($image));
+            promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [

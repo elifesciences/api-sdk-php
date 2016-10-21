@@ -4,6 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
 final class PodcastEpisode
 {
@@ -11,7 +12,8 @@ final class PodcastEpisode
     private $title;
     private $impactStatement;
     private $published;
-    private $image;
+    private $banner;
+    private $thumbnail;
     private $sources;
     private $subjects;
     private $chapters;
@@ -24,7 +26,8 @@ final class PodcastEpisode
         string $title,
         string $impactStatement = null,
         DateTimeImmutable $published,
-        Image $image,
+        PromiseInterface $banner,
+        Image $thumbnail,
         array $sources,
         Sequence $subjects,
         Sequence $chapters
@@ -33,7 +36,8 @@ final class PodcastEpisode
         $this->title = $title;
         $this->impactStatement = $impactStatement;
         $this->published = $published;
-        $this->image = $image;
+        $this->banner = $banner;
+        $this->thumbnail = $thumbnail;
         $this->sources = $sources;
         $this->subjects = $subjects;
         $this->chapters = $chapters;
@@ -62,9 +66,14 @@ final class PodcastEpisode
         return $this->published;
     }
 
-    public function getImage() : Image
+    public function getBanner() : Image
     {
-        return $this->image;
+        return $this->banner->wait();
+    }
+
+    public function getThumbnail() : Image
+    {
+        return $this->thumbnail;
     }
 
     /**

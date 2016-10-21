@@ -89,9 +89,9 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     {
         $subjects = [
             new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('Subject image should not be unwrapped')),
+                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
             new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('Subject image should not be unwrapped')),
+                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
         ];
 
         return [

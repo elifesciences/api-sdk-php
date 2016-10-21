@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\all;
+use function GuzzleHttp\Promise\promise_for;
 
 final class LabsExperimentNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -44,20 +45,36 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
                 ->then(function (Result $experiment) {
                     return $experiment['content'];
                 }));
+
+            $data['image']['banner'] = $experiment
+                ->then(function (Result $article) {
+                    return $article['image']['banner'];
+                });
         } else {
             $data['content'] = new ArraySequence($data['content']);
+
+            $data['image']['banner'] = promise_for($data['image']['banner']);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 
+        $data['image']['banner'] = $data['image']['banner']
+            ->then(function (array $banner) use ($format, $context) {
+                return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
+            });
+
+        $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
+            $format, $context);
+
         return new LabsExperiment(
             $data['number'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             $data['impactStatement'] ?? null,
-            $this->denormalizer->denormalize($data['image'], Image::class, $format, $context),
+            $data['image']['banner'],
+            $data['image']['thumbnail'],
             $data['content']
         );
     }
@@ -107,7 +124,9 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
             'number' => $object->getNumber(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
-            'image' => $this->normalizer->normalize($object->getImage(), $format, $context),
+            'image' => [
+                'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
+            ],
         ];
 
         if ($object->getImpactStatement()) {
@@ -115,6 +134,8 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         }
 
         if (empty($context['snippet'])) {
+            $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();

@@ -63,8 +63,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
             new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
-            new ArraySequence([]), promise_for(null),
+            new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, promise_for(null),
+            null, new ArraySequence([]), promise_for(null),
             new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
             new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
 
@@ -132,8 +132,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $image = new Image('', [
-            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
             new ImageSize('16:9', [
                 250 => 'https://placehold.it/250x141',
                 500 => 'https://placehold.it/500x281',
@@ -144,7 +145,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ]),
         ]);
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-            promise_for($image));
+            promise_for($banner), promise_for($thumbnail));
         $date = new DateTimeImmutable();
         $statusDate = new DateTimeImmutable('-1 day');
 
@@ -155,7 +156,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]), 'abstractDoi')),
                     promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
                     new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]),
-                    'impact statement', $image, new ArraySequence(['keyword']),
+                    'impact statement', promise_for($banner), $thumbnail, new ArraySequence(['keyword']),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArraySequence([
@@ -212,19 +213,26 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'status' => 'vor',
                     'impactStatement' => 'impact statement',
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                900 => 'https://placehold.it/900x450',
-                                1800 => 'https://placehold.it/1800x900',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
+                        ],
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
                             ],
                         ],
                     ],
@@ -306,8 +314,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
                     'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
                     promise_for(new Copyright('license', 'statement')),
-                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null, null,
-                    new ArraySequence([]), promise_for(null),
+                    new ArraySequence([new PersonAuthor(new Person('preferred name', 'index name'))]), null,
+                    promise_for(null), null, new ArraySequence([]), promise_for(null),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 [],
@@ -359,7 +367,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         '10.7554/eLife.1abstract')), promise_for(1),
                     promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                     new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), 'Article 1 impact statement',
-                    $image, new ArraySequence(['Article 1 keyword']),
+                    promise_for($banner), $thumbnail, new ArraySequence(['Article 1 keyword']),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 digest')]),
                         '10.7554/eLife.1digest')), new ArraySequence([
                         new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
@@ -394,19 +402,17 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'status' => 'vor',
                     'impactStatement' => 'Article 1 impact statement',
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                900 => 'https://placehold.it/900x450',
-                                1800 => 'https://placehold.it/1800x900',
-                            ],
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
                         ],
                     ],
@@ -419,8 +425,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
                     'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
                     promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), 'Article 1 impact statement',
-                    $image, new ArraySequence([]), promise_for(null), new ArraySequence([
+                    new ArraySequence([new PersonAuthor(new Person('Author', 'Author'))]), null, promise_for(null),
+                    null, new ArraySequence([]), promise_for(null), new ArraySequence([
                         new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
                     ]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000'),
@@ -440,24 +446,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'volume' => 1,
                     'elocationId' => 'e1',
                     'status' => 'vor',
-                    'impactStatement' => 'Article 1 impact statement',
-                    'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                900 => 'https://placehold.it/900x450',
-                                1800 => 'https://placehold.it/1800x900',
-                            ],
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
-                        ],
-                    ],
                 ],
                 function (ApiTestCase $test) {
                     $test->mockArticleCall(1, false, true);

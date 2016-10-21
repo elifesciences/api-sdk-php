@@ -48,8 +48,19 @@ final class SubjectNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $subject = new Subject('id', 'name', promise_for(null), promise_for($image));
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
+            new ImageSize('16:9', [
+                250 => 'https://placehold.it/250x141',
+                500 => 'https://placehold.it/500x281',
+            ]),
+            new ImageSize('1:1', [
+                '70' => 'https://placehold.it/70x70',
+                '140' => 'https://placehold.it/140x140',
+            ]),
+        ]);
+        $subject = new Subject('id', 'name', promise_for(null), promise_for($banner), promise_for($thumbnail));
 
         return [
             'subject' => [$subject, null, true],
@@ -113,8 +124,9 @@ final class SubjectNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $image = new Image('', [
-            new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
             new ImageSize('16:9', [
                 250 => 'https://placehold.it/250x141',
                 500 => 'https://placehold.it/500x281',
@@ -128,25 +140,32 @@ final class SubjectNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-                    promise_for($image)),
+                    promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
                     'name' => 'Subject 1 name',
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
                             ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        ],
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
                         ],
                     ],
@@ -154,25 +173,33 @@ final class SubjectNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Subject('subject1', 'Subject 1 name', promise_for(null), promise_for($image)),
+                new Subject('subject1', 'Subject 1 name', promise_for(null), promise_for($banner),
+                    promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
                     'name' => 'Subject 1 name',
                     'image' => [
-                        'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                '900' => 'https://placehold.it/900x450',
-                                '1800' => 'https://placehold.it/1800x900',
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
                             ],
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
+                        ],
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
                             ],
                         ],
                     ],
@@ -180,7 +207,7 @@ final class SubjectNormalizerTest extends ApiTestCase
             ],
             'snippet' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-                    promise_for($image)),
+                    promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',

@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\all;
+use function GuzzleHttp\Promise\promise_for;
 
 final class PodcastEpisodeNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -48,8 +49,15 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                 ->then(function (Result $podcastEpisode) {
                     return $podcastEpisode['chapters'];
                 }));
+
+            $data['image']['banner'] = $podcastEpisode
+                ->then(function (Result $podcastEpisode) {
+                    return $podcastEpisode['image']['banner'];
+                });
         } else {
             $data['chapters'] = new ArraySequence($data['chapters']);
+
+            $data['image']['banner'] = promise_for($data['image']['banner']);
         }
 
         $data['chapters'] = $data['chapters']
@@ -84,6 +92,14 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     }, $chapter['content'])));
             });
 
+        $data['image']['banner'] = $data['image']['banner']
+            ->then(function (array $banner) use ($format, $context) {
+                return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
+            });
+
+        $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
+            $format, $context);
+
         $data['sources'] = array_map(function (array $source) {
             return new PodcastEpisodeSource($source['mediaType'], $source['uri']);
         }, $data['sources']);
@@ -99,7 +115,8 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['title'],
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
-            $this->denormalizer->denormalize($data['image'], Image::class, $format, $context),
+            $data['image']['banner'],
+            $data['image']['thumbnail'],
             $data['sources'],
             $data['subjects'],
             $data['chapters']
@@ -151,7 +168,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             'number' => $object->getNumber(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
-            'image' => $this->normalizer->normalize($object->getImage(), $format, $context),
+            'image' => ['thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context)],
             'sources' => array_map(function (PodcastEpisodeSource $source) {
                 return [
                     'mediaType' => $source->getMediaType(),
@@ -173,6 +190,8 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
         }
 
         if (empty($context['snippet'])) {
+            $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
             $data['chapters'] = $object->getChapters()->map(function (PodcastEpisodeChapter $chapter) use (
                 $format,
                 $context

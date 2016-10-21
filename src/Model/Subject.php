@@ -9,17 +9,24 @@ final class Subject
     private $id;
     private $name;
     private $impactStatement;
-    private $image;
+    private $banner;
+    private $thumbnail;
 
     /**
      * @internal
      */
-    public function __construct(string $id, string $name, PromiseInterface $impactStatement, PromiseInterface $image)
-    {
+    public function __construct(
+        string $id,
+        string $name,
+        PromiseInterface $impactStatement,
+        PromiseInterface $banner,
+        PromiseInterface $thumbnail
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->impactStatement = $impactStatement;
-        $this->image = $image;
+        $this->banner = $banner;
+        $this->thumbnail = $thumbnail;
     }
 
     public function getId() : string
@@ -40,8 +47,13 @@ final class Subject
         return $this->impactStatement->wait();
     }
 
-    public function getImage() : Image
+    public function getBanner() : Image
     {
-        return $this->image->wait();
+        return $this->banner->wait();
+    }
+
+    public function getThumbnail() : Image
+    {
+        return $this->thumbnail->wait();
     }
 }

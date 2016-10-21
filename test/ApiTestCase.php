@@ -477,10 +477,6 @@ abstract class ApiTestCase extends TestCase
             'image' => [
                 'alt' => '',
                 'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
-                    ],
                     '16:9' => [
                         '250' => 'https://placehold.it/250x141',
                         '500' => 'https://placehold.it/500x281',
@@ -569,19 +565,26 @@ abstract class ApiTestCase extends TestCase
         $article += [
             'impactStatement' => 'Article '.$number.' impact statement',
             'image' => [
-                'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
+                'banner' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '2:1' => [
+                            '900' => 'https://placehold.it/900x450',
+                            '1800' => 'https://placehold.it/1800x900',
+                        ],
                     ],
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
+                ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://placehold.it/250x141',
+                            '500' => 'https://placehold.it/500x281',
+                        ],
+                        '1:1' => [
+                            '70' => 'https://placehold.it/70x70',
+                            '140' => 'https://placehold.it/140x140',
+                        ],
                     ],
                 ],
             ],
@@ -665,6 +668,9 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
+            if (isset($article['image'])) {
+                unset($article['image']['banner']);
+            }
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
@@ -780,19 +786,26 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Labs experiment '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00+00:00',
             'image' => [
-                'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
+                'banner' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '2:1' => [
+                            '900' => 'https://placehold.it/900x450',
+                            '1800' => 'https://placehold.it/1800x900',
+                        ],
                     ],
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
+                ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://placehold.it/250x141',
+                            '500' => 'https://placehold.it/500x281',
+                        ],
+                        '1:1' => [
+                            '70' => 'https://placehold.it/70x70',
+                            '140' => 'https://placehold.it/140x140',
+                        ],
                     ],
                 ],
             ],
@@ -806,6 +819,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($labsExperiment['content']);
+            unset($labsExperiment['image']['banner']);
         }
 
         if (!$complete) {
@@ -825,10 +839,6 @@ abstract class ApiTestCase extends TestCase
             'image' => [
                 'alt' => '',
                 'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
-                    ],
                     '16:9' => [
                         '250' => 'https://placehold.it/250x141',
                         '500' => 'https://placehold.it/500x281',
@@ -850,19 +860,26 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Podcast episode '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00+00:00',
             'image' => [
-                'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
+                'banner' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '2:1' => [
+                            '900' => 'https://placehold.it/900x450',
+                            '1800' => 'https://placehold.it/1800x900',
+                        ],
                     ],
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
+                ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://placehold.it/250x141',
+                            '500' => 'https://placehold.it/500x281',
+                        ],
+                        '1:1' => [
+                            '70' => 'https://placehold.it/70x70',
+                            '140' => 'https://placehold.it/140x140',
+                        ],
                     ],
                 ],
             ],
@@ -891,6 +908,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
+            unset($podcastEpisode['image']['banner']);
             unset($podcastEpisode['content']);
         }
 
@@ -904,19 +922,26 @@ abstract class ApiTestCase extends TestCase
             'name' => 'Subject '.$number.' name',
             'impactStatement' => 'Subject '.$number.' impact statement',
             'image' => [
-                'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
+                'banner' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '2:1' => [
+                            '900' => 'https://placehold.it/900x450',
+                            '1800' => 'https://placehold.it/1800x900',
+                        ],
                     ],
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
+                ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://placehold.it/250x141',
+                            '500' => 'https://placehold.it/500x281',
+                        ],
+                        '1:1' => [
+                            '70' => 'https://placehold.it/70x70',
+                            '140' => 'https://placehold.it/140x140',
+                        ],
                     ],
                 ],
             ],

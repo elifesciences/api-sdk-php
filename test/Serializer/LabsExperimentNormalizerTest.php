@@ -15,6 +15,7 @@ use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class LabsExperimentNormalizerTest extends ApiTestCase
@@ -52,9 +53,9 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null, $image,
-            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
+        $thumbnail = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null, rejection_for('No banner'),
+            $thumbnail, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
         return [
@@ -120,18 +121,52 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $banner = new Image('',
+            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $thumbnail = new Image('', [
+            new ImageSize('16:9', [
+                250 => 'https://placehold.it/250x141',
+                500 => 'https://placehold.it/500x281',
+            ]),
+            new ImageSize('1:1', [
+                '70' => 'https://placehold.it/70x70',
+                '140' => 'https://placehold.it/140x140',
+            ]),
+        ]);
 
         return [
             'complete' => [
-                new LabsExperiment(1, 'title', $date, 'impact statement', $image,
+                new LabsExperiment(1, 'title', $date, 'impact statement', promise_for($banner), $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
+                            ],
+                        ],
+                    ],
                     'impactStatement' => 'impact statement',
                     'content' => [
                         [
@@ -142,13 +177,37 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsExperiment(1, 'title', $date, null, $image, new ArraySequence([new Paragraph('text')])),
+                new LabsExperiment(1, 'title', $date, null, promise_for($banner), $thumbnail,
+                    new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
                     'title' => 'title',
                     'published' => $date->format(DATE_ATOM),
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                        'banner' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '2:1' => [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -158,14 +217,28 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $date, 'Labs experiment 1 impact statement', $image,
-                    new ArraySequence([new Paragraph('Labs experiment 1 text')])),
+                new LabsExperiment(1, 'Labs experiment 1 title', $date, 'Labs experiment 1 impact statement',
+                    promise_for($banner), $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
                     'published' => $date->format(DATE_ATOM),
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
                     'impactStatement' => 'Labs experiment 1 impact statement',
                 ],
                 function (ApiTestCase $test) {
@@ -173,14 +246,28 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $date, null, $image,
+                new LabsExperiment(1, 'Labs experiment 1 title', $date, null, promise_for($banner), $thumbnail,
                     new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
                     'published' => $date->format(DATE_ATOM),
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 function (ApiTestCase $test) {
                     $test->mockLabsExperimentCall(1);

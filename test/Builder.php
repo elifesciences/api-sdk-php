@@ -28,6 +28,16 @@ class Builder
             'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
             'subjects' => new ArraySequence([]),
         ];
+    
+        if (strstr($model, 'Subject')) {
+            $this->testData = [
+                'id' => 'subject1',
+                'name' => 'Subject 1',
+                'impactStatement' => rejection_for('No impact statement'),
+                'banner' => rejection_for('No banner'),
+                'thumbnail' => rejection_for('No thumbnail'),
+            ];
+        }
         return $this;
     }
 
@@ -47,7 +57,7 @@ class Builder
             $this->ensureSingleArgument($args);
             $this->testData[$field] = $args[0];
         } else {
-            throw BadMethodCallException($name);
+            throw new BadMethodCallException($name);
         }
         return $this;
     }
@@ -75,7 +85,7 @@ class Builder
     private function ensureSingleArgument($args)
     {
         if (count($args) > 1) {
-            throw BadMethodCallException("Too many arguments: " . var_export($args, true));
+            throw new BadMethodCallException("Too many arguments: " . var_export($args, true));
         }
     }
 }

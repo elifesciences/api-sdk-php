@@ -126,9 +126,10 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
-        $collection = $this
-            ->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']))
+        $collection = $this->builder
+            ->create(Collection::CLASS)
             ->withSubjects($subjects)
+            ->__invoke()
         ;
 
         $this->assertEquals($expected, $collection->getSubjects()->toArray());
@@ -136,11 +137,16 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function subjectsProvider() : array
     {
+        $this->builder = new Builder;
         $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
-            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
+            $this->builder
+                ->create(Subject::CLASS)
+                ->withId('subject1')
+                ->__invoke(),
+            $this->builder
+                ->create(Subject::CLASS)
+                ->withId('subject2')
+                ->__invoke(),
         ];
 
         return [
@@ -153,22 +159,5 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
                 $subjects,
             ],
         ];
-    }
-
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $subTitle = null, $impactStatement = null, $published = null, $banner = null, $thumbnail = null)
-    {
-        if ($subTitle === null) {
-            $subTitle = promise_for('Tropical disease subtitle');
-        }
-        if ($published === null) {
-            $published = new DateTimeImmutable();
-        }
-        if ($banner === null) {
-            $banner = rejection_for('No banner');
-        }
-        if ($thumbnail === null) {
-            $thumbnail = new Image('', [900 => 'https://placehold.it/900x450']);
-        }
-        return new Collection($id, $title, $subTitle, $impactStatement, $published, $banner, $thumbnail);
     }
 }

@@ -46,6 +46,16 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function normalize($object, $format = null, array $context = []) : array
     {
+        $data = [];
+        $data['id'] = $object->getId();
+        $data['title'] = $object->getTitle();
+        $data['impact_statement'] = $object->getImpactStatement();
+        $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
+
+        $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
+        return $data;
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

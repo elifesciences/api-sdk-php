@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 #use eLife\ApiClient\MediaType;
 #use eLife\ApiClient\Result;
-#use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\ArraySequence;
 #use eLife\ApiSdk\Collection\PromiseSequence;
 #use eLife\ApiSdk\Model\ArticlePoA;
 #use eLife\ApiSdk\Model\ArticleVoR;
@@ -48,6 +48,12 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
             });
 
+        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
+            $context['snippet'] = true;
+
+            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
+        }, $data['subjects'] ?? []));
+
         return new Collection(
             $data['id'],
             $data['title'],
@@ -55,7 +61,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
             promise_for($data['image']['banner']),
-            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context)
+            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
+            $data['subjects']
         );
     }
 

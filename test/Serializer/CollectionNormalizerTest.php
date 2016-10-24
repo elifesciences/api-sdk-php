@@ -21,6 +21,7 @@ use eLife\ApiSdk\Serializer\CollectionNormalizer;
 #use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -59,7 +60,7 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $collection = new Collection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), rejection_for('No banner'), new Image('', []));
+        $collection = Builder::for(Collection::CLASS)->__invoke();
 
         return [
             'collection' => [$collection, null, true],
@@ -98,33 +99,31 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
+        $this->builder = Builder::for(Collection::CLASS);
         $date = new DateTimeImmutable();
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'), promise_for($banner), promise_for($thumbnail)); 
+        $banner = Builder::for(Image::CLASS)
+            ->sample('banner');
+        $thumbnail = Builder::for(Image::CLASS)
+            ->sample('thumbnail');
+        $subject = Builder::for(Subject::class)
+            ->withId('subject1')
+            ->withName('Subject 1 name')
+            ->withPromiseOfImpactStatement('Subject 1 impact statement')
+            ->withPromiseOfBanner($banner)
+            ->withPromiseOfThumbnail($thumbnail); 
 
         return [
             'complete' => [
-                new Collection(
-                    'tropical-disease',
-                    'Tropical disease',
-                    promise_for('Tropical disease subtitle'),
-                    'Tropical disease impact statement',
-                    $date,
-                    promise_for($banner),
-                    $thumbnail,
-                    new ArraySequence([$subject])
-                ),
+                $this->builder
+                    ->withId('tropical-disease')
+                    ->withTitle('Tropical disease')
+                    ->withPromiseOfSubTitle('Tropical disease subtitle')
+                    ->withImpactStatement('Tropical disease impact statement')
+                    ->withPublishedDate($date)
+                    ->withPromiseOfBanner($banner)
+                    ->withThumbnail($thumbnail)
+                    ->withSubjects(new ArraySequence([$subject]))
+                    ->__invoke(),
                 ['complete' => true],
                 [
                     'id' => 'tropical-disease',

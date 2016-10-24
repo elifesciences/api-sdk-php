@@ -22,7 +22,7 @@ final class Collection
         DateTimeImmutable $publishedDate,
         PromiseInterface $banner,
         Image $thumbnail,
-        Sequence $subjects = null
+        Sequence $subjects
     )
     {
         $this->id = $id;
@@ -32,9 +32,6 @@ final class Collection
         $this->publishedDate = $publishedDate;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
-        if ($subjects === null) {
-            $subjects = new ArraySequence([]);
-        }
         $this->subjects = $subjects;
     }
 

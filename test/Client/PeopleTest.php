@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\People;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\Subject;
@@ -26,9 +26,9 @@ final class PeopleTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $this->assertInstanceOf(Collection::class, $this->people);
+        $this->assertInstanceOf(Sequence::class, $this->people);
     }
 
     /**

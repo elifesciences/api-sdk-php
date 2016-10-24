@@ -1056,6 +1056,7 @@ abstract class ApiTestCase extends TestCase
         $collection = [
             'id' => $id,
             'title' => ucfirst($id),
+            'subTitle' => ucfirst($id).' subtitle',
             'impactStatement' => ucfirst($id).' impact statement',
             'updated' => '2000-01-01T00:00:00+00:00',
             'image' => [

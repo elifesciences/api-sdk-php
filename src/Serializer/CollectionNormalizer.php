@@ -14,7 +14,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\CollectionChapter;
 #use eLife\ApiSdk\Model\CollectionSource;
-#use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Model\Subject;
 #use eLife\ApiSdk\Promise\CallbackPromise;
 #use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;

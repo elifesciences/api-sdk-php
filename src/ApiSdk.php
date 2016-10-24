@@ -91,6 +91,7 @@ final class ApiSdk
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
             new BlogArticleNormalizer($this->blogClient),
+            new CollectionNormalizer($this->collectionsClient),
             new EventNormalizer($this->eventsClient),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),

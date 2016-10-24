@@ -31,7 +31,7 @@ final class CollectionsTest extends ApiTestCase
 
         $collection = $this->collections->get('tropical-disease')->wait();
 
-        return;
+        $this->markTestIncomplete();
         $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
         $this->assertSame(7, $podcastEpisode->getNumber());
 

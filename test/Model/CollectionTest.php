@@ -12,17 +12,26 @@ use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class CollectionTest extends PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->builder = new Builder;
+    }
+    
     /**
      * @test
      */
     public function it_has_an_id()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease');
+        $collection = $this->builder
+            ->create(Collection::CLASS)
+            ->withId('tropical-disease')
+            ->__invoke();
         $this->assertSame('tropical-disease', $collection->getId());
     }
 
@@ -31,7 +40,10 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease');
+        $collection = $this->builder
+            ->create(Collection::CLASS)
+            ->withTitle('Tropical disease')
+            ->__invoke();
         $this->assertSame('Tropical disease', $collection->getTitle());
     }
 
@@ -40,8 +52,11 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_sub_title()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease');
-        $this->assertSame('Tropical disease', $collection->getTitle());
+        $collection = $this->builder 
+            ->create(Collection::CLASS)
+            ->withPromiseOfSubTitle('Tropical disease subtitle')
+            ->__invoke();
+        $this->assertSame('Tropical disease subtitle', $collection->getSubTitle());
     }
 
     /**
@@ -49,10 +64,16 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), 'impact statement');
-        $withOut = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null);
+        $with = $this->builder 
+            ->create(Collection::CLASS)
+            ->withImpactStatement('Tropical disease impact statement')
+            ->__invoke();
+        $withOut = $this->builder
+            ->create(Collection::CLASS)
+            ->withImpactStatement(null)
+            ->__invoke();
 
-        $this->assertSame('impact statement', $with->getImpactStatement());
+        $this->assertSame('Tropical disease impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
 
@@ -61,9 +82,12 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, $published = new DateTimeImmutable());
+        $collection = $this->builder 
+            ->create(Collection::CLASS)
+            ->withPublishedDate($publishedDate = new DateTimeImmutable())
+            ->__invoke();
 
-        $this->assertEquals($published, $collection->getPublishedDate());
+        $this->assertEquals($publishedDate, $collection->getPublishedDate());
     }
 
     /**
@@ -71,18 +95,27 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_banner()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
+        $collection = $this->builder 
+            ->create(Collection::CLASS)
+            ->withPromiseOfBanner(
+                $image = new Image('', [900 => 'https://placehold.it/900x450'])
+            )
+            ->__invoke();
 
         $this->assertEquals($image, $collection->getBanner());
     }
-
 
     /**
      * @test
      */
     public function it_has_a_thumbnail()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']));
+        $collection = $this->builder 
+            ->create(Collection::CLASS)
+            ->withThumbnail(
+                $image = new Image('', [70 => 'https://placehold.it/70x140'])
+            )
+            ->__invoke();
 
         $this->assertEquals($image, $collection->getThumbnail());
     }

@@ -3,12 +3,11 @@
 namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
@@ -76,7 +75,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider subjectsProvider
      */
-    public function it_may_have_subjects(Collection $subjects = null, array $expected)
+    public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects

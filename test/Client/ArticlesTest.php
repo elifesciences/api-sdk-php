@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
@@ -27,9 +27,9 @@ final class ArticlesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $this->assertInstanceOf(Collection::class, $this->articles);
+        $this->assertInstanceOf(Sequence::class, $this->articles);
     }
 
     /**

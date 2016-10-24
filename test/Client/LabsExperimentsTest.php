@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\LabsExperiments;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\LabsExperiment;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -25,9 +25,9 @@ final class LabsExperimentsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $this->assertInstanceOf(Collection::class, $this->labsExperiments);
+        $this->assertInstanceOf(Sequence::class, $this->labsExperiments);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiSdk\Client\AnnualReports;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
@@ -30,9 +30,9 @@ final class AnnualReportsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $this->assertInstanceOf(Collection::class, $this->annualReports);
+        $this->assertInstanceOf(Sequence::class, $this->annualReports);
     }
 
     /**

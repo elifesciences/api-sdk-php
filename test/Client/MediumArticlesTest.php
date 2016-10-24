@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiSdk\Client\MediumArticles;
-use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
@@ -30,9 +30,9 @@ final class MediumArticlesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_is_a_collection()
+    public function it_is_a_sequence()
     {
-        $this->assertInstanceOf(Collection::class, $this->mediumArticles);
+        $this->assertInstanceOf(Sequence::class, $this->mediumArticles);
     }
 
     /**

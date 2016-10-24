@@ -38,10 +38,19 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_sub_title()
+    {
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease');
+        $this->assertSame('Tropical disease', $collection->getTitle());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_an_impact_statement()
     {
-        $with = $this->anEmptyCollection('tropical-disease', 'Tropical disease', 'impact statement');
-        $withOut = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null);
+        $with = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), 'impact statement');
+        $withOut = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null);
 
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
@@ -52,7 +61,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, $published = new DateTimeImmutable());
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, $published = new DateTimeImmutable());
 
         $this->assertEquals($published, $collection->getPublishedDate());
     }
@@ -62,7 +71,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_banner()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
 
         $this->assertEquals($image, $collection->getBanner());
     }
@@ -73,7 +82,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_thumbnail()
     {
-        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']));
+        $collection = $this->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']));
 
         $this->assertEquals($image, $collection->getThumbnail());
     }
@@ -85,7 +94,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $collection = $this
-            ->anEmptyCollection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']))
+            ->anEmptyCollection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), null, $image = new Image('', [900 => 'https://placehold.it/900x450']))
             ->withSubjects($subjects)
         ;
 
@@ -113,8 +122,11 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         ];
     }
 
-    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $impactStatement = null, $published = null, $banner = null, $thumbnail = null)
+    private function anEmptyCollection($id = 'tropical-disease', $title = 'Tropical disease', $subTitle = null, $impactStatement = null, $published = null, $banner = null, $thumbnail = null)
     {
+        if ($subTitle === null) {
+            $subTitle = promise_for('Tropical disease subtitle');
+        }
         if ($published === null) {
             $published = new DateTimeImmutable();
         }
@@ -124,6 +136,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         if ($thumbnail === null) {
             $thumbnail = new Image('', [900 => 'https://placehold.it/900x450']);
         }
-        return new Collection($id, $title, $impactStatement, $published, $banner, $thumbnail);
+        return new Collection($id, $title, $subTitle, $impactStatement, $published, $banner, $thumbnail);
     }
 }

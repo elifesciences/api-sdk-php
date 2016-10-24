@@ -14,10 +14,20 @@ final class Collection
     private $impactStatement;
     private $publishedDate;
 
-    public function __construct($id, $title, $impactStatement, DateTimeImmutable $publishedDate, PromiseInterface $banner, Image $thumbnail, Sequence $subjects = null)
+    public function __construct(
+        $id,
+        $title,
+        PromiseInterface $subTitle,
+        $impactStatement,
+        DateTimeImmutable $publishedDate,
+        PromiseInterface $banner,
+        Image $thumbnail,
+        Sequence $subjects = null
+    )
     {
         $this->id = $id;
         $this->title = $title;
+        $this->subTitle = $subTitle;
         $this->impactStatement = $impactStatement;
         $this->publishedDate = $publishedDate;
         $this->banner = $banner;
@@ -28,22 +38,30 @@ final class Collection
         $this->subjects = $subjects;
     }
 
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getTitle()
+    public function getTitle() : string
     {
         return $this->title;
     }
 
+    public function getSubTitle() : string
+    {
+        return $this->subTitle->wait();
+    }
+
+    /**
+     * @return string|null
+     */
     public function getImpactStatement()
     {
         return $this->impactStatement;
     }
 
-    public function getPublishedDate()
+    public function getPublishedDate() : DateTimeImmutable
     {
         return $this->publishedDate; 
     }
@@ -63,6 +81,7 @@ final class Collection
         return new self(
             $this->id,
             $this->title,
+            $this->subTitle,
             $this->impactStatement,
             $this->publishedDate,
             $this->banner,

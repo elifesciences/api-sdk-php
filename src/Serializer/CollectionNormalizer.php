@@ -51,6 +51,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         return new Collection(
             $data['id'],
             $data['title'],
+            promise_for($data['subTitle']),
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
             promise_for($data['image']['banner']),
@@ -63,6 +64,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data = [];
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
+        $data['subTitle'] = $object->getSubTitle();
         $data['impactStatement'] = $object->getImpactStatement();
         $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
 

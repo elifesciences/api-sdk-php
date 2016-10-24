@@ -59,7 +59,7 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $collection = new Collection('tropical-disease', 'Tropical disease', null, new DateTimeImmutable(), rejection_for('No banner'), new Image('', []));
+        $collection = new Collection('tropical-disease', 'Tropical disease', promise_for('Tropical disease subtitle'), null, new DateTimeImmutable(), rejection_for('No banner'), new Image('', []));
 
         return [
             'collection' => [$collection, null, true],
@@ -118,6 +118,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 new Collection(
                     'tropical-disease',
                     'Tropical disease',
+                    promise_for('Tropical disease subtitle'),
                     'Tropical disease impact statement',
                     $date,
                     promise_for($banner),
@@ -128,6 +129,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => 'tropical-disease',
                     'title' => 'Tropical disease',
+                    'subTitle' => 'Tropical disease subtitle',
                     'impactStatement' => 'Tropical disease impact statement',
                     'updated' => $date->format(DATE_ATOM),
                     'image' => [

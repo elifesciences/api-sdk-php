@@ -77,6 +77,25 @@ final class CollectionNormalizerTest extends ApiTestCase
         $this->assertEquals($expected, $this->normalizer->normalize($collection, null, $context));
     }
 
+    /**
+     * @test
+     * @dataProvider normalizeProvider
+     */
+    public function it_denormalizes_collections(
+        Collection $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
+
+        $actual = $this->normalizer->denormalize($json, Collection::class, null, $context);
+
+        $this->assertObjectsAreEqual($expected, $actual);
+    }
+
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable();
@@ -109,7 +128,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => 'tropical-disease',
                     'title' => 'Tropical disease',
-                    'impact_statement' => 'Tropical disease impact statement',
+                    'impactStatement' => 'Tropical disease impact statement',
                     'updated' => $date->format(DATE_ATOM),
                     'image' => [
                         'thumbnail' => [

@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-#use DateTimeImmutable;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 #use eLife\ApiClient\MediaType;
 #use eLife\ApiClient\Result;
@@ -10,7 +10,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 #use eLife\ApiSdk\Collection\PromiseSequence;
 #use eLife\ApiSdk\Model\ArticlePoA;
 #use eLife\ApiSdk\Model\ArticleVoR;
-#use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Collection;
 #use eLife\ApiSdk\Model\CollectionChapter;
 #use eLife\ApiSdk\Model\CollectionSource;
@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #use function GuzzleHttp\Promise\all;
-#use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\promise_for;
 
 final class CollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -42,6 +42,20 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function denormalize($data, $class, $format = null, array $context = []) : Collection
     {
+        $data['image']['banner'] = promise_for($data['image']['banner']);
+        $data['image']['banner'] = $data['image']['banner']
+            ->then(function (array $banner) use ($format, $context) {
+                return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
+            });
+
+        return new Collection(
+            $data['id'],
+            $data['title'],
+            $data['impactStatement'] ?? null,
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
+            promise_for($data['image']['banner']),
+            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context)
+        );
     }
 
     public function normalize($object, $format = null, array $context = []) : array
@@ -49,7 +63,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data = [];
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
-        $data['impact_statement'] = $object->getImpactStatement();
+        $data['impactStatement'] = $object->getImpactStatement();
         $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);

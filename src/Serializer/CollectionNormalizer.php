@@ -8,15 +8,19 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 //use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 //use eLife\ApiSdk\Collection\PromiseSequence;
-//use eLife\ApiSdk\Model\ArticlePoA;
-//use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Interview;
 //use eLife\ApiSdk\Model\CollectionChapter;
 //use eLife\ApiSdk\Model\CollectionSource;
+use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\Subject;
 //use eLife\ApiSdk\Promise\CallbackPromise;
 //use GuzzleHttp\Promise\PromiseInterface;
+use LogicException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -80,12 +84,38 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         if (count($object->getSubjects()) > 0) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
-                var_dump($subject);
 
                 return $this->normalizer->normalize($subject, $format, $context);
             })->toArray();
         }
 
+        $data['selectedCurator'] = $this->normalizer->normalize($object->getSelectedCurator(), $format, ['snippet' => true]);
+        $data['selectedCurator']['etAl'] = $object->selectedCuratorEtAl();
+
+        $data['curators'] = $object->getCurators()->map(function (Person $person) use ($format, $context) {
+            $context['snippet'] = true;
+
+            return $this->normalizer->normalize($person, $format, $context);
+        })->toArray();
+
+        $data['content'] = $object->getContent()->map(function ($eachContent) use ($format, $context) {
+            $context['snippet'] = true;
+
+            $eachContentData = $this->normalizer->normalize($eachContent, $format, $context);
+            if (method_exists($eachContent, 'getType')) {
+                $eachContentData['type'] = $eachContent->getType();
+            } else {
+                $contentClasses = [
+                    BlogArticle::class => 'blog-article',
+                    Interview::class => 'interview',
+                ];
+                if (!array_key_exists(get_class($eachContent), $contentClasses)) {
+                    throw new LogicException("Class of content " . get_class($eachContent) . " is not supported in a Collection. Supported classes are: " . var_export($contentClasses, true));
+                }
+                $eachContentData['type'] = $contentClasses[get_class($eachContent)];
+            }
+            return $eachContentData;
+        })->toArray();
         return $data;
     }
 

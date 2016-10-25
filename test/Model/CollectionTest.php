@@ -4,14 +4,12 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
-//use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
-//use eLife\ApiSdk\Model\PodcastEpisodeChapter;
-//use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -221,5 +219,21 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         ;
 
         $this->assertEquals($relatedContent, $collection->getRelatedContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_podcast_episodes()
+    {
+        $collection = $this->builder
+            ->create(Collection::class)
+            ->withPodcastEpisodes($podcastEpisodes = new ArraySequence([
+                Builder::dummy(PodcastEpisode::class),
+            ]))
+            ->__invoke()
+        ;
+
+        $this->assertEquals($podcastEpisodes, $collection->getPodcastEpisodes());
     }
 }

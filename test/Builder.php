@@ -12,6 +12,8 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\PodcastEpisode;
+use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use function GuzzleHttp\Promise\promise_for;
@@ -113,6 +115,7 @@ final class Builder
                     'curators' => new PromiseSequence(rejection_for('no curators')),
                     'content' => new PromiseSequence(rejection_for('no content')),
                     'relatedContent' => new PromiseSequence(rejection_for('no related content')),
+                    'podcastEpisodes' => new PromiseSequence(rejection_for('no podcast episodes')),
                 ];
             },
             Image::class => function() {
@@ -139,6 +142,24 @@ final class Builder
                     'research' => rejection_for('Research should not be unwrapped'),
                     'profile' => new PromiseSequence(rejection_for('Profile should not be unwrapped')),
                     'competingInterests' => rejection_for('Competing interests should not be unwrapped'),
+                ];
+            },
+            PodcastEpisode::class => function() {
+                return [
+                    'number' => 4,
+                    'title' => 'September 2013',
+                    'impactStatement' => null,
+                    'published' => new DateTimeImmutable(),
+                    'banner' => rejection_for('No banner'),
+                    'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
+                    'sources' => [
+                        new PodcastEpisodeSource(
+                            'audio/mpeg',
+                            'http://example.com/podcast.mp3'
+                        ),
+                    ],
+                    'subjects' => new ArraySequence([]),
+                    'chapters' => new PromiseSequence(rejection_for('no chapters')),
                 ];
             },
         ];

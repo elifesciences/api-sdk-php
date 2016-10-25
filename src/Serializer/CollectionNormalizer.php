@@ -77,6 +77,14 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+        if (count($object->getSubjects()) > 0) {
+            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
+                $context['snippet'] = true;
+                var_dump($subject);
+
+                return $this->normalizer->normalize($subject, $format, $context);
+            })->toArray();
+        }
 
         return $data;
     }

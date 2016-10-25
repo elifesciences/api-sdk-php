@@ -6,6 +6,7 @@ use BadMethodCallException;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
@@ -92,6 +93,9 @@ final class Builder
     {
         $samples = $this->samples();
 
+        if (!array_key_exists($sampleName, $samples[$this->model])) {
+            throw new InvalidArgumentException("Sample $sampleName not found for {$this->model}");
+        }
         $sample = call_user_func(
             $samples[$this->model][$sampleName],
             $this
@@ -192,6 +196,30 @@ final class Builder
                     'chapters' => new PromiseSequence(rejection_for('no chapters')),
                 ];
             },
+            ArticlePoA::class => function() {
+                return [
+                    'id' => '14107',
+                    'type' => 'research-article',
+                    'version' => 1,
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'titlePrefix' => null,
+                    'published' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
+                    'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                    'pdf' => null,
+                    'subjects' => new ArraySequence([
+              //          self::for(Subject::class)->sample('genomics-evolutionary-biology')
+                    ]),
+                    'researchOrganisms' => [],
+                    'abstract' => rejection_for('no abstract'),
+                    'issue' => rejection_for('no issue'),
+                    'copyright' => rejection_for('copyright'),
+                    'authors' => $this->rejectSequence(),
+                ];
+            },
             ArticleVoR::class => function() {
                 return [
                     'id' => '09560',
@@ -257,6 +285,22 @@ final class Builder
                             '140' => 'https://placehold.it/140x140',
                         ]),
                     ]);
+                },
+            ],
+            ArticlePoA::class => [
+                'growth-factor' => function($builder) {
+                    return $builder
+                        ->withId('14107')
+                        ->withVersion(1)
+                        ->withDoi('10.7554/eLife.14107')
+                        ->withAuthorLine('Yongjian Huang et al')
+                        ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
+                        ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+                        ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+                        ->withVolume(5)
+                        ->withElocationId('e14107')
+                        // why doesn't this override 'subjects' in the defaults?
+                        ->withSubjects(new ArraySequence([]));
                 },
             ],
             ArticleVoR::class => [

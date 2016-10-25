@@ -98,7 +98,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             return $this->normalizer->normalize($person, $format, $context);
         })->toArray();
 
-        $data['content'] = $object->getContent()->map(function ($eachContent) use ($format, $context) {
+        $contentNormalization = function ($eachContent) use ($format, $context) {
+            if (!is_object($eachContent)) {
+                throw new LogicException("Content not valid: " . var_export($eachContent, true));
+            }
             $context['snippet'] = true;
 
             $eachContentData = $this->normalizer->normalize($eachContent, $format, $context);
@@ -115,7 +118,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 $eachContentData['type'] = $contentClasses[get_class($eachContent)];
             }
             return $eachContentData;
-        })->toArray();
+        };
+        $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
+        $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
+        
         return $data;
     }
 

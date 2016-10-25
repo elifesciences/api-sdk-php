@@ -7,7 +7,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 //use eLife\ApiSdk\Collection\PromiseSequence;
-//use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticlePoA;
 //use eLife\ApiSdk\Model\ArticleSection;
 //use eLife\ApiSdk\Model\Block\Paragraph;
 //use eLife\ApiSdk\Model\Copyright;
@@ -163,6 +163,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('slime'),
                         Builder::for(Interview::class)
                             ->sample('controlling-traffic'),
+                    ]))
+                    ->withRelatedContent(new ArraySequence([
+                        Builder::for(ArticlePoa::class)
+                            ->sample('growth-factor'),
                     ]))
                     ->__invoke(),
                     /*

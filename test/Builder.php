@@ -6,10 +6,13 @@ use BadMethodCallException;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -85,7 +88,7 @@ final class Builder
     {
         // TODO: turn into private field
         $defaults = [
-            'eLife\ApiSdk\Model\BlogArticle' => function() {
+            BlogArticle::class => function() {
                 return [
                     'id' => '359325',
                     'title' => 'Media coverage: Slime can see',
@@ -95,7 +98,7 @@ final class Builder
                     'subjects' => new ArraySequence([]),
                 ];
             },
-            'eLife\ApiSdk\Model\Collection' => function() {
+            Collection::class => function() {
                 return [
                     'id' => 'tropical-disease',
                     'title' => 'Tropical disease',
@@ -111,13 +114,13 @@ final class Builder
                     'content' => new PromiseSequence(rejection_for('no content')),
                 ];
             },
-            'eLife\ApiSdk\Model\Image' => function() {
+            Image::class => function() {
                 return [
                     'altText' => '',
                     'sizes' => [],
                 ];
             },
-            'eLife\ApiSdk\Model\Subject' => function() {
+            Subject::class => function() {
                 return [
                     'id' => 'subject1',
                     'name' => 'Subject 1',
@@ -126,7 +129,7 @@ final class Builder
                     'thumbnail' => rejection_for('No thumbnail'),
                 ];
             },
-            'eLife\ApiSdk\Model\Person' => function() {
+            Person::class => function() {
                 return [
                     'id' => 'jqpublic',
                     'details' => new PersonDetails('preferred name', 'index name'),

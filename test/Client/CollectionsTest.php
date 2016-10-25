@@ -31,18 +31,19 @@ final class CollectionsTest extends ApiTestCase
         $collection = $this->collections->get('tropical-disease')->wait();
 
         $this->markTestIncomplete();
-        $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
-        $this->assertSame(7, $podcastEpisode->getNumber());
 
-        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()->toArray()[0]);
-        $this->assertSame('Chapter title', $podcastEpisode->getChapters()->toArray()[0]->getTitle());
+        //$this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
+        //$this->assertSame(7, $podcastEpisode->getNumber());
 
-        $this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()->toArray()[0]->getName());
+        //$this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()->toArray()[0]);
+        //$this->assertSame('Chapter title', $podcastEpisode->getChapters()->toArray()[0]->getTitle());
 
-        $this->mockSubjectCall(1);
+        //$this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()->toArray()[0]);
+        //$this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()->toArray()[0]->getName());
 
-        $this->assertSame('Subject 1 impact statement',
-            $podcastEpisode->getSubjects()->toArray()[0]->getImpactStatement());
+        //$this->mockSubjectCall(1);
+
+        //$this->assertSame('Subject 1 impact statement',
+        //    $podcastEpisode->getSubjects()->toArray()[0]->getImpactStatement());
     }
 }

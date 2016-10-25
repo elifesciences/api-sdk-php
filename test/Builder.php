@@ -112,6 +112,7 @@ final class Builder
                     'selectedCuratorEtAl' => false,
                     'curators' => new PromiseSequence(rejection_for('no curators')),
                     'content' => new PromiseSequence(rejection_for('no content')),
+                    'relatedContent' => new PromiseSequence(rejection_for('no related content')),
                 ];
             },
             Image::class => function() {

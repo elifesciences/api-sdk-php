@@ -206,4 +206,20 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($content, $collection->getContent());
     }
+
+    /**
+     * @test
+     */
+    public function it_has_related_content()
+    {
+        $collection = $this->builder
+            ->create(Collection::class)
+            ->withRelatedContent($relatedContent = new ArraySequence([
+                Builder::dummy(BlogArticle::class),
+            ]))
+            ->__invoke()
+        ;
+
+        $this->assertEquals($relatedContent, $collection->getRelatedContent());
+    }
 }

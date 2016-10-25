@@ -175,4 +175,18 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($person, $collection->getSelectedCurator());
         $this->assertTrue($collection->selectedCuratorEtAl());
     }
+
+    /**
+     * @test
+     */
+    public function it_has_curators()
+    {
+        $collection = $this->builder
+            ->create(Collection::class)
+            ->withCurators($curators = new ArraySequence([Builder::dummy(Person::class)]))
+            ->__invoke()
+        ;
+
+        $this->assertEquals($curators, $collection->getCurators());
+    }
 }

@@ -18,6 +18,7 @@ final class Collection
     private $subjects;
     private $selectedCurator;
     private $selectedCuratorEtAl;
+    private $curators;
 
     public function __construct(
         $id,
@@ -29,7 +30,8 @@ final class Collection
         Image $thumbnail,
         Sequence $subjects,
         Person $selectedCurator,
-        bool $selectedCuratorEtAl
+        bool $selectedCuratorEtAl,
+        Sequence $curators
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -41,6 +43,7 @@ final class Collection
         $this->subjects = $subjects;
         $this->selectedCurator = $selectedCurator;
         $this->selectedCuratorEtAl = $selectedCuratorEtAl;
+        $this->curators = $curators;
     }
 
     public function getId() : string
@@ -108,5 +111,10 @@ final class Collection
     public function selectedCuratorEtAl() : bool
     {
         return $this->selectedCuratorEtAl;
+    }
+
+    public function getCurators() : Sequence
+    {
+        return $this->curators;        
     }
 }

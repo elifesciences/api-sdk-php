@@ -97,6 +97,7 @@ final class Builder
                     'subjects' => new ArraySequence([]),
                     'selectedCurator' => self::dummy(Person::class),
                     'selectedCuratorEtAl' => false,
+                    'curators' => new PromiseSequence(rejection_for('no curators')),
                 ];
             },
             'eLife\ApiSdk\Model\Image' => function() {

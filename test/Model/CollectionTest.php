@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 //use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
@@ -188,5 +189,21 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         ;
 
         $this->assertEquals($curators, $collection->getCurators());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_content()
+    {
+        $collection = $this->builder
+            ->create(Collection::class)
+            ->withContent($content = new ArraySequence([
+                Builder::dummy(BlogArticle::class),
+            ]))
+            ->__invoke()
+        ;
+
+        $this->assertEquals($content, $collection->getContent());
     }
 }

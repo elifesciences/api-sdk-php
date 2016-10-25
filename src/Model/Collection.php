@@ -19,6 +19,7 @@ final class Collection
     private $selectedCurator;
     private $selectedCuratorEtAl;
     private $curators;
+    private $content;
 
     public function __construct(
         $id,
@@ -31,7 +32,8 @@ final class Collection
         Sequence $subjects,
         Person $selectedCurator,
         bool $selectedCuratorEtAl,
-        Sequence $curators
+        Sequence $curators,
+        Sequence $content
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -44,6 +46,7 @@ final class Collection
         $this->selectedCurator = $selectedCurator;
         $this->selectedCuratorEtAl = $selectedCuratorEtAl;
         $this->curators = $curators;
+        $this->content = $content;
     }
 
     public function getId() : string
@@ -116,5 +119,10 @@ final class Collection
     public function getCurators() : Sequence
     {
         return $this->curators;        
+    }
+
+    public function getContent() : Sequence
+    {
+        return $this->content;
     }
 }

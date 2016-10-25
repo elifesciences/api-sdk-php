@@ -85,6 +85,16 @@ final class Builder
     {
         // TODO: turn into private field
         $defaults = [
+            'eLife\ApiSdk\Model\BlogArticle' => function() {
+                return [
+                    'id' => '359325',
+                    'title' => 'Media coverage: Slime can see',
+                    'published' => new DateTimeImmutable(),
+                    'impactStatement' => null,
+                    'content' => new PromiseSequence(rejection_for('no content')),
+                    'subjects' => new ArraySequence([]),
+                ];
+            },
             'eLife\ApiSdk\Model\Collection' => function() {
                 return [
                     'id' => 'tropical-disease',
@@ -98,6 +108,7 @@ final class Builder
                     'selectedCurator' => self::dummy(Person::class),
                     'selectedCuratorEtAl' => false,
                     'curators' => new PromiseSequence(rejection_for('no curators')),
+                    'content' => new PromiseSequence(rejection_for('no content')),
                 ];
             },
             'eLife\ApiSdk\Model\Image' => function() {

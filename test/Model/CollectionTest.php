@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Person;
 //use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 //use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
@@ -157,5 +158,21 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
                 $subjects,
             ],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_selected_curator()
+    {
+        $collection = $this->builder
+            ->create(Collection::class)
+            ->withSelectedCurator($person = Builder::dummy(Person::class))
+            ->withSelectedCuratorEtAl(true)
+            ->__invoke()
+        ;
+
+        $this->assertEquals($person, $collection->getSelectedCurator());
+        $this->assertTrue($collection->selectedCuratorEtAl());
     }
 }

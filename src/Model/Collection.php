@@ -10,8 +10,14 @@ final class Collection
 {
     private $id;
     private $title;
+    private $subTitle;
     private $impactStatement;
     private $publishedDate;
+    private $banner;
+    private $thumbnail;
+    private $subjects;
+    private $selectedCurator;
+    private $selectedCuratorEtAl;
 
     public function __construct(
         $id,
@@ -21,7 +27,9 @@ final class Collection
         DateTimeImmutable $publishedDate,
         PromiseInterface $banner,
         Image $thumbnail,
-        Sequence $subjects
+        Sequence $subjects,
+        Person $selectedCurator,
+        bool $selectedCuratorEtAl
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -31,6 +39,8 @@ final class Collection
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->subjects = $subjects;
+        $this->selectedCurator = $selectedCurator;
+        $this->selectedCuratorEtAl = $selectedCuratorEtAl;
     }
 
     public function getId() : string
@@ -88,5 +98,15 @@ final class Collection
     public function getSubjects() : Sequence
     {
         return $this->subjects;
+    }
+
+    public function getSelectedCurator() : Person
+    {
+        return $this->selectedCurator;
+    }
+
+    public function selectedCuratorEtAl() : bool
+    {
+        return $this->selectedCuratorEtAl;
     }
 }

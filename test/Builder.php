@@ -5,13 +5,16 @@ namespace test\eLife\ApiSdk;
 use BadMethodCallException;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonDetails;
 use InvalidArgumentException;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
-class Builder
+final class Builder
 {
     private $model;
     private $testData;
@@ -21,10 +24,15 @@ class Builder
         return (new self())->create($model);
     }
 
+    public static function dummy($model)
+    {
+        return self::for($model)->__invoke();
+    }
+
     public function create($model)
     {
         $this->model = $model;
-        $this->testData = $this->defaultTestDataFor($model);
+        $this->testData = call_user_func($this->defaultTestDataFor($model));
 
         return $this;
     }
@@ -77,27 +85,46 @@ class Builder
     {
         // TODO: turn into private field
         $defaults = [
-            'eLife\ApiSdk\Model\Collection' => [
-                'id' => 'tropical-disease',
-                'title' => 'Tropical disease',
-                'subTitle' => rejection_for('Tropical disease subtitle'),
-                'impactStatement' => null,
-                'publishedDate' => new DateTimeImmutable(),
-                'banner' => rejection_for('No banner'),
-                'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
-                'subjects' => new ArraySequence([]),
-            ],
-            'eLife\ApiSdk\Model\Image' => [
-                'altText' => '',
-                'sizes' => [],
-            ],
-            'eLife\ApiSdk\Model\Subject' => [
-                'id' => 'subject1',
-                'name' => 'Subject 1',
-                'impactStatement' => rejection_for('No impact statement'),
-                'banner' => rejection_for('No banner'),
-                'thumbnail' => rejection_for('No thumbnail'),
-            ],
+            'eLife\ApiSdk\Model\Collection' => function() {
+                return [
+                    'id' => 'tropical-disease',
+                    'title' => 'Tropical disease',
+                    'subTitle' => rejection_for('Tropical disease subtitle'),
+                    'impactStatement' => null,
+                    'publishedDate' => new DateTimeImmutable(),
+                    'banner' => rejection_for('No banner'),
+                    'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
+                    'subjects' => new ArraySequence([]),
+                    'selectedCurator' => self::dummy(Person::class),
+                    'selectedCuratorEtAl' => false,
+                ];
+            },
+            'eLife\ApiSdk\Model\Image' => function() {
+                return [
+                    'altText' => '',
+                    'sizes' => [],
+                ];
+            },
+            'eLife\ApiSdk\Model\Subject' => function() {
+                return [
+                    'id' => 'subject1',
+                    'name' => 'Subject 1',
+                    'impactStatement' => rejection_for('No impact statement'),
+                    'banner' => rejection_for('No banner'),
+                    'thumbnail' => rejection_for('No thumbnail'),
+                ];
+            },
+            'eLife\ApiSdk\Model\Person' => function() {
+                return [
+                    'id' => 'jqpublic',
+                    'details' => new PersonDetails('preferred name', 'index name'),
+                    'type' => 'senior-editor', 
+                    'image' => null,
+                    'research' => rejection_for('Research should not be unwrapped'),
+                    'profile' => new PromiseSequence(rejection_for('Profile should not be unwrapped')),
+                    'competingInterests' => rejection_for('Competing interests should not be unwrapped'),
+                ];
+            },
         ];
 
         if (!array_key_exists($model, $defaults)) {

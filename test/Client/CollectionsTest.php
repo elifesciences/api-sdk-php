@@ -4,8 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Collections;
-#use eLife\ApiSdk\Collection;
-use eLife\ApiSdk\Model\Collection;
+//use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 

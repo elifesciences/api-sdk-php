@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
@@ -23,8 +22,7 @@ final class Collection
         PromiseInterface $banner,
         Image $thumbnail,
         Sequence $subjects
-    )
-    {
+    ) {
         $this->id = $id;
         $this->title = $title;
         $this->subTitle = $subTitle;
@@ -60,7 +58,7 @@ final class Collection
 
     public function getPublishedDate() : DateTimeImmutable
     {
-        return $this->publishedDate; 
+        return $this->publishedDate;
     }
 
     public function getBanner() : Image
@@ -70,7 +68,7 @@ final class Collection
 
     public function getThumbnail() : Image
     {
-        return $this->thumbnail; 
+        return $this->thumbnail;
     }
 
     public function withSubjects(Sequence $subjects) : Collection

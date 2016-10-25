@@ -1091,73 +1091,73 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
              */
-            "selectedCurator" => [
-                "id" => "pjha",
-                "type" => "senior-editor",
-                "name" => [
-                    "preferred" => "Prabhat Jha",
-                    "index" => "Jha, Prabhat"
+            'selectedCurator' => [
+                'id' => 'pjha',
+                'type' => 'senior-editor',
+                'name' => [
+                    'preferred' => 'Prabhat Jha',
+                    'index' => 'Jha, Prabhat',
                 ],
-                "image" => [
-                    "alt" => "",
-                    "sizes" => [
-                        "16:9" => [
-                            "250" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141",
-                            "500" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281"
+                'image' => [
+                    'alt' => '',
+                    'sizes' => [
+                        '16:9' => [
+                            '250' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141',
+                            '500' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281',
                         ],
-                        "1:1" => [
-                            "70" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70",
-                            "140" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140"
-                        ]
-                    ]
-                ],
-                "etAl" => true
-            ],
-            "curators" => [
-                [
-                    "id" => "bcooper",
-                    "type" => "reviewing-editor",
-                    "name" => [
-                        "preferred" => "Ben Cooper",
-                        "index" => "Cooper, Ben"
-                    ]
-                ],
-                [
-                    "id" => "pjha",
-                    "type" => "senior-editor",
-                    "name" => [
-                        "preferred" => "Prabhat Jha",
-                        "index" => "Jha, Prabhat"
+                        '1:1' => [
+                            '70' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70',
+                            '140' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140',
+                        ],
                     ],
-                    "image" => [
-                    "alt" => "",
-                        "sizes" => [
-                            "16:9" => [
-                                "250" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141",
-                                "500" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281"
-                            ],
-                            "1:1" => [
-                                "70" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70",
-                                "140" => "https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140"
-                            ]
-                        ]
-                    ]
-                ]
+                ],
+                'etAl' => true,
             ],
-            "content" => [
+            'curators' => [
                 [
-                    "type" => "blog-article",
-                    "id" => "359325",
-                    "title" => "Media coverage => Slime can see",
-                    "impactStatement" => "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
-                    "published" => "2016-07-08T08:33:25+00:00",
-                    "subjects" => [
+                    'id' => 'bcooper',
+                    'type' => 'reviewing-editor',
+                    'name' => [
+                        'preferred' => 'Ben Cooper',
+                        'index' => 'Cooper, Ben',
+                    ],
+                ],
+                [
+                    'id' => 'pjha',
+                    'type' => 'senior-editor',
+                    'name' => [
+                        'preferred' => 'Prabhat Jha',
+                        'index' => 'Jha, Prabhat',
+                    ],
+                    'image' => [
+                    'alt' => '',
+                        'sizes' => [
+                            '16:9' => [
+                                '250' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141',
+                                '500' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281',
+                            ],
+                            '1:1' => [
+                                '70' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70',
+                                '140' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'content' => [
+                [
+                    'type' => 'blog-article',
+                    'id' => '359325',
+                    'title' => 'Media coverage => Slime can see',
+                    'impactStatement' => "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
+                    'published' => '2016-07-08T08:33:25+00:00',
+                    'subjects' => [
                         [
-                            "id" => "biophysics-structural-biology",
-                            "name" => "Biophysics and Structural Biology",
-                        ]
-                    ]
-                ]
+                            'id' => 'biophysics-structural-biology',
+                            'name' => 'Biophysics and Structural Biology',
+                        ],
+                    ],
+                ],
             ],
             'subjects' => [$this->createSubjectJson(1, true)],
         ];

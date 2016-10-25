@@ -7,7 +7,6 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Model\Collection;
 use InvalidArgumentException;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
@@ -21,11 +20,12 @@ class Builder
     {
         return (new self())->create($model);
     }
-    
+
     public function create($model)
     {
         $this->model = $model;
         $this->testData = $this->defaultTestDataFor($model);
+
         return $this;
     }
 
@@ -47,24 +47,29 @@ class Builder
         } else {
             throw new BadMethodCallException($name);
         }
+
         return $this;
     }
 
     public function __invoke()
     {
         $class = new \ReflectionClass($this->model);
-        $constructorArgumentNames = array_map(function($p) { return $p->getName(); } , $class->getConstructor()->getParameters());
+        $constructorArgumentNames = array_map(function ($p) {
+            return $p->getName();
+        }, $class->getConstructor()->getParameters());
         $constructorArguments = [];
         foreach ($constructorArgumentNames as $name) {
             $constructorArguments[] = $this->testData[$name];
         }
         $instance = $class->newInstanceArgs($constructorArguments);
+
         return $instance;
     }
 
     public function sample($sampleName)
     {
         $samples = $this->samples();
+
         return call_user_func($samples[$this->model][$sampleName]);
     }
 
@@ -107,13 +112,13 @@ class Builder
         // TODO: turn into private field
         return [
             'eLife\ApiSdk\Model\Image' => [
-                'banner' => function() {
+                'banner' => function () {
                     return new Image(
                         '',
                         [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]
                     );
                 },
-                'thumbnail' => function() {
+                'thumbnail' => function () {
                     return new Image('', [
                         new ImageSize('16:9', [
                             250 => 'https://placehold.it/250x141',
@@ -124,8 +129,8 @@ class Builder
                             '140' => 'https://placehold.it/140x140',
                         ]),
                     ]);
-                }
-            ]
+                },
+            ],
         ];
     }
 
@@ -133,14 +138,14 @@ class Builder
     {
         $allowedFields = array_keys($this->testData);
         if (!in_array($field, $allowedFields)) {
-            throw new BadMethodCallException("Field $field is not allowed for {$this->model}. Allowed fields: " . implode(', ', $allowedFields));
+            throw new BadMethodCallException("Field $field is not allowed for {$this->model}. Allowed fields: ".implode(', ', $allowedFields));
         }
     }
 
     private function ensureSingleArgument($args)
     {
         if (count($args) > 1) {
-            throw new BadMethodCallException("Too many arguments: " . var_export($args, true));
+            throw new BadMethodCallException('Too many arguments: '.var_export($args, true));
         }
     }
 }

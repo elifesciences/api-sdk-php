@@ -6,24 +6,21 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
-#use eLife\ApiSdk\Collection\PromiseSequence;
-#use eLife\ApiSdk\Model\ArticlePoA;
-#use eLife\ApiSdk\Model\ArticleSection;
-#use eLife\ApiSdk\Model\Block\Paragraph;
-#use eLife\ApiSdk\Model\Copyright;
-use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
-#use eLife\ApiSdk\Model\Person;
-#use eLife\ApiSdk\Model\PersonAuthor;
+//use eLife\ApiSdk\Collection\PromiseSequence;
+//use eLife\ApiSdk\Model\ArticlePoA;
+//use eLife\ApiSdk\Model\ArticleSection;
+//use eLife\ApiSdk\Model\Block\Paragraph;
+//use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Collection;
+//use eLife\ApiSdk\Model\Person;
+//use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
-#use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+//use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class CollectionNormalizerTest extends ApiTestCase
 {
@@ -60,7 +57,7 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $collection = Builder::for(Collection::CLASS)->__invoke();
+        $collection = Builder::for(Collection::class)->__invoke();
 
         return [
             'collection' => [$collection, null, true],
@@ -99,18 +96,18 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $this->builder = Builder::for(Collection::CLASS);
+        $this->builder = Builder::for(Collection::class);
         $date = new DateTimeImmutable();
-        $banner = Builder::for(Image::CLASS)
+        $banner = Builder::for(Image::class)
             ->sample('banner');
-        $thumbnail = Builder::for(Image::CLASS)
+        $thumbnail = Builder::for(Image::class)
             ->sample('thumbnail');
         $subject = Builder::for(Subject::class)
             ->withId('subject1')
             ->withName('Subject 1 name')
             ->withPromiseOfImpactStatement('Subject 1 impact statement')
             ->withPromiseOfBanner($banner)
-            ->withPromiseOfThumbnail($thumbnail); 
+            ->withPromiseOfThumbnail($thumbnail);
 
         return [
             'complete' => [

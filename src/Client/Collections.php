@@ -3,12 +3,11 @@
 namespace eLife\ApiSdk\Client;
 
 use ArrayObject;
+use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\Model\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
-
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Collections
@@ -35,5 +34,4 @@ final class Collections
                 return $this->denormalizer->denormalize($result->toArray(), Collection::class);
             });
     }
-
 }

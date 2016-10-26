@@ -125,7 +125,7 @@ final class CollectionNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                $this->builder
+                Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPromiseOfSubTitle('A selection of papers')
@@ -136,24 +136,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withSubjects($subjects)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
-                            ->withId('pjha')
-                            ->withType('senior-editor')
-                            ->withDetails(new PersonDetails(
-                                'Prabhat Jha',
-                                'Jha, Prabhat'
-                            ))
-                            ->__invoke()
+                            ->sample('pjha')
                     )
                     ->withSelectedCuratorEtAl(true)
                     ->withCurators(new ArraySequence([
                         Builder::for(Person::class)
-                            ->withId('bcooper')
-                            ->withType('reviewing-editor')
-                            ->withDetails(new PersonDetails(
-                                'Ben Cooper',
-                                'Cooper, Ben'
-                            ))
-                            ->__invoke(),
+                            ->sample('bcooper'),
                         $selectedCurator
                     ]))
                     ->withContent(new ArraySequence([
@@ -349,6 +337,104 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
+            ],
+            'minimum' => [
+                Builder::for(Collection::class)
+                    ->withId('1')
+                    ->withTitle('Tropical disease')
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPromiseOfBanner($banner)
+                    ->withThumbnail($thumbnail)
+                    ->withSelectedCurator(
+                        $selectedCurator = Builder::for(Person::class)
+                            ->sample('pjha')
+                    )
+                    ->withCurators(new ArraySequence([
+                        $selectedCurator
+                    ]))
+                    ->withContent(new ArraySequence([
+                        Builder::for(ArticlePoA::class)
+                            ->sample('growth-factor'),
+                    ]))
+                    ->__invoke(),
+                [],
+                [
+                    'id' => '1',
+                    'title' => 'Tropical disease',
+                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'image' => 
+                    [
+                        'banner' => 
+                        [
+                            'alt' => '',
+                            'sizes' => 
+                            [
+                                '2:1' => 
+                                [
+                                    900 => 'https://placehold.it/900x450',
+                                    1800 => 'https://placehold.it/1800x900',
+                                ],
+                            ],
+                        ],
+                        'thumbnail' => 
+                        [
+                            'alt' => '',
+                            'sizes' => 
+                            [
+                                '16:9' => 
+                                [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => 
+                                [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'selectedCurator' => 
+                    [
+                        'id' => 'pjha',
+                        'type' => 'senior-editor',
+                        'name' => 
+                        [
+                            'preferred' => 'Prabhat Jha',
+                            'index' => 'Jha, Prabhat',
+                        ],
+                    ],
+                    'curators' => 
+                    [
+                        0 => 
+                        [
+                            'id' => 'pjha',
+                            'type' => 'senior-editor',
+                            'name' => 
+                            [
+                                'preferred' => 'Prabhat Jha',
+                                'index' => 'Jha, Prabhat',
+                            ],
+                        ],
+                    ],
+                    'content' => 
+                    [
+                        0 => 
+                        [
+                            'type' => 'research-article',
+                            'status' => 'poa',
+                            'id' => '14107',
+                            'version' => 1,
+                            'doi' => '10.7554/eLife.14107',
+                            'authorLine' => 'Yongjian Huang et al',
+                            'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                            'published' => '2016-03-28T00:00:00+00:00',
+                            'statusDate' => '2016-03-28T00:00:00+00:00',
+                            'volume' => 5,
+                            'elocationId' => 'e14107',
+                        ],
+                    ],
+                ]
             ],
         ];
     }

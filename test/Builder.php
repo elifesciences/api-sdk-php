@@ -125,7 +125,7 @@ final class Builder
                 return [
                     'id' => 'tropical-disease',
                     'title' => 'Tropical disease',
-                    'subTitle' => rejection_for('Tropical disease subtitle'),
+                    'subTitle' => promise_for(null),
                     'impactStatement' => null,
                     'publishedDate' => new DateTimeImmutable(),
                     'banner' => rejection_for('No banner'),
@@ -135,8 +135,8 @@ final class Builder
                     'selectedCuratorEtAl' => false,
                     'curators' => new PromiseSequence(rejection_for('no curators')),
                     'content' => new PromiseSequence(rejection_for('no content')),
-                    'relatedContent' => new PromiseSequence(rejection_for('no related content')),
-                    'podcastEpisodes' => new PromiseSequence(rejection_for('no podcast episodes')),
+                    'relatedContent' => $this->emptyPromiseSequence(),
+                    'podcastEpisodes' => $this->emptyPromiseSequence(),
                 ];
             },
             Image::class => function () {
@@ -349,6 +349,26 @@ final class Builder
                                                 ;
                 },
             ],
+            Person::class => [
+                'bcooper' => function($builder) {
+                    return $builder
+                        ->withId('bcooper')
+                        ->withType('reviewing-editor')
+                        ->withDetails(new PersonDetails(
+                            'Ben Cooper',
+                            'Cooper, Ben'
+                        ));
+                },
+                'pjha' => function($builder) {
+                    return $builder
+                        ->withId('pjha')
+                        ->withType('senior-editor')
+                        ->withDetails(new PersonDetails(
+                            'Prabhat Jha',
+                            'Jha, Prabhat'
+                        ));
+                },
+            ],
             PodcastEpisode::class => [
                 '29' => function($builder) {
                     return $builder
@@ -399,5 +419,10 @@ final class Builder
     private function rejectSequence()
     {
         return new PromiseSequence(rejection_for('rejecting this sequence'));
+    }
+
+    private function emptyPromiseSequence()
+    {
+        return new PromiseSequence(promise_for([]));
     }
 }

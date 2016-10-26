@@ -74,8 +74,12 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data = [];
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
-        $data['subTitle'] = $object->getSubTitle();
-        $data['impactStatement'] = $object->getImpactStatement();
+        if ($object->getSubTitle()) {
+            $data['subTitle'] = $object->getSubTitle();
+        }
+        if ($object->getImpactStatement()) {
+            $data['impactStatement'] = $object->getImpactStatement();
+        }
         $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
@@ -89,7 +93,9 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         }
 
         $data['selectedCurator'] = $this->normalizer->normalize($object->getSelectedCurator(), $format, ['snippet' => true]);
-        $data['selectedCurator']['etAl'] = $object->selectedCuratorEtAl();
+        if ($object->selectedCuratorEtAl()) {
+            $data['selectedCurator']['etAl'] = $object->selectedCuratorEtAl();
+        }
 
         $data['curators'] = $object->getCurators()->map(function (Person $person) use ($format, $context) {
             $context['snippet'] = true;
@@ -119,12 +125,16 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             return $eachContentData;
         };
         $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
-        $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
-        $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
-            $context['snippet'] = true;
+        if (count($object->getRelatedContent()) > 0) {
+            $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
+        }
+        if (count($object->getPodcastEpisodes()) > 0) {
+            $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
+                $context['snippet'] = true;
 
-            return $this->normalizer->normalize($podcastEpisode, $format, $context);
-        })->toArray();
+                return $this->normalizer->normalize($podcastEpisode, $format, $context);
+            })->toArray();
+        }
         
         return $data;
     }

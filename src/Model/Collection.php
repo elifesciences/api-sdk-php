@@ -65,7 +65,10 @@ final class Collection
         return $this->title;
     }
 
-    public function getSubTitle() : string
+    /**
+     * @return string|null
+     */
+    public function getSubTitle()
     {
         return $this->subTitle->wait();
     }

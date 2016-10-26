@@ -436,6 +436,65 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ]
             ],
+            'complete snippet' => [
+                Builder::for(Collection::class)
+                    ->withId('1')
+                    ->withTitle('Tropical disease')
+                    ->withImpactStatement('eLife has published papers on many...')
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withThumbnail($thumbnail)
+                    ->withSubjects($subjects)
+                    ->withSelectedCurator(
+                        $selectedCurator = Builder::for(Person::class)
+                            ->sample('pjha')
+                    )
+                    ->withSelectedCuratorEtAl(true)
+                    ->__invoke(),
+                ['complete' => true, 'snippet' => true],
+                [
+                    'id' => '1',
+                    'title' => 'Tropical disease',
+                    'impactStatement' => 'eLife has published papers on many...',
+                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'subjects' => [
+                        0 => [
+                            'id' => 'epidemiology-global-health',
+                            'name' => 'Epidemiology and Global Health',
+                        ],
+                        1 => [
+                            'id' => 'microbiology-infectious-disease',
+                            'name' => 'Microbiology and Infectious Disease',
+                        ],
+                    ],
+                    'selectedCurator' => [
+                        'id' => 'pjha',
+                        'type' => 'senior-editor',
+                        'name' => [
+                            'preferred' => 'Prabhat Jha',
+                            'index' => 'Jha, Prabhat',
+                        ],
+                        'etAl' => true,
+                    ],
+                ],
+                function (ApiTestCase $test) {
+                    //$test->mockCollectionCall(1, true);
+                },
+            ],
             'minimum snippet' => [
                 Builder::for(Collection::class)
                     ->withId('1')

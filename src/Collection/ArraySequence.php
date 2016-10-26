@@ -13,7 +13,7 @@ final class ArraySequence implements IteratorAggregate, Sequence
 {
     private $array;
 
-    public function __construct(array $array)
+    public function __construct(array $array = [])
     {
         $this->array = array_values($array);
     }

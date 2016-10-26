@@ -91,6 +91,7 @@ final class CollectionNormalizerTest extends ApiTestCase
         if ($extra) {
             call_user_func($extra, $this);
         }
+        $this->mockPersonCall('pjha');
 
         $actual = $this->normalizer->denormalize($json, Collection::class, null, $context);
 
@@ -346,7 +347,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withThumbnail($thumbnail)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
-                            ->sample('pjha')
+                            ->sample('pjha', ['snippet' => false])
                     )
                     ->withCurators(new ArraySequence([
                         $selectedCurator,
@@ -403,7 +404,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'content' => [
+                    'content' => $minimumContent = [
                         0 => [
                             'type' => 'research-article',
                             'status' => 'poa',
@@ -476,7 +477,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    //$test->mockCollectionCall(1, true);
+                    $test->mockCollectionCall('1', true);
                 },
             ],
             'minimum snippet' => [
@@ -484,11 +485,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPromiseOfBanner($banner)
                     ->withThumbnail($thumbnail)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
-                            ->sample('pjha')
+                            ->sample('pjha', ['snippet' => false])
                     )
+                    ->withCurators(new ArraySequence())
+                    ->withContent(new ArraySequence())
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -519,6 +523,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockCollectionCall('1', true);
+                },
             ],
         ];
     }

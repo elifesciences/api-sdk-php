@@ -4,10 +4,11 @@ namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
-//use eLife\ApiClient\MediaType;
-//use eLife\ApiClient\Result;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 //use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -15,8 +16,8 @@ use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
-//use eLife\ApiSdk\Promise\CallbackPromise;
-//use GuzzleHttp\Promise\PromiseInterface;
+use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\PromiseInterface;
 use LogicException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -24,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-//use function GuzzleHttp\Promise\all;
+use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class CollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -43,7 +44,41 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function denormalize($data, $class, $format = null, array $context = []) : Collection
     {
-        $data['image']['banner'] = promise_for($data['image']['banner']);
+        if (!empty($context['snippet'])) {
+            $collection = $this->denormalizeSnippet($data);
+
+            $data['image']['banner'] = $collection
+                ->then(function (Result $collection) {
+                    return $collection['image']['banner'];
+                });
+
+            $data['curators'] = $collection
+                ->then(function(Result $collection) {
+                    return new ArraySequence(array_map(function($curator) use ($format, $context) {
+                        return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
+                    }, $collection['curators']));
+                });
+
+            $data['content'] = $collection
+                ->then(function(Result $collection) {
+                    return new ArraySequence(array_map(function($eachContent) use ($format, $context) {
+                        if ($eachContent['type'] == 'research-article') {
+                            return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                        }
+                    }, $data['content']));
+                });
+        } else {
+            $data['image']['banner'] = promise_for($data['image']['banner']);
+            $data['curators'] = new ArraySequence(array_map(function($curator) use ($format, $context) {
+                return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
+            }, $data['curators']));
+            $data['content'] = new ArraySequence(array_map(function($eachContent) use ($format, $context) {
+                if ($eachContent['type'] == 'research-article') {
+                    return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                }
+            }, $data['content']));
+        }
+
         $data['image']['banner'] = $data['image']['banner']
             ->then(function (array $banner) use ($format, $context) {
                 return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
@@ -54,17 +89,58 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
+        $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
+
+            $data['relatedContent'] = new ArraySequence([]);
+            $data['podcastEpisodes'] = new ArraySequence([]);
 
         return new Collection(
             $data['id'],
             $data['title'],
-            promise_for($data['subTitle']),
+            promise_for($data['subTitle'] ?? null),
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
             promise_for($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
-            $data['subjects']
+            $data['subjects'],
+            $data['selectedCurator'],
+            $data['selectedCuratorEtAl'] ?? false,
+            $data['curators'],
+            $data['content'],
+            $data['relatedContent'],
+            $data['podcastEpisodes']
         );
+    }
+
+    private function denormalizeSnippet(array $collection) : PromiseInterface
+    {
+        //if (isset($this->found[$episode['number']])) {
+        //    return $this->found[$episode['number']];
+        //}
+
+        $this->found[$collection['id']] = null;
+
+        if (empty($this->globalCallback)) {
+            $this->globalCallback = new CallbackPromise(function () {
+                foreach ($this->found as $id => $collection) {
+                    if (null === $collection) {
+                        $this->found[$id] = $this->collectionsClient->getCollection(
+                            ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                            $id
+                        );
+                    }
+                }
+
+                $this->globalCallback = null;
+
+                return all($this->found)->wait();
+            });
+        }
+
+        return $this->globalCallback
+            ->then(function (array $collections) use ($collection) {
+                return $collections[$collection['id']];
+            });
     }
 
     public function normalize($object, $format = null, array $context = []) : array

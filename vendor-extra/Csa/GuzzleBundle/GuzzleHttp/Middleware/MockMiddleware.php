@@ -45,6 +45,7 @@ class MockMiddleware extends CacheMiddleware
 
             try {
                 if (null === $response = $this->adapter->fetch($request)) {
+                    var_Dump($request);
                     throw new \RuntimeException('Record not found.');
                 }
 

@@ -376,7 +376,7 @@ abstract class ApiTestCase extends TestCase
         string $type = null
     ) {
         $people = array_map(function (int $id) {
-            return $this->createPersonJson($id, true);
+            return $this->createPersonJson('person'.$id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -406,18 +406,26 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockPersonCall(int $number, bool $complete = false)
+    /**
+     * @param string|integer $numberOrId
+     */
+    final protected function mockPersonCall($numberOrId, bool $complete = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "person{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/people/person'.$number,
+                'http://api.elifesciences.org/people/'.$id,
                 ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
-                json_encode($this->createPersonJson($number, false, $complete))
+                json_encode($this->createPersonJson($id, false, $complete))
             )
         );
     }
@@ -925,14 +933,14 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    private function createPersonJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createPersonJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $person = [
-            'id' => 'person'.$number,
+            'id' => $id,
             'type' => 'senior-editor',
             'name' => [
-                'preferred' => 'Person '.$number.' preferred',
-                'index' => 'Person '.$number.' index',
+                'preferred' => $id.' preferred',
+                'index' => $id.' index',
             ],
             'orcid' => '0000-0002-1825-0097',
             'research' => [
@@ -952,10 +960,10 @@ abstract class ApiTestCase extends TestCase
             'profile' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Person '.$number.' profile text',
+                    'text' => $id.' profile text',
                 ],
             ],
-            'competingInterests' => 'Person '.$number.' competing interests',
+            'competingInterests' => $id.' competing interests',
             'image' => [
                 'alt' => '',
                 'sizes' => [

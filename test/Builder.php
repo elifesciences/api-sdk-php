@@ -89,16 +89,21 @@ final class Builder
         return $instance;
     }
 
-    public function sample($sampleName)
+    public function sample($sampleName, $context = [])
     {
         $samples = $this->samples();
 
         if (!array_key_exists($sampleName, $samples[$this->model])) {
             throw new InvalidArgumentException("Sample $sampleName not found for {$this->model}");
         }
+        if (!array_key_exists('snippet', $context)) {
+            // what should be the default?
+            $context['snippet'] = true;
+        }
         $sample = call_user_func(
             $samples[$this->model][$sampleName],
-            $this
+            $this,
+            $context
         );
         if ($sample instanceof self) {
             return $sample->__invoke();
@@ -128,7 +133,7 @@ final class Builder
                     'subTitle' => promise_for(null),
                     'impactStatement' => null,
                     'publishedDate' => new DateTimeImmutable(),
-                    'banner' => rejection_for('No banner'),
+                    'banner' => rejection_for('No banner. Builder'),
                     'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
                     'subjects' => new ArraySequence([]),
                     'selectedCurator' => self::dummy(Person::class),
@@ -359,14 +364,22 @@ final class Builder
                             'Cooper, Ben'
                         ));
                 },
-                'pjha' => function ($builder) {
-                    return $builder
+                'pjha' => function ($builder, $context) {
+                    $person = $builder
                         ->withId('pjha')
                         ->withType('senior-editor')
                         ->withDetails(new PersonDetails(
                             'Prabhat Jha',
                             'Jha, Prabhat'
                         ));
+                    if (!$context['snippet']) {
+                        $person
+                            ->withPromiseOfResearch('')
+                            ->withProfile(new ArraySequence([]))
+                            ->withPromiseOfCompetingInterests('');
+                        
+                    }
+                    return $person;
                 },
             ],
             PodcastEpisode::class => [

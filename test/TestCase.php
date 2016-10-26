@@ -23,20 +23,24 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            $this->assertItemsAreEqual($expected->{$method}(), $actual->{$method}());
+            $detail = get_class($actual)."::".$method;
+            $this->assertItemsAreEqual($expected->{$method}(), $actual->{$method}(), $detail);
         }
     }
 
-    private function assertItemsAreEqual($expected, $actual)
+    private function assertItemsAreEqual($expected, $actual, $detail = null)
     {
         $actual = $this->normalise($actual);
         $expected = $this->normalise($expected);
 
         if (is_object($actual)) {
+            echo "Recur: " . get_class($actual) . PHP_EOL;
             $this->assertObjectsAreEqual($expected, $actual);
         } elseif (is_array($actual)) {
+            $this->assertInternalType('array', $expected, "We are getting an array out of $detail but we were not expecting it");
+            $this->assertEquals(count($expected), count($actual), "Count of $detail doesn't match expected");
             foreach ($actual as $key => $actualItem) {
-                $this->assertItemsAreEqual($expected[$key], $actualItem);
+                $this->assertItemsAreEqual($expected[$key], $actualItem, $detail .' '.$key);
             }
         } else {
             $this->assertEquals($expected, $actual);

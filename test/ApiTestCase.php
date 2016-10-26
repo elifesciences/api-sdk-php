@@ -143,26 +143,31 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockArticleCall(int $number, bool $complete = false, bool $vor = false)
+    final protected function mockArticleCall($numberOrId, bool $complete = false, bool $vor = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "blogArticle{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         if ($vor) {
             $response = new Response(
                 200,
                 ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1)],
-                json_encode($this->createArticleVoRJson($number, false, $complete))
+                json_encode($this->createArticleVoRJson($id, false, $complete))
             );
         } else {
             $response = new Response(
                 200,
                 ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1)],
-                json_encode($this->createArticlePoAJson($number, false, $complete))
+                json_encode($this->createArticlePoAJson($id, false, $complete))
             );
         }
 
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/articles/article'.$number,
+                'http://api.elifesciences.org/articles/'.$id,
                 [
                     'Accept' => [
                         new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
@@ -581,24 +586,24 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    private function createArticlePoAJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createArticlePoAJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $article = [
             'status' => 'poa',
-            'id' => 'article'.$number,
+            'id' => $id,
             'version' => 1,
             'type' => 'research-article',
-            'doi' => '10.7554/eLife.'.$number,
-            'title' => 'Article '.$number.' title',
-            'titlePrefix' => 'Article '.$number.' title prefix',
+            'doi' => '10.7554/eLife.'.$id,
+            'title' => 'Article '.$id.' title',
+            'titlePrefix' => 'Article '.$id.' title prefix',
             'published' => '2000-01-01T00:00:00+00:00',
             'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
             'issue' => 1,
-            'elocationId' => 'e'.$number,
+            'elocationId' => 'e'.$id,
             'pdf' => 'http://www.example.com/',
             'subjects' => [$this->createSubjectJson(1, true)],
-            'researchOrganisms' => ['Article '.$number.' research organism'],
+            'researchOrganisms' => ['Article '.$id.' research organism'],
             'copyright' => [
                 'license' => 'CC-BY-4.0',
                 'holder' => 'Author et al',
@@ -618,7 +623,7 @@ abstract class ApiTestCase extends TestCase
                 'content' => [
                     [
                         'type' => 'paragraph',
-                        'text' => 'Article '.$number.' abstract text',
+                        'text' => 'Article '.$id.' abstract text',
                     ],
                 ],
             ],
@@ -643,9 +648,9 @@ abstract class ApiTestCase extends TestCase
         return $article;
     }
 
-    private function createArticleVoRJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createArticleVoRJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
-        $article = $this->createArticlePoAJson($number, $isSnippet, $complete);
+        $article = $this->createArticlePoAJson($id, $isSnippet, $complete);
 
         $article['status'] = 'vor';
 

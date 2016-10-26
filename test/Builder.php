@@ -8,14 +8,17 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
@@ -237,10 +240,10 @@ final class Builder
               //          self::for(Subject::class)->sample('genomics-evolutionary-biology')
                     ]),
                     'researchOrganisms' => [],
-                    'abstract' => rejection_for('no abstract'),
-                    'issue' => rejection_for('no issue'),
-                    'copyright' => rejection_for('copyright'),
-                    'authors' => $this->rejectSequence(),
+                    'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
+                    'issue' => promise_for(1),
+                    'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                    'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                 ];
             },
             ArticleVoR::class => function () {

@@ -421,6 +421,11 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockCollectionCall('1', true);
+                    $test->mockSubjectCall('biophysics-structural-biology', true);
+                    $test->mockArticleCall('14107', true);
+                },
             ],
             'complete snippet' => [
                 Builder::for(Collection::class)

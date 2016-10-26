@@ -45,8 +45,11 @@ class MockMiddleware extends CacheMiddleware
 
             try {
                 if (null === $response = $this->adapter->fetch($request)) {
-                    var_Dump($request);
-                    throw new \RuntimeException('Record not found.');
+                    throw new \RuntimeException(sprintf(
+                        'Record not found for request: %s %s',
+                        $request->getMethod(),
+                        $request->getUri()
+                    ));
                 }
 
                 $response = $this->addDebugHeader($response, 'REPLAY');

@@ -94,6 +94,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
+        $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
             $data['relatedContent'] = new ArraySequence([]);
@@ -109,7 +110,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
             $data['subjects'],
             $data['selectedCurator'],
-            $data['selectedCuratorEtAl'] ?? false,
+            $selectedCuratorEtAl,
             $data['curators'],
             $data['content'],
             $data['relatedContent'],

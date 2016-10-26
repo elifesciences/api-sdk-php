@@ -139,13 +139,16 @@ final class Builder
                     'subTitle' => promise_for(null),
                     'impactStatement' => null,
                     'publishedDate' => new DateTimeImmutable(),
-                    'banner' => rejection_for('No banner. Builder'),
+                    'banner' => promise_for(self::for(Image::class)->sample('banner')),
                     'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
                     'subjects' => new ArraySequence([]),
                     'selectedCurator' => self::dummy(Person::class),
                     'selectedCuratorEtAl' => false,
-                    'curators' => new PromiseSequence(rejection_for('no curators')),
-                    'content' => new PromiseSequence(rejection_for('no content')),
+                    'curators' => new ArraySequence([
+                        self::dummy(Person::class),
+                    ]),
+                    'content' => new ArraySequence([
+                    ]),
                     'relatedContent' => $this->emptyPromiseSequence(),
                     'podcastEpisodes' => $this->emptyPromiseSequence(),
                 ];
@@ -199,9 +202,9 @@ final class Builder
                         ]
                     ),
                      */
-                    'research' => rejection_for('Research should not be unwrapped'),
-                    'profile' => new PromiseSequence(rejection_for('Profile should not be unwrapped')),
-                    'competingInterests' => rejection_for('Competing interests should not be unwrapped'),
+                    'research' => promise_for(null),
+                    'profile' => new ArraySequence(),
+                    'competingInterests' => promise_for(null),
                 ];
             },
             PodcastEpisode::class => function () {
@@ -445,6 +448,18 @@ final class Builder
                         ->withName('Biophysics and Structural Biology')
                         ->withPromiseOfImpactStatement('Subject biophysics-structural-biology impact statement');
                 },
+                'epidemiology-global-health' => function () {
+                    return self::for(Subject::class)
+                        ->withId('epidemiology-global-health')
+                        ->withName('Epidemiology and Global Health')
+                        ->withPromiseOfImpactStatement('Subject epidemiology-global-health impact statement');
+                },
+                'microbiology-infectious-disease' => function () {
+                    return self::for(Subject::class)
+                        ->withId('microbiology-infectious-disease')
+                        ->withName('Microbiology and Infectious Disease')
+                        ->withPromiseOfImpactStatement('Subject microbiology-infectious-disease impact statement');
+                }
             ],
         ];
     }

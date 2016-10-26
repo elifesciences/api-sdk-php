@@ -115,13 +115,9 @@ final class CollectionNormalizerTest extends ApiTestCase
             ->withPromiseOfThumbnail($thumbnail);
         $subjects = new ArraySequence([
             Builder::for(Subject::class)
-                ->withId('epidemiology-global-health')
-                ->withName('Epidemiology and Global Health')
-                ->__invoke(),
+                ->sample('epidemiology-global-health'),
             Builder::for(Subject::class)
-                ->withId('microbiology-infectious-disease')
-                ->withName('Microbiology and Infectious Disease')
-                ->__invoke(),
+                ->sample('microbiology-infectious-disease'),
         ]);
 
         return [
@@ -434,12 +430,23 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
                     ->withThumbnail($thumbnail)
-                    ->withSubjects($subjects)
+                    ->withSubjects(
+                        $subjects)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha')
                     )
                     ->withSelectedCuratorEtAl(true)
+                    ->withCurators(new ArraySequence([
+                        Builder::for(Person::class)
+                            ->sample('bcooper', ['snippet' => false]),
+                        Builder::for(Person::class)
+                            ->sample('pjha', ['snippet' => false]),
+                    ]))
+                    ->withContent(new ArraySequence([
+                        $blogArticle = Builder::for(BlogArticle::class)
+                            ->sample('slime'),
+                    ]))
                     ->__invoke(),
                 ['complete' => true, 'snippet' => true],
                 [
@@ -484,6 +491,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                 ],
                 function (ApiTestCase $test) {
                     $test->mockCollectionCall('1', true);
+                    $test->mockSubjectCall('biophysics-structural-biology', true);
+                    $test->mockSubjectCall('epidemiology-global-health', true);
+                    $test->mockSubjectCall('microbiology-infectious-disease', true);
+                    $test->mockBlogArticleCall('359325');
                 },
             ],
             'minimum snippet' => [

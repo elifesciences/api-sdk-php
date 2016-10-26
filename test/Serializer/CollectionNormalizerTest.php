@@ -17,7 +17,7 @@ use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
-//use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
@@ -168,36 +168,11 @@ final class CollectionNormalizerTest extends ApiTestCase
                         Builder::for(ArticlePoa::class)
                             ->sample('growth-factor'),
                     ]))
+                    ->withPodcastEpisodes(new ArraySequence([
+                        Builder::for(PodcastEpisode::class)
+                            ->sample('29')
+                    ]))
                     ->__invoke(),
-                    /*
-    1 => array(
-      'type' => 'blog-article',
-      'id' => '1',
-      'title' => 'Media coverage: Slime can see',
-      'impactStatement' => 'In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.',
-      'published' => '2016-07-08T08:33:25+00:00',
-      'subjects' => array(
-        0 => array(
-          'id' => 'biophysics-structural-biology',
-          'name' => 'Biophysics and Structural Biology',
-        ),
-      ),
-    ),
-    2 => array(
-      'type' => 'interview',
-      'id' => '1',
-      'interviewee' => array(
-        'name' => array(
-          'preferred' => 'Ramanath Hegde',
-          'index' => 'Hegde, Ramanath',
-        ),
-      ),
-      'title' => 'Controlling traffic',
-      'impactStatement' => 'Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.',
-      'published' => '2016-01-29T16:22:28+00:00',
-    ),
-  ),
-                     */
                 ['complete' => true],
 array(
   'id' => '1',

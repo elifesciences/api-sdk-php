@@ -14,9 +14,8 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
-//use eLife\ApiSdk\Model\CollectionChapter;
-//use eLife\ApiSdk\Model\CollectionSource;
 use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 //use eLife\ApiSdk\Promise\CallbackPromise;
 //use GuzzleHttp\Promise\PromiseInterface;
@@ -121,6 +120,11 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         };
         $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
         $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
+        $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
+            $context['snippet'] = true;
+
+            return $this->normalizer->normalize($podcastEpisode, $format, $context);
+        })->toArray();
         
         return $data;
     }

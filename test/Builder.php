@@ -349,6 +349,21 @@ final class Builder
                                                 ;
                 },
             ],
+            PodcastEpisode::class => [
+                '29' => function($builder) {
+                    return $builder
+                        ->withNumber(29)
+                        ->withTitle('April/May 2016')
+                        ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42+00:00'))
+                        ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                        ->withSources([
+                            new PodcastEpisodeSource(
+                                'audio/mpeg',
+                                'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3'
+                            )
+                        ]);
+                },
+            ],
             Subject::class => [
                 'genomics-evolutionary-biology' => function() {
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?

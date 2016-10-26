@@ -265,7 +265,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                         1 => [
                             'type' => 'blog-article',
-                            'id' => '1',
+                            'id' => '359325',
                             'title' => 'Media coverage: Slime can see',
                             'impactStatement' => 'In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.',
                             'published' => '2016-07-08T08:33:25+00:00',
@@ -334,6 +334,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
+                function($test) {
+                    $test->mockCollectionCall('1', true);
+                    $test->mockSubjectCall('biophysics-structural-biology', true);
+                    $test->mockSubjectCall('epidemiology-global-health', true);
+                    $test->mockSubjectCall('microbiology-infectious-disease', true);
+                    $test->mockSubjectCall('genomics-evolutionary-biology', true);
+                    $test->mockBlogArticleCall('359325');
+                }
             ],
             'minimum' => [
                 Builder::for(Collection::class)

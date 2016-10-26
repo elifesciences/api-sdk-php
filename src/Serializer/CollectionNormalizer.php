@@ -9,6 +9,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -63,12 +64,15 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 ->then(function(Result $collection) use ($format, $context) {
                     return (array_map(function($eachContent) use ($format, $context) {
                         if ($eachContent['type'] == 'research-article') {
-                            // VOR is missing, need additional check
-                            return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                            if ($eachContent['status'] == 'poa') {
+                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                            } else {
+                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                            }
                         } else if ($eachContent['type'] == 'blog-article') {
                             return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
                         } else {
-                            throw \NotImplementedException($eachContent['type']);
+                            throw new \NotImplementedException($eachContent['type']);
                         }
                     }, $collection['content']));
                 }));
@@ -78,9 +82,19 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
             }, $data['curators']));
             $data['content'] = new ArraySequence(array_map(function($eachContent) use ($format, $context) {
-                if ($eachContent['type'] == 'research-article') {
-                    return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
-                }
+                        if ($eachContent['type'] == 'research-article') {
+                            if ($eachContent['status'] == 'poa') {
+                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                            } else {
+                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                            }
+                        } else if ($eachContent['type'] == 'blog-article') {
+                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+                        } else {
+                            return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
+                            throw new \NotImplementedException($eachContent['type']);
+                        }
+                        // missing blog-article and interview here, extract common code
             }, $data['content']));
         }
 

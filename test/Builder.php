@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -122,7 +123,9 @@ final class Builder
                     'title' => 'Media coverage: Slime can see',
                     'published' => new DateTimeImmutable(),
                     'impactStatement' => null,
-                    'content' => new PromiseSequence(rejection_for('no content')),
+                    'content' => new PromiseSequence(promise_for([
+                        new Paragraph(''),
+                    ])),
                     'subjects' => new ArraySequence([]),
                 ];
             },
@@ -167,9 +170,9 @@ final class Builder
                 return [
                     'id' => 'subject1',
                     'name' => 'Subject 1',
-                    'impactStatement' => rejection_for('No impact statement'),
-                    'banner' => rejection_for('No banner'),
-                    'thumbnail' => rejection_for('No thumbnail'),
+                    'impactStatement' => promise_for('Impact statement'),
+                    'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                    'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
                 ];
             },
             Person::class => function () {
@@ -178,6 +181,21 @@ final class Builder
                     'details' => new PersonDetails('preferred name', 'index name'),
                     'type' => 'senior-editor',
                     'image' => null,
+                    /*
+                     * new Image(
+                        '',
+                        [
+                            '16:9' => [
+                                '250' => 'https://placehold.it/250x141',
+                                '500' => 'https://placehold.it/500x281',
+                            ],
+                            '1:1' => [
+                                '70' => 'https://placehold.it/70x70',
+                                '140' => 'https://placehold.it/140x140',
+                            ],
+                        ]
+                    ),
+                     */
                     'research' => rejection_for('Research should not be unwrapped'),
                     'profile' => new PromiseSequence(rejection_for('Profile should not be unwrapped')),
                     'competingInterests' => rejection_for('Competing interests should not be unwrapped'),
@@ -331,12 +349,15 @@ final class Builder
             BlogArticle::class => [
                 'slime' => function ($builder) {
                     return $builder
-                        ->withId(1)
+                        ->withId(359325)
                         ->withTitle('Media coverage: Slime can see')
                         ->withImpactStatement('In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.')
                         ->withPublished(new DateTimeImmutable('2016-07-08T08:33:25+00:00'))
                         ->withSubjects(new ArraySequence([
                             self::for(Subject::class)->sample('biophysics-structural-biology'),
+                        ]))
+                        ->withContent(new ArraySequence([
+                            new Paragraph("Blog article 359325 text")
                         ]));
                 },
             ],
@@ -355,14 +376,24 @@ final class Builder
                 },
             ],
             Person::class => [
-                'bcooper' => function ($builder) {
-                    return $builder
+                'bcooper' => function ($builder, $context) {
+                    $person = $builder
                         ->withId('bcooper')
                         ->withType('reviewing-editor')
                         ->withDetails(new PersonDetails(
                             'Ben Cooper',
                             'Cooper, Ben'
                         ));
+
+                    if (!$context['snippet']) {
+                        $person
+                            ->withPromiseOfResearch('')
+                            ->withProfile(new ArraySequence([]))
+                            ->withPromiseOfCompetingInterests('');
+                        
+                    }
+
+                    return $person;
                 },
                 'pjha' => function ($builder, $context) {
                     $person = $builder
@@ -408,7 +439,8 @@ final class Builder
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
                     return self::for(Subject::class)
                         ->withId('biophysics-structural-biology')
-                        ->withName('Biophysics and Structural Biology');
+                        ->withName('Biophysics and Structural Biology')
+                        ->withPromiseOfImpactStatement('Subject biophysics-structural-biology impact statement');
                 },
             ],
         ];

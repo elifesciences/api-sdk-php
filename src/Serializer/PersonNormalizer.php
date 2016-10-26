@@ -115,7 +115,6 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             $this->globalCallback = new CallbackPromise(function () {
                 foreach ($this->found as $id => $person) {
                     if (null === $person) {
-                        var_Dump($id);
                         $this->found[$id] = $this->peopleClient->getPerson(
                             ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
                             $id

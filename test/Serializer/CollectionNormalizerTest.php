@@ -91,7 +91,8 @@ final class CollectionNormalizerTest extends ApiTestCase
         if ($extra) {
             call_user_func($extra, $this);
         }
-        $this->mockPersonCall('pjha');
+        $this->mockPersonCall('pjha', $complete=false, $isSnippet=true);
+        $this->mockPersonCall('bcooper', $complete=false, $isSnippet=true);
 
         $actual = $this->normalizer->denormalize($json, Collection::class, null, $context);
 
@@ -491,8 +492,18 @@ final class CollectionNormalizerTest extends ApiTestCase
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false])
                     )
-                    ->withCurators(new ArraySequence())
-                    ->withContent(new ArraySequence())
+                    ->withCurators(new ArraySequence([
+                        $bcooper = Builder::for(Person::class)
+                            ->sample('bcooper', ['snippet' => false]),
+                        $selectedCurator, 
+                    ]))
+                    ->withContent(new ArraySequence([
+                        $blogArticle = Builder::for(BlogArticle::class)
+                            ->sample('slime'),
+                        //null,
+                        //$articlePoA = Builder::for(ArticlePoA::class)
+                        //    ->sample('growth-factor')
+                    ]))
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -525,6 +536,8 @@ final class CollectionNormalizerTest extends ApiTestCase
                 ],
                 function (ApiTestCase $test) {
                     $test->mockCollectionCall('1', true);
+                    $test->mockSubjectCall('biophysics-structural-biology', true);
+                    $test->mockBlogArticleCall('359325');
                 },
             ],
         ];

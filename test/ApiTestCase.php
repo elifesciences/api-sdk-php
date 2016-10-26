@@ -206,18 +206,23 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockBlogArticleCall(int $number, bool $complete = false)
+    final protected function mockBlogArticleCall($numberOrId, bool $complete = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "blogArticle{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/blog-articles/blogArticle'.$number,
+                'http://api.elifesciences.org/blog-articles/'.$id,
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
-                json_encode($this->createBlogArticleJson($number, false, $complete))
+                json_encode($this->createBlogArticleJson($id, false, $complete))
             )
         );
     }
@@ -409,7 +414,7 @@ abstract class ApiTestCase extends TestCase
     /**
      * @param string|integer $numberOrId
      */
-    final protected function mockPersonCall($numberOrId, bool $complete = false)
+    final protected function mockPersonCall($numberOrId, bool $complete = false, bool $isSnippet = false)
     {
         if (is_integer($numberOrId)) {
             $id = "person{$numberOrId}";
@@ -425,7 +430,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
-                json_encode($this->createPersonJson($id, false, $complete))
+                json_encode($this->createPersonJson($id, $isSnippet, $complete))
             )
         );
     }
@@ -517,18 +522,23 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockSubjectCall(int $number)
+    final protected function mockSubjectCall($numberOrId)
     {
+        if (is_integer($numberOrId)) {
+            $id = "person{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/subjects/subject'.$number,
+                'http://api.elifesciences.org/subjects/'.$id,
                 ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
-                json_encode($this->createSubjectJson($number))
+                json_encode($this->createSubjectJson($id))
             )
         );
     }
@@ -763,22 +773,22 @@ abstract class ApiTestCase extends TestCase
         return $article;
     }
 
-    private function createBlogArticleJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createBlogArticleJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $blogArticle = [
-            'id' => 'blogArticle'.$number,
-            'title' => 'Blog article '.$number.' title',
+            'id' => $id,
+            'title' => 'Blog article '.$id.' title',
             'published' => '2000-01-01T00:00:00+00:00',
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Blog article '.$number.' text',
+                    'text' => 'Blog article '.$id.' text',
                 ],
             ],
         ];
 
         if ($complete) {
-            $blogArticle['impactStatement'] = 'Blog article '.$number.' impact statement';
+            $blogArticle['impactStatement'] = 'Blog article '.$id.' impact statement';
             $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
 
@@ -1106,19 +1116,6 @@ abstract class ApiTestCase extends TestCase
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
                 ],
-                'image' => [
-                    'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141',
-                            '500' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70',
-                            '140' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140',
-                        ],
-                    ],
-                ],
                 'etAl' => true,
             ],
             'curators' => [
@@ -1137,27 +1134,14 @@ abstract class ApiTestCase extends TestCase
                         'preferred' => 'Prabhat Jha',
                         'index' => 'Jha, Prabhat',
                     ],
-                    'image' => [
-                    'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                '250' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=250&height=141',
-                                '500' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=500&height=281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=70&height=70',
-                                '140' => 'https://demo--api-dummy.elifesciences.org/images/people/pjha/jpg?width=140&height=140',
-                            ],
-                        ],
-                    ],
                 ],
             ],
             'content' => [
                 [
                     'type' => 'blog-article',
                     'id' => '359325',
-                    'title' => 'Media coverage => Slime can see',
-                    'impactStatement' => "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
+                    'title' => 'Media coverage: Slime can see',
+                    'impactStatement' => "In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.",
                     'published' => '2016-07-08T08:33:25+00:00',
                     'subjects' => [
                         [
@@ -1183,12 +1167,12 @@ abstract class ApiTestCase extends TestCase
         return $collection;
     }
 
-    final private function createSubjectJson(int $number, bool $isSnippet = false) : array
+    final private function createSubjectJson(string $id, bool $isSnippet = false) : array
     {
         $subject = [
-            'id' => 'subject'.$number,
-            'name' => 'Subject '.$number.' name',
-            'impactStatement' => 'Subject '.$number.' impact statement',
+            'id' => $id,
+            'name' => 'Subject '.$id.' name',
+            'impactStatement' => 'Subject '.$id.' impact statement',
             'image' => [
                 'banner' => [
                     'alt' => '',

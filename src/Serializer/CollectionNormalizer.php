@@ -7,7 +7,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
-//use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
@@ -52,21 +52,26 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                     return $collection['image']['banner'];
                 });
 
-            $data['curators'] = $collection
-                ->then(function(Result $collection) {
-                    return new ArraySequence(array_map(function($curator) use ($format, $context) {
+            $data['curators'] = new PromiseSequence($collection
+                ->then(function(Result $collection) use ($format, $context) {
+                    return array_map(function($curator) use ($format, $context) {
                         return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
-                    }, $collection['curators']));
-                });
+                    }, $collection['curators']);
+                }));
 
-            $data['content'] = $collection
-                ->then(function(Result $collection) {
-                    return new ArraySequence(array_map(function($eachContent) use ($format, $context) {
+            $data['content'] = new PromiseSequence($collection
+                ->then(function(Result $collection) use ($format, $context) {
+                    return (array_map(function($eachContent) use ($format, $context) {
                         if ($eachContent['type'] == 'research-article') {
+                            // VOR is missing, need additional check
                             return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                        } else if ($eachContent['type'] == 'blog-article') {
+                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+                        } else {
+                            throw \NotImplementedException($eachContent['type']);
                         }
-                    }, $data['content']));
-                });
+                    }, $collection['content']));
+                }));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
             $data['curators'] = new ArraySequence(array_map(function($curator) use ($format, $context) {

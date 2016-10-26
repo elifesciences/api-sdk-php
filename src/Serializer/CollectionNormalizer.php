@@ -83,7 +83,6 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
-        $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
         if (count($object->getSubjects()) > 0) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
@@ -97,43 +96,48 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['selectedCurator']['etAl'] = $object->selectedCuratorEtAl();
         }
 
-        $data['curators'] = $object->getCurators()->map(function (Person $person) use ($format, $context) {
-            $context['snippet'] = true;
+        if (empty($context['snippet'])) {
+            $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
 
-            return $this->normalizer->normalize($person, $format, $context);
-        })->toArray();
-
-        $contentNormalization = function ($eachContent) use ($format, $context) {
-            if (!is_object($eachContent)) {
-                throw new LogicException("Content not valid: " . var_export($eachContent, true));
-            }
-            $context['snippet'] = true;
-
-            $eachContentData = $this->normalizer->normalize($eachContent, $format, $context);
-            if (method_exists($eachContent, 'getType')) {
-                $eachContentData['type'] = $eachContent->getType();
-            } else {
-                $contentClasses = [
-                    BlogArticle::class => 'blog-article',
-                    Interview::class => 'interview',
-                ];
-                if (!array_key_exists(get_class($eachContent), $contentClasses)) {
-                    throw new LogicException("Class of content " . get_class($eachContent) . " is not supported in a Collection. Supported classes are: " . var_export($contentClasses, true));
-                }
-                $eachContentData['type'] = $contentClasses[get_class($eachContent)];
-            }
-            return $eachContentData;
-        };
-        $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
-        if (count($object->getRelatedContent()) > 0) {
-            $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
-        }
-        if (count($object->getPodcastEpisodes()) > 0) {
-            $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
+            $data['curators'] = $object->getCurators()->map(function (Person $person) use ($format, $context) {
                 $context['snippet'] = true;
 
-                return $this->normalizer->normalize($podcastEpisode, $format, $context);
+                return $this->normalizer->normalize($person, $format, $context);
             })->toArray();
+
+            $contentNormalization = function ($eachContent) use ($format, $context) {
+                if (!is_object($eachContent)) {
+                    throw new LogicException("Content not valid: " . var_export($eachContent, true));
+                }
+                $context['snippet'] = true;
+
+                $eachContentData = $this->normalizer->normalize($eachContent, $format, $context);
+                if (method_exists($eachContent, 'getType')) {
+                    $eachContentData['type'] = $eachContent->getType();
+                } else {
+                    $contentClasses = [
+                        BlogArticle::class => 'blog-article',
+                        Interview::class => 'interview',
+                    ];
+                    if (!array_key_exists(get_class($eachContent), $contentClasses)) {
+                        throw new LogicException("Class of content " . get_class($eachContent) . " is not supported in a Collection. Supported classes are: " . var_export($contentClasses, true));
+                    }
+                    $eachContentData['type'] = $contentClasses[get_class($eachContent)];
+                }
+                return $eachContentData;
+            };
+
+            $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
+            if (count($object->getRelatedContent()) > 0) {
+                $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
+            }
+            if (count($object->getPodcastEpisodes()) > 0) {
+                $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
+                    $context['snippet'] = true;
+
+                    return $this->normalizer->normalize($podcastEpisode, $format, $context);
+                })->toArray();
+            }
         }
         
         return $data;

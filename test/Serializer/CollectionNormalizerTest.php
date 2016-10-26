@@ -436,6 +436,54 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ]
             ],
+            'minimum snippet' => [
+                Builder::for(Collection::class)
+                    ->withId('1')
+                    ->withTitle('Tropical disease')
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withThumbnail($thumbnail)
+                    ->withSelectedCurator(
+                        $selectedCurator = Builder::for(Person::class)
+                            ->sample('pjha')
+                    )
+                    ->__invoke(),
+                ['snippet' => true],
+                [
+                    'id' => '1',
+                    'title' => 'Tropical disease',
+                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'image' => 
+                    [
+                        'thumbnail' => 
+                        [
+                            'alt' => '',
+                            'sizes' => 
+                            [
+                                '16:9' => 
+                                [
+                                    250 => 'https://placehold.it/250x141',
+                                    500 => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => 
+                                [
+                                    70 => 'https://placehold.it/70x70',
+                                    140 => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'selectedCurator' => 
+                    [
+                        'id' => 'pjha',
+                        'type' => 'senior-editor',
+                        'name' => 
+                        [
+                            'preferred' => 'Prabhat Jha',
+                            'index' => 'Jha, Prabhat',
+                        ],
+                    ],
+                ]
+            ],
         ];
     }
 }

@@ -14,11 +14,10 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Person;
-use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
 //use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -142,7 +141,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withCurators(new ArraySequence([
                         Builder::for(Person::class)
                             ->sample('bcooper'),
-                        $selectedCurator
+                        $selectedCurator,
                     ]))
                     ->withContent(new ArraySequence([
                         Builder::for(ArticleVoR::class)
@@ -158,7 +157,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
                         Builder::for(PodcastEpisode::class)
-                            ->sample('29')
+                            ->sample('29'),
                     ]))
                     ->__invoke(),
                 ['complete' => true],
@@ -350,7 +349,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('pjha')
                     )
                     ->withCurators(new ArraySequence([
-                        $selectedCurator
+                        $selectedCurator,
                     ]))
                     ->withContent(new ArraySequence([
                         Builder::for(ArticlePoA::class)
@@ -362,65 +361,50 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'id' => '1',
                     'title' => 'Tropical disease',
                     'updated' => '2015-09-16T11:19:26+00:00',
-                    'image' => 
-                    [
-                        'banner' => 
-                        [
+                    'image' => [
+                        'banner' => [
                             'alt' => '',
-                            'sizes' => 
-                            [
-                                '2:1' => 
-                                [
+                            'sizes' => [
+                                '2:1' => [
                                     900 => 'https://placehold.it/900x450',
                                     1800 => 'https://placehold.it/1800x900',
                                 ],
                             ],
                         ],
-                        'thumbnail' => 
-                        [
+                        'thumbnail' => [
                             'alt' => '',
-                            'sizes' => 
-                            [
-                                '16:9' => 
-                                [
+                            'sizes' => [
+                                '16:9' => [
                                     250 => 'https://placehold.it/250x141',
                                     500 => 'https://placehold.it/500x281',
                                 ],
-                                '1:1' => 
-                                [
+                                '1:1' => [
                                     70 => 'https://placehold.it/70x70',
                                     140 => 'https://placehold.it/140x140',
                                 ],
                             ],
                         ],
                     ],
-                    'selectedCurator' => 
-                    [
+                    'selectedCurator' => [
                         'id' => 'pjha',
                         'type' => 'senior-editor',
-                        'name' => 
-                        [
+                        'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
                     ],
-                    'curators' => 
-                    [
-                        0 => 
-                        [
+                    'curators' => [
+                        0 => [
                             'id' => 'pjha',
                             'type' => 'senior-editor',
-                            'name' => 
-                            [
+                            'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
                             ],
                         ],
                     ],
-                    'content' => 
-                    [
-                        0 => 
-                        [
+                    'content' => [
+                        0 => [
                             'type' => 'research-article',
                             'status' => 'poa',
                             'id' => '14107',
@@ -434,7 +418,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'elocationId' => 'e14107',
                         ],
                     ],
-                ]
+                ],
             ],
             'complete snippet' => [
                 Builder::for(Collection::class)
@@ -511,37 +495,30 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'id' => '1',
                     'title' => 'Tropical disease',
                     'updated' => '2015-09-16T11:19:26+00:00',
-                    'image' => 
-                    [
-                        'thumbnail' => 
-                        [
+                    'image' => [
+                        'thumbnail' => [
                             'alt' => '',
-                            'sizes' => 
-                            [
-                                '16:9' => 
-                                [
+                            'sizes' => [
+                                '16:9' => [
                                     250 => 'https://placehold.it/250x141',
                                     500 => 'https://placehold.it/500x281',
                                 ],
-                                '1:1' => 
-                                [
+                                '1:1' => [
                                     70 => 'https://placehold.it/70x70',
                                     140 => 'https://placehold.it/140x140',
                                 ],
                             ],
                         ],
                     ],
-                    'selectedCurator' => 
-                    [
+                    'selectedCurator' => [
                         'id' => 'pjha',
                         'type' => 'senior-editor',
-                        'name' => 
-                        [
+                        'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
                     ],
-                ]
+                ],
             ],
         ];
     }

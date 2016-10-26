@@ -8,8 +8,6 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 //use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 //use eLife\ApiSdk\Collection\PromiseSequence;
-use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -107,7 +105,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
             $contentNormalization = function ($eachContent) use ($format, $context) {
                 if (!is_object($eachContent)) {
-                    throw new LogicException("Content not valid: " . var_export($eachContent, true));
+                    throw new LogicException('Content not valid: '.var_export($eachContent, true));
                 }
                 $context['snippet'] = true;
 
@@ -120,10 +118,11 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                         Interview::class => 'interview',
                     ];
                     if (!array_key_exists(get_class($eachContent), $contentClasses)) {
-                        throw new LogicException("Class of content " . get_class($eachContent) . " is not supported in a Collection. Supported classes are: " . var_export($contentClasses, true));
+                        throw new LogicException('Class of content '.get_class($eachContent).' is not supported in a Collection. Supported classes are: '.var_export($contentClasses, true));
                     }
                     $eachContentData['type'] = $contentClasses[get_class($eachContent)];
                 }
+
                 return $eachContentData;
             };
 
@@ -139,7 +138,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 })->toArray();
             }
         }
-        
+
         return $data;
     }
 

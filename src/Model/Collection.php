@@ -127,7 +127,7 @@ final class Collection
 
     public function getCurators() : Sequence
     {
-        return $this->curators;        
+        return $this->curators;
     }
 
     public function getContent() : Sequence

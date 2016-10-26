@@ -82,7 +82,7 @@ final class Builder
             unset($testDataRemainingToUse[$name]);
         }
         if ($testDataRemainingToUse) {
-            throw new LogicException("Some defaults were specified, but not used by the constructor of $this->model: " . var_export($testDataRemainingToUse, true));
+            throw new LogicException("Some defaults were specified, but not used by the constructor of $this->model: ".var_export($testDataRemainingToUse, true));
         }
         $instance = $class->newInstanceArgs($constructorArguments);
 
@@ -145,17 +145,17 @@ final class Builder
                     'sizes' => [],
                 ];
             },
-            Interview::class => function() {
+            Interview::class => function () {
                 return [
                     'id' => '1',
                     'interviewee' => new Interviewee(
-                        new PersonDetails("Ramanath Hegde", "Hegde, Ramanath"),
+                        new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
                         $this->rejectSequence()
                     ),
                     'title' => 'Controlling traffic',
                     'published' => new DateTimeImmutable(),
                     'impactStatement' => null,
-                    'content' => $this->rejectSequence()
+                    'content' => $this->rejectSequence(),
                 ];
             },
             Subject::class => function () {
@@ -196,7 +196,7 @@ final class Builder
                     'chapters' => new PromiseSequence(rejection_for('no chapters')),
                 ];
             },
-            ArticlePoA::class => function() {
+            ArticlePoA::class => function () {
                 return [
                     'id' => '14107',
                     'type' => 'research-article',
@@ -220,7 +220,7 @@ final class Builder
                     'authors' => $this->rejectSequence(),
                 ];
             },
-            ArticleVoR::class => function() {
+            ArticleVoR::class => function () {
                 return [
                     'id' => '09560',
                     'version' => 1,
@@ -235,7 +235,7 @@ final class Builder
                     'elocationId' => 'e09560',
                     'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
                     'subjects' => new ArraySequence([
-                        self::for(Subject::class)->sample('genomics-evolutionary-biology')
+                        self::for(Subject::class)->sample('genomics-evolutionary-biology'),
                     ]),
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'thumbnail' => self::for(Image::class)->sample('thumbnail'),
@@ -288,7 +288,7 @@ final class Builder
                 },
             ],
             ArticlePoA::class => [
-                'growth-factor' => function($builder) {
+                'growth-factor' => function ($builder) {
                     return $builder
                         ->withId('14107')
                         ->withVersion(1)
@@ -317,40 +317,40 @@ final class Builder
                         ->withElocationId('e09560')
                         ->withPdf('https://elifesciences.org/content/4/e09560.pdf')
                         ->withSubjects(new ArraySequence([
-                            self::for(Subject::class)->sample('genomics-evolutionary-biology')
+                            self::for(Subject::class)->sample('genomics-evolutionary-biology'),
                         ]))
                         ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                         ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
                 },
             ],
             BlogArticle::class => [
-                'slime' => function($builder) {
+                'slime' => function ($builder) {
                     return $builder
                         ->withId(1)
                         ->withTitle('Media coverage: Slime can see')
                         ->withImpactStatement('In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.')
                         ->withPublished(new DateTimeImmutable('2016-07-08T08:33:25+00:00'))
                         ->withSubjects(new ArraySequence([
-                            self::for(Subject::class)->sample('biophysics-structural-biology')
+                            self::for(Subject::class)->sample('biophysics-structural-biology'),
                         ]));
                 },
             ],
             Interview::class => [
-                'controlling-traffic' => function($builder) {
+                'controlling-traffic' => function ($builder) {
                     return $builder
                         ->withId('1')
                         ->withTitle('Controlling traffic')
                         ->withInterviewee(new Interviewee(
-                                new PersonDetails("Ramanath Hegde", "Hegde, Ramanath"),
+                                new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
                                 $this->rejectSequence()
                         ))
-                        ->withImpactStatement("Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.")
-                        ->withPublished(new DateTimeImmutable("2016-01-29T16:22:28+00:00"))
+                        ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
+                        ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28+00:00'))
                                                 ;
                 },
             ],
             Person::class => [
-                'bcooper' => function($builder) {
+                'bcooper' => function ($builder) {
                     return $builder
                         ->withId('bcooper')
                         ->withType('reviewing-editor')
@@ -359,7 +359,7 @@ final class Builder
                             'Cooper, Ben'
                         ));
                 },
-                'pjha' => function($builder) {
+                'pjha' => function ($builder) {
                     return $builder
                         ->withId('pjha')
                         ->withType('senior-editor')
@@ -370,7 +370,7 @@ final class Builder
                 },
             ],
             PodcastEpisode::class => [
-                '29' => function($builder) {
+                '29' => function ($builder) {
                     return $builder
                         ->withNumber(29)
                         ->withTitle('April/May 2016')
@@ -380,18 +380,18 @@ final class Builder
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
                                 'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3'
-                            )
+                            ),
                         ]);
                 },
             ],
             Subject::class => [
-                'genomics-evolutionary-biology' => function() {
+                'genomics-evolutionary-biology' => function () {
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
                     return self::for(Subject::class)
                         ->withId('genomics-evolutionary-biology')
                         ->withName('Genomics and Evolutionary Biology');
                 },
-                'biophysics-structural-biology' => function() {
+                'biophysics-structural-biology' => function () {
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
                     return self::for(Subject::class)
                         ->withId('biophysics-structural-biology')

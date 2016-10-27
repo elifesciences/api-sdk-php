@@ -357,8 +357,8 @@ final class Builder
                 },
             ],
             ArticleVoR::class => [
-                'homo-naledi' => function () {
-                    return self::for(ArticleVoR::class)
+                'homo-naledi' => function ($builder) {
+                    return $builder
                         ->withId('09560')
                         ->withVersion(1)
                         ->withDoi('10.7554/eLife.09560')
@@ -475,28 +475,26 @@ final class Builder
                         ->withName('Subject 1 name')
                         ->withPromiseOfImpactStatement('Subject 1 impact statement');
                 },
-                'genomics-evolutionary-biology' => function () {
-                    // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
-                    return self::for(Subject::class)
+                'genomics-evolutionary-biology' => function ($builder) {
+                    return $builder
                         ->withId('genomics-evolutionary-biology')
                         ->withName('Genomics and Evolutionary Biology')
                         ->withPromiseOfImpactStatement('Subject genomics-evolutionary-biology impact statement');
                 },
-                'biophysics-structural-biology' => function () {
-                    // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
-                    return self::for(Subject::class)
+                'biophysics-structural-biology' => function ($builder) {
+                    return $builder
                         ->withId('biophysics-structural-biology')
                         ->withName('Biophysics and Structural Biology')
                         ->withPromiseOfImpactStatement('Subject biophysics-structural-biology impact statement');
                 },
-                'epidemiology-global-health' => function () {
-                    return self::for(Subject::class)
+                'epidemiology-global-health' => function ($builder) {
+                    return $builder
                         ->withId('epidemiology-global-health')
                         ->withName('Epidemiology and Global Health')
                         ->withPromiseOfImpactStatement('Subject epidemiology-global-health impact statement');
                 },
-                'microbiology-infectious-disease' => function () {
-                    return self::for(Subject::class)
+                'microbiology-infectious-disease' => function ($builder) {
+                    return $builder
                         ->withId('microbiology-infectious-disease')
                         ->withName('Microbiology and Infectious Disease')
                         ->withPromiseOfImpactStatement('Subject microbiology-infectious-disease impact statement');

@@ -39,17 +39,20 @@ final class Builder
     private $model;
     private $testData;
 
-    public static function for($model)
+    public static function for($model) : self
     {
         return (new self())->create($model);
     }
 
+    /**
+     * @return object  instance of $model
+     */
     public static function dummy($model)
     {
         return self::for($model)->__invoke();
     }
 
-    public function create($model)
+    public function create($model) : self
     {
         $this->model = $model;
         $this->testData = call_user_func($this->defaultTestDataFor($model));
@@ -59,8 +62,9 @@ final class Builder
 
     /**
      * @method with...($value)  e.g. withImpactStatement('a string')
+     * @method withPromiseOf...($value)  e.g. withPromiseOfBanner(new Image(...))
      */
-    public function __call($name, $args)
+    public function __call($name, $args) : self
     {
         if (preg_match('/^withPromiseOf(.*)$/', $name, $matches)) {
             $field = lcfirst($matches[1]);
@@ -79,6 +83,9 @@ final class Builder
         return $this;
     }
 
+    /**
+     * @return object  instance of $this->model
+     */
     public function __invoke()
     {
         $class = new \ReflectionClass($this->model);
@@ -99,6 +106,9 @@ final class Builder
         return $instance;
     }
 
+    /**
+     * @return object  instance of $this->model
+     */
     public function sample($sampleName, $context = [])
     {
         $samples = $this->samples();
@@ -193,21 +203,6 @@ final class Builder
                     'details' => new PersonDetails('preferred name', 'index name'),
                     'type' => 'senior-editor',
                     'image' => null,
-                    /*
-                     * new Image(
-                        '',
-                        [
-                            '16:9' => [
-                                '250' => 'https://placehold.it/250x141',
-                                '500' => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
-                            ],
-                        ]
-                    ),
-                     */
                     'research' => promise_for(null),
                     'profile' => new ArraySequence(),
                     'competingInterests' => promise_for(null),
@@ -245,9 +240,7 @@ final class Builder
                     'volume' => 5,
                     'elocationId' => 'e14107',
                     'pdf' => null,
-                    'subjects' => new ArraySequence([
-              //          self::for(Subject::class)->sample('genomics-evolutionary-biology')
-                    ]),
+                    'subjects' => new ArraySequence(),
                     'researchOrganisms' => [],
                     'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
                     'issue' => promise_for(1),

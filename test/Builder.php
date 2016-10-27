@@ -146,7 +146,7 @@ final class Builder
                     'impactStatement' => null,
                     'publishedDate' => new DateTimeImmutable(),
                     'banner' => promise_for(self::for(Image::class)->sample('banner')),
-                    'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
+                    'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                     'subjects' => new ArraySequence([]),
                     'selectedCurator' => self::dummy(Person::class),
                     'selectedCuratorEtAl' => false,

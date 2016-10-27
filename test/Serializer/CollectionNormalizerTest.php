@@ -6,11 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
-//use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
-//use eLife\ApiSdk\Model\ArticleSection;
-//use eLife\ApiSdk\Model\Block\Paragraph;
-//use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
@@ -20,7 +16,6 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
-//use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
@@ -101,25 +96,6 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $this->builder = Builder::for(Collection::class);
-        $date = new DateTimeImmutable();
-        $banner = Builder::for(Image::class)
-            ->sample('banner');
-        $thumbnail = Builder::for(Image::class)
-            ->sample('thumbnail');
-        $subject = Builder::for(Subject::class)
-            ->withId('subject1')
-            ->withName('Subject 1 name')
-            ->withPromiseOfImpactStatement('Subject 1 impact statement')
-            ->withPromiseOfBanner($banner)
-            ->withPromiseOfThumbnail($thumbnail);
-        $subjects = new ArraySequence([
-            Builder::for(Subject::class)
-                ->sample('epidemiology-global-health'),
-            Builder::for(Subject::class)
-                ->sample('microbiology-infectious-disease'),
-        ]);
-
         return [
             'complete' => [
                 Builder::for(Collection::class)
@@ -128,9 +104,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withPromiseOfSubTitle('A selection of papers')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
-                    ->withPromiseOfBanner($banner)
-                    ->withThumbnail($thumbnail)
-                    ->withSubjects($subjects)
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->sample('epidemiology-global-health'),
+                        Builder::for(Subject::class)
+                            ->sample('microbiology-infectious-disease'),
+                    ]))
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha')
@@ -354,8 +333,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
-                    ->withPromiseOfBanner($banner)
-                    ->withThumbnail($thumbnail)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false])
@@ -443,9 +420,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withTitle('Tropical disease')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
-                    ->withThumbnail($thumbnail)
-                    ->withSubjects(
-                        $subjects)
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->sample('epidemiology-global-health'),
+                        Builder::for(Subject::class)
+                            ->sample('microbiology-infectious-disease'),
+                    ]))
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha')
@@ -521,8 +501,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
-                    ->withPromiseOfBanner($banner)
-                    ->withThumbnail($thumbnail)
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false])

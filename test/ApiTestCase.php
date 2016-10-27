@@ -299,18 +299,26 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockInterviewCall(int $number, bool $complete = false)
+    /**
+     * @param string|integer $numberOrId
+     */
+    final protected function mockInterviewCall($numberOrId, bool $complete = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "person{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/interviews/interview'.$number,
+                'http://api.elifesciences.org/interviews/'.$id,
                 ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
-                json_encode($this->createInterviewJson($number, false, $complete))
+                json_encode($this->createInterviewJson($id, false, $complete))
             )
         );
     }
@@ -655,11 +663,11 @@ abstract class ApiTestCase extends TestCase
         $article['status'] = 'vor';
 
         if (false === empty($article['abstract'])) {
-            $article['abstract']['doi'] = '10.7554/eLife.'.$number.'abstract';
+            $article['abstract']['doi'] = '10.7554/eLife.'.$id.'abstract';
         }
 
         $article += [
-            'impactStatement' => 'Article '.$number.' impact statement',
+            'impactStatement' => 'Article '.$id.' impact statement',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -684,25 +692,25 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
-            'keywords' => ['Article '.$number.' keyword'],
+            'keywords' => ['Article '.$id.' keyword'],
             'digest' => [
                 'content' => [
                     [
                         'type' => 'paragraph',
-                        'text' => 'Article '.$number.' digest',
+                        'text' => 'Article '.$id.' digest',
                     ],
                 ],
-                'doi' => '10.7554/eLife.'.$number.'digest',
+                'doi' => '10.7554/eLife.'.$id.'digest',
             ],
             'body' => [
                 [
                     'type' => 'section',
-                    'title' => 'Article '.$number.' section title',
-                    'id' => 'article'.$number.'section',
+                    'title' => 'Article '.$id.' section title',
+                    'id' => 'article'.$id.'section',
                     'content' => [
                         [
                             'type' => 'paragraph',
-                            'text' => 'Article '.$number.' text',
+                            'text' => 'Article '.$id.' text',
                         ],
                     ],
                 ],
@@ -728,26 +736,26 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
             'decisionLetter' => [
-                'doi' => '10.7554/eLife.'.$number.'decisionLetter',
+                'doi' => '10.7554/eLife.'.$id.'decisionLetter',
                 'description' => [
                     [
                         'type' => 'paragraph',
-                        'text' => 'Article '.$number.' decision letter description',
+                        'text' => 'Article '.$id.' decision letter description',
                     ],
                 ],
                 'content' => [
                     [
                         'type' => 'paragraph',
-                        'text' => 'Article '.$number.' decision letter text',
+                        'text' => 'Article '.$id.' decision letter text',
                     ],
                 ],
             ],
             'authorResponse' => [
-                'doi' => '10.7554/eLife.'.$number.'authorResponse',
+                'doi' => '10.7554/eLife.'.$id.'authorResponse',
                 'content' => [
                     [
                         'type' => 'paragraph',
-                        'text' => 'Article '.$number.' author response text',
+                        'text' => 'Article '.$id.' author response text',
                     ],
                 ],
             ],
@@ -833,10 +841,10 @@ abstract class ApiTestCase extends TestCase
         return $event;
     }
 
-    private function createInterviewJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createInterviewJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $interview = [
-            'id' => 'interview'.$number,
+            'id' => $id,
             'interviewee' => [
                 'name' => [
                     'preferred' => 'preferred name',
@@ -850,13 +858,13 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
-            'title' => 'Interview '.$number.' title',
-            'impactStatement' => 'Interview '.$number.' impact statement',
+            'title' => 'Interview '.$id.' title',
+            'impactStatement' => 'Interview '.$id.' impact statement',
             'published' => '2000-01-01T00:00:00+00:00',
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Interview '.$number.' text',
+                    'text' => 'Interview '.$id.' text',
                 ],
             ],
         ];
@@ -1156,17 +1164,36 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'relatedContent' => [
+                [
+                    'type' => 'research-article',
+                    'status' => 'poa',
+                    'id' => '14107',
+                    'version' => 1,
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                ]
+            ],
+            'podcastEpisodes' => [
+            ],
             'subjects' => [$this->createSubjectJson(1, true)],
         ];
 
         if (!$complete) {
             unset($collection['impactStatement']);
             unset($collection['subjects']);
+            unset($collection['relatedContent']);
         }
 
         if ($isSnippet) {
             unset($collection['image']['banner']);
             unset($collection['content']);
+            unset($collection['relatedContent']);
         }
 
         return $collection;

@@ -341,6 +341,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
                     $test->mockSubjectCall('genomics-evolutionary-biology', true);
                     $test->mockBlogArticleCall('359325');
+                    $test->mockArticleCall('09560', true, $vor = true);
+                    $test->mockInterviewCall('1', true);
+                    $test->mockArticleCall('14107', true);
+                    $test->mockPodcastEpisodeCall(29, true);
+                    $test->mockSubjectCall('1', true);
+                    $test->mockArticleCall('1', true);
                 }
             ],
             'minimum' => [
@@ -455,6 +461,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),
                     ]))
+                    ->withRelatedContent(new ArraySequence([
+                        Builder::for(ArticlePoa::class)
+                            ->sample('growth-factor'),
+                    ]))
                     ->__invoke(),
                 ['complete' => true, 'snippet' => true],
                 [
@@ -503,6 +513,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('epidemiology-global-health', true);
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
                     $test->mockBlogArticleCall('359325');
+                    $test->mockArticleCall('14107', true);
                 },
             ],
             'minimum snippet' => [
@@ -524,9 +535,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withContent(new ArraySequence([
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),
-                        //null,
-                        //$articlePoA = Builder::for(ArticlePoA::class)
-                        //    ->sample('growth-factor')
+                    ]))
+                    ->withRelatedContent(new ArraySequence([
+                        Builder::for(ArticlePoa::class)
+                            ->sample('growth-factor'),
                     ]))
                     ->__invoke(),
                 ['snippet' => true],
@@ -562,6 +574,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockCollectionCall('1', true);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockBlogArticleCall('359325');
+                    $test->mockArticleCall('14107', true);
                 },
             ],
         ];

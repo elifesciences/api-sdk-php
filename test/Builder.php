@@ -10,6 +10,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
@@ -17,11 +18,16 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
+use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\PodcastEpisode;
+use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use eLife\ApiSdk\Model\Reference\BookReference;
+use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use LogicException;
@@ -164,7 +170,7 @@ final class Builder
                     'id' => '1',
                     'interviewee' => new Interviewee(
                         new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
-                        $this->rejectSequence()
+                        new ArraySequence([])
                     ),
                     'title' => 'Controlling traffic',
                     'published' => new DateTimeImmutable(),
@@ -225,7 +231,7 @@ final class Builder
                     'chapters' => new PromiseSequence(rejection_for('no chapters')),
                 ];
             },
-            ArticlePoA::class => function () {
+            ArticlePoA::class => $articlePoA = function () {
                 return [
                     'id' => '14107',
                     'type' => 'research-article',
@@ -249,39 +255,37 @@ final class Builder
                     'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                 ];
             },
-            ArticleVoR::class => function () {
-                return [
-                    'id' => '09560',
-                    'version' => 1,
-                    'type' => 'research-article',
-                    'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
-                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
-                    'titlePrefix' => null,
-                    'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
-                    'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
-                    'volume' => 4,
-                    'elocationId' => 'e09560',
-                    'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
-                    'subjects' => new ArraySequence([
-                        self::for(Subject::class)->sample('genomics-evolutionary-biology'),
-                    ]),
-                    'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                    'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                    'researchOrganisms' => [],
-                    'abstract' => rejection_for('no abstract'),
-                    'issue' => rejection_for('no issue'),
-                    'copyright' => rejection_for('no copyright'),
-                    'authors' => $this->rejectSequence(),
-                    'banner' => rejection_for('no banner'),
-                    'keywords' => $this->rejectSequence(),
-                    'digest' => rejection_for('no banner'),
-                    'content' => $this->rejectSequence(),
-                    'references' => $this->rejectSequence(),
-                    'decisionLetter' => rejection_for('no decision letter'),
-                    'decisionLetterDescription' => $this->rejectSequence(),
-                    'authorResponse' => rejection_for('no author response'),
-                ];
+            ArticleVoR::class => function () use ($articlePoA) {
+                return array_merge(
+                    $articlePoA(),
+                    [
+                        'id' => '09560',
+                        'version' => 1,
+                        'type' => 'research-article',
+                        'doi' => '10.7554/eLife.09560',
+                        'authorLine' => 'Lee R Berger et al',
+                        'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                        'titlePrefix' => null,
+                        'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'volume' => 4,
+                        'elocationId' => 'e09560',
+                        'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'keywords' => new ArraySequence(['Article 09560 keyword']),
+                        'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
+                        'content' => new ArraySequence([new Paragraph('content')]),
+                        'references' => $references = new ArraySequence([
+                            new BookReference(new ReferenceDate(2000),
+                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
+                            new Place(null, null, ['publisher'])),
+                        ]),
+                        'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
+                        'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
+                        'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                    ]
+                );
             },
         ];
 
@@ -328,8 +332,28 @@ final class Builder
                         ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
                         ->withVolume(5)
                         ->withElocationId('e14107')
-                        // why doesn't this override 'subjects' in the defaults?
                         ->withSubjects(new ArraySequence([]));
+                },
+                '1' => function ($builder) {
+                    return $builder
+                        ->withId('1')
+                        ->withVersion(1)
+                        ->withDoi('10.7554/eLife.1')
+                        ->withAuthorLine('Author et al')
+                        ->withTitle('Article 1 title')
+                        ->withTitlePrefix('Article 1 title prefix')
+                        ->withPublished(new DateTimeImmutable('2000-01-01T00:00:00+00:00'))
+                        ->withStatusDate(new DateTimeImmutable('1999-12-31T00:00:00+00:00'))
+                        ->withVolume(1)
+                        ->withElocationId('e1')
+                        ->withPdf('http://www.example.com/')
+                        ->withSubjects(new ArraySequence([
+                            self::for(Subject::class)->sample('1'),
+                        ]))
+                        ->withResearchOrganisms([
+                            'Article 1 research organism'
+                        ])
+                        ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
                 },
             ],
             ArticleVoR::class => [
@@ -348,8 +372,13 @@ final class Builder
                         ->withSubjects(new ArraySequence([
                             self::for(Subject::class)->sample('genomics-evolutionary-biology'),
                         ]))
+                        ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                         ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
-                        ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
+                        ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                        ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]))
+                        ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
+                        ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
+                        ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')));
                 },
             ],
             BlogArticle::class => [
@@ -373,12 +402,14 @@ final class Builder
                         ->withId('1')
                         ->withTitle('Controlling traffic')
                         ->withInterviewee(new Interviewee(
-                                new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
-                                $this->rejectSequence()
+                            new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
+                            new ArraySequence([
+                                new IntervieweeCvLine('date', 'text')
+                            ])
                         ))
                         ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
                         ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28+00:00'))
-                                                ;
+                        ->withContent(new ArraySequence([new Paragraph('Interview 1 text')]));
                 },
             ],
             Person::class => [
@@ -425,21 +456,32 @@ final class Builder
                         ->withNumber(29)
                         ->withTitle('April/May 2016')
                         ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42+00:00'))
+                        ->withPromiseOfBanner(self::for(Image::class)->sample('banner'))
                         ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                         ->withSources([
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
                                 'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3'
                             ),
-                        ]);
+                        ])
+                        ->withChapters(new ArraySequence([new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                            self::for(ArticlePoA::class)->sample('1')
+                        ]))]));
                 },
             ],
             Subject::class => [
+                '1' => function ($builder) {
+                    return $builder
+                        ->withId('1')
+                        ->withName('Subject 1 name')
+                        ->withPromiseOfImpactStatement('Subject 1 impact statement');
+                },
                 'genomics-evolutionary-biology' => function () {
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?
                     return self::for(Subject::class)
                         ->withId('genomics-evolutionary-biology')
-                        ->withName('Genomics and Evolutionary Biology');
+                        ->withName('Genomics and Evolutionary Biology')
+                        ->withPromiseOfImpactStatement('Subject genomics-evolutionary-biology impact statement');
                 },
                 'biophysics-structural-biology' => function () {
                     // TODO: maybe pass in a ready Builder::for(SomeModel::class)?

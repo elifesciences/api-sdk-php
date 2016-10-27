@@ -76,6 +76,30 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                         }
                     }, $collection['content']));
                 }));
+
+            $data['relatedContent'] = new PromiseSequence($collection
+                ->then(function(Result $collection) use ($format, $context) {
+                    return (array_map(function($eachContent) use ($format, $context) {
+                        if ($eachContent['type'] == 'research-article') {
+                            if ($eachContent['status'] == 'poa') {
+                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                            } else {
+                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                            }
+                        } else if ($eachContent['type'] == 'blog-article') {
+                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+                        } else {
+                            throw new \NotImplementedException($eachContent['type']);
+                        }
+                    }, $collection['relatedContent'] ?? []));
+                }));
+
+            $data['podcastEpisodes'] = new PromiseSequence($collection
+                ->then(function(Result $collection) use ($format, $context) {
+                    return array_map(function($podcastEpisode) use ($format, $context) {
+                        return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
+                    }, $collection['podcastEpisodes'] ?? []);
+                }));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
             $data['curators'] = new ArraySequence(array_map(function($curator) use ($format, $context) {
@@ -96,6 +120,26 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                         }
                         // missing blog-article and interview here, extract common code
             }, $data['content']));
+
+            $data['relatedContent'] = new ArraySequence(array_map(function($eachContent) use ($format, $context) {
+                        if ($eachContent['type'] == 'research-article') {
+                            if ($eachContent['status'] == 'poa') {
+                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                            } else {
+                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                            }
+                        } else if ($eachContent['type'] == 'blog-article') {
+                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+                        } else {
+                            return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
+                            throw new \NotImplementedException($eachContent['type']);
+                        }
+                        // missing blog-article and interview here, extract common code
+            }, $data['relatedContent'] ?? []));
+
+            $data['podcastEpisodes'] = new ArraySequence(array_map(function($podcastEpisode) use ($format, $context) {
+                return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
+            }, $data['podcastEpisodes'] ?? []));
         }
 
         $data['image']['banner'] = $data['image']['banner']
@@ -111,8 +155,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
-            $data['relatedContent'] = new ArraySequence([]);
-            $data['podcastEpisodes'] = new ArraySequence([]);
+//        $data['podcastEpisodes'] = new ArraySequence([]);
 
         return new Collection(
             $data['id'],

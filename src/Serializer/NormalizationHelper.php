@@ -30,6 +30,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
+/**
+ * A better name is welcome.
+ */
 class NormalizationHelper
 {
     /**
@@ -68,21 +71,21 @@ class NormalizationHelper
         });
     }
 
-    public function denormalizePromise($promise, $class, $context) : PromiseInterface
+    public function denormalizePromise(PromiseInterface $promise, string $class, $context) : PromiseInterface
     {
         return $promise->then(function (array $entity) use ($class, $context) {
             return $this->denormalizer->denormalize($entity, $class, $this->format, $context);
         });
     }
 
-    public function denormalizeSequence($sequence, $class, $context) : Sequence
+    public function denormalizeSequence(Sequence $sequence, string $class, $context) : Sequence
     {
         return $sequence->map(function (array $entity) use ($class, $context) {
             return $this->denormalizer->denormalize($entity, $class, $this->format, $context);
         });
     }
 
-    public function denormalizeArray(array $array, $class, $context) : ArraySequence
+    public function denormalizeArray(array $array, string $class, $context) : ArraySequence
     {
         return new ArraySequence(array_map(function (array $subject) use ($class, $context) {
             return $this->denormalizer->denormalize($subject, $class, $this->format, $context);
@@ -98,7 +101,7 @@ class NormalizationHelper
         })->toArray();
     }
 
-    public function normalizeToSnippet($object)
+    public function normalizeToSnippet($object) : array
     {
         return $this->normalizer->normalize($object, $this->format, ['snippet' => true]);
     }

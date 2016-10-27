@@ -35,12 +35,13 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
     use NormalizerAwareTrait;
 
     private $collectionsClient;
-    private $found = [];
+    private $identityMap;
     private $globalCallback;
 
     public function __construct(CollectionsClient $collectionsClient)
     {
         $this->collectionsClient = $collectionsClient;
+        $this->identityMap = new IdentityMap();
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Collection
@@ -120,26 +121,27 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     private function denormalizeSnippet(array $collection) : PromiseInterface
     {
-        //if (isset($this->found[$episode['number']])) {
-        //    return $this->found[$episode['number']];
-        //}
+        if ($this->identityMap->has($collection['id'])) {
+            return $this->identityMap->get($collection['id']);
+        }
 
-        $this->found[$collection['id']] = null;
+        $this->identityMap->reset($collection['id']);
 
         if (empty($this->globalCallback)) {
             $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $collection) {
+                foreach ($this->identityMap as $id => $collection) {
                     if (null === $collection) {
-                        $this->found[$id] = $this->collectionsClient->getCollection(
+                        $p = $this->collectionsClient->getCollection(
                             ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                             $id
                         );
+                        $this->identityMap->put($id, $p);
                     }
                 }
 
                 $this->globalCallback = null;
 
-                return all($this->found)->wait();
+                return $this->identityMap->waitForAll();
             });
         }
 

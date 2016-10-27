@@ -496,6 +496,38 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockCollectionListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
+        $collections = array_map(function (int $id) {
+            return $this->createCollectionJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $collections,
+                ])
+            )
+        );
+    }
+
     final protected function mockCollectionCall(string $id, bool $complete = true)
     {
         $this->storage->save(

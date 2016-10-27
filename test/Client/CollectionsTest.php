@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
@@ -21,6 +22,29 @@ final class CollectionsTest extends ApiTestCase
     protected function setUpCollections()
     {
         $this->collections = (new ApiSdk($this->getHttpClient()))->collections();
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_a_sequence()
+    {
+        $this->assertInstanceOf(Sequence::class, $this->collections);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_traversed()
+    {
+        $this->mockCollectionListCall(1, 1, 200);
+        $this->mockCollectionListCall(1, 100, 200);
+        $this->mockCollectionListCall(2, 100, 200);
+
+        foreach ($this->collections as $i => $collection) {
+            $this->assertInstanceOf(Collection::class, $collection);
+            $this->assertSame((string) $i, $collection->getId());
+        }
     }
 
     /**

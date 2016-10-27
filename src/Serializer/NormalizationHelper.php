@@ -33,7 +33,7 @@ use function GuzzleHttp\Promise\promise_for;
 /**
  * A better name is welcome.
  */
-class NormalizationHelper
+final class NormalizationHelper
 {
     /**
      * @var NormalizerInterface

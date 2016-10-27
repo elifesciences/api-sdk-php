@@ -10,35 +10,37 @@ use function GuzzleHttp\Promise\all;
 /**
  * As in http://www.martinfowler.com/eaaCatalog/identityMap.html
  */
-class IdentityMap implements IteratorAggregate
+final class IdentityMap
 {
     private $contents = [];
 
-    public function reset($id)
+    public function reset($id) : self
     {
         $this->contents[$id] = null;
         return $this; 
     }
 
-    public function has($id)
+    public function has($id) : bool
     {
         return array_key_exists($id, $this->contents); 
     }
 
+    /**
+     * @return PromiseInterface|null
+     */
     public function get($id)
     {
         return $this->contents[$id];
     }
 
-    public function put($id, PromiseInterface $promise)
+    public function fillMissingWith(callable $load) : self
     {
-        $this->contents[$id] = $promise;        
-        return $id;
-    }
-
-    public function getIterator()
-    {
-        return new ArrayIterator($this->contents);
+        foreach ($this->contents as $id => $promise) {
+            if (null === $promise) {
+                $this->contents[$id] =  $load($id);
+            }
+        }
+        return $this;
     }
 
     public function waitForAll()

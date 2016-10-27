@@ -51,9 +51,9 @@ final class Builder
                         'title' => 'Media coverage: Slime can see',
                         'published' => new DateTimeImmutable(),
                         'impactStatement' => null,
-                        'content' => new PromiseSequence(promise_for([
+                        'content' => new ArraySequence([
                             new Paragraph(''),
-                        ])),
+                        ]),
                         'subjects' => new ArraySequence([]),
                     ];
                 },
@@ -72,10 +72,9 @@ final class Builder
                         'curators' => new ArraySequence([
                             self::dummy(Person::class),
                         ]),
-                        'content' => new ArraySequence([
-                        ]),
-                        'relatedContent' => $this->emptyPromiseSequence(),
-                        'podcastEpisodes' => $this->emptyPromiseSequence(),
+                        'content' => new ArraySequence(),
+                        'relatedContent' => new ArraySequence(),
+                        'podcastEpisodes' => new ArraySequence(),
                     ];
                 },
                 Image::class => function () {
@@ -131,7 +130,7 @@ final class Builder
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'subjects' => new ArraySequence([]),
+                        'subjects' => new ArraySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
                     ];
                 },
@@ -179,9 +178,18 @@ final class Builder
                             'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
                             'content' => new ArraySequence([new Paragraph('content')]),
                             'references' => $references = new ArraySequence([
-                                new BookReference(new ReferenceDate(2000),
-                                [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-                                new Place(null, null, ['publisher'])),
+                                new BookReference(
+                                    new ReferenceDate(2000),
+                                    [
+                                        new PersonAuthor(new PersonDetails(
+                                            'preferred name',
+                                            'index name'
+                                        ))
+                                    ],
+                                    false,
+                                    'book title',
+                                    new Place(null, null, ['publisher'])
+                                ),
                             ]),
                             'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                             'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
@@ -521,10 +529,5 @@ final class Builder
     private function rejectSequence()
     {
         return new PromiseSequence(rejection_for('rejecting this sequence'));
-    }
-
-    private function emptyPromiseSequence()
-    {
-        return new PromiseSequence(promise_for([]));
     }
 }

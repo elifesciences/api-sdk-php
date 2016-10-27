@@ -55,97 +55,40 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
             $data['curators'] = new PromiseSequence($collection
                 ->then(function (Result $collection) use ($format, $context) {
-                    return array_map(function ($curator) use ($format, $context) {
-                        return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
-                    }, $collection['curators']);
+                    return $collection['curators'];
                 }));
 
             $data['content'] = new PromiseSequence($collection
-                ->then(function (Result $collection) use ($format, $context) {
-                    return array_map(function ($eachContent) use ($format, $context) {
-                        if ($eachContent['type'] == 'research-article') {
-                            if ($eachContent['status'] == 'poa') {
-                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
-                            } else {
-                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
-                            }
-                        } elseif ($eachContent['type'] == 'blog-article') {
-                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
-                        } else {
-                            throw new \NotImplementedException($eachContent['type']);
-                        }
-                    }, $collection['content']);
-                }));
+                ->then(function (Result $c) {
+                    return $c['content'];
+                })
+            );
 
             $data['relatedContent'] = new PromiseSequence($collection
                 ->then(function (Result $collection) use ($format, $context) {
-                    return array_map(function ($eachContent) use ($format, $context) {
-                        if ($eachContent['type'] == 'research-article') {
-                            if ($eachContent['status'] == 'poa') {
-                                return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
-                            } else {
-                                return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
-                            }
-                        } elseif ($eachContent['type'] == 'blog-article') {
-                            return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
-                        } else {
-                            throw new \NotImplementedException($eachContent['type']);
-                        }
-                    }, $collection['relatedContent'] ?? []);
+                    return $collection['relatedContent'] ?? [];
                 }));
 
             $data['podcastEpisodes'] = new PromiseSequence($collection
                 ->then(function (Result $collection) use ($format, $context) {
-                    return array_map(function ($podcastEpisode) use ($format, $context) {
-                        return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
-                    }, $collection['podcastEpisodes'] ?? []);
+                    return $collection['podcastEpisodes'];
                 }));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
-            $data['curators'] = new ArraySequence(array_map(function ($curator) use ($format, $context) {
-                return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
-            }, $data['curators']));
-            $data['content'] = new ArraySequence(array_map(function ($eachContent) use ($format, $context) {
-                if ($eachContent['type'] == 'research-article') {
-                    if ($eachContent['status'] == 'poa') {
-                        return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
-                    } else {
-                        return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
-                    }
-                } elseif ($eachContent['type'] == 'blog-article') {
-                    return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
-                } else {
-                    return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
-                    throw new \NotImplementedException($eachContent['type']);
-                }
-                        // missing blog-article and interview here, extract common code
-            }, $data['content']));
-
-            $data['relatedContent'] = new ArraySequence(array_map(function ($eachContent) use ($format, $context) {
-                if ($eachContent['type'] == 'research-article') {
-                    if ($eachContent['status'] == 'poa') {
-                        return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
-                    } else {
-                        return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
-                    }
-                } elseif ($eachContent['type'] == 'blog-article') {
-                    return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
-                } else {
-                    return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
-                    throw new \NotImplementedException($eachContent['type']);
-                }
-                        // missing blog-article and interview here, extract common code
-            }, $data['relatedContent'] ?? []));
-
-            $data['podcastEpisodes'] = new ArraySequence(array_map(function ($podcastEpisode) use ($format, $context) {
-                return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
-            }, $data['podcastEpisodes'] ?? []));
+            $data['curators'] = new ArraySequence($data['curators']);
+            $data['content'] = new ArraySequence($data['content']);
+            $data['relatedContent'] = new ArraySequence($data['relatedContent'] ?? []);
+            $data['podcastEpisodes'] = new ArraySequence($data['podcastEpisodes'] ?? []);
         }
 
         $data['image']['banner'] = $data['image']['banner']
             ->then(function (array $banner) use ($format, $context) {
                 return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
             });
+
+        $data['curators'] = $data['curators']->map(function ($curator) use ($format, $context) {
+            return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
+        });
 
         $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
             $context['snippet'] = true;
@@ -155,7 +98,26 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
-//        $data['podcastEpisodes'] = new ArraySequence([]);
+        $data['content'] = $data['content']->map($contentItemDenormalization = function ($eachContent) use ($format, $context) {
+            if ($eachContent['type'] == 'research-article') {
+                if ($eachContent['status'] == 'poa') {
+                    return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                } else {
+                    return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                }
+            } elseif ($eachContent['type'] == 'blog-article') {
+                return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+            } elseif ($eachContent['type'] == 'interview') {
+                return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
+            } else {
+                throw new \LogicException("Cannot denormalize {$eachContent['type']}");
+            }
+        });
+        $data['relatedContent'] = $data['relatedContent']->map($contentItemDenormalization);
+
+        $data['podcastEpisodes'] = $data['podcastEpisodes']->map(function ($podcastEpisode) use ($format, $context) {
+            return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
+        });
 
         return new Collection(
             $data['id'],

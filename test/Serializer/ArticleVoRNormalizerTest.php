@@ -125,7 +125,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
 
-        $this->mockSubjectCall(1);
+        $this->mockSubjectCall('subject1');
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -144,7 +144,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
         $date = new DateTimeImmutable();
         $statusDate = new DateTimeImmutable('-1 day');
@@ -363,25 +363,25 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
                     'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
                     new ArraySequence([$subject]), ['Article 1 research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]),
-                        '10.7554/eLife.1abstract')), promise_for(1),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 abstract text')]),
+                        '10.7554/eLife.article1abstract')), promise_for(1),
                     promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                     'Article 1 impact statement', promise_for($banner), $thumbnail,
-                    new ArraySequence(['Article 1 keyword']),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 digest')]),
-                        '10.7554/eLife.1digest')), new ArraySequence([
-                        new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
+                    new ArraySequence(['Article article1 keyword']),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 digest')]),
+                        '10.7554/eLife.article1digest')), new ArraySequence([
+                        new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
                     ]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000'),
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
                     ]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 decision letter text')]),
-                        '10.7554/eLife.1decisionLetter')),
-                    new ArraySequence([new Paragraph('Article 1 decision letter description')]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 author response text')]),
-                        '10.7554/eLife.1authorResponse'))),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 decision letter text')]),
+                        '10.7554/eLife.article1decisionLetter')),
+                    new ArraySequence([new Paragraph('Article article1 decision letter description')]),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 author response text')]),
+                        '10.7554/eLife.article1authorResponse'))),
                 ['snippet' => true],
                 [
                     'id' => 'article1',
@@ -419,7 +419,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall(1, true, true);
+                    $test->mockArticleCall('article1', true, true);
                 },
             ],
             'minimum snippet' => [
@@ -428,11 +428,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
-                        new Section('Article 1 section title', 'article1section', [new Paragraph('Article 1 text')]),
+                        new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
                     ]), new ArraySequence([
-                        new BookReference(ReferenceDate::fromString('2000'),
-                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-                            new Place(null, null, ['publisher'])),
+                        // minimum article-vor does not have reference, according to api-raml model
+                        //new BookReference(ReferenceDate::fromString('2000'),
+                        //    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
+                        //    new Place(null, null, ['publisher'])),
                     ]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],
                 [
@@ -449,7 +450,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'status' => 'vor',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall(1, false, true);
+                    $test->mockArticleCall('article1', false, true);
                 },
             ],
         ];

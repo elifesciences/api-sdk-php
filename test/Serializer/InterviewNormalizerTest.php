@@ -183,7 +183,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $date,
-                    'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview 1 text')])
+                    'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [
@@ -200,13 +200,13 @@ final class InterviewNormalizerTest extends ApiTestCase
                     'impactStatement' => 'Interview 1 impact statement',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockInterviewCall(1, true);
+                    $test->mockInterviewCall('interview1', true);
                 },
             ],
             'minimum snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new ArraySequence([])),
-                    'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview 1 text')])
+                    'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [
@@ -221,7 +221,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                     'published' => $date->format(DATE_ATOM),
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockInterviewCall(1);
+                    $test->mockInterviewCall('interview1');
                 },
             ],
         ];

@@ -78,7 +78,7 @@ final class InterviewsTest extends ApiTestCase
      */
     public function it_gets_an_interview()
     {
-        $this->mockInterviewCall(7);
+        $this->mockInterviewCall('interview7');
 
         $interview = $this->interviews->get('interview7')->wait();
 
@@ -86,7 +86,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame('interview7', $interview->getId());
 
         $this->assertInstanceOf(Paragraph::class, $interview->getContent()->toArray()[0]);
-        $this->assertSame('Interview 7 text', $interview->getContent()->toArray()[0]->getText());
+        $this->assertSame('Interview interview7 text', $interview->getContent()->toArray()[0]->getText());
     }
 
     /**
@@ -104,10 +104,10 @@ final class InterviewsTest extends ApiTestCase
         $this->assertInstanceOf(Interview::class, $interview);
         $this->assertSame('interview1', $interview->getId());
 
-        $this->mockInterviewCall(1);
+        $this->mockInterviewCall('interview1');
 
         $this->assertInstanceOf(Paragraph::class, $interview->getContent()->toArray()[0]);
-        $this->assertSame('Interview 1 text', $interview->getContent()->toArray()[0]->getText());
+        $this->assertSame('Interview interview1 text', $interview->getContent()->toArray()[0]->getText());
     }
 
     /**

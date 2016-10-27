@@ -116,10 +116,10 @@ abstract class ApiTestCase extends TestCase
     ) {
         $articles = array_map(function (int $id) use ($vor) {
             if ($vor) {
-                return $this->createArticleVoRJson($id, true);
+                return $this->createArticleVoRJson('article'.$id, true);
             }
 
-            return $this->createArticlePoAJson($id, true);
+            return $this->createArticlePoAJson('article'.$id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -146,7 +146,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockArticleCall($numberOrId, bool $complete = false, bool $vor = false)
     {
         if (is_integer($numberOrId)) {
-            $id = "blogArticle{$numberOrId}";
+            $id = "article{$numberOrId}";
         } else {
             $id = (string) $numberOrId;
         }
@@ -187,7 +187,7 @@ abstract class ApiTestCase extends TestCase
         array $subjects = []
     ) {
         $blogArticles = array_map(function (int $id) {
-            return $this->createBlogArticleJson($id, true);
+            return $this->createBlogArticleJson('blogArticle'.$id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -279,7 +279,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockInterviewListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $interviews = array_map(function (int $id) {
-            return $this->createInterviewJson($id, true);
+            return $this->createInterviewJson('interview'.$id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
@@ -305,7 +305,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockInterviewCall($numberOrId, bool $complete = false)
     {
         if (is_integer($numberOrId)) {
-            $id = "person{$numberOrId}";
+            $id = "interview{$numberOrId}";
         } else {
             $id = (string) $numberOrId;
         }
@@ -515,7 +515,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockSubjectListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $subjects = array_map(function (int $id) {
-            return $this->createSubjectJson($id);
+            return $this->createSubjectJson('subject'.$id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
@@ -538,7 +538,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockSubjectCall($numberOrId)
     {
         if (is_integer($numberOrId)) {
-            $id = "person{$numberOrId}";
+            $id = "subject{$numberOrId}";
         } else {
             $id = (string) $numberOrId;
         }
@@ -610,7 +610,7 @@ abstract class ApiTestCase extends TestCase
             'issue' => 1,
             'elocationId' => 'e'.$id,
             'pdf' => 'http://www.example.com/',
-            'subjects' => [$this->createSubjectJson(1, true)],
+            'subjects' => [$this->createSubjectJson('1', true)],
             'researchOrganisms' => ['Article '.$id.' research organism'],
             'copyright' => [
                 'license' => 'CC-BY-4.0',
@@ -1063,7 +1063,7 @@ abstract class ApiTestCase extends TestCase
                     'title' => 'Chapter title',
                     'time' => 0,
                     'impactStatement' => 'Chapter impact statement',
-                    'content' => [$this->createArticlePoAJson(1, true, $complete)],
+                    'content' => [$this->createArticlePoAJson('1', true, $complete)],
                 ],
             ],
         ];

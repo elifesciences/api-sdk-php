@@ -117,7 +117,7 @@ final class PersonNormalizerTest extends ApiTestCase
 
         $actual = $this->normalizer->denormalize($json, Person::class, null, $context);
 
-        $this->mockSubjectCall(1);
+        $this->mockSubjectCall('subject1');
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -136,7 +136,7 @@ final class PersonNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
         return [
@@ -201,8 +201,8 @@ final class PersonNormalizerTest extends ApiTestCase
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
                     'senior-editor', $thumbnail,
                     promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
-                    new ArraySequence([new Paragraph('Person 1 profile text')]),
-                    promise_for('Person 1 competing interests')),
+                    new ArraySequence([new Paragraph('person1 profile text')]),
+                    promise_for('person1 competing interests')),
                 ['snippet' => true],
                 [
                     'name' => [

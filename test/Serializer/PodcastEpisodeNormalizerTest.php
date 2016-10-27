@@ -124,8 +124,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         $actual = $this->normalizer->denormalize($json, PodcastEpisode::class, null, $context);
 
-        $this->mockSubjectCall(1);
-        $this->mockArticleCall(1, !empty($context['complete']));
+        $this->mockSubjectCall('1');
+        $this->mockArticleCall('1', !empty($context['complete']));
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -145,7 +145,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+        $subject = new Subject('1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
         return [
@@ -156,7 +156,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter 1 title', 0, 'Chapter impact statement',
                             new ArraySequence([
-                                new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
+                                new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
                                     'Article 1 title prefix', 'Article 1 title',
                                     new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
                                     new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1',
@@ -210,7 +210,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'time' => 0,
                             'content' => [
                                 [
-                                    'id' => 'article1',
+                                    'id' => '1',
                                     'version' => 1,
                                     'type' => 'research-article',
                                     'doi' => '10.7554/eLife.1',
@@ -223,7 +223,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'titlePrefix' => 'Article 1 title prefix',
                                     'pdf' => 'http://www.example.com/',
                                     'subjects' => [
-                                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                                        ['id' => '1', 'name' => 'Subject 1 name'],
                                     ],
                                     'researchOrganisms' => ['Article 1 research organism'],
                                     'status' => 'poa',
@@ -240,7 +240,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
-                            new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
+                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
                                 'Article 1 title', new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
                                 new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
                                 new ArraySequence([]), [], promise_for(null), promise_for(null),
@@ -290,7 +290,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'time' => 0,
                             'content' => [
                                 [
-                                    'id' => 'article1',
+                                    'id' => '1',
                                     'version' => 1,
                                     'type' => 'research-article',
                                     'doi' => '10.7554/eLife.1',
@@ -313,7 +313,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
-                            new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
+                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
                                 'Article 1 title prefix', 'Article 1 title',
                                 new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
                                 new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', 'http://www.example.com/',
@@ -360,7 +360,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
-                            new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
+                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
                                 'Article 1 title', new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
                                 new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
                                 new ArraySequence([]), [], promise_for(null), promise_for(null),

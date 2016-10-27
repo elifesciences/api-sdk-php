@@ -80,7 +80,7 @@ final class ArticlesTest extends ApiTestCase
      */
     public function it_gets_an_article()
     {
-        $this->mockArticleCall(7, true, true);
+        $this->mockArticleCall('article7', true, true);
 
         $article = $this->articles->get('article7')->wait();
 
@@ -88,9 +88,9 @@ final class ArticlesTest extends ApiTestCase
         $this->assertSame('article7', $article->getId());
 
         $this->assertInstanceOf(Section::class, $article->getContent()->toArray()[0]);
-        $this->assertSame('Article 7 section title', $article->getContent()->toArray()[0]->getTitle());
+        $this->assertSame('Article article7 section title', $article->getContent()->toArray()[0]->getTitle());
         $this->assertInstanceOf(Paragraph::class, $article->getContent()->toArray()[0]->getContent()[0]);
-        $this->assertSame('Article 7 text', $article->getContent()->toArray()[0]->getContent()[0]->getText());
+        $this->assertSame('Article article7 text', $article->getContent()->toArray()[0]->getContent()[0]->getText());
 
         $this->mockSubjectCall(1);
 
@@ -113,10 +113,10 @@ final class ArticlesTest extends ApiTestCase
         $this->assertInstanceOf(ArticleVersion::class, $article);
         $this->assertSame('article1', $article->getId());
 
-        $this->mockArticleCall(1, false, true);
+        $this->mockArticleCall('article1', false, true);
 
         $this->assertInstanceOf(Section::class, $article->getContent()->toArray()[0]);
-        $this->assertSame('Article 1 section title', $article->getContent()->toArray()[0]->getTitle());
+        $this->assertSame('Article article1 section title', $article->getContent()->toArray()[0]->getTitle());
     }
 
     /**

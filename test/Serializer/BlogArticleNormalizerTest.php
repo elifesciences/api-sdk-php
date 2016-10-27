@@ -136,7 +136,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
         return [
@@ -178,7 +178,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new BlogArticle('blogArticle1', 'Blog article 1 title', $date, 'Blog article 1 impact statement',
-                    new ArraySequence([new Paragraph('Blog article 1 text')]), new ArraySequence([$subject])),
+                    new ArraySequence([new Paragraph('Blog article blogArticle1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true],
                 [
                     'id' => 'blogArticle1',
@@ -195,7 +195,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new BlogArticle('blogArticle1', 'Blog article 1 title', $date, null,
-                    new ArraySequence([new Paragraph('Blog article 1 text')]), new ArraySequence([])),
+                    new ArraySequence([new Paragraph('Blog article blogArticle1 text')]), new ArraySequence([])),
                 ['snippet' => true],
                 [
                     'id' => 'blogArticle1',

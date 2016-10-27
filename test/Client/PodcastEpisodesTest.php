@@ -92,7 +92,7 @@ final class PodcastEpisodesTest extends ApiTestCase
         $this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()->toArray()[0]);
         $this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()->toArray()[0]->getName());
 
-        $this->mockSubjectCall(1);
+        $this->mockSubjectCall('1');
 
         $this->assertSame('Subject 1 impact statement',
             $podcastEpisode->getSubjects()->toArray()[0]->getImpactStatement());

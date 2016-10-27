@@ -87,14 +87,14 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame('person7', $person->getId());
 
         $this->assertInstanceOf(Paragraph::class, $person->getProfile()->toArray()[0]);
-        $this->assertSame('Person 7 profile text', $person->getProfile()->toArray()[0]->getText());
+        $this->assertSame('person7 profile text', $person->getProfile()->toArray()[0]->getText());
 
         $this->assertInstanceOf(Subject::class, $person->getResearch()->getExpertises()->toArray()[0]);
         $this->assertSame('Subject 1 name', $person->getResearch()->getExpertises()->toArray()[0]->getName());
 
         $this->mockSubjectCall(1);
 
-        $this->assertSame('Subject 1 impact statement',
+        $this->assertSame('Subject subject1 impact statement',
             $person->getResearch()->getExpertises()->toArray()[0]->getImpactStatement());
     }
 
@@ -116,7 +116,7 @@ final class PeopleTest extends ApiTestCase
         $this->mockPersonCall(1, true);
 
         $this->assertInstanceOf(Paragraph::class, $person->getProfile()->toArray()[0]);
-        $this->assertSame('Person 1 profile text', $person->getProfile()->toArray()[0]->getText());
+        $this->assertSame('person1 profile text', $person->getProfile()->toArray()[0]->getText());
     }
 
     /**

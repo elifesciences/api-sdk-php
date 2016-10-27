@@ -76,7 +76,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     public function it_normalize_subjects(Subject $subject, array $context, array $expected)
     {
         if (!empty($context['snippet'])) {
-            $this->mockSubjectCall(1);
+            $this->mockSubjectCall('subject1');
         }
 
         $this->assertSame($expected, $this->normalizer->normalize($subject, null, $context));
@@ -116,7 +116,7 @@ final class SubjectNormalizerTest extends ApiTestCase
         $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
 
         if (!empty($context['snippet'])) {
-            $this->mockSubjectCall(1);
+            $this->mockSubjectCall('subject1');
         }
 
         $this->assertObjectsAreEqual($expected, $actual);
@@ -139,7 +139,7 @@ final class SubjectNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
                     promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
@@ -169,7 +169,7 @@ final class SubjectNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'impactStatement' => 'Subject 1 impact statement',
+                    'impactStatement' => 'Subject subject1 impact statement',
                 ],
             ],
             'minimum' => [
@@ -206,7 +206,7 @@ final class SubjectNormalizerTest extends ApiTestCase
                 ],
             ],
             'snippet' => [
-                new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
                     promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
                 [

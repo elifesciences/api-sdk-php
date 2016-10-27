@@ -87,12 +87,12 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame('blogArticle7', $blogArticle->getId());
 
         $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
-        $this->assertSame('Blog article 7 text', $blogArticle->getContent()->toArray()[0]->getText());
+        $this->assertSame('Blog article blogArticle7 text', $blogArticle->getContent()->toArray()[0]->getText());
 
         $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()->toArray()[0]);
         $this->assertSame('Subject 1 name', $blogArticle->getSubjects()->toArray()[0]->getName());
 
-        $this->mockSubjectCall(1);
+        $this->mockSubjectCall('1');
 
         $this->assertSame('Subject 1 impact statement',
             $blogArticle->getSubjects()->toArray()[0]->getImpactStatement());
@@ -116,7 +116,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->mockBlogArticleCall(1);
 
         $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
-        $this->assertSame('Blog article 1 text', $blogArticle->getContent()->toArray()[0]->getText());
+        $this->assertSame('Blog article blogArticle1 text', $blogArticle->getContent()->toArray()[0]->getText());
     }
 
     /**

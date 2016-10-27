@@ -118,7 +118,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
         $actual = $this->normalizer->denormalize($json, ArticlePoA::class, null, $context);
 
-        $this->mockSubjectCall(1);
+        $this->mockSubjectCall('subject1');
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -139,7 +139,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         ]);
         $date = new DateTimeImmutable();
         $statusDate = new DateTimeImmutable('-1 day');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
+        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
         return [
@@ -230,7 +230,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
                     'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
                     new ArraySequence([$subject]), ['Article 1 research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
+                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 abstract text')]))),
                     promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                 ['snippet' => true],
@@ -254,7 +254,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall(1, true);
+                    $test->mockArticleCall('article1', true);
                 },
             ],
             'minimum snippet' => [
@@ -277,7 +277,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall(1);
+                    $test->mockArticleCall('article1');
                 },
             ],
         ];

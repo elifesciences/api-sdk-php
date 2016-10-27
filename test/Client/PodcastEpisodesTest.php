@@ -141,9 +141,9 @@ final class PodcastEpisodesTest extends ApiTestCase
 
         $this->podcastEpisodes->count();
 
-        $this->mockPodcastEpisodeListCall(1, 1, 10, true, ['subject']);
+        $this->mockPodcastEpisodeListCall(1, 1, 4, true, ['subject']);
 
-        $this->assertSame(10, $this->podcastEpisodes->forSubject('subject')->count());
+        $this->assertSame(4, $this->podcastEpisodes->forSubject('subject')->count());
     }
 
     /**

@@ -36,6 +36,11 @@ final class Collections implements Iterator, Sequence
         $this->denormalizer = $denormalizer;
     }
 
+    public function __clone()
+    {
+        $this->resetIterator();
+    }
+
     public function get(string $id) : PromiseInterface
     {
         if (isset($this->collections[$id])) {
@@ -51,6 +56,20 @@ final class Collections implements Iterator, Sequence
                 return $this->denormalizer->denormalize($result->toArray(), Collection::class);
             });
     }
+
+    public function forSubject(string ...$subjectId) : self
+    {
+        $clone = clone $this;
+
+        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
+
+        if ($clone->subjectsQuery !== $this->subjectsQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
 
     public function slice(int $offset, int $length = null) : Sequence
     {

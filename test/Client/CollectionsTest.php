@@ -50,6 +50,34 @@ final class CollectionsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_counted()
+    {
+        $this->mockCollectionListCall(1, 1, 10);
+
+        $this->assertSame(10, $this->collections->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_casts_to_an_array()
+    {
+        $this->mockCollectionListCall(1, 1, 10);
+        $this->mockCollectionListCall(1, 100, 10);
+
+        $array = $this->collections->toArray();
+
+        $this->assertCount(10, $array);
+
+        foreach ($array as $i => $collection) {
+            $this->assertInstanceOf(Collection::class, $collection);
+            $this->assertSame((string) ($i + 1), $collection->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_collection()
     {
         $this->mockCollectionCall('tropical-disease', true);
@@ -70,5 +98,230 @@ final class CollectionsTest extends ApiTestCase
 
         $this->assertSame('Subject 1 impact statement',
             $collection->getSubjects()->toArray()[0]->getImpactStatement());
+    }
+
+    /**
+     * @test
+     */
+    public function it_reuses_already_known_collections()
+    {
+        $this->mockCollectionListCall(1, 1, 1);
+        $this->mockCollectionListCall(1, 100, 1);
+
+        $this->collections->toArray();
+
+        $collection = $this->collections->get(1)->wait();
+
+        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertSame('1', $collection->getId());
+
+        $this->mockCollectionCall(1);
+
+        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()->toArray()[0]);
+        $this->assertSame('Media coverage: Slime can see', $collection->getContent()->toArray()[0]->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_subject()
+    {
+        $this->mockCollectionListCall(1, 1, 5, true, ['subject']);
+        $this->mockCollectionListCall(1, 100, 5, true, ['subject']);
+
+        foreach ($this->collections->forSubject('subject') as $i => $collection) {
+            $this->assertSame((string) $i, $collection->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering_by_subject()
+    {
+        $this->mockCollectionListCall(1, 1, 10);
+
+        $this->collections->count();
+
+        $this->mockCollectionListCall(1, 1, 4, true, ['subject']);
+
+        $this->assertSame(4, $this->collections->forSubject('subject')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_filtering_by_subject()
+    {
+        $this->mockCollectionListCall(1, 1, 200);
+        $this->mockCollectionListCall(1, 100, 200);
+        $this->mockCollectionListCall(2, 100, 200);
+
+        $this->collections->toArray();
+
+        $this->mockCollectionListCall(1, 1, 200, true, ['subject']);
+        $this->mockCollectionListCall(1, 100, 200, true, ['subject']);
+        $this->mockCollectionListCall(2, 100, 200, true, ['subject']);
+
+        $this->collections->forSubject('subject')->toArray();
+    }
+
+    /**
+     * @test
+     * @dataProvider sliceProvider
+     */
+    public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
+    {
+        foreach ($calls as $call) {
+            $this->mockCollectionListCall($call['page'], $call['per-page'], 5);
+        }
+
+        foreach ($this->collections->slice($offset, $length) as $i => $collection) {
+            $this->assertInstanceOf(Collection::class, $collection);
+            $this->assertSame($expected[$i], $collection->getId());
+        }
+    }
+
+    public function sliceProvider() : array
+    {
+        return [
+            'offset 1, length 1' => [
+                1,
+                1,
+                ['2'],
+                [
+                    ['page' => 2, 'per-page' => 1],
+                ],
+            ],
+            'offset -2, no length' => [
+                -2,
+                null,
+                ['4', '5'],
+                [
+                    ['page' => 1, 'per-page' => 1],
+                    ['page' => 1, 'per-page' => 100],
+                ],
+            ],
+            'offset 6, no length' => [
+                6,
+                null,
+                [],
+                [
+                    ['page' => 1, 'per-page' => 1],
+                    ['page' => 1, 'per-page' => 100],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider sliceProvider
+     */
+    public function it_can_be_mapped()
+    {
+        $this->mockCollectionListCall(1, 1, 3);
+        $this->mockCollectionListCall(1, 100, 3);
+
+        $map = function (Collection $collection) {
+            return $collection->getId();
+        };
+
+        $this->assertSame(
+            ['1', '2', '3'],
+            $this->collections->map($map)->toArray()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $filter = function (Collection $podcastEpisode) {
+            return $podcastEpisode->getId() > 3;
+        };
+
+        foreach ($this->collections->filter($filter) as $i => $podcastEpisode) {
+            $this->assertSame((string) ($i + 4), $podcastEpisode->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_reduced()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $reduce = function (int $carry = null, Collection $podcastEpisode) {
+            return $carry + $podcastEpisode->getId();
+        };
+
+        $this->assertSame(115, $this->collections->reduce($reduce, 100)->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_sorted()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $sort = function (Collection $a, Collection $b) {
+            return $b->getId() <=> $a->getId();
+        };
+
+        foreach ($this->collections->sort($sort) as $i => $podcastEpisode) {
+            $this->assertSame((string) (5 - $i), $podcastEpisode->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_reversed()
+    {
+        $this->mockCollectionListCall(1, 1, 5, false);
+        $this->mockCollectionListCall(1, 100, 5, false);
+
+        foreach ($this->collections->reverse() as $i => $podcastEpisode) {
+            $this->assertSame((string) $i, $podcastEpisode->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_recount_when_reversed()
+    {
+        $this->mockCollectionListCall(1, 1, 10);
+
+        $this->collections->count();
+
+        $this->assertSame(10, $this->collections->reverse()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_reversed()
+    {
+        $this->mockCollectionListCall(1, 1, 200);
+        $this->mockCollectionListCall(1, 100, 200);
+        $this->mockCollectionListCall(2, 100, 200);
+
+        $this->collections->toArray();
+
+        $this->mockCollectionListCall(1, 1, 200, false);
+        $this->mockCollectionListCall(1, 100, 200, false);
+        $this->mockCollectionListCall(2, 100, 200, false);
+
+        $this->collections->reverse()->toArray();
     }
 }

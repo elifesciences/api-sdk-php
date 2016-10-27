@@ -1146,14 +1146,6 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
-            /*
-            'sources' => [
-                [
-                    'mediaType' => 'audio/mpeg',
-                    'uri' => 'https://www.example.com/episode.mp3',
-                ],
-            ],
-             */
             'selectedCurator' => [
                 'id' => 'pjha',
                 'type' => 'senior-editor',

@@ -29,17 +29,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
-function selectField($resultPromise, $fieldName, $default = null)
-{
-    return $resultPromise->then(function (Result $entity) use ($fieldName, $default) {
-        if ($default !== null) {
-            return $entity[$fieldName] ?? $default;
-        } else {
-            return $entity[$fieldName];
-        }
-    });
-}
-
 final class CollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
@@ -56,6 +45,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function denormalize($data, $class, $format = null, array $context = []) : Collection
     {
+        $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
+
         if (!empty($context['snippet'])) {
             $collection = $this->denormalizeSnippet($data);
 
@@ -64,10 +55,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                     return $collection['image']['banner'];
                 });
 
-            $data['curators'] = new PromiseSequence(selectField($collection, 'curators'));
-            $data['content'] = new PromiseSequence(selectField($collection, 'content'));
-            $data['relatedContent'] = new PromiseSequence(selectField($collection, 'relatedContent', []));
-            $data['podcastEpisodes'] = new PromiseSequence(selectField($collection, 'podcastEpisodes'));
+            $data['curators'] = new PromiseSequence($normalizationHelper->selectField($collection, 'curators'));
+            $data['content'] = new PromiseSequence($normalizationHelper->selectField($collection, 'content'));
+            $data['relatedContent'] = new PromiseSequence($normalizationHelper->selectField($collection, 'relatedContent', []));
+            $data['podcastEpisodes'] = new PromiseSequence($normalizationHelper->selectField($collection, 'podcastEpisodes'));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
             $data['curators'] = new ArraySequence($data['curators']);
@@ -76,46 +67,38 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['podcastEpisodes'] = new ArraySequence($data['podcastEpisodes'] ?? []);
         }
 
-        $denormalizePromise = function ($promise, $class, $format, $context) {
-            return $promise->then(function (array $entity) use ($class, $format, $context) {
-                return $this->denormalizer->denormalize($entity, $class, $format, $context);
-            });
-        };
-        $data['image']['banner'] = $denormalizePromise($data['image']['banner'], Image::class, $format, $context);
+        $data['image']['banner'] = $normalizationHelper->denormalizePromise($data['image']['banner'], Image::class, $context);
 
-        $denormalizeSequence = function ($sequence, $class, $format, $context) {
-            return $sequence->map(function (array $entity) use ($class, $format, $context) {
-                return $this->denormalizer->denormalize($entity, $class, $format, $context);
-            });
-        };
-        $data['curators'] = $denormalizeSequence($data['curators'], Person::class, $format, $context + ['snippet' => true]);
+        $data['curators'] = $normalizationHelper->denormalizeSequence($data['curators'], Person::class, $context + ['snippet' => true]);
 
-        $denormalizeArray = function ($array, $class, $format, $context) {
-            return new ArraySequence(array_map(function (array $subject) use ($class, $format, $context) {
-                return $this->denormalizer->denormalize($subject, $class, $format, $context);
-            }, $array));
-        };
-        $data['subjects'] = $denormalizeArray($data['subjects'] ?? [], Subject::class, $format, $context + ['snippet' => true]);
+        $data['subjects'] = $normalizationHelper->denormalizeArray($data['subjects'] ?? [], Subject::class, $context + ['snippet' => true]);
         $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
-        $data['content'] = $data['content']->map($contentItemDenormalization = function ($eachContent) use ($format, $context) {
+        $contentItemDenormalization = function ($eachContent) use ($format, $context) {
             if ($eachContent['type'] == 'research-article') {
                 if ($eachContent['status'] == 'poa') {
-                    return $this->denormalizer->denormalize($eachContent, ArticlePoA::class, $format, $context + ['snippet' => true]);
+                    $class = ArticlePoA::class;
                 } else {
-                    return $this->denormalizer->denormalize($eachContent, ArticleVoR::class, $format, $context + ['snippet' => true]);
+                    $class = ArticleVoR::class;
                 }
             } elseif ($eachContent['type'] == 'blog-article') {
-                return $this->denormalizer->denormalize($eachContent, BlogArticle::class, $format, $context + ['snippet' => true]);
+                $class = BlogArticle::class;
             } elseif ($eachContent['type'] == 'interview') {
-                return $this->denormalizer->denormalize($eachContent, Interview::class, $format, $context + ['snippet' => true]);
+                $class = Interview::class;
             } else {
                 throw new \LogicException("Cannot denormalize {$eachContent['type']}");
             }
-        });
+            return $this->denormalizer->denormalize(
+                $eachContent,
+                $class,
+                $format,
+                $context + ['snippet' => true]
+            );
+        };
+        $data['content'] = $data['content']->map($contentItemDenormalization);
         $data['relatedContent'] = $data['relatedContent']->map($contentItemDenormalization);
-        $data['podcastEpisodes'] = $denormalizeSequence($data['podcastEpisodes'], PodcastEpisode::class, $format, $context + ['snippet' => true]);
+        $data['podcastEpisodes'] = $normalizationHelper->denormalizeSequence($data['podcastEpisodes'], PodcastEpisode::class, $context + ['snippet' => true]);
 
         return new Collection(
             $data['id'],
@@ -168,6 +151,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function normalize($object, $format = null, array $context = []) : array
     {
+        $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
+
         $data = [];
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
@@ -181,14 +166,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         if (count($object->getSubjects()) > 0) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
-                $context['snippet'] = true;
-
-                return $this->normalizer->normalize($subject, $format, $context);
-            })->toArray();
+            $data['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($object->getSubjects(), $context);
         }
 
-        $data['selectedCurator'] = $this->normalizer->normalize($object->getSelectedCurator(), $format, ['snippet' => true]);
+        $data['selectedCurator'] = $normalizationHelper->normalizeToSnippet($object->getSelectedCurator());
         if ($object->selectedCuratorEtAl()) {
             $data['selectedCurator']['etAl'] = $object->selectedCuratorEtAl();
         }
@@ -196,31 +177,20 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         if (empty($context['snippet'])) {
             $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
 
-            $data['curators'] = $object->getCurators()->map(function (Person $person) use ($format, $context) {
-                $context['snippet'] = true;
+            $data['curators'] = $normalizationHelper->normalizeSequenceToSnippets($object->getCurators(), $context);
 
-                return $this->normalizer->normalize($person, $format, $context);
-            })->toArray();
-
-            $contentNormalization = function ($eachContent) use ($format, $context) {
-                if (!is_object($eachContent)) {
-                    throw new LogicException('Content not valid: '.var_export($eachContent, true));
+            $contentNormalization = function ($eachContent) use ($normalizationHelper) {
+                $eachContentData = $normalizationHelper->normalizeToSnippet($eachContent);
+                $contentClasses = [
+                    ArticlePoA::class => 'research-article',
+                    ArticleVoR::class => 'research-article',
+                    BlogArticle::class => 'blog-article',
+                    Interview::class => 'interview',
+                ];
+                if (!array_key_exists(get_class($eachContent), $contentClasses)) {
+                    throw new LogicException('Class of content '.get_class($eachContent).' is not supported in a Collection. Supported classes are: '.var_export($contentClasses, true));
                 }
-                $context['snippet'] = true;
-
-                $eachContentData = $this->normalizer->normalize($eachContent, $format, $context);
-                if (method_exists($eachContent, 'getType')) {
-                    $eachContentData['type'] = $eachContent->getType();
-                } else {
-                    $contentClasses = [
-                        BlogArticle::class => 'blog-article',
-                        Interview::class => 'interview',
-                    ];
-                    if (!array_key_exists(get_class($eachContent), $contentClasses)) {
-                        throw new LogicException('Class of content '.get_class($eachContent).' is not supported in a Collection. Supported classes are: '.var_export($contentClasses, true));
-                    }
-                    $eachContentData['type'] = $contentClasses[get_class($eachContent)];
-                }
+                $eachContentData['type'] = $contentClasses[get_class($eachContent)];
 
                 return $eachContentData;
             };
@@ -230,11 +200,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
             }
             if (count($object->getPodcastEpisodes()) > 0) {
-                $data['podcastEpisodes'] = $object->getPodcastEpisodes()->map(function (PodcastEpisode $podcastEpisode) use ($format, $context) {
-                    $context['snippet'] = true;
 
-                    return $this->normalizer->normalize($podcastEpisode, $format, $context);
-                })->toArray();
+                $data['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($object->getPodcastEpisodes(), $context);
             }
         }
 

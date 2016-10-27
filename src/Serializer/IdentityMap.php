@@ -2,13 +2,11 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use ArrayIterator;
-use IteratorAggregate;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\all;
 
 /**
- * As in http://www.martinfowler.com/eaaCatalog/identityMap.html
+ * As in http://www.martinfowler.com/eaaCatalog/identityMap.html.
  */
 final class IdentityMap
 {
@@ -17,12 +15,13 @@ final class IdentityMap
     public function reset($id) : self
     {
         $this->contents[$id] = null;
-        return $this; 
+
+        return $this;
     }
 
     public function has($id) : bool
     {
-        return array_key_exists($id, $this->contents); 
+        return array_key_exists($id, $this->contents);
     }
 
     /**
@@ -37,9 +36,10 @@ final class IdentityMap
     {
         foreach ($this->contents as $id => $promise) {
             if (null === $promise) {
-                $this->contents[$id] =  $load($id);
+                $this->contents[$id] = $load($id);
             }
         }
+
         return $this;
     }
 

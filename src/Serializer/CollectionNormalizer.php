@@ -26,7 +26,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class CollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -90,6 +89,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             } else {
                 throw new \LogicException("Cannot denormalize {$eachContent['type']}");
             }
+
             return $this->denormalizer->denormalize(
                 $eachContent,
                 $class,
@@ -129,7 +129,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
         if (empty($this->globalCallback)) {
             $this->globalCallback = new CallbackPromise(function () {
-                $this->identityMap->fillMissingWith(function($id) {
+                $this->identityMap->fillMissingWith(function ($id) {
                     return $this->collectionsClient->getCollection(
                         ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                         $id
@@ -199,7 +199,6 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                 $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
             }
             if (count($object->getPodcastEpisodes()) > 0) {
-
                 $data['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($object->getPodcastEpisodes(), $context);
             }
         }

@@ -2,33 +2,12 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\CollectionsClient;
-use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\BlogArticle;
-use eLife\ApiSdk\Model\Collection;
-use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\Interview;
-use eLife\ApiSdk\Model\Person;
-use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
-use LogicException;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
-use function GuzzleHttp\Promise\promise_for;
 
 /**
  * A better name is welcome.
@@ -49,7 +28,7 @@ final class NormalizationHelper
      * @var string|null
      */
     private $format;
-    
+
     /**
      * @param string|null $format
      */

@@ -5,7 +5,6 @@ namespace test\eLife\ApiSdk\Client;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Subject;

@@ -7,8 +7,8 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticleSection;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -252,7 +252,7 @@ final class Builder
                     'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
                     'issue' => promise_for(1),
                     'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                    'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                 ];
             },
             ArticleVoR::class => function () use ($articlePoA) {
@@ -351,7 +351,7 @@ final class Builder
                             self::for(Subject::class)->sample('1'),
                         ]))
                         ->withResearchOrganisms([
-                            'Article 1 research organism'
+                            'Article 1 research organism',
                         ])
                         ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
                 },
@@ -392,7 +392,7 @@ final class Builder
                             self::for(Subject::class)->sample('biophysics-structural-biology'),
                         ]))
                         ->withContent(new ArraySequence([
-                            new Paragraph("Blog article 359325 text")
+                            new Paragraph('Blog article 359325 text'),
                         ]));
                 },
             ],
@@ -404,7 +404,7 @@ final class Builder
                         ->withInterviewee(new Interviewee(
                             new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
                             new ArraySequence([
-                                new IntervieweeCvLine('date', 'text')
+                                new IntervieweeCvLine('date', 'text'),
                             ])
                         ))
                         ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
@@ -427,7 +427,6 @@ final class Builder
                             ->withPromiseOfResearch('')
                             ->withProfile(new ArraySequence([]))
                             ->withPromiseOfCompetingInterests('');
-                        
                     }
 
                     return $person;
@@ -445,8 +444,8 @@ final class Builder
                             ->withPromiseOfResearch('')
                             ->withProfile(new ArraySequence([]))
                             ->withPromiseOfCompetingInterests('');
-                        
                     }
+
                     return $person;
                 },
             ],
@@ -465,7 +464,7 @@ final class Builder
                             ),
                         ])
                         ->withChapters(new ArraySequence([new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
-                            self::for(ArticlePoA::class)->sample('1')
+                            self::for(ArticlePoA::class)->sample('1'),
                         ]))]));
                 },
             ],
@@ -501,7 +500,7 @@ final class Builder
                         ->withId('microbiology-infectious-disease')
                         ->withName('Microbiology and Infectious Disease')
                         ->withPromiseOfImpactStatement('Subject microbiology-infectious-disease impact statement');
-                }
+                },
             ],
         ];
     }

@@ -70,7 +70,6 @@ final class Collections implements Iterator, Sequence
         return $clone;
     }
 
-
     public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {

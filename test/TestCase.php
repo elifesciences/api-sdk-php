@@ -27,7 +27,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                 continue;
             }
 
-            $methodDetail = $detail.' '.get_class($actual)."::".$method;
+            $methodDetail = $detail.' '.get_class($actual).'::'.$method;
             try {
                 $this->assertItemsAreEqual($expected->{$method}(), $actual->{$method}(), $methodDetail);
             } catch (RejectionException $e) {
@@ -47,7 +47,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             $this->assertInternalType('array', $expected, "We are getting an array out of $detail but we were not expecting it");
             $this->assertEquals(count($expected), count($actual), "Count of $detail doesn't match expected");
             foreach ($actual as $key => $actualItem) {
-                $this->assertItemsAreEqual($expected[$key], $actualItem, $detail .' '.$key);
+                $this->assertItemsAreEqual($expected[$key], $actualItem, $detail.' '.$key);
             }
         } else {
             $this->assertEquals($expected, $actual, $detail);

@@ -6,6 +6,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
@@ -67,6 +68,18 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockSubjectCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_collections()
+    {
+        $this->assertInstanceOf(Collections::class, $this->apiSdk->collections());
+
+        $this->mockCollectionCall('1');
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->collections()->get('1')->wait());
     }
 
     /**

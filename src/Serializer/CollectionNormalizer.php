@@ -29,6 +29,17 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
+function selectField($resultPromise, $fieldName, $default = null)
+{
+    return $resultPromise->then(function (Result $entity) use ($fieldName, $default) {
+        if ($default !== null) {
+            return $entity[$fieldName] ?? $default;
+        } else {
+            return $entity[$fieldName];
+        }
+    });
+}
+
 final class CollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
@@ -53,26 +64,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
                     return $collection['image']['banner'];
                 });
 
-            $data['curators'] = new PromiseSequence($collection
-                ->then(function (Result $collection) use ($format, $context) {
-                    return $collection['curators'];
-                }));
-
-            $data['content'] = new PromiseSequence($collection
-                ->then(function (Result $c) {
-                    return $c['content'];
-                })
-            );
-
-            $data['relatedContent'] = new PromiseSequence($collection
-                ->then(function (Result $collection) use ($format, $context) {
-                    return $collection['relatedContent'] ?? [];
-                }));
-
-            $data['podcastEpisodes'] = new PromiseSequence($collection
-                ->then(function (Result $collection) use ($format, $context) {
-                    return $collection['podcastEpisodes'];
-                }));
+            $data['curators'] = new PromiseSequence(selectField($collection, 'curators'));
+            $data['content'] = new PromiseSequence(selectField($collection, 'content'));
+            $data['relatedContent'] = new PromiseSequence(selectField($collection, 'relatedContent', []));
+            $data['podcastEpisodes'] = new PromiseSequence(selectField($collection, 'podcastEpisodes'));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
             $data['curators'] = new ArraySequence($data['curators']);
@@ -81,20 +76,26 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['podcastEpisodes'] = new ArraySequence($data['podcastEpisodes'] ?? []);
         }
 
-        $data['image']['banner'] = $data['image']['banner']
-            ->then(function (array $banner) use ($format, $context) {
-                return $this->denormalizer->denormalize($banner, Image::class, $format, $context);
+        $denormalizePromise = function ($promise, $class, $format, $context) {
+            return $promise->then(function (array $entity) use ($class, $format, $context) {
+                return $this->denormalizer->denormalize($entity, $class, $format, $context);
             });
+        };
+        $data['image']['banner'] = $denormalizePromise($data['image']['banner'], Image::class, $format, $context);
 
-        $data['curators'] = $data['curators']->map(function ($curator) use ($format, $context) {
-            return $this->denormalizer->denormalize($curator, Person::class, $format, $context + ['snippet' => true]);
-        });
+        $denormalizeSequence = function ($sequence, $class, $format, $context) {
+            return $sequence->map(function (array $entity) use ($class, $format, $context) {
+                return $this->denormalizer->denormalize($entity, $class, $format, $context);
+            });
+        };
+        $data['curators'] = $denormalizeSequence($data['curators'], Person::class, $format, $context + ['snippet' => true]);
 
-        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
-            $context['snippet'] = true;
-
-            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
-        }, $data['subjects'] ?? []));
+        $denormalizeArray = function ($array, $class, $format, $context) {
+            return new ArraySequence(array_map(function (array $subject) use ($class, $format, $context) {
+                return $this->denormalizer->denormalize($subject, $class, $format, $context);
+            }, $array));
+        };
+        $data['subjects'] = $denormalizeArray($data['subjects'] ?? [], Subject::class, $format, $context + ['snippet' => true]);
         $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
@@ -114,10 +115,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             }
         });
         $data['relatedContent'] = $data['relatedContent']->map($contentItemDenormalization);
-
-        $data['podcastEpisodes'] = $data['podcastEpisodes']->map(function ($podcastEpisode) use ($format, $context) {
-            return $this->denormalizer->denormalize($podcastEpisode, PodcastEpisode::class, $format, $context + ['snippet' => true]);
-        });
+        $data['podcastEpisodes'] = $denormalizeSequence($data['podcastEpisodes'], PodcastEpisode::class, $format, $context + ['snippet' => true]);
 
         return new Collection(
             $data['id'],

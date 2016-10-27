@@ -184,7 +184,7 @@ final class Builder
                                         new PersonAuthor(new PersonDetails(
                                             'preferred name',
                                             'index name'
-                                        ))
+                                        )),
                                     ],
                                     false,
                                     'book title',
@@ -419,7 +419,7 @@ final class Builder
     }
 
     /**
-     * @return object  instance of $model
+     * @return object instance of $model
      */
     public static function dummy($model)
     {
@@ -463,7 +463,7 @@ final class Builder
     }
 
     /**
-     * @return object  instance of $this->model
+     * @return object instance of $this->model
      */
     public function __invoke()
     {
@@ -486,7 +486,7 @@ final class Builder
     }
 
     /**
-     * @return object  instance of $this->model
+     * @return object instance of $this->model
      */
     public function sample($sampleName, $context = [])
     {

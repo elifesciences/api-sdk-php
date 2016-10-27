@@ -4,7 +4,9 @@ namespace test\eLife\ApiSdk\Client;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Collections;
-//use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
@@ -30,20 +32,19 @@ final class CollectionsTest extends ApiTestCase
 
         $collection = $this->collections->get('tropical-disease')->wait();
 
-        $this->markTestIncomplete();
+        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertSame('tropical-disease', $collection->getId());
 
-        //$this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
-        //$this->assertSame(7, $podcastEpisode->getNumber());
+        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()->toArray()[0]);
+        $this->assertSame('Media coverage: Slime can see', $collection->getContent()->toArray()[0]->getTitle());
 
-        //$this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()->toArray()[0]);
-        //$this->assertSame('Chapter title', $podcastEpisode->getChapters()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(Subject::class, $collection->getSubjects()->toArray()[0]);
+        $this->assertSame('Subject 1 name', $collection->getSubjects()->toArray()[0]->getName());
 
-        //$this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()->toArray()[0]);
-        //$this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()->toArray()[0]->getName());
+        $this->mockSubjectCall('1');
+        $this->mockSubjectCall('biophysics-structural-biology');
 
-        //$this->mockSubjectCall(1);
-
-        //$this->assertSame('Subject 1 impact statement',
-        //    $podcastEpisode->getSubjects()->toArray()[0]->getImpactStatement());
+        $this->assertSame('Subject 1 impact statement',
+            $collection->getSubjects()->toArray()[0]->getImpactStatement());
     }
 }

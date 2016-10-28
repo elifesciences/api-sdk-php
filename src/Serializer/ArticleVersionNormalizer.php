@@ -41,9 +41,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     }
 
     /**
-     * Selects the Model class from the 'type' and 'status' fields
+     * Selects the Model class from the 'type' and 'status' fields.
      *
      * @param string|null $status
+     *
      * @return string|null
      */
     public static function articleClass(string $type, $status)
@@ -66,6 +67,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 } else {
                     $class = ArticleVoR::class;
                 }
+
                 return $class;
         }
 

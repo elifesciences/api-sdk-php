@@ -25,6 +25,7 @@ final class Collection
 
     /**
      * @internal
+     *
      * @param string|null $impactStatement
      */
     public function __construct(

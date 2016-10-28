@@ -5,7 +5,6 @@ namespace eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
-use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;

@@ -446,7 +446,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
                         Builder::for(PodcastEpisode::class)
-                            ->sample('29')
+                            ->sample('29'),
                     ]))
                     ->__invoke(),
                 ['complete' => true, 'snippet' => true],

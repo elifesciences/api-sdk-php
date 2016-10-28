@@ -45,6 +45,7 @@ final class NormalizationHelper
     public function selectField(PromiseInterface $resultPromise, string $fieldPath, $default = null) : PromiseInterface
     {
         $selectors = explode('.', $fieldPath);
+
         return $resultPromise->then(function (Result $entity) use (/*array*/ $selectors, $default) {
             $result = $entity->toArray();
             foreach ($selectors as $selector) {

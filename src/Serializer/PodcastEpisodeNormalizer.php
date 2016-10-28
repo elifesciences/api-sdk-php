@@ -66,13 +66,8 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     $chapter['impactStatement'] ?? null,
                     new ArraySequence(array_map(function (array $item) use ($format, $context) {
                         $context['snippet'] = true;
-                        if ($item['type'] == 'collection') {
-                            return $this->denormalizer->denormalize($item, Collection::class, $format, $context);
-                        } else {
-                            $class = ArticleVersionNormalizer::articleClass($item['type'], $item['status']);
 
-                            return $this->denormalizer->denormalize($item, $class, $format, $context);
-                        }
+                        return $this->denormalizer->denormalize($item, Model::class, $format, $context);
                     }, $chapter['content'])));
             });
 

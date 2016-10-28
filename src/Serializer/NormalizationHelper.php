@@ -78,17 +78,17 @@ final class NormalizationHelper
         }, $array));
     }
 
-    public function normalizeSequenceToSnippets(Sequence $sequence, array $context) : array
+    public function normalizeSequenceToSnippets(Sequence $sequence, array $context = []) : array
     {
         return $sequence->map(function ($each) use ($context) {
-            $context['snippet'] = true;
-
-            return $this->normalizer->normalize($each, $this->format, $context);
+            return $this->normalizeToSnippet($each, $context);
         })->toArray();
     }
 
-    public function normalizeToSnippet($object) : array
+    public function normalizeToSnippet($object, array $context = []) : array
     {
-        return $this->normalizer->normalize($object, $this->format, ['snippet' => true]);
+        $context['snippet'] = true;
+
+        return $this->normalizer->normalize($object, $this->format, $context);
     }
 }

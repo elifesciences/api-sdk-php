@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Subject
+final class Subject implements Model
 {
     private $id;
     private $name;

@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\promise_for;
@@ -15,6 +16,18 @@ use function GuzzleHttp\Promise\rejection_for;
 
 final class EventTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
+            rejection_for('Event venue should not be unwrapped'));
+
+        $this->assertInstanceOf(Model::class, $event);
+    }
+
     /**
      * @test
      */

@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
@@ -21,6 +22,16 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->builder = Builder::for(Collection::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $collection = $this->builder->__invoke();
+
+        $this->assertInstanceOf(Model::class, $collection);
     }
 
     /**

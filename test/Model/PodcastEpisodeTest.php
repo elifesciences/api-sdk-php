@@ -7,6 +7,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
@@ -17,6 +18,20 @@ use function GuzzleHttp\Promise\rejection_for;
 
 final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable(), rejection_for('No banner'),
+            new Image('', [900 => 'https://placehold.it/900x450']),
+            [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
+            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+
+        $this->assertInstanceOf(Model::class, $podcastEpisode);
+    }
+
     /**
      * @test
      */

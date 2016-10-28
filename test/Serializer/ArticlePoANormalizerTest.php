@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
@@ -98,6 +99,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     {
         return [
             'article poa' => [[], ArticlePoA::class, [], true],
+            'article poa by type' => [['type' => 'research-article', 'status' => 'poa'], Model::class, [], true],
             'non-article poa' => [[], get_class($this), [], false],
         ];
     }

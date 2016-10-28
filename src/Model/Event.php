@@ -7,7 +7,7 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Event
+final class Event implements Model
 {
     private $id;
     private $title;

@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class LabsExperiment
+final class LabsExperiment implements Model
 {
     private $number;
     private $title;

@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion
+abstract class ArticleVersion implements Model
 {
     private $id;
     private $version;

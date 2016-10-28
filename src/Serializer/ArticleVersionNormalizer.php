@@ -251,6 +251,24 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return $this->normalizeArticle($object, $data, $format, $context);
     }
 
+    final protected function isArticleType(string $type)
+    {
+        return in_array($type, [
+            'correction',
+            'editorial',
+            'feature',
+            'insight',
+            'research-advance',
+            'research-article',
+            'research-exchange',
+            'retraction',
+            'registered-report',
+            'replication-study',
+            'short-report',
+            'tools-resources',
+        ]);
+    }
+
     abstract protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,

@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 
-final class MediumArticle
+final class MediumArticle implements Model
 {
     private $uri;
     private $title;

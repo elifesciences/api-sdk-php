@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\Model;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticlePoANormalizer extends ArticleVersionNormalizer
@@ -43,7 +44,9 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
         return
             ArticlePoA::class === $type
             ||
-            (ArticleVersion::class === $type && 'poa' === $data['status']);
+            (ArticleVersion::class === $type && 'poa' === $data['status'])
+            ||
+            Model::class === $type && $this->isArticleType($data['type'] ?? 'unknown') && 'poa' === ($data['status'] ?? 'unknown');
     }
 
     /**

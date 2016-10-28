@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -95,6 +96,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     {
         return [
             'Labs experiment' => [[], LabsExperiment::class, [], true],
+            'Labs experiment by type' => [['type' => 'labs-experiment'], Model::class, [], true],
             'non-Labs experiment' => [[], get_class($this), [], false],
         ];
     }
@@ -219,7 +221,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 new LabsExperiment(1, 'Labs experiment 1 title', $date, 'Labs experiment 1 impact statement',
                     promise_for($banner), $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
-                ['snippet' => true],
+                ['snippet' => true, 'type' => true],
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
@@ -240,6 +242,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'impactStatement' => 'Labs experiment 1 impact statement',
+                    'type' => 'labs-experiment',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockLabsExperimentCall(1, true);

@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PodcastEpisode;
@@ -106,6 +107,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
     {
         return [
             'podcast episode' => [[], PodcastEpisode::class, [], true],
+            'podcast episode by type' => [['type' => 'podcast-episode'], Model::class, [], true],
             'non-podcast episode' => [[], get_class($this), [], false],
         ];
     }
@@ -363,7 +365,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                 new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
                         ])),
                     ])),
-                ['snippet' => true, 'complete' => true],
+                ['snippet' => true, 'complete' => true, 'type' => true],
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
@@ -390,6 +392,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'uri' => 'https://www.example.com/episode.mp3',
                         ],
                     ],
+                    'type' => 'podcast-episode',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockPodcastEpisodeCall(1, true);

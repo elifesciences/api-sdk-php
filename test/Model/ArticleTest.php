@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
@@ -22,6 +23,19 @@ use function GuzzleHttp\Promise\rejection_for;
 
 abstract class ArticleTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    final public function it_is_a_model()
+    {
+        $article = $this->createArticleVersion('id', 1, 'type', 'doi', 'author line', null, 'title',
+            new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
+            rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
+            new PromiseSequence(rejection_for('No authors')));
+
+        $this->assertInstanceOf(Model::class, $article);
+    }
+
     /**
      * @test
      */

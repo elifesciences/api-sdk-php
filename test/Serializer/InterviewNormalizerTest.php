@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -97,6 +98,7 @@ final class InterviewNormalizerTest extends ApiTestCase
     {
         return [
             'interview' => [[], Interview::class, [], true],
+            'interview by type' => [['type' => 'interview'], Model::class, [], true],
             'non-interview' => [[], get_class($this), [], false],
         ];
     }
@@ -185,7 +187,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $date,
                     'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
-                ['snippet' => true],
+                ['snippet' => true, 'type' => true],
                 [
                     'id' => 'interview1',
                     'interviewee' => [
@@ -198,6 +200,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                     'title' => 'Interview 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'Interview 1 impact statement',
+                    'type' => 'interview',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockInterviewCall('interview1', true);

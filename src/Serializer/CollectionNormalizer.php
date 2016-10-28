@@ -7,18 +7,14 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
-use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\Interview;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
-use LogicException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -74,18 +70,9 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
         $contentItemDenormalization = function ($eachContent) use ($format, $context) {
-            if ($class = (ArticleVersionNormalizer::articleClass($eachContent['type'], $eachContent['status'] ?? null))) {
-            } elseif ($eachContent['type'] == 'blog-article') {
-                $class = BlogArticle::class;
-            } elseif ($eachContent['type'] == 'interview') {
-                $class = Interview::class;
-            } else {
-                throw new \LogicException("Cannot denormalize {$eachContent['type']}");
-            }
-
             return $this->denormalizer->denormalize(
                 $eachContent,
-                $class,
+                Model::class,
                 $format,
                 $context + ['snippet' => true]
             );
@@ -146,6 +133,9 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
         $data = [];
+        if (!empty($context['type'])) {
+            $data['type'] = 'collection';
+        }
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
         if ($object->getImpactStatement()) {
@@ -170,27 +160,13 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
             $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
 
+            $typeContext = array_merge($context, ['type' => true]);
+
             $data['curators'] = $normalizationHelper->normalizeSequenceToSnippets($object->getCurators(), $context);
 
-            $contentNormalization = function ($eachContent) use ($normalizationHelper) {
-                $eachContentData = $normalizationHelper->normalizeToSnippet($eachContent);
-                $contentClasses = [
-                    ArticlePoA::class => 'research-article',
-                    ArticleVoR::class => 'research-article',
-                    BlogArticle::class => 'blog-article',
-                    Interview::class => 'interview',
-                ];
-                if (!array_key_exists(get_class($eachContent), $contentClasses)) {
-                    throw new LogicException('Class of content '.get_class($eachContent).' is not supported in a Collection. Supported classes are: '.var_export($contentClasses, true));
-                }
-                $eachContentData['type'] = $contentClasses[get_class($eachContent)];
-
-                return $eachContentData;
-            };
-
-            $data['content'] = $object->getContent()->map($contentNormalization)->toArray();
+            $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($object->getContent(), $typeContext);
             if (count($object->getRelatedContent()) > 0) {
-                $data['relatedContent'] = $object->getRelatedContent()->map($contentNormalization)->toArray();
+                $data['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedContent(), $typeContext);
             }
             if (count($object->getPodcastEpisodes()) > 0) {
                 $data['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($object->getPodcastEpisodes(), $context);
@@ -202,7 +178,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return Collection::class === $type;
+        return
+            Collection::class === $type
+            ||
+            'collection' === ($data['type'] ?? 'unknown');
     }
 
     public function supportsNormalization($data, $format = null) : bool

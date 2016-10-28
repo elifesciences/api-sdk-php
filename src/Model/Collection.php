@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Collection
+final class Collection implements Model
 {
     private $id;
     private $title;
@@ -99,6 +99,9 @@ final class Collection
         return $this->thumbnail;
     }
 
+    /**
+     * @return Sequence|Subject[]
+     */
     public function getSubjects() : Sequence
     {
         return $this->subjects;
@@ -114,21 +117,33 @@ final class Collection
         return $this->selectedCuratorEtAl;
     }
 
+    /**
+     * @return Sequence|Person[]
+     */
     public function getCurators() : Sequence
     {
         return $this->curators;
     }
 
+    /**
+     * @return Sequence|Model[]
+     */
     public function getContent() : Sequence
     {
         return $this->content;
     }
 
+    /**
+     * @return Sequence|Model[]
+     */
     public function getRelatedContent() : Sequence
     {
         return $this->relatedContent;
     }
 
+    /**
+     * @return Sequence|PodcastEpisode[]
+     */
     public function getPodcastEpisodes() : Sequence
     {
         return $this->podcastEpisodes;

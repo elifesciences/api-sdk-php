@@ -5,10 +5,21 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
+use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
 
 final class MediumArticleTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $mediumArticle = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable(), null);
+
+        $this->assertInstanceOf(Model::class, $mediumArticle);
+    }
+
     /**
      * @test
      */

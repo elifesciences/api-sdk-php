@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Person
+final class Person implements Model
 {
     private $id;
     private $details;

@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\promise_for;
@@ -10,6 +11,17 @@ use function GuzzleHttp\Promise\rejection_for;
 
 final class SubjectTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
+            rejection_for('No banner'), rejection_for('Image should not be unwrapped'));
+
+        $this->assertInstanceOf(Model::class, $subject);
+    }
+
     /**
      * @test
      */

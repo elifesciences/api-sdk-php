@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -96,6 +97,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     {
         return [
             'blog article' => [[], BlogArticle::class, [], true],
+            'blog article by type' => [['type' => 'blog-article'], Model::class, [], true],
             'non-blog article' => [[], get_class($this), [], false],
         ];
     }
@@ -179,7 +181,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 new BlogArticle('blogArticle1', 'Blog article 1 title', $date, 'Blog article 1 impact statement',
                     new ArraySequence([new Paragraph('Blog article blogArticle1 text')]), new ArraySequence([$subject])),
-                ['snippet' => true],
+                ['snippet' => true, 'type' => true],
                 [
                     'id' => 'blogArticle1',
                     'title' => 'Blog article 1 title',
@@ -188,6 +190,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1 name'],
                     ],
+                    'type' => 'blog-article',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockBlogArticleCall(1, true);

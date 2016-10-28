@@ -8,12 +8,26 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class BlogArticleTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_is_a_model()
+    {
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable(), null,
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+        );
+
+        $this->assertInstanceOf(Model::class, $blogArticle);
+    }
+
     /**
      * @test
      */

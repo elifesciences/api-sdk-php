@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -94,6 +95,7 @@ final class EventNormalizerTest extends ApiTestCase
     {
         return [
             'event' => [[], Event::class, [], true],
+            'event by type' => [['type' => 'event'], Model::class, [], true],
             'non-event' => [[], get_class($this), [], false],
         ];
     }
@@ -165,7 +167,7 @@ final class EventNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 new Event('event1', 'Event 1 title', 'Event 1 impact statement', $starts, $ends, $timezone,
                     new ArraySequence([new Paragraph('Event 1 text')]), promise_for($venue)),
-                ['snippet' => true],
+                ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
                     'title' => 'Event 1 title',
@@ -173,6 +175,7 @@ final class EventNormalizerTest extends ApiTestCase
                     'ends' => $ends->format(DATE_ATOM),
                     'impactStatement' => 'Event 1 impact statement',
                     'timezone' => $timezone->getName(),
+                    'type' => 'event',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockEventCall(1, true);

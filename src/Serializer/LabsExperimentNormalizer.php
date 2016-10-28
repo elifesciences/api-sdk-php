@@ -11,6 +11,7 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -112,7 +113,10 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return LabsExperiment::class === $type;
+        return
+            LabsExperiment::class === $type
+            ||
+            Model::class === $type && 'labs-experiment' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -128,6 +132,10 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
                 'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
             ],
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'labs-experiment';
+        }
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();

@@ -12,10 +12,12 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
@@ -71,6 +73,32 @@ final class CollectionNormalizerTest extends ApiTestCase
     public function it_normalizes_collections(Collection $collection, array $context, array $expected)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($collection, null, $context));
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_a_denormalizer()
+    {
+        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canDenormalizeProvider
+     */
+    public function it_can_denormalize_collections($data, $format, array $context, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+    }
+
+    public function canDenormalizeProvider() : array
+    {
+        return [
+            'collection' => [[], Collection::class, [], true],
+            'collection by type' => [['type' => 'collection'], Model::class, [], true],
+            'non-collection' => [[], get_class($this), [], false],
+        ];
     }
 
     /**
@@ -449,7 +477,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('29'),
                     ]))
                     ->__invoke(),
-                ['complete' => true, 'snippet' => true],
+                ['complete' => true, 'snippet' => true, 'type' => true],
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
@@ -489,6 +517,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                         'etAl' => true,
                     ],
+                    'type' => 'collection',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockCollectionCall('1', true);

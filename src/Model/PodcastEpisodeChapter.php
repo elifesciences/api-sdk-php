@@ -52,6 +52,9 @@ final class PodcastEpisodeChapter
         return $this->impactStatement;
     }
 
+    /**
+     * @return Sequence|Model[]
+     */
     public function getContent(): Sequence
     {
         return $this->content;

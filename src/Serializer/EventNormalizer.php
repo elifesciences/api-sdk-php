@@ -11,6 +11,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -115,7 +116,10 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return Event::class === $type;
+        return
+            Event::class === $type
+            ||
+            Model::class === $type && 'event' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -129,6 +133,10 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             'starts' => $object->getStarts()->format(DATE_ATOM),
             'ends' => $object->getStarts()->format(DATE_ATOM),
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'event';
+        }
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();

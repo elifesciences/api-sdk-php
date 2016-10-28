@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -103,7 +104,10 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return BlogArticle::class === $type;
+        return
+            BlogArticle::class === $type
+            ||
+            Model::class === $type && 'blog-article' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -116,6 +120,10 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'blog-article';
+        }
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();

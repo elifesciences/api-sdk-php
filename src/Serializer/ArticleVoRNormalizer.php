@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Reference;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
@@ -193,7 +194,9 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         return
             ArticleVoR::class === $type
             ||
-            (ArticleVersion::class === $type && 'vor' === $data['status']);
+            (ArticleVersion::class === $type && 'vor' === $data['status'])
+            ||
+            Model::class === $type && $this->isArticleType($data['type'] ?? 'unknown') && 'vor' === ($data['status'] ?? 'unknown');
     }
 
     /**

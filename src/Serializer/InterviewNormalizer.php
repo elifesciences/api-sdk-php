@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -111,7 +112,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return Interview::class === $type;
+        return
+            Interview::class === $type
+            ||
+            Model::class === $type && 'interview' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -125,6 +129,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(DATE_ATOM),
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'interview';
+        }
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();

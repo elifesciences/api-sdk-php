@@ -59,28 +59,28 @@ final class NormalizationHelper
         });
     }
 
-    public function denormalizePromise(PromiseInterface $promise, string $class, $context) : PromiseInterface
+    public function denormalizePromise(PromiseInterface $promise, string $class, array $context) : PromiseInterface
     {
         return $promise->then(function (array $entity) use ($class, $context) {
             return $this->denormalizer->denormalize($entity, $class, $this->format, $context);
         });
     }
 
-    public function denormalizeSequence(Sequence $sequence, string $class, $context) : Sequence
+    public function denormalizeSequence(Sequence $sequence, string $class, array $context) : Sequence
     {
         return $sequence->map(function (array $entity) use ($class, $context) {
             return $this->denormalizer->denormalize($entity, $class, $this->format, $context);
         });
     }
 
-    public function denormalizeArray(array $array, string $class, $context) : ArraySequence
+    public function denormalizeArray(array $array, string $class, array $context) : ArraySequence
     {
         return new ArraySequence(array_map(function (array $subject) use ($class, $context) {
             return $this->denormalizer->denormalize($subject, $class, $this->format, $context);
         }, $array));
     }
 
-    public function normalizeSequenceToSnippets(Sequence $sequence, $context) : array
+    public function normalizeSequenceToSnippets(Sequence $sequence, array $context) : array
     {
         return $sequence->map(function ($each) use ($context) {
             $context['snippet'] = true;

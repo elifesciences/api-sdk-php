@@ -43,7 +43,7 @@ final class IdentityMap
         return $this;
     }
 
-    public function waitForAll()
+    public function waitForAll() : array
     {
         return all($this->contents)->wait();
     }

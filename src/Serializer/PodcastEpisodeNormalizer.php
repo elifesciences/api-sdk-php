@@ -8,7 +8,6 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
-use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;

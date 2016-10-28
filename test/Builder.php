@@ -31,6 +31,7 @@ use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use LogicException;
+use ReflectionClass;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -485,7 +486,7 @@ final class Builder
      */
     public function __invoke()
     {
-        $class = new \ReflectionClass($this->model);
+        $class = new ReflectionClass($this->model);
         $constructorArgumentNames = array_map(function ($p) {
             return $p->getName();
         }, $class->getConstructor()->getParameters());

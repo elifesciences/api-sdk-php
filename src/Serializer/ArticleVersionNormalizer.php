@@ -7,8 +7,10 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
@@ -36,6 +38,38 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     public function __construct(ArticlesClient $articlesClient)
     {
         $this->articlesClient = $articlesClient;
+    }
+
+    /**
+     * Selects the Model class from the 'type' and 'status' fields
+     *
+     * @param string|null $status
+     * @return string|null
+     */
+    public static function articleClass(string $type, $status)
+    {
+        switch ($type) {
+            case 'correction':
+            case 'editorial':
+            case 'feature':
+            case 'insight':
+            case 'research-advance':
+            case 'research-article':
+            case 'research-exchange':
+            case 'retraction':
+            case 'registered-report':
+            case 'replication-study':
+            case 'short-report':
+            case 'tools-resources':
+                if ('poa' === $status) {
+                    $class = ArticlePoA::class;
+                } else {
+                    $class = ArticleVoR::class;
+                }
+                return $class;
+        }
+
+        return null;
     }
 
     final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion

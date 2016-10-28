@@ -66,27 +66,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     $chapter['impactStatement'] ?? null,
                     new ArraySequence(array_map(function (array $item) use ($format, $context) {
                         $context['snippet'] = true;
-
-                        switch ($item['type']) {
-                            case 'correction':
-                            case 'editorial':
-                            case 'feature':
-                            case 'insight':
-                            case 'research-advance':
-                            case 'research-article':
-                            case 'research-exchange':
-                            case 'retraction':
-                            case 'registered-report':
-                            case 'replication-study':
-                            case 'short-report':
-                            case 'tools-resources':
-                                if ('poa' === $item['status']) {
-                                    $class = ArticlePoA::class;
-                                } else {
-                                    $class = ArticleVoR::class;
-                                }
-                                break;
-                        }
+                        $class = ArticleVersionNormalizer::articleClass($item['type'], $item['status']);
 
                         return $this->denormalizer->denormalize($item, $class, $format, $context);
                     }, $chapter['content'])));

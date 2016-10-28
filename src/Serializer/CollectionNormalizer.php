@@ -72,12 +72,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
 
         $contentItemDenormalization = function ($eachContent) use ($format, $context) {
-            if ($eachContent['type'] == 'research-article') {
-                if ($eachContent['status'] == 'poa') {
-                    $class = ArticlePoA::class;
-                } else {
-                    $class = ArticleVoR::class;
-                }
+            if ($class = (ArticleVersionNormalizer::articleClass($eachContent['type'], $eachContent['status'] ?? null))) {
             } elseif ($eachContent['type'] == 'blog-article') {
                 $class = BlogArticle::class;
             } elseif ($eachContent['type'] == 'interview') {

@@ -29,10 +29,7 @@ final class NormalizationHelper
      */
     private $format;
 
-    /**
-     * @param string|null $format
-     */
-    public function __construct(NormalizerInterface $normalizer, DenormalizerInterface $denormalizer, $format)
+    public function __construct(NormalizerInterface $normalizer, DenormalizerInterface $denormalizer, string $format = null)
     {
         $this->normalizer = $normalizer;
         $this->denormalizer = $denormalizer;

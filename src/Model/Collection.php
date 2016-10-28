@@ -25,14 +25,12 @@ final class Collection
 
     /**
      * @internal
-     *
-     * @param string|null $impactStatement
      */
     public function __construct(
         string $id,
         string $title,
         PromiseInterface $subTitle,
-        $impactStatement,
+        string $impactStatement = null,
         DateTimeImmutable $publishedDate,
         PromiseInterface $banner,
         Image $thumbnail,

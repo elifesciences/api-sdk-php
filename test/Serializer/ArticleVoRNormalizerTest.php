@@ -429,12 +429,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
                         new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([
-                        // minimum article-vor does not have reference, according to api-raml model
-                        //new BookReference(ReferenceDate::fromString('2000'),
-                        //    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-                        //    new Place(null, null, ['publisher'])),
-                    ]), promise_for(null), new ArraySequence([]), promise_for(null)),
+                    ]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],
                 [
                     'id' => 'article1',

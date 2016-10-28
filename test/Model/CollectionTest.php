@@ -16,9 +16,11 @@ use test\eLife\ApiSdk\Builder;
 
 final class CollectionTest extends PHPUnit_Framework_TestCase
 {
+    private $builder;
+
     public function setUp()
     {
-        $this->builder = new Builder();
+        $this->builder = Builder::for(Collection::class);
     }
 
     /**
@@ -27,7 +29,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_an_id()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withId('tropical-disease')
             ->__invoke();
         $this->assertSame('tropical-disease', $collection->getId());
@@ -39,7 +40,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_title()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withTitle('Tropical disease')
             ->__invoke();
         $this->assertSame('Tropical disease', $collection->getTitle());
@@ -48,13 +48,17 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_sub_title()
+    public function it_may_have_a_sub_title()
     {
-        $collection = $this->builder
-            ->create(Collection::class)
+        $with = $this->builder
             ->withPromiseOfSubTitle('Tropical disease subtitle')
             ->__invoke();
-        $this->assertSame('Tropical disease subtitle', $collection->getSubTitle());
+        $without = $this->builder
+            ->withPromiseOfSubTitle(null)
+            ->__invoke();
+
+        $this->assertSame('Tropical disease subtitle', $with->getSubTitle());
+        $this->assertNull($without->getSubTitle());
     }
 
     /**
@@ -63,11 +67,9 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
-            ->create(Collection::class)
             ->withImpactStatement('Tropical disease impact statement')
             ->__invoke();
         $withOut = $this->builder
-            ->create(Collection::class)
             ->withImpactStatement(null)
             ->__invoke();
 
@@ -81,7 +83,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_published_date()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withPublishedDate($publishedDate = new DateTimeImmutable())
             ->__invoke();
 
@@ -94,7 +95,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withPromiseOfBanner(
                 $image = new Image('', [900 => 'https://placehold.it/900x450'])
             )
@@ -109,7 +109,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withThumbnail(
                 $image = new Image('', [70 => 'https://placehold.it/70x140'])
             )
@@ -125,7 +124,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withSubjects($subjects)
             ->__invoke()
         ;
@@ -135,14 +133,11 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function subjectsProvider() : array
     {
-        $this->builder = new Builder();
         $subjects = [
-            $this->builder
-                ->create(Subject::class)
+            Builder::for(Subject::class)
                 ->withId('subject1')
                 ->__invoke(),
-            $this->builder
-                ->create(Subject::class)
+            Builder::for(Subject::class)
                 ->withId('subject2')
                 ->__invoke(),
         ];
@@ -165,7 +160,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_selected_curator()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withSelectedCurator($person = Builder::dummy(Person::class))
             ->withSelectedCuratorEtAl(true)
             ->__invoke()
@@ -181,7 +175,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_curators()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withCurators($curators = new ArraySequence([Builder::dummy(Person::class)]))
             ->__invoke()
         ;
@@ -195,7 +188,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_content()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withContent($content = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
@@ -211,7 +203,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_related_content()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withRelatedContent($relatedContent = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
@@ -227,7 +218,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_podcast_episodes()
     {
         $collection = $this->builder
-            ->create(Collection::class)
             ->withPodcastEpisodes($podcastEpisodes = new ArraySequence([
                 Builder::dummy(PodcastEpisode::class),
             ]))

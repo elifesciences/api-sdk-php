@@ -128,12 +128,6 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         $this->mockSubjectCall('1');
         $this->mockArticleCall('1', !empty($context['complete']));
-        // only for complete?
-        $this->mockCollectionCall('tropical-disease', false);
-        $this->mockPersonCall('pjha', false);
-        $this->mockPersonCall('bcooper', false);
-        $this->mockBlogArticleCall('359325', false);
-        $this->mockSubjectCall('biophysics-structural-biology');
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -273,6 +267,13 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     ],
                     'impactStatement' => 'Podcast episode 1 impact statement',
                 ],
+                function ($test) {
+                    $test->mockCollectionCall('tropical-disease', false);
+                    $test->mockPersonCall('pjha', false);
+                    $test->mockPersonCall('bcooper', false);
+                    $test->mockBlogArticleCall('359325', false);
+                    $test->mockSubjectCall('biophysics-structural-biology');
+                },
             ],
             'minimum' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,

@@ -23,9 +23,13 @@ final class Collection
     private $relatedContent;
     private $podcastEpisodes;
 
+    /**
+     * @internal
+     * @param string|null $impactStatement
+     */
     public function __construct(
-        $id,
-        $title,
+        string $id,
+        string $title,
         PromiseInterface $subTitle,
         $impactStatement,
         DateTimeImmutable $publishedDate,
@@ -94,20 +98,6 @@ final class Collection
     public function getThumbnail() : Image
     {
         return $this->thumbnail;
-    }
-
-    public function withSubjects(Sequence $subjects) : Collection
-    {
-        return new self(
-            $this->id,
-            $this->title,
-            $this->subTitle,
-            $this->impactStatement,
-            $this->publishedDate,
-            $this->banner,
-            $this->thumbnail,
-            $subjects
-        );
     }
 
     public function getSubjects() : Sequence

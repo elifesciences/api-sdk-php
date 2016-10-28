@@ -314,7 +314,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function ($test) {
-                    $test->mockCollectionCall('1', true);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockSubjectCall('epidemiology-global-health', true);
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
@@ -409,7 +408,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockCollectionCall('1', true);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockArticleCall('14107', true);
                 },
@@ -516,10 +514,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),
                     ]))
-                    ->withRelatedContent(new ArraySequence([
-                        Builder::for(ArticlePoa::class)
-                            ->sample('growth-factor'),
-                    ]))
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -551,7 +545,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockCollectionCall('1', true);
+                    $test->mockCollectionCall('1', false);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockBlogArticleCall('359325');
                     $test->mockArticleCall('14107', true);

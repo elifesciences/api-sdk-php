@@ -52,7 +52,7 @@ final class Builder
                         'published' => new DateTimeImmutable(),
                         'impactStatement' => null,
                         'content' => new ArraySequence([
-                            new Paragraph(''),
+                            new Paragraph('blogArticle 359325 content'),
                         ]),
                         'subjects' => new ArraySequence([]),
                     ];
@@ -79,7 +79,7 @@ final class Builder
                 },
                 Image::class => function () {
                     return [
-                        'altText' => '',
+                        'altText' => 'Image alt text',
                         'sizes' => [],
                     ];
                 },
@@ -123,7 +123,7 @@ final class Builder
                         'impactStatement' => null,
                         'published' => new DateTimeImmutable(),
                         'banner' => rejection_for('No banner'),
-                        'thumbnail' => new Image('', [900 => 'https://placehold.it/900x450']),
+                        'thumbnail' => new Image('thumbnail', [900 => 'https://placehold.it/900x450']),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
@@ -496,8 +496,7 @@ final class Builder
             throw new InvalidArgumentException("Sample $sampleName not found for {$this->model}");
         }
         if (!array_key_exists('snippet', $context)) {
-            // what should be the default?
-            $context['snippet'] = true;
+            $context['snippet'] = false;
         }
         $sample = call_user_func(
             $samples[$this->model][$sampleName],
@@ -505,7 +504,7 @@ final class Builder
             $context
         );
         if ($sample instanceof self) {
-            return $sample->__invoke();
+            return $sample();
         } else {
             return $sample;
         }

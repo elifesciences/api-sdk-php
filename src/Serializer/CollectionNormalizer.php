@@ -50,11 +50,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         if (!empty($context['snippet'])) {
             $collection = $this->denormalizeSnippet($data);
 
-            $data['image']['banner'] = $collection
-                ->then(function (Result $collection) {
-                    return $collection['image']['banner'];
-                });
-
+            $data['image']['banner'] = $normalizationHelper->selectField($collection, 'image.banner');
             $data['curators'] = new PromiseSequence($normalizationHelper->selectField($collection, 'curators'));
             $data['content'] = new PromiseSequence($normalizationHelper->selectField($collection, 'content'));
             $data['relatedContent'] = new PromiseSequence($normalizationHelper->selectField($collection, 'relatedContent', []));

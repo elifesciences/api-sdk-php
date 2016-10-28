@@ -39,14 +39,23 @@ final class NormalizationHelper
         $this->format = $format;
     }
 
-    public function selectField(PromiseInterface $resultPromise, $fieldName, $default = null) : PromiseInterface
+    /**
+     * @param string $fieldPath e.g. 'title' or 'image.banner'
+     */
+    public function selectField(PromiseInterface $resultPromise, string $fieldPath, $default = null) : PromiseInterface
     {
-        return $resultPromise->then(function (Result $entity) use ($fieldName, $default) {
-            if ($default !== null) {
-                return $entity[$fieldName] ?? $default;
-            } else {
-                return $entity[$fieldName];
+        $selectors = explode('.', $fieldPath);
+        return $resultPromise->then(function (Result $entity) use (/*array*/ $selectors, $default) {
+            $result = $entity->toArray();
+            foreach ($selectors as $selector) {
+                if (array_key_exists($selector, $result)) {
+                    $result = $result[$selector];
+                } else {
+                    return $default;
+                }
             }
+
+            return $result;
         });
     }
 

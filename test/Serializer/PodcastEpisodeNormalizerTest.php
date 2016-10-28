@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
@@ -23,6 +24,7 @@ use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -126,6 +128,12 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         $this->mockSubjectCall('1');
         $this->mockArticleCall('1', !empty($context['complete']));
+        // only for complete?
+        $this->mockCollectionCall('tropical-disease', false);
+        $this->mockPersonCall('pjha', false);
+        $this->mockPersonCall('bcooper', false);
+        $this->mockBlogArticleCall('359325', false);
+        $this->mockSubjectCall('biophysics-structural-biology');
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -166,6 +174,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     promise_for(1),
                                     promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
+                                Builder::for(Collection::class)
+                                    ->sample('tropical-disease'),
                             ])),
                     ])),
                 ['complete' => true],
@@ -227,6 +237,35 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     ],
                                     'researchOrganisms' => ['Article 1 research organism'],
                                     'status' => 'poa',
+                                ],
+                                [
+                                    'id' => 'tropical-disease',
+                                    'type' => 'collection',
+                                    'title' => 'Tropical disease',
+                                    'updated' => '2000-01-01T00:00:00+00:00',
+                                    'image' => [
+                                        'thumbnail' => [
+                                            'alt' => '',
+                                            'sizes' => [
+                                                '16:9' => [
+                                                    250 => 'https://placehold.it/250x141',
+                                                    500 => 'https://placehold.it/500x281',
+                                                ],
+                                                '1:1' => [
+                                                    70 => 'https://placehold.it/70x70',
+                                                    140 => 'https://placehold.it/140x140',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'selectedCurator' => [
+                                        'id' => 'pjha',
+                                        'name' => [
+                                            'preferred' => 'Prabhat Jha',
+                                            'index' => 'Jha, Prabhat',
+                                        ],
+                                        'type' => 'senior-editor',
+                                    ],
                                 ],
                             ],
                             'impactStatement' => 'Chapter impact statement',

@@ -303,6 +303,24 @@ final class Builder
                             ]));
                     },
                 ],
+                Collection::class => [
+                    'tropical-disease' => function ($builder) {
+                        return $builder
+                            ->withId('tropical-disease')
+                            ->withTitle('Tropical disease')
+                            ->withPublishedDate(new DateTimeImmutable('2000-01-01T00:00:00+00:00'))
+                            ->withThumbnail(Builder::for(Image::class)->sample('thumbnail'))
+                            ->withSelectedCurator($pjha = Builder::for(Person::class)->sample('pjha'))
+                            ->withCurators(new ArraySequence([
+                                Builder::for(Person::class)->sample('bcooper'),
+                                $pjha,
+                            ]))
+                            ->withContent(new ArraySequence([
+                                Builder::for(BlogArticle::class)
+                                    ->sample('slime'),
+                            ]));
+                    },
+                ],
                 Interview::class => [
                     'controlling-traffic' => function ($builder) {
                         return $builder

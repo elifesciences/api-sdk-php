@@ -444,6 +444,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                         Builder::for(ArticlePoa::class)
                             ->sample('growth-factor'),
                     ]))
+                    ->withPodcastEpisodes(new ArraySequence([
+                        Builder::for(PodcastEpisode::class)
+                            ->sample('29')
+                    ]))
                     ->__invoke(),
                 ['complete' => true, 'snippet' => true],
                 [
@@ -493,6 +497,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
                     $test->mockBlogArticleCall('359325');
                     $test->mockArticleCall('14107', true);
+                    $test->mockPodcastEpisodeCall('29', true);
+                    $test->mockSubjectCall('1', true);
+                    $test->mockArticleCall('1', true);
                 },
             ],
             'minimum snippet' => [

@@ -1204,6 +1204,32 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
             'podcastEpisodes' => [
+                $podcastEpisode = [
+                    'number' => 29,
+                    'title' => 'April/May 2016',
+                    'published' => '2016-05-27T13:19:42+00:00',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'sizes' => [
+                                '16:9' => [
+                                    '250' => 'https://placehold.it/250x141',
+                                    '500' => 'https://placehold.it/500x281',
+                                ],
+                                '1:1' => [
+                                    '70' => 'https://placehold.it/70x70',
+                                    '140' => 'https://placehold.it/140x140',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'sources' => [
+                        [
+                            'mediaType' => 'audio/mpeg',
+                            'uri' => 'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3',
+                        ],
+                    ],
+                ],
             ],
             'subjects' => [$this->createSubjectJson(1, true)],
         ];

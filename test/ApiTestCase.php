@@ -1210,14 +1210,20 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($collection['impactStatement']);
-            unset($collection['subjects']);
+            unset($collection['selectedCurator']['etAl']);
+            unset($collection['subTitle']);
             unset($collection['relatedContent']);
+            unset($collection['podcastEpisodes']);
+            unset($collection['subjects']);
         }
 
         if ($isSnippet) {
             unset($collection['image']['banner']);
+            unset($collection['subTitle']);
+            unset($collection['curators']);
             unset($collection['content']);
             unset($collection['relatedContent']);
+            unset($collection['podcastEpisodes']);
         }
 
         return $collection;

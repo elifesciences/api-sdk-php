@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Client;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use test\eLife\ApiSdk\ApiTestCase;
 
@@ -68,6 +69,26 @@ class SearchTest extends ApiTestCase
         foreach ($array as $i => $result) {
             $this->assertInstanceOf(Model::class, $result);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_reuses_already_known_models()
+    {
+        $this->mockCountCall(1);
+        $this->mockSearchCall(1, 100, 1);
+
+        $this->search->toArray();
+
+        $result = $this->search->toArray();
+
+        $this->assertInstanceOf(Model::class, $result[0]);
+
+        $this->mockBlogArticleCall(1);
+
+        $this->assertInstanceOf(BlogArticle::class, $result[0]);
+        $this->assertSame('Blog article 1 title', $result[0]->getTitle());
     }
 
     private function mockCountCall($count)

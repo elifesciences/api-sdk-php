@@ -99,9 +99,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, 'bacteria');
         $this->mockSearchCall(1, 100, 5, 'bacteria');
 
-        foreach ($this->search->forQuery('bacteria') as $i => $model) {
-            $this->assertInstanceOf(Model::class, $model);
-        }
+        $this->traverseAndSanityCheck($this->search->forQuery('bacteria'));
     }
 
     /**
@@ -112,13 +110,18 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, '', ['subject']);
         $this->mockSearchCall(1, 100, 5, '', true, ['subject']);
 
-        foreach ($this->search->forSubject('subject') as $i => $model) {
-            $this->assertInstanceOf(Model::class, $model);
-        }
+        $this->traverseAndSanityCheck($this->search->forSubject('subject'));
     }
 
     private function mockCountCall(int $count, string $query = '', array $subjects = [])
     {
         $this->mockSearchCall(1, 1, $count, $query, true, $subjects);
+    }
+
+    private function traverseAndSanityCheck(Search $search)
+    {
+        foreach ($search as $i => $model) {
+            $this->assertInstanceOf(Model::class, $model);
+        }
     }
 }

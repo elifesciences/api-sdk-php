@@ -13,6 +13,7 @@ use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
+use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Reference;
@@ -27,7 +28,7 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @before
      */
-    protected function setUpBlogArticles()
+    protected function setUpApiSdk()
     {
         $this->apiSdk = new ApiSdk($this->getHttpClient());
     }
@@ -157,6 +158,19 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockPodcastEpisodeCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->podcastEpisodes()->get(1)->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_searches()
+    {
+        $this->assertInstanceOf(Search::class, $this->apiSdk->search());
+
+        $this->markTestIncomplete();
+        $this->mockSearchCall(1);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->search()->get(1)->wait());
     }
 
     /**

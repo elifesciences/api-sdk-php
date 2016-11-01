@@ -544,6 +544,15 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockSearchCall(
+        int $page = 1,
+        int $perPage = 100,
+        int $total = 100,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
+    }
+
     final protected function mockSubjectListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $subjects = array_map(function (int $id) {

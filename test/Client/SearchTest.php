@@ -97,7 +97,7 @@ class SearchTest extends ApiTestCase
     public function it_can_be_filtered_by_subject()
     {
         $this->mockCountCall(5,['subject']);
-        $this->mockSearchCall(1, 100, 5, true, ['subject']);
+        $this->mockSearchCall(1, 100, 5, '', true, ['subject']);
 
         foreach ($this->search->forSubject('subject') as $i => $model) {
             $this->assertInstanceOf(Model::class, $model);
@@ -106,6 +106,6 @@ class SearchTest extends ApiTestCase
 
     private function mockCountCall(int $count, array $subjects = [])
     {
-        $this->mockSearchCall(1, 1, $count, true, $subjects);
+        $this->mockSearchCall(1, 1, $count, '', true, $subjects);
     }
 }

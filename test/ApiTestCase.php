@@ -549,8 +549,11 @@ abstract class ApiTestCase extends TestCase
         int $page = 1,
         int $perPage = 100,
         int $total = 100,
+        string $query = '',
         $descendingOrder = true,
-        array $subjects = []
+        array $subjects = [],
+        array $types = [],
+        $sort = 'relevance'
     ) {
         $results = array_map(function (int $id) {
             return $this->createSearchResultJson($id);
@@ -560,10 +563,14 @@ abstract class ApiTestCase extends TestCase
             return '&subject[]='.$subjectId;
         }, $subjects));
 
+        $typesQuery = implode('', array_map(function (string $type) {
+            return '&types[]='.$type;
+        }, $types));
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for=&page='.$page.'&per-page='.$perPage.'&sort=relevance&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery,
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
             ),
             new Response(

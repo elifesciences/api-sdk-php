@@ -10,6 +10,7 @@ use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -31,6 +32,7 @@ final class Search implements Iterator, Sequence
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
         $this->searchClient = $searchClient;
+        $this->denormalizer = $denormalizer;
     }
 
     public function __clone()
@@ -73,15 +75,8 @@ final class Search implements Iterator, Sequence
                 $results = [];
 
                 foreach ($result['items'] as $searchResult) {
-                    /*
-                    if (isset($this->collections[$collection['id']])) {
-                        $collections[] = $this->collections[$collection['id']]->wait();
-                    } else {
-                        $collections[] = $collection = $this->denormalizer->denormalize($collection, Collection::class,
-                            null, ['snippet' => true]);
-                        $this->collections[$collection->getId()] = promise_for($collection);
-                    }
-                     */
+                    $results[] = $model = $this->denormalizer->denormalize($searchResult, Model::class, null, ['snippet' => true]);
+                    $this->results[$model->getId()] = promise_for($model);
                 }
 
                 return new ArraySequence($results);

@@ -13,6 +13,7 @@ use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
@@ -551,6 +552,53 @@ abstract class ApiTestCase extends TestCase
         $descendingOrder = true,
         array $subjects = []
     ) {
+        $results = array_map(function (int $id) {
+            return $this->createSearchResultJson($id);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        /*
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+         */
+        $subjectsQuery = '';
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/search?for=&page='.$page.'&per-page='.$perPage.'&sort=relevance&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(SearchClient::TYPE_SEARCH, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $results,
+                    'subjects' => [],
+                    'types' => [
+                        'correction' => 0,
+                        'editorial' => 0,
+                        'feature' => 0,
+                        'insight' => 0,
+                        'research-advance' => 0,
+                        'research-article' => 0,
+                        'research-exchange' => 0,
+                        'retraction' => 0,
+                        'registered-report' => 0,
+                        'replication-study' => 0,
+                        'short-report' => 0,
+                        'tools-resources' => 0,
+                        'blog-article' => 0,
+                        'collection' => 0,
+                        'event' => 0,
+                        'interview' => 0,
+                        'labs-experiment' => 0,
+                        'podcast-episode' => 0,
+                    ],
+                ])
+            )
+        );
     }
 
     final protected function mockSubjectListCall(int $page, int $perPage, int $total, $descendingOrder = true)
@@ -1263,6 +1311,15 @@ abstract class ApiTestCase extends TestCase
 
         return $collection;
     }
+
+    private function createSearchResultJson(string $id) : array
+    {
+        return array_merge(
+            $this->createBlogArticleJson($id, $isSnippet = true),
+            ['type' => 'blog-article']
+        );
+    }
+
 
     final private function createSubjectJson(string $id, bool $isSnippet = false) : array
     {

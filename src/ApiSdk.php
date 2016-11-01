@@ -89,6 +89,7 @@ final class ApiSdk
         $this->labsClient = new LabsClient($this->httpClient);
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
+        $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new Serializer([

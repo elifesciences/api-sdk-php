@@ -3,9 +3,12 @@
 namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\Cache\StorageAdapterInterface;
+use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\ApiValidator\MessageValidator;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
 final class ValidatingStorageAdapter implements StorageAdapterInterface
 {
@@ -25,9 +28,28 @@ final class ValidatingStorageAdapter implements StorageAdapterInterface
 
     public function save(RequestInterface $request, ResponseInterface $response)
     {
-        $this->validator->validate($request);
-        $this->validator->validate($response);
+        try {
+            $this->validator->validate($request);
+        } catch (InvalidMessage $e) {
+            throw new RuntimeException("Request JSON schema validation failed: ".$this->dumpJsonBody($request), -1, $e);
+        }
+        try {
+            $this->validator->validate($response);
+        } catch (InvalidMessage $e) {
+            throw new RuntimeException("Response JSON schema validation failed: ".$this->dumpJsonBody($response), -1, $e);
+        }
 
         $this->storageAdapter->save($request, $response);
+    }
+
+    private function dumpJsonBody(MessageInterface $message)
+    {
+        return var_export(
+            json_decode(
+                (string) $message->getBody(),
+                true
+            ),
+            true
+        );
     }
 }

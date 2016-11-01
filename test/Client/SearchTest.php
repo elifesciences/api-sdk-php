@@ -124,9 +124,20 @@ class SearchTest extends ApiTestCase
         $this->traverseAndSanityCheck($this->search->forType('blog-article'));
     }
 
-    private function mockCountCall(int $count, string $query = '', array $subjects = [], $types = [])
+    /**
+     * @test
+     */
+    public function it_can_be_sorted()
     {
-        $this->mockSearchCall(1, 1, $count, $query, true, $subjects, $types);
+        $this->mockCountCall(5, '', [], [], 'relevance');
+        $this->mockSearchCall(1, 100, 5, '', true, [], [], 'relevance');
+
+        $this->traverseAndSanityCheck($this->search->withSort('relevance'));
+    }
+
+    private function mockCountCall(int $count, string $query = '', array $subjects = [], $types = [], $sort = 'relevance')
+    {
+        $this->mockSearchCall(1, 1, $count, $query, true, $subjects, $types, $sort);
     }
 
     private function traverseAndSanityCheck(Search $search)

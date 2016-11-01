@@ -28,6 +28,7 @@ final class Search implements Iterator, Sequence
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $typesQuery = [];
+    private $sort = 'relevance';
     private $searchClient;
     private $denormalizer;
     
@@ -81,6 +82,19 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
 
+    public function withSort(string $sort) : self
+    {
+        $clone = clone $this;
+
+        $clone->sort = $sort;
+
+        if ($clone->sort !== $this->sort) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
@@ -97,7 +111,7 @@ final class Search implements Iterator, Sequence
                 $this->query,
                 ($offset / $length) + 1,
                 $length,
-                $sort = 'relevance',
+                $this->sort,
                 $this->descendingOrder,
                 $this->subjectsQuery,
                 $this->typesQuery

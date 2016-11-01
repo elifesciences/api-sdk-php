@@ -564,7 +564,7 @@ abstract class ApiTestCase extends TestCase
         }, $subjects));
 
         $typesQuery = implode('', array_map(function (string $type) {
-            return '&types[]='.$type;
+            return '&type[]='.$type;
         }, $types));
 
         $this->storage->save(

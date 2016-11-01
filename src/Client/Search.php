@@ -27,6 +27,7 @@ final class Search implements Iterator, Sequence
     private $query = '';
     private $descendingOrder = true;
     private $subjectsQuery = [];
+    private $typesQuery = [];
     private $searchClient;
     private $denormalizer;
     
@@ -67,6 +68,18 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
 
+    public function forType(string ...$type) : self
+    {
+        $clone = clone $this;
+
+        $clone->typesQuery = array_unique(array_merge($this->typesQuery, $type));
+
+        if ($clone->typesQuery !== $this->typesQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
 
     public function slice(int $offset, int $length = null) : Sequence
     {
@@ -87,7 +100,7 @@ final class Search implements Iterator, Sequence
                 $sort = 'relevance',
                 $this->descendingOrder,
                 $this->subjectsQuery,
-                $types = []
+                $this->typesQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

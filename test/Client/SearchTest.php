@@ -34,7 +34,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_traversed()
     {
-        $this->mockSearchCall(1, 1, 200);
+        $this->mockCountCall(200);
         $this->mockSearchCall(1, 100, 200);
         $this->mockSearchCall(2, 100, 200);
 
@@ -48,8 +48,30 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_counted()
     {
-        $this->mockSearchCall(1, 1, 10);
+        $this->mockCountCall(10);
 
         $this->assertSame(10, $this->search->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_casts_to_an_array()
+    {
+        $this->mockCountCall(10);
+        $this->mockSearchCall(1, 100, 10);
+
+        $array = $this->search->toArray();
+
+        $this->assertCount(10, $array);
+
+        foreach ($array as $i => $result) {
+            $this->assertInstanceOf(Model::class, $result);
+        }
+    }
+
+    private function mockCountCall($count)
+    {
+        $this->mockSearchCall(1, 1, $count);
     }
 }

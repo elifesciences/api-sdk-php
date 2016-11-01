@@ -24,6 +24,7 @@ final class Search implements Iterator, Sequence
 
     private $count;
     private $collections = [];
+    private $query = '';
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $searchClient;
@@ -38,6 +39,19 @@ final class Search implements Iterator, Sequence
     public function __clone()
     {
         $this->resetIterator();
+    }
+
+    public function forQuery(string $query)
+    {
+        $clone = clone $this;
+
+        $clone->query = $query;
+
+        if ($clone->query !== $this->query) {
+            $clone->count = null;
+        }
+
+        return $clone;
     }
 
     public function forSubject(string ...$subjectId) : self
@@ -67,7 +81,7 @@ final class Search implements Iterator, Sequence
         return new PromiseSequence($this->searchClient
             ->query(
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)],
-                $query = '',
+                $this->query,
                 ($offset / $length) + 1,
                 $length,
                 $sort = 'relevance',

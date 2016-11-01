@@ -94,9 +94,22 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_filtered_by_query()
+    {
+        $this->mockCountCall(5, 'bacteria');
+        $this->mockSearchCall(1, 100, 5, 'bacteria');
+
+        foreach ($this->search->forQuery('bacteria') as $i => $model) {
+            $this->assertInstanceOf(Model::class, $model);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_subject()
     {
-        $this->mockCountCall(5,['subject']);
+        $this->mockCountCall(5, '', ['subject']);
         $this->mockSearchCall(1, 100, 5, '', true, ['subject']);
 
         foreach ($this->search->forSubject('subject') as $i => $model) {
@@ -104,8 +117,8 @@ class SearchTest extends ApiTestCase
         }
     }
 
-    private function mockCountCall(int $count, array $subjects = [])
+    private function mockCountCall(int $count, string $query = '', array $subjects = [])
     {
-        $this->mockSearchCall(1, 1, $count, '', true, $subjects);
+        $this->mockSearchCall(1, 1, $count, $query, true, $subjects);
     }
 }

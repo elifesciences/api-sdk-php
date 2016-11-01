@@ -172,6 +172,31 @@ class SearchTest extends ApiTestCase
         $this->traverseAndSanityCheck($this->search->reverse());
     }
 
+    /**
+     * @test
+     */
+    public function it_does_not_recount_when_reversed()
+    {
+        $this->mockCountCall(10);
+
+        $this->search->count();
+
+        $this->assertSame(10, $this->search->reverse()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_reversed()
+    {
+        $this->mockCountCall(10);
+        $this->mockSearchCall(1, 100, 10);
+        $this->search->toArray();
+
+        $this->mockSearchCall(1, 100, 10, '', false);
+        $this->search->reverse()->toArray();
+    }
+
     private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
     {
         $this->mockSearchCall(1, 1, $count, $query, $descendingOrder, $subjects, $types, $sort);

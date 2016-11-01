@@ -556,12 +556,9 @@ abstract class ApiTestCase extends TestCase
             return $this->createSearchResultJson($id);
         }, $this->generateIdList($page, $perPage, $total));
 
-        /*
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
             return '&subject[]='.$subjectId;
         }, $subjects));
-         */
-        $subjectsQuery = '';
 
         $this->storage->save(
             new Request(

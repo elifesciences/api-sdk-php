@@ -40,10 +40,19 @@ final class Search implements Iterator, Sequence
         $this->resetIterator();
     }
 
-    public function get()
+    public function forSubject(string ...$subjectId) : self
     {
-        
-    }    
+        $clone = clone $this;
+
+        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
+
+        if ($clone->subjectsQuery !== $this->subjectsQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
 
     public function slice(int $offset, int $length = null) : Sequence
     {
@@ -63,7 +72,7 @@ final class Search implements Iterator, Sequence
                 $length,
                 $sort = 'relevance',
                 $this->descendingOrder,
-                $subjects = [],
+                $this->subjectsQuery,
                 $types = []
             )
             ->then(function (Result $result) {

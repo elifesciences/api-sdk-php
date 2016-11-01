@@ -91,8 +91,21 @@ class SearchTest extends ApiTestCase
         $this->assertSame('Blog article 1 title', $result[0]->getTitle());
     }
 
-    private function mockCountCall($count)
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_subject()
     {
-        $this->mockSearchCall(1, 1, $count);
+        $this->mockCountCall(5,['subject']);
+        $this->mockSearchCall(1, 100, 5, true, ['subject']);
+
+        foreach ($this->search->forSubject('subject') as $i => $model) {
+            $this->assertInstanceOf(Model::class, $model);
+        }
+    }
+
+    private function mockCountCall(int $count, array $subjects = [])
+    {
+        $this->mockSearchCall(1, 1, $count, true, $subjects);
     }
 }

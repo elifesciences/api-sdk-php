@@ -165,7 +165,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['titlePrefix'] ?? null,
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']),
+            $data['statusDate'] ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null,
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,

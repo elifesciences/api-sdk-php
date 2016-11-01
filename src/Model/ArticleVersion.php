@@ -39,7 +39,7 @@ abstract class ArticleVersion
         string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published,
-        DateTimeImmutable $statusDate,
+        DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
         string $pdf = null,

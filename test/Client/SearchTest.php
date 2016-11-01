@@ -135,6 +135,32 @@ class SearchTest extends ApiTestCase
         $this->traverseAndSanityCheck($this->search->withSort('relevance'));
     }
 
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering()
+    {
+        $this->mockCountCall(5);
+        $this->search->count();
+
+        $this->mockCountCall(4, '', ['subject']);
+        $this->assertSame(4, $this->search->forSubject('subject')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_filtering()
+    {
+        $this->mockCountCall(10);
+        $this->mockSearchCall(1, 100, 10);
+        $this->search->toArray();
+
+        $this->mockCountCall(8, 'bacteria');
+        $this->mockSearchCall(1, 100, 8, 'bacteria');
+        $this->search->forQuery('bacteria')->toArray();
+    }
+
     private function mockCountCall(int $count, string $query = '', array $subjects = [], $types = [], $sort = 'relevance')
     {
         $this->mockSearchCall(1, 1, $count, $query, true, $subjects, $types, $sort);

@@ -49,9 +49,7 @@ final class Search implements Iterator, Sequence
 
         $clone->query = $query;
 
-        if ($clone->query !== $this->query) {
-            $clone->count = null;
-        }
+        $clone->invalidateDataIfDifferent('query', $this);
 
         return $clone;
     }
@@ -62,9 +60,7 @@ final class Search implements Iterator, Sequence
 
         $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
 
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
+        $clone->invalidateDataIfDifferent('subjectsQuery', $this);
 
         return $clone;
     }
@@ -75,9 +71,7 @@ final class Search implements Iterator, Sequence
 
         $clone->typesQuery = array_unique(array_merge($this->typesQuery, $type));
 
-        if ($clone->typesQuery !== $this->typesQuery) {
-            $clone->count = null;
-        }
+        $clone->invalidateDataIfDifferent('typesQuery', $this);
 
         return $clone;
     }
@@ -88,9 +82,7 @@ final class Search implements Iterator, Sequence
 
         $clone->sort = $sort;
 
-        if ($clone->sort !== $this->sort) {
-            $clone->count = null;
-        }
+        $clone->invalidateDataIfDifferent('sort', $this);
 
         return $clone;
     }
@@ -150,5 +142,12 @@ final class Search implements Iterator, Sequence
         }
 
         return $this->count;
+    }
+
+    private function invalidateDataIfDifferent(string $field, self $another)
+    {
+        if ($this->$field !== $another->$field) {
+            $this->count = null;
+        }
     }
 }

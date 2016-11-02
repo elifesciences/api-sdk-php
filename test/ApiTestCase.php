@@ -579,7 +579,18 @@ abstract class ApiTestCase extends TestCase
                 json_encode([
                     'total' => $total,
                     'items' => $results,
-                    'subjects' => [],
+                    'subjects' => [
+                        [
+                            'id' => 'subject1',
+                            'name' => 'Subject 1',
+                            'results' => 20,
+                        ],
+                        [
+                            'id' => 'subject2',
+                            'name' => 'Subject 2',
+                            'results' => 30,
+                        ],
+                    ],
                     'types' => [
                         'correction' => 1,
                         'editorial' => 2,

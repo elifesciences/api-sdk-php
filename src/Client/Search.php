@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\SearchTypes;
 use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\Promise;
@@ -37,6 +38,10 @@ final class Search implements Iterator, Sequence
      * @var PromiseInterface
      */
     private $types;
+    /**
+     * @var PromiseInterface
+     */
+    private $subjects;
 
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
@@ -128,6 +133,11 @@ final class Search implements Iterator, Sequence
                 return new SearchTypes($result['types']);
             });
 
+        $this->subjects = $resultPromise
+            ->then(function($result) {
+                return new SearchSubjects($result['subjects']);
+            });
+
         return new PromiseSequence($resultPromise
             ->then(function (Result $result) {
                 $results = [];
@@ -191,6 +201,15 @@ final class Search implements Iterator, Sequence
         }
 
         return $this->types->wait();
+    }
+
+    public function subjects() : SearchSubjects
+    {
+        if (null === $this->subjects) {
+            $this->slice(0, 1);
+        }
+
+        return $this->subjects->wait();
     }
 
     private function invalidateDataIfDifferent(string $field, self $another)

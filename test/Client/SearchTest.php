@@ -320,6 +320,19 @@ class SearchTest extends ApiTestCase
         }
     }
 
+    /**
+     * @test
+     */
+    public function it_has_counters_for_subjects()
+    {
+        $this->mockCountCall(10); 
+        $this->mockFirstPageCall(10);
+
+        $subjects = $this->search->subjects();
+        foreach ($subjects as $subject => $counter) {
+        }
+    }
+
     private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
     {
         $this->mockSearchCall(1, 1, $count, $query, $descendingOrder, $subjects, $types, $sort);

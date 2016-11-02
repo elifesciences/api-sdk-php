@@ -21,7 +21,8 @@ final class IdentityMap
 
     public function has($id) : bool
     {
-        return array_key_exists($id, $this->contents);
+        // on null, this must return false
+        return isset($this->contents[$id]);
     }
 
     /**

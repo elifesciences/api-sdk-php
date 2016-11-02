@@ -109,7 +109,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
         if (empty($this->globalCallback)) {
             $this->globalCallback = new CallbackPromise(function () {
-                $this->identityMap->fillMissingWith(function ($id) {
+                $this->identityMap->fillMissingWith(function ($id) : PromiseInterface {
                     return $this->collectionsClient->getCollection(
                         ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                         $id

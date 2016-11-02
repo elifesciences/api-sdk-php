@@ -135,7 +135,7 @@ final class Search implements Iterator, Sequence
 
         $this->subjects = $resultPromise
             ->then(function($result) {
-                return new SearchSubjects($result['subjects']);
+                return $this->denormalizer->denormalize($result['subjects'], SearchSubjects::class);
             });
 
         return new PromiseSequence($resultPromise

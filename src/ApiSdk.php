@@ -47,6 +47,7 @@ use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
+use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
@@ -111,6 +112,7 @@ final class ApiSdk
             new PersonNormalizer($this->peopleClient),
             new PlaceNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
+            new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),

@@ -3,19 +3,44 @@
 namespace eLife\ApiSdk\Model;
 
 use ArrayIterator;
+use Iterator;
 use IteratorAggregate;
 
-class SearchSubjects implements IteratorAggregate
+class SearchSubjects implements Iterator
 {
-    private $c;
+    private $subjects;
+    private $counters;
     
-    public function __construct($c)
+    public function __construct(array $subjects, array $counters)
     {
-        $this->c = $c;
+        $this->subjects = $subjects;
+        $this->counters = $counters;
     }
 
-    public function getIterator()
+    public function current()
     {
-        return new ArrayIterator($this->c);
+        return current($this->counters);
+    }
+
+    public function next()
+    {
+        next($this->subjects);
+        next($this->counters);
+    }
+
+    public function key()
+    {
+        return current($this->subjects);
+    }
+
+    public function valid()
+    {
+        return $this->key() !== false;
+    }
+
+    public function rewind()
+    {
+        reset($this->subjects);
+        reset($this->counters);
     }
 }

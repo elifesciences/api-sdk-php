@@ -139,11 +139,12 @@ class SearchTest extends ApiTestCase
      */
     public function it_refreshes_subject_and_types_when_filtering()
     {
-        $total = function($iterator) {
+        $total = function ($iterator) {
             $sum = 0;
             foreach ($iterator as $results) {
                 $sum += $results;
             }
+
             return $sum;
         };
         $this->mockCountCall(5);
@@ -331,7 +332,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_has_counters_for_types()
     {
-        $this->mockCountCall(10); 
+        $this->mockCountCall(10);
         $this->mockFirstPageCall(10);
 
         $types = $this->search->types();
@@ -347,7 +348,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_has_counters_for_subjects()
     {
-        $this->mockCountCall(10); 
+        $this->mockCountCall(10);
         $this->mockFirstPageCall(10);
 
         $subjects = $this->search->subjects();

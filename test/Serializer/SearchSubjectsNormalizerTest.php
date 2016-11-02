@@ -3,19 +3,14 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use stdClass;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 
 final class SearchSubjectsNormalizerTest extends ApiTestCase
 {
@@ -63,7 +58,7 @@ final class SearchSubjectsNormalizerTest extends ApiTestCase
         return [
             'subject' => [$searchSubjects, null, true],
             'subject with format' => [$searchSubjects, 'foo', true],
-            'non-subject' => [new stdClass, null, false],
+            'non-subject' => [new stdClass(), null, false],
         ];
     }
 

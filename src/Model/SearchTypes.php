@@ -10,7 +10,7 @@ use IteratorAggregate;
 class SearchTypes implements IteratorAggregate, Countable
 {
     private $typesToResults;
-    
+
     public function __construct($typesToResults)
     {
         $this->typesToResults = $typesToResults;

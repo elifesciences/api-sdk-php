@@ -13,7 +13,6 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\SearchTypes;
 use eLife\ApiSdk\SlicedIterator;
-use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -131,14 +130,14 @@ final class Search implements Iterator, Sequence
 
                 return $result;
             });
-        
+
         $this->types = $resultPromise
-            ->then(function($result) {
+            ->then(function ($result) {
                 return new SearchTypes($result['types']);
             });
 
         $this->subjects = $resultPromise
-            ->then(function($result) {
+            ->then(function ($result) {
                 return $this->denormalizer->denormalize($result['subjects'], SearchSubjects::class);
             });
 

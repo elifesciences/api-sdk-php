@@ -2,15 +2,13 @@
 
 namespace eLife\ApiSdk\Model;
 
-use ArrayIterator;
 use Iterator;
-use IteratorAggregate;
 
 class SearchSubjects implements Iterator
 {
     private $subjects;
     private $results;
-    
+
     public function __construct(array $subjects, array $results)
     {
         $this->subjects = $subjects;

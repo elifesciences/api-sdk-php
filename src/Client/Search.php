@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -12,7 +11,6 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\SlicedIterator;
-use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
@@ -32,7 +30,7 @@ final class Search implements Iterator, Sequence
     private $searchClient;
     private $denormalizer;
     private $results = [];
-    
+
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
         $this->searchClient = $searchClient;
@@ -140,8 +138,8 @@ final class Search implements Iterator, Sequence
         return
             $searchResult['type']
             .(
-                isset($searchResult['status']) 
-                ? '-' . $searchResult['status']
+                isset($searchResult['status'])
+                ? '-'.$searchResult['status']
                 : ''
             )
             .'::'

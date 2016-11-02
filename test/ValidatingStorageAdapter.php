@@ -31,12 +31,12 @@ final class ValidatingStorageAdapter implements StorageAdapterInterface
         try {
             $this->validator->validate($request);
         } catch (InvalidMessage $e) {
-            throw new RuntimeException("Request JSON schema validation failed: ".$this->dumpJsonBody($request), -1, $e);
+            throw new RuntimeException('Request JSON schema validation failed: '.$this->dumpJsonBody($request), -1, $e);
         }
         try {
             $this->validator->validate($response);
         } catch (InvalidMessage $e) {
-            throw new RuntimeException("Response JSON schema validation failed: ".$this->dumpJsonBody($response), -1, $e);
+            throw new RuntimeException('Response JSON schema validation failed: '.$this->dumpJsonBody($response), -1, $e);
         }
 
         $this->storageAdapter->save($request, $response);

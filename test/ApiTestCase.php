@@ -1331,12 +1331,12 @@ abstract class ApiTestCase extends TestCase
         $index = (((int) $id) - 1) % count($allowedModelFactories);
         $selectedModelFactory = array_keys($allowedModelFactories)[$index];
         $type = array_values($allowedModelFactories)[$index];
+
         return array_merge(
             $this->$selectedModelFactory($id, $isSnippet = true),
             ['type' => $type]
         );
     }
-
 
     final private function createSubjectJson(string $id, bool $isSnippet = false) : array
     {

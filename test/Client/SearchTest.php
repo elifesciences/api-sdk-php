@@ -198,7 +198,7 @@ class SearchTest extends ApiTestCase
             ],
         ];
     }
-    
+
     /**
      * @test
      * @dataProvider sliceProvider
@@ -281,7 +281,7 @@ class SearchTest extends ApiTestCase
 
         $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
         foreach ($this->search->reverse() as $searchResult) {
-            $this->assertTrue(array_search($searchResult, $models, $strict = true) !== false, "Search result not found in previous results objects set");
+            $this->assertTrue(array_search($searchResult, $models, $strict = true) !== false, 'Search result not found in previous results objects set');
         }
     }
 

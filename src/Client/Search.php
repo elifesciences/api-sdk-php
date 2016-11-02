@@ -137,7 +137,15 @@ final class Search implements Iterator, Sequence
 
     private function keyFor(array $searchResult)
     {
-        return $searchResult['type'].'::'.$searchResult['id'];
+        return
+            $searchResult['type']
+            .(
+                isset($searchResult['status']) 
+                ? '-' . $searchResult['status']
+                : ''
+            )
+            .'::'
+            .$searchResult['id'];
     }
 
     public function reverse() : Sequence

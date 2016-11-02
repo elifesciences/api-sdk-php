@@ -1318,9 +1318,18 @@ abstract class ApiTestCase extends TestCase
 
     private function createSearchResultJson(string $id) : array
     {
+        $allowedModelFactories = [
+            'createArticlePoAJson' => 'research-article',
+            'createArticleVoRJson' => 'research-article',
+            'createBlogArticleJson' => 'blog-article',
+            //'createCollectionJson' => 'collection',
+        ];
+        $index = (((int) $id) - 1) % count($allowedModelFactories);
+        $selectedModelFactory = array_keys($allowedModelFactories)[$index];
+        $type = array_values($allowedModelFactories)[$index];
         return array_merge(
-            $this->createBlogArticleJson($id, $isSnippet = true),
-            ['type' => 'blog-article']
+            $this->$selectedModelFactory($id, $isSnippet = true),
+            ['type' => $type]
         );
     }
 

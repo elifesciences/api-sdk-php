@@ -5,6 +5,8 @@ namespace test\eLife\ApiSdk\Client;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -85,10 +87,8 @@ class SearchTest extends ApiTestCase
 
         $this->assertInstanceOf(Model::class, $result[0]);
 
-        $this->mockBlogArticleCall(1);
-
-        $this->assertInstanceOf(BlogArticle::class, $result[0]);
-        $this->assertSame('Blog article 1 title', $result[0]->getTitle());
+        $this->mockArticleCall(1);
+        $this->assertSame('Article 1 title', $result[0]->getTitle());
     }
 
     /**
@@ -212,7 +212,7 @@ class SearchTest extends ApiTestCase
         };
 
         $this->assertSame(
-            [BlogArticle::class, BlogArticle::class, BlogArticle::class],
+            [ArticlePoA::class, ArticleVoR::class, BlogArticle::class],
             $this->search->map($map)->toArray()
         );
     }

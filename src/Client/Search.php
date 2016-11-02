@@ -145,7 +145,11 @@ final class Search implements Iterator, Sequence
                 : ''
             )
             .'::'
-            .$searchResult['id'];
+            .(
+                isset($searchResult['id'])
+                ? $searchResult['id']
+                : $searchResult['number']
+            );
     }
 
     public function reverse() : Sequence

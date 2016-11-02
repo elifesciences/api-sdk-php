@@ -226,10 +226,10 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(5);
 
         $filter = function (Model $model) {
-            return $model->getId() > 3;
+            return get_class($model) == BlogArticle::class;
         };
 
-        $this->assertEquals(2, count($this->search->filter($filter)));
+        $this->assertEquals(1, count($this->search->filter($filter)));
     }
 
     /**
@@ -241,10 +241,10 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(5);
 
         $reduce = function (int $carry = null, Model $model) {
-            return $carry + $model->getId();
+            return $carry + 1;
         };
 
-        $this->assertSame(115, $this->search->reduce($reduce, 100)->wait());
+        $this->assertSame(105, $this->search->reduce($reduce, 100)->wait());
     }
 
     /**

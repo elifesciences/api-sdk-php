@@ -31,6 +31,7 @@ final class Search implements Iterator, Sequence
     private $sort = 'relevance';
     private $searchClient;
     private $denormalizer;
+    private $results = [];
     
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
@@ -120,13 +121,23 @@ final class Search implements Iterator, Sequence
                 $results = [];
 
                 foreach ($result['items'] as $searchResult) {
-                    $results[] = $model = $this->denormalizer->denormalize($searchResult, Model::class, null, ['snippet' => true]);
-                    $this->results[$model->getId()] = promise_for($model);
+                    $key = $this->keyFor($searchResult);
+                    if (isset($this->results[$key])) {
+                        $results[] = $this->results[$key]->wait();
+                    } else {
+                        $results[] = $model = $this->denormalizer->denormalize($searchResult, Model::class, null, ['snippet' => true]);
+                        $this->results[$key] = promise_for($model);
+                    }
                 }
 
                 return new ArraySequence($results);
             })
         );
+    }
+
+    private function keyFor(array $searchResult)
+    {
+        return $searchResult['type'].'::'.$searchResult['id'];
     }
 
     public function reverse() : Sequence

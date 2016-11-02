@@ -1175,7 +1175,7 @@ abstract class ApiTestCase extends TestCase
         return $podcastEpisode;
     }
 
-    private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    protected function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $collection = [
             'id' => $id,
@@ -1322,7 +1322,11 @@ abstract class ApiTestCase extends TestCase
             'createArticlePoAJson' => 'research-article',
             'createArticleVoRJson' => 'research-article',
             'createBlogArticleJson' => 'blog-article',
-            //'createCollectionJson' => 'collection',
+            'createCollectionJson' => 'collection',
+            'createEventJson' => 'event',
+            'createInterviewJson' => 'interview',
+            //'createLabsExperimentJson' => 'labs-experiment',
+            //'createPodcastEpisodeJson' => 'podcast-episode',
         ];
         $index = (((int) $id) - 1) % count($allowedModelFactories);
         $selectedModelFactory = array_keys($allowedModelFactories)[$index];

@@ -76,7 +76,10 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
 
-    public function withSort(string $sort) : self
+    /**
+     * @param string $sort 'relevance' or 'date'?
+     */
+    public function sortBy(string $sort) : self
     {
         $clone = clone $this;
 

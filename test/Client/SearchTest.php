@@ -127,17 +127,6 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_can_be_sorted()
-    {
-        $this->mockCountCall(5, '', true, [], [], 'relevance');
-        $this->mockSearchCall(1, 100, 5, '', true, [], [], 'relevance');
-
-        $this->traverseAndSanityCheck($this->search->withSort('relevance'));
-    }
-
-    /**
-     * @test
-     */
     public function it_recounts_when_filtering()
     {
         $this->mockCountCall(5);
@@ -159,6 +148,114 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(8, 'bacteria');
         $this->mockSearchCall(1, 100, 8, 'bacteria');
         $this->search->forQuery('bacteria')->toArray();
+    }
+
+    /**
+     * @test
+     * @dataProvider sliceProvider
+     */
+    public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
+    {
+        foreach ($calls as $call) {
+            $this->mockSearchCall($call['page'], $call['per-page'], 5);
+        }
+
+        foreach ($this->search->slice($offset, $length) as $i => $searchResult) {
+            $this->assertInstanceOf(Model::class, $searchResult);
+        }
+    }
+
+    public function sliceProvider() : array
+    {
+        // 3rd arguments have to be updated to describe the expected result
+        return [
+            'offset 1, length 1' => [
+                1,
+                1,
+                [2],
+                [
+                    ['page' => 2, 'per-page' => 1],
+                ],
+            ],
+            'offset -2, no length' => [
+                -2,
+                null,
+                [4, 5],
+                [
+                    ['page' => 1, 'per-page' => 1],
+                    ['page' => 1, 'per-page' => 100],
+                ],
+            ],
+            'offset 6, no length' => [
+                6,
+                null,
+                [],
+                [
+                    ['page' => 1, 'per-page' => 1],
+                    ['page' => 1, 'per-page' => 100],
+                ],
+            ],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider sliceProvider
+     */
+    public function it_can_be_mapped()
+    {
+        $this->mockCountCall(3);
+        $this->mockSearchCall(1, 100, 3);
+
+        $map = function (Model $model) {
+            return get_class($model);
+        };
+
+        $this->assertSame(
+            [BlogArticle::class, BlogArticle::class, BlogArticle::class],
+            $this->search->map($map)->toArray()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered()
+    {
+        $this->mockCountCall(5);
+        $this->mockSearchCall(1, 100, 5);
+
+        $filter = function (Model $model) {
+            return $model->getId() > 3;
+        };
+
+        $this->assertEquals(2, count($this->search->filter($filter)));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_reduced()
+    {
+        $this->mockCountCall(5);
+        $this->mockSearchCall(1, 100, 5);
+
+        $reduce = function (int $carry = null, Model $model) {
+            return $carry + $model->getId();
+        };
+
+        $this->assertSame(115, $this->search->reduce($reduce, 100)->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_sorted()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'relevance');
+        $this->mockSearchCall(1, 100, 5, '', true, [], [], 'relevance');
+
+        $this->traverseAndSanityCheck($this->search->sortBy('relevance'));
     }
 
     /**

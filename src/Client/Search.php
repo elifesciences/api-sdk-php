@@ -216,6 +216,9 @@ final class Search implements Iterator, Sequence
     {
         if ($this->$field !== $another->$field) {
             $this->count = null;
+            $this->types = null;
+            $this->subjects = null;
+            $this->results = [];
         }
     }
 }

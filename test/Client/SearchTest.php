@@ -9,6 +9,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
 class SearchTest extends ApiTestCase
@@ -131,6 +132,27 @@ class SearchTest extends ApiTestCase
 
         $this->mockCountCall(4, 'bacteria');
         $this->assertSame(4, $this->search->forQuery('bacteria')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_refreshes_subject_and_types_when_filtering()
+    {
+        $total = function($iterator) {
+            $sum = 0;
+            foreach ($iterator as $results) {
+                $sum += $results;
+            }
+            return $sum;
+        };
+        $this->mockCountCall(5);
+        $oldTypes = $total($this->search->types());
+        $oldSubjects = $total($this->search->subjects());
+
+        $this->mockCountCall(4, 'bacteria');
+        $this->assertNotEquals($oldTypes, $total($this->search->forQuery('bacteria')->types()), 'Types are not being refreshed');
+        $this->assertNotEquals($oldSubjects, $total($this->search->forQuery('bacteria')->subjects()), 'Subjects are not being refreshed');
     }
 
     /**
@@ -330,6 +352,8 @@ class SearchTest extends ApiTestCase
 
         $subjects = $this->search->subjects();
         foreach ($subjects as $subject => $counter) {
+            $this->assertInstanceOf(Subject::class, $subject);
+            $this->assertGreaterThanOrEqual(0, $counter);
         }
     }
 

@@ -41,9 +41,7 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(200);
         $this->mockSearchCall($page = 2, $perPage = 100, $total = 200);
 
-        foreach ($this->search as $i => $result) {
-            $this->assertInstanceOf(Model::class, $result);
-        }
+        $this->assertSame(200, $this->traverseAndSanityCheck($this->search));
     }
 
     /**
@@ -68,9 +66,7 @@ class SearchTest extends ApiTestCase
 
         $this->assertCount(10, $array);
 
-        foreach ($array as $i => $result) {
-            $this->assertInstanceOf(Model::class, $result);
-        }
+        $this->assertSame(10, $this->traverseAndSanityCheck($array));
     }
 
     /**
@@ -100,7 +96,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, 'bacteria');
         $this->mockFirstPageCall(5, 'bacteria');
 
-        $this->traverseAndSanityCheck($this->search->forQuery('bacteria'));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forQuery('bacteria')));
     }
 
     /**
@@ -111,7 +107,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, $query = '', $descendingOrder = true, ['subject']);
         $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['subject']);
 
-        $this->traverseAndSanityCheck($this->search->forSubject('subject'));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('subject')));
     }
 
     /**
@@ -122,7 +118,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);
         $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);
 
-        $this->traverseAndSanityCheck($this->search->forType('blog-article'));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forType('blog-article')));
     }
 
     /**
@@ -148,7 +144,7 @@ class SearchTest extends ApiTestCase
 
         $this->mockCountCall(8, 'bacteria');
         $this->mockFirstPageCall(8, 'bacteria');
-        $this->search->forQuery('bacteria')->toArray();
+        $this->assertSame(8, $this->traverseAndSanityCheck($this->search->forQuery('bacteria')->toArray()));
     }
 
     /**
@@ -161,9 +157,7 @@ class SearchTest extends ApiTestCase
             $this->mockSearchCall($call['page'], $call['per-page'], $total = 5);
         }
 
-        foreach ($this->search->slice($offset, $length) as $i => $searchResult) {
-            $this->assertInstanceOf(Model::class, $searchResult);
-        }
+        $this->traverseAndSanityCheck($this->search->slice($offset, $length));
     }
 
     public function sliceProvider() : array
@@ -256,7 +250,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], $types = [], 'relevance');
         $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, $subjects = [], $types = [], 'relevance');
 
-        $this->traverseAndSanityCheck($this->search->sortBy('relevance'));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->sortBy('relevance')));
     }
 
     /**
@@ -267,7 +261,7 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(10, $query = '', $descendingOrder = false);
         $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
 
-        $this->traverseAndSanityCheck($this->search->reverse());
+        $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()));
     }
 
     /**
@@ -307,7 +301,7 @@ class SearchTest extends ApiTestCase
         $this->search->toArray();
 
         $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
-        $this->search->reverse()->toArray();
+        $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()->toArray()));
     }
 
     private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
@@ -320,10 +314,14 @@ class SearchTest extends ApiTestCase
         $this->mockSearchCall(1, 100, $total, ...$options);
     }
 
-    private function traverseAndSanityCheck(Search $search)
+    private function traverseAndSanityCheck($search)
     {
+        $count = 0;
         foreach ($search as $i => $model) {
             $this->assertInstanceOf(Model::class, $model);
+            ++$count;
         }
+
+        return $count;
     }
 }

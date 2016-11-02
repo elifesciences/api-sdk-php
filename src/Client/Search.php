@@ -12,6 +12,8 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\SearchTypes;
 use eLife\ApiSdk\SlicedIterator;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
@@ -31,6 +33,9 @@ final class Search implements Iterator, Sequence
     private $searchClient;
     private $denormalizer;
     private $results = [];
+    /**
+     * @var PromiseInterface
+     */
     private $types;
 
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
@@ -101,7 +106,7 @@ final class Search implements Iterator, Sequence
             );
         }
 
-        return new PromiseSequence($this->searchClient
+        $resultPromise = $this->searchClient
             ->query(
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)],
                 $this->query,
@@ -116,7 +121,14 @@ final class Search implements Iterator, Sequence
                 $this->count = $result['total'];
 
                 return $result;
-            })
+            });
+        
+        $this->types = $resultPromise
+            ->then(function($result) {
+                return new SearchTypes($result['types']);
+            });
+
+        return new PromiseSequence($resultPromise
             ->then(function (Result $result) {
                 $results = [];
 
@@ -129,11 +141,12 @@ final class Search implements Iterator, Sequence
                         $this->results[$key] = promise_for($model);
                     }
                 }
-                $this->types = new SearchTypes($result['types']);
 
                 return new ArraySequence($results);
             })
         );
+
+        return $sequencePromise;
     }
 
     private function keyFor(array $searchResult)
@@ -173,11 +186,11 @@ final class Search implements Iterator, Sequence
 
     public function types() : SearchTypes
     {
-        if (null === $this->count) {
-            $this->slice(0)->count();
+        if (null === $this->types) {
+            $this->slice(0, 1);
         }
 
-        return $this->types;
+        return $this->types->wait();
     }
 
     private function invalidateDataIfDifferent(string $field, self $another)

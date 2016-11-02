@@ -9,23 +9,23 @@ use IteratorAggregate;
 class SearchSubjects implements Iterator
 {
     private $subjects;
-    private $counters;
+    private $results;
     
-    public function __construct(array $subjects, array $counters)
+    public function __construct(array $subjects, array $results)
     {
         $this->subjects = $subjects;
-        $this->counters = $counters;
+        $this->results = $results;
     }
 
     public function current()
     {
-        return current($this->counters);
+        return current($this->results);
     }
 
     public function next()
     {
         next($this->subjects);
-        next($this->counters);
+        next($this->results);
     }
 
     public function key()
@@ -41,6 +41,6 @@ class SearchSubjects implements Iterator
     public function rewind()
     {
         reset($this->subjects);
-        reset($this->counters);
+        reset($this->results);
     }
 }

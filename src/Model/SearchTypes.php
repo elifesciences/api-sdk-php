@@ -9,20 +9,20 @@ use IteratorAggregate;
 
 class SearchTypes implements IteratorAggregate, Countable
 {
-    private $typeToCounter;
+    private $typesToResults;
     
-    public function __construct($typeToCounter)
+    public function __construct($typesToResults)
     {
-        $this->typeToCounter = $typeToCounter;
+        $this->typesToResults = $typesToResults;
     }
 
     public function count()
     {
-        return count($this->typeToCounter);
+        return count($this->typesToResults);
     }
 
     public function getIterator() : Iterator
     {
-        return new ArrayIterator($this->typeToCounter);
+        return new ArrayIterator($this->typesToResults);
     }
 }

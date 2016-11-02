@@ -27,15 +27,15 @@ class SearchSubjectsNormalizer implements NormalizerInterface, DenormalizerInter
     public function denormalize($data, $class, $format = null, array $context = []) : SearchSubjects
     {
         $subjects = [];
-        $counters = [];
+        $results = [];
 
         foreach ($data as $each) {
-            $counters[] = $each['results'];
+            $results[] = $each['results'];
             unset($each['results']);
             $subjects[] = $this->denormalizer->denormalize($each, Subject::class, $format, $context + ['snippet' => true]);
         }
 
-        return new SearchSubjects($subjects, $counters);
+        return new SearchSubjects($subjects, $results);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

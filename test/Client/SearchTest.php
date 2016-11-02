@@ -80,13 +80,13 @@ class SearchTest extends ApiTestCase
 
         $existingModel = $this->search->toArray()[0];
 
-        $result = $this->search->toArray();
+        $models = $this->search->toArray();
 
-        $this->assertInstanceOf(Model::class, $result[0]);
+        $this->assertInstanceOf(Model::class, $models[0]);
 
         $this->mockArticleCall(1);
-        $this->assertSame($existingModel, $result[0]);
-        $this->assertSame('Article 1 title', $result[0]->getTitle());
+        $this->assertSame($existingModel, $models[0]);
+        $this->assertSame('Article 1 title', $models[0]->getTitle());
     }
 
     /**
@@ -296,8 +296,8 @@ class SearchTest extends ApiTestCase
         $models = $this->search->toArray();
 
         $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
-        foreach ($this->search->reverse() as $searchResult) {
-            $this->assertTrue(array_search($searchResult, $models, $strict = true) !== false, 'Search result not found in previous results objects set');
+        foreach ($this->search->reverse() as $item) {
+            $this->assertTrue(array_search($item, $models, $strict = true) !== false, 'Search item not found in previous items objects set');
         }
     }
 

@@ -24,16 +24,20 @@ final class Search implements Iterator, Sequence
     use ArrayFromIterator;
     use SlicedIterator;
 
-    private $count;
-    private $collections = [];
+    // collaborators
+    private $searchClient;
+    private $denormalizer;
+
+    // inputs
     private $query = '';
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $typesQuery = [];
     private $sort = 'relevance';
-    private $searchClient;
-    private $denormalizer;
-    private $results = [];
+
+    // cached outputs
+    private $count;
+    private $items = [];
     /**
      * @var PromiseInterface
      */
@@ -140,39 +144,39 @@ final class Search implements Iterator, Sequence
 
         return new PromiseSequence($resultPromise
             ->then(function (Result $result) {
-                $results = [];
+                $items = [];
 
-                foreach ($result['items'] as $searchResult) {
-                    $key = $this->keyFor($searchResult);
-                    if (isset($this->results[$key])) {
-                        $results[] = $this->results[$key]->wait();
+                foreach ($result['items'] as $item) {
+                    $key = $this->keyFor($item);
+                    if (isset($this->items[$key])) {
+                        $items[] = $this->items[$key]->wait();
                     } else {
-                        $results[] = $model = $this->denormalizer->denormalize($searchResult, Model::class, null, ['snippet' => true]);
-                        $this->results[$key] = promise_for($model);
+                        $items[] = $model = $this->denormalizer->denormalize($item, Model::class, null, ['snippet' => true]);
+                        $this->items[$key] = promise_for($model);
                     }
                 }
 
-                return new ArraySequence($results);
+                return new ArraySequence($items);
             })
         );
 
         return $sequencePromise;
     }
 
-    private function keyFor(array $searchResult)
+    private function keyFor(array $item)
     {
         return
-            $searchResult['type']
+            $item['type']
             .(
-                isset($searchResult['status'])
-                ? '-'.$searchResult['status']
+                isset($item['status'])
+                ? '-'.$item['status']
                 : ''
             )
             .'::'
             .(
-                isset($searchResult['id'])
-                ? $searchResult['id']
-                : $searchResult['number']
+                isset($item['id'])
+                ? $item['id']
+                : $item['number']
             );
     }
 
@@ -218,7 +222,7 @@ final class Search implements Iterator, Sequence
             $this->count = null;
             $this->types = null;
             $this->subjects = null;
-            $this->results = [];
+            $this->items = [];
         }
     }
 }

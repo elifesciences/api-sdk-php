@@ -167,10 +167,10 @@ final class ApiSdkTest extends ApiTestCase
     {
         $this->assertInstanceOf(Search::class, $this->apiSdk->search());
 
-        $this->markTestIncomplete();
-        $this->mockSearchCall(1);
+        $this->mockSearchCall(1, 1, 10);
+        $this->mockSearchCall(1, 100, 10);
 
-        $this->apiSdk->getSerializer()->normalize($this->apiSdk->search()->get(1)->wait());
+        $this->assertCount(10, $this->apiSdk->search()->toArray());
     }
 
     /**

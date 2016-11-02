@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\SearchTypes;
 use eLife\ApiSdk\SlicedIterator;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -30,6 +31,7 @@ final class Search implements Iterator, Sequence
     private $searchClient;
     private $denormalizer;
     private $results = [];
+    private $types;
 
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
@@ -127,6 +129,7 @@ final class Search implements Iterator, Sequence
                         $this->results[$key] = promise_for($model);
                     }
                 }
+                $this->types = new SearchTypes($result['types']);
 
                 return new ArraySequence($results);
             })
@@ -166,6 +169,15 @@ final class Search implements Iterator, Sequence
         }
 
         return $this->count;
+    }
+
+    public function types() : SearchTypes
+    {
+        if (null === $this->count) {
+            $this->slice(0)->count();
+        }
+
+        return $this->types;
     }
 
     private function invalidateDataIfDifferent(string $field, self $another)

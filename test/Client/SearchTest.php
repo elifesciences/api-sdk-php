@@ -304,6 +304,22 @@ class SearchTest extends ApiTestCase
         $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()->toArray()));
     }
 
+    /**
+     * @test
+     */
+    public function it_has_counters_for_types()
+    {
+        $this->mockCountCall(10); 
+        $this->mockFirstPageCall(10);
+
+        $types = $this->search->types();
+        foreach ($types as $type => $counter) {
+            $this->assertInternalType('string', $type);
+            $this->assertRegexp('/^[a-z-]+$/', $type);
+            $this->assertGreaterThanOrEqual(0, $counter);
+        }
+    }
+
     private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
     {
         $this->mockSearchCall(1, 1, $count, $query, $descendingOrder, $subjects, $types, $sort);

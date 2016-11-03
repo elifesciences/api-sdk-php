@@ -100,7 +100,8 @@ final class PodcastEpisodes implements Iterator, Sequence
                     if (isset($this->episodes[$episode['number']])) {
                         $episodes[] = $this->episodes[$episode['number']]->wait();
                     } else {
-                        $episodes[] = $episode = $this->denormalizer->denormalize($episode, PodcastEpisode::class, null, ['snippet' => true]);
+                        $episodes[] = $episode = $this->denormalizer->denormalize($episode, PodcastEpisode::class,
+                            null, ['snippet' => true]);
                         $this->episodes[$episode->getNumber()] = promise_for($episode);
                     }
                 }

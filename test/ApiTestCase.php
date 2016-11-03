@@ -1186,7 +1186,7 @@ abstract class ApiTestCase extends TestCase
         return $podcastEpisode;
     }
 
-    protected function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $collection = [
             'id' => $id,

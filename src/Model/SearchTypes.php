@@ -7,11 +7,14 @@ use Countable;
 use Iterator;
 use IteratorAggregate;
 
-class SearchTypes implements IteratorAggregate, Countable
+final class SearchTypes implements IteratorAggregate, Countable
 {
     private $typesToResults;
 
-    public function __construct($typesToResults)
+    /**
+     * @internal
+     */
+    public function __construct(array $typesToResults)
     {
         $this->typesToResults = $typesToResults;
     }

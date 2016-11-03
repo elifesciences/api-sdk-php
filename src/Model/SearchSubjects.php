@@ -2,17 +2,26 @@
 
 namespace eLife\ApiSdk\Model;
 
+use Countable;
 use Iterator;
 
-class SearchSubjects implements Iterator
+final class SearchSubjects implements Iterator, Countable
 {
     private $subjects;
     private $results;
 
+    /**
+     * @internal
+     */
     public function __construct(array $subjects, array $results)
     {
         $this->subjects = $subjects;
         $this->results = $results;
+    }
+
+    public function count()
+    {
+        return count($this->subjects);
     }
 
     public function current()

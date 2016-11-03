@@ -14,15 +14,23 @@ class SearchSubjectsTest extends \PHPUnit_Framework_TestCase
     public function it_is_iterable_with_subjects_as_keys()
     {
         $searchSubjects = new SearchSubjects(
-            [
+            $expectedSubjects = [
                 Builder::for(Subject::class)->sample('biophysics-structural-biology'),
                 Builder::for(Subject::class)->sample('genomics-evolutionary-biology'),
             ],
-            [10, 20]
+            $expectedResults = [10, 20]
         );
-        foreach ($searchSubjects as $subject => $counter) {
+
+        $actualSubjects = [];
+        $actualResults = [];
+        foreach ($searchSubjects as $subject => $results) {
             $this->assertInstanceOf(Subject::class, $subject);
-            $this->assertInternalType('integer', $counter);
+            $actualSubjects[] = $subject;
+            $this->assertInternalType('integer', $results);
+            $actualResults[] = $results;
         }
+
+        $this->assertSame($expectedSubjects, $actualSubjects);
+        $this->assertSame($expectedResults, $actualResults);
     }
 }

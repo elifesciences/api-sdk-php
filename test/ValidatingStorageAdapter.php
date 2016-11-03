@@ -44,12 +44,12 @@ final class ValidatingStorageAdapter implements StorageAdapterInterface
 
     private function dumpJsonBody(MessageInterface $message)
     {
-        return var_export(
+        return json_encode(
             json_decode(
                 (string) $message->getBody(),
                 true
             ),
-            true
+            JSON_PRETTY_PRINT
         );
     }
 }

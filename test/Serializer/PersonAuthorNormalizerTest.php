@@ -82,7 +82,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
-                        $somewhere = Builder::for(Address::class)->sample('somewhere')
+                        $somewhere = Builder::for(Address::class)->sample('somewhere'),
                     ]),
                 [
                     'affiliations' => [
@@ -196,7 +196,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
-                        $somewhere = Builder::for(Address::class)->sample('somewhere')
+                        $somewhere = Builder::for(Address::class)->sample('somewhere'),
                     ]),
             ],
             'minimum' => [

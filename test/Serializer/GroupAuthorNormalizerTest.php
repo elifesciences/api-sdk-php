@@ -87,7 +87,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
-                            $somewhere = Builder::for(Address::class)->sample('somewhere')
+                            $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
@@ -273,13 +273,13 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                         [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
-                            $somewhere = Builder::for(Address::class)->sample('somewhere')
+                            $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
-                        $somewhere
+                        $somewhere,
                     ]),
             ],
             'minimum' => [

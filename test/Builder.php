@@ -47,7 +47,7 @@ final class Builder
     {
         if (self::$defaults === null) {
             self::$defaults = [
-                Address::class => function() {
+                Address::class => function () {
                     return [
                         'formatted' => new ArraySequence(['foo', 'bar']),
                         'streetAddress' => new ArraySequence(),
@@ -221,7 +221,7 @@ final class Builder
         if (self::$sampleRecipes === null) {
             self::$sampleRecipes = [
                 Address::class => [
-                    'simple' => function($builder) {
+                    'simple' => function ($builder) {
                         return $builder
                             ->withSequenceOfFormatted('address')
                             ->withSequenceOfStreetAddress('street address')
@@ -230,7 +230,7 @@ final class Builder
                             ->withCountry('country')
                             ->withPostalCode('postal code');
                     },
-                    'somewhere' => function($builder) {
+                    'somewhere' => function ($builder) {
                         return Builder::for(Address::class)
                             ->withSequenceOfFormatted('somewhere')
                             ->withSequenceOfLocality('somewhere');

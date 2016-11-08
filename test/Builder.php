@@ -192,6 +192,7 @@ final class Builder
                                     new Place(null, null, ['publisher'])
                                 ),
                             ]),
+                            'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
                             'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                             'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                             'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
@@ -284,7 +285,7 @@ final class Builder
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]))
-                            ->withAcknowledgements(new ArraySequence([new Paragraph('Article 09560 acknowledgements')]))
+                            ->withAcknowledgements(new ArraySequence([new Paragraph('acknowledgements')]))
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                             ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')));

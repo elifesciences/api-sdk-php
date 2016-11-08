@@ -232,7 +232,7 @@ final class AnnualReportsTest extends ApiTestCase
             return $carry + $annualReport->getYear();
         };
 
-        $this->assertSame(10170, $this->annualReports->reduce($reduce, 100)->wait());
+        $this->assertSame(10170, $this->annualReports->reduce($reduce, 100));
     }
 
     /**

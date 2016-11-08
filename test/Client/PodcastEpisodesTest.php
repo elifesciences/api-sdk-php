@@ -291,7 +291,7 @@ final class PodcastEpisodesTest extends ApiTestCase
             return $carry + $podcastEpisode->getNumber();
         };
 
-        $this->assertSame(115, $this->podcastEpisodes->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->podcastEpisodes->reduce($reduce, 100));
     }
 
     /**

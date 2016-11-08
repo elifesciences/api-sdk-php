@@ -204,7 +204,7 @@ final class MediumArticlesTest extends ApiTestCase
             return $carry + substr($mediumArticle->getUri(), -1);
         };
 
-        $this->assertSame(115, $this->mediumArticles->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->mediumArticles->reduce($reduce, 100));
     }
 
     /**

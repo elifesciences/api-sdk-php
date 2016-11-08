@@ -74,11 +74,9 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         );
     }
 
-    public function reduce(callable $callback, $initial = null) : PromiseInterface
+    public function reduce(callable $callback, $initial = null)
     {
-        return $this->then(function (Sequence $collection) use ($callback, $initial) {
-            return $collection->reduce($callback, $initial);
-        });
+        return $this->wait()->reduce($callback, $initial);
     }
 
     public function sort(callable $callback) : Sequence

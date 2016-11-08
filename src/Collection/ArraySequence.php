@@ -6,10 +6,8 @@ use ArrayIterator;
 use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\ImmutableArrayAccess;
-use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
 use Traversable;
-use function GuzzleHttp\Promise\promise_for;
 
 final class ArraySequence implements IteratorAggregate, Sequence
 {
@@ -53,9 +51,9 @@ final class ArraySequence implements IteratorAggregate, Sequence
         return new self(array_filter($this->array, $callback));
     }
 
-    public function reduce(callable $callback, $initial = null) : PromiseInterface
+    public function reduce(callable $callback, $initial = null)
     {
-        return promise_for(array_reduce($this->array, $callback, $initial));
+        return array_reduce($this->array, $callback, $initial);
     }
 
     public function sort(callable $callback) : Sequence

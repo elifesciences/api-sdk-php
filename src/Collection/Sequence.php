@@ -4,7 +4,6 @@ namespace eLife\ApiSdk\Collection;
 
 use ArrayAccess;
 use eLife\ApiSdk\Collection;
-use GuzzleHttp\Promise\PromiseInterface;
 
 interface Sequence extends Collection, ArrayAccess
 {
@@ -17,7 +16,7 @@ interface Sequence extends Collection, ArrayAccess
      */
     public function filter(callable $callback) : Collection;
 
-    public function reduce(callable $callback, $initial = null) : PromiseInterface;
+    public function reduce(callable $callback, $initial = null);
 
     public function sort(callable $callback) : Sequence;
 

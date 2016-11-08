@@ -236,7 +236,7 @@ final class InterviewsTest extends ApiTestCase
             return $carry + substr($interview->getId(), -1);
         };
 
-        $this->assertSame(115, $this->interviews->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->interviews->reduce($reduce, 100));
     }
 
     /**

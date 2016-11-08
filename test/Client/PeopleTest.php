@@ -335,7 +335,7 @@ final class PeopleTest extends ApiTestCase
             return $carry + substr($person->getId(), -1);
         };
 
-        $this->assertSame(115, $this->people->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->people->reduce($reduce, 100));
     }
 
     /**

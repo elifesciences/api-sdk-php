@@ -295,7 +295,7 @@ class SearchTest extends ApiTestCase
             return $carry + 1;
         };
 
-        $this->assertSame(105, $this->search->reduce($reduce, 100)->wait());
+        $this->assertSame(105, $this->search->reduce($reduce, 100));
     }
 
     /**

@@ -236,7 +236,7 @@ final class LabsExperimentsTest extends ApiTestCase
             return $carry + $labsExperiment->getNumber();
         };
 
-        $this->assertSame(115, $this->labsExperiments->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->labsExperiments->reduce($reduce, 100));
     }
 
     /**

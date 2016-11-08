@@ -11,5 +11,7 @@ interface Collection extends Countable, Traversable
 
     public function isEmpty() : bool;
 
+    public function notEmpty() : bool;
+
     public function toArray() : array;
 }

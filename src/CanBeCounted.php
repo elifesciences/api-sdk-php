@@ -10,4 +10,9 @@ trait CanBeCounted
     {
         return 0 === count($this);
     }
+
+    final public function notEmpty() : bool
+    {
+        return !$this->isEmpty();
+    }
 }

@@ -35,15 +35,15 @@ final class AddressNormalizer implements NormalizerInterface, DenormalizerInterf
             'components' => [],
         ];
 
-        if (!$object->getStreetAddress()->isEmpty()) {
+        if ($object->getStreetAddress()->notEmpty()) {
             $data['components']['streetAddress'] = $object->getStreetAddress()->toArray();
         }
 
-        if (!$object->getLocality()->isEmpty()) {
+        if ($object->getLocality()->notEmpty()) {
             $data['components']['locality'] = $object->getLocality()->toArray();
         }
 
-        if (!$object->getArea()->isEmpty()) {
+        if ($object->getArea()->notEmpty()) {
             $data['components']['area'] = $object->getArea()->toArray();
         }
 

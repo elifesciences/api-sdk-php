@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Address;
+use eLife\ApiSdk\Collection\ArraySequence;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -10,9 +11,11 @@ final class AddressNormalizer implements NormalizerInterface, DenormalizerInterf
 {
     public function denormalize($data, $class, $format = null, array $context = []) : Address
     {
-        return new Address($data['formatted'],
-            $data['components']['streetAddress'] ?? [],
-            $data['components']['locality'] ?? [], $data['components']['area'] ?? [],
+        return new Address(
+            new ArraySequence($data['formatted']),
+            new ArraySequence($data['components']['streetAddress'] ?? []),
+            new ArraySequence($data['components']['locality'] ?? []),
+            new ArraySequence($data['components']['area'] ?? []),
             $data['components']['country'] ?? null,
             $data['components']['postalCode'] ?? null);
     }
@@ -28,20 +31,20 @@ final class AddressNormalizer implements NormalizerInterface, DenormalizerInterf
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
-            'formatted' => $object->getFormatted(),
+            'formatted' => $object->getFormatted()->toArray(),
             'components' => [],
         ];
 
-        if ($object->getStreetAddress()) {
-            $data['components']['streetAddress'] = $object->getStreetAddress();
+        if (!$object->getStreetAddress()->isEmpty()) {
+            $data['components']['streetAddress'] = $object->getStreetAddress()->toArray();
         }
 
-        if ($object->getLocality()) {
-            $data['components']['locality'] = $object->getLocality();
+        if (!$object->getLocality()->isEmpty()) {
+            $data['components']['locality'] = $object->getLocality()->toArray();
         }
 
-        if ($object->getArea()) {
-            $data['components']['area'] = $object->getArea();
+        if (!$object->getArea()->isEmpty()) {
+            $data['components']['area'] = $object->getArea()->toArray();
         }
 
         if ($object->getCountry()) {

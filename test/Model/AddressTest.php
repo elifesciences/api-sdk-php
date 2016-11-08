@@ -2,8 +2,10 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class AddressTest extends PHPUnit_Framework_TestCase
 {
@@ -12,9 +14,11 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_formatted_address()
     {
-        $address = new Address(['foo', 'bar']);
+        $address = Builder::for(Address::class)
+            ->withFormatted($sequence = new ArraySequence(['foo', 'bar']))
+            ->__invoke();
 
-        $this->assertSame(['foo', 'bar'], $address->getFormatted());
+        $this->assertSame($sequence, $address->getFormatted());
     }
 
     /**
@@ -22,10 +26,14 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_street_address()
     {
-        $with = new Address(['foo', 'bar'], ['foo', 'bar']);
-        $withOut = new Address(['foo', 'bar']);
+        $with = Builder::for(Address::class)
+            ->withStreetAddress($sequence = new ArraySequence(['foo', 'bar']))
+            ->__invoke();
+        $withOut = Builder::for(Address::class)
+            ->withStreetAddress(null)
+            ->__invoke();
 
-        $this->assertSame(['foo', 'bar'], $with->getStreetAddress());
+        $this->assertSame($sequence, $with->getStreetAddress());
         $this->assertEmpty($withOut->getStreetAddress());
     }
 
@@ -34,10 +42,14 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_locality()
     {
-        $with = new Address(['foo', 'bar'], [], ['foo', 'bar']);
-        $withOut = new Address(['foo', 'bar']);
+        $with = Builder::for(Address::class)
+            ->withLocality($sequence = new ArraySequence(['foo', 'bar']))
+            ->__invoke();
+        $withOut = Builder::for(Address::class)
+            ->withLocality(null)
+            ->__invoke();
 
-        $this->assertSame(['foo', 'bar'], $with->getLocality());
+        $this->assertSame($sequence, $with->getLocality());
         $this->assertEmpty($withOut->getLocality());
     }
 
@@ -46,10 +58,14 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_area()
     {
-        $with = new Address(['foo', 'bar'], [], [], ['foo', 'bar']);
-        $withOut = new Address(['foo', 'bar']);
+        $with = Builder::for(Address::class)
+            ->withArea($sequence = new ArraySequence(['foo', 'bar']))
+            ->__invoke();
+        $withOut = Builder::for(Address::class)
+            ->withArea(null)
+            ->__invoke();
 
-        $this->assertSame(['foo', 'bar'], $with->getArea());
+        $this->assertSame($sequence, $with->getArea());
         $this->assertEmpty($withOut->getArea());
     }
 
@@ -58,8 +74,12 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_country()
     {
-        $with = new Address(['foo'], [], [], [], 'foo');
-        $withOut = new Address(['foo']);
+        $with = Builder::for(Address::class)
+            ->withCountry('foo')
+            ->__invoke();
+        $withOut = Builder::for(Address::class)
+            ->withCountry(null)
+            ->__invoke();
 
         $this->assertSame('foo', $with->getCountry());
         $this->assertNull($withOut->getCountry());
@@ -70,8 +90,12 @@ final class AddressTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_postal_code()
     {
-        $with = new Address(['foo'], [], [], [], null, 'foo');
-        $withOut = new Address(['foo']);
+        $with = Builder::for(Address::class)
+            ->withPostalCode('foo')
+            ->__invoke();
+        $withOut = Builder::for(Address::class)
+            ->withPostalCode(null)
+            ->__invoke();
 
         $this->assertSame('foo', $with->getPostalCode());
         $this->assertNull($withOut->getPostalCode());

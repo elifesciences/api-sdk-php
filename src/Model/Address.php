@@ -2,6 +2,9 @@
 
 namespace eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\Sequence;
+
 final class Address
 {
     private $formatted;
@@ -15,49 +18,49 @@ final class Address
      * @internal
      */
     public function __construct(
-        array $formatted,
-        array $streetAddress = [],
-        array $locality = [],
-        array $area = [],
+        Sequence $formatted,
+        Sequence $streetAddress = null,
+        Sequence $locality = null,
+        Sequence $area = null,
         string $country = null,
         string $postalCode = null
     ) {
         $this->formatted = $formatted;
-        $this->streetAddress = $streetAddress;
-        $this->locality = $locality;
-        $this->area = $area;
+        $this->streetAddress = ArraySequence::coalesce($streetAddress);
+        $this->locality = ArraySequence::coalesce($locality);
+        $this->area = ArraySequence::coalesce($area);
         $this->country = $country;
         $this->postalCode = $postalCode;
     }
 
     /**
-     * @return string[]
+     * @return Sequence of string
      */
-    public function getFormatted(): array
+    public function getFormatted(): Sequence
     {
         return $this->formatted;
     }
 
     /**
-     * @return string[]
+     * @return Sequence of string
      */
-    public function getStreetAddress(): array
+    public function getStreetAddress(): Sequence
     {
         return $this->streetAddress;
     }
 
     /**
-     * @return string[]
+     * @return Sequence of string
      */
-    public function getLocality(): array
+    public function getLocality(): Sequence
     {
         return $this->locality;
     }
 
     /**
-     * @return string[]
+     * @return Sequence of string
      */
-    public function getArea(): array
+    public function getArea(): Sequence
     {
         return $this->area;
     }

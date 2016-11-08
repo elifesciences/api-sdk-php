@@ -6,6 +6,7 @@ use BadMethodCallException;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -46,6 +47,16 @@ final class Builder
     {
         if (self::$defaults === null) {
             self::$defaults = [
+                Address::class => function() {
+                    return [
+                        'formatted' => new ArraySequence(['foo', 'bar']),
+                        'streetAddress' => new ArraySequence(),
+                        'locality' => new ArraySequence(),
+                        'area' => new ArraySequence(),
+                        'country' => null,
+                        'postalCode' => null,
+                    ];
+                },
                 BlogArticle::class => function () {
                     return [
                         'id' => '359325',
@@ -471,6 +482,10 @@ final class Builder
             $this->ensureExistingField($field);
             $this->ensureSingleArgument($args);
             $this->testData[$field] = promise_for($args[0]);
+        } elseif (preg_match('/^withSequenceOf(.*)$/', $name, $matches)) {
+            $field = lcfirst($matches[1]);
+            $this->ensureExistingField($field);
+            $this->testData[$field] = new ArraySequence($args);
         } elseif (preg_match('/^with(.*)$/', $name, $matches)) {
             $field = lcfirst($matches[1]);
             $this->ensureExistingField($field);

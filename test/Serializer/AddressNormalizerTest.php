@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class AddressNormalizerTest extends TestCase
@@ -40,7 +41,10 @@ final class AddressNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $address = new Address(['locality'], [], ['locality']);
+        $address = Builder::for(Address::class)
+            ->withSequenceOfFormatted('locality')
+            ->withSequenceOfLocality('locality')
+            ->__invoke();
 
         return [
             'address' => [$address, null, true],
@@ -98,7 +102,14 @@ final class AddressNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new Address(['address'], ['street address'], ['locality'], ['area'], 'country', 'postal code'),
+                $address = Builder::for(Address::class)
+                    ->withSequenceOfFormatted('address')
+                    ->withSequenceOfStreetAddress('street address')
+                    ->withSequenceOfLocality('locality')
+                    ->withSequenceOfArea('area')
+                    ->withCountry('country')
+                    ->withPostalCode('postal code')
+                    ->__invoke(),
                 [
                     'formatted' => ['address'],
                     'components' => [
@@ -111,7 +122,9 @@ final class AddressNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new Address(['address']),
+                $address = Builder::for(Address::class)
+                    ->withSequenceOfFormatted('address')
+                    ->__invoke(),
                 [
                     'formatted' => ['address'],
                     'components' => [],

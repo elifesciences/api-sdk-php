@@ -119,6 +119,16 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_filtered()
     {
+        $collection = new ArraySequence([1, null, 2, 3, false, 4, 5]);
+
+        $this->assertSame([1, 2, 3, 4, 5], $collection->filter()->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_with_a_callback()
+    {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $filter = function (int $number) {
@@ -139,7 +149,7 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
             return $carry + $number;
         };
 
-        $this->assertSame(115, $collection->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $collection->reduce($reduce, 100));
     }
 
     /**

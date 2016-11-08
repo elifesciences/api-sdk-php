@@ -227,7 +227,7 @@ final class SubjectsTest extends ApiTestCase
             return $carry + substr($subject->getId(), -1);
         };
 
-        $this->assertSame(115, $this->subjects->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->subjects->reduce($reduce, 100));
     }
 
     /**

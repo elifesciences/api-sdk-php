@@ -281,7 +281,7 @@ final class EventsTest extends ApiTestCase
             return $carry + substr($event->getId(), -1);
         };
 
-        $this->assertSame(115, $this->events->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->events->reduce($reduce, 100));
     }
 
     /**

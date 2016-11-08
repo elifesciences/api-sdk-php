@@ -290,7 +290,7 @@ final class BlogArticlesTest extends ApiTestCase
             return $carry + substr($blogArticle->getId(), -1);
         };
 
-        $this->assertSame(115, $this->blogArticles->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->blogArticles->reduce($reduce, 100));
     }
 
     /**

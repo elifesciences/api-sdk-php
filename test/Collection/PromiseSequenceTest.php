@@ -181,7 +181,7 @@ final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
             return $carry + $number;
         };
 
-        $this->assertSame(115, $collection->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $collection->reduce($reduce, 100));
     }
 
     /**

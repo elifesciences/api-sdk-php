@@ -7,7 +7,7 @@ use Traversable;
 
 interface Collection extends Countable, Traversable
 {
-    public function filter(callable $callback) : Collection;
+    public function filter(callable $callback = null) : Collection;
 
     public function isEmpty() : bool;
 

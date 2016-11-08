@@ -294,7 +294,7 @@ final class CollectionsTest extends ApiTestCase
             return $carry + $podcastEpisode->getId();
         };
 
-        $this->assertSame(115, $this->collections->reduce($reduce, 100)->wait());
+        $this->assertSame(115, $this->collections->reduce($reduce, 100));
     }
 
     /**

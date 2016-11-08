@@ -50,6 +50,10 @@ final class ArraySequence implements IteratorAggregate, Sequence
 
     public function filter(callable $callback = null) : Collection
     {
+        if (null === $callback) {
+            return new self(array_filter($this->array));
+        }
+
         return new self(array_filter($this->array, $callback));
     }
 

@@ -6,6 +6,7 @@ use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class PlaceTest extends PHPUnit_Framework_TestCase
 {
@@ -50,7 +51,7 @@ final class PlaceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_address()
     {
-        $address = new Address(['bar']);
+        $address = Builder::dummy(Address::class);
 
         $with = new Place(null, null, ['foo'], $address);
         $withOut = new Place(null, null, ['foo']);

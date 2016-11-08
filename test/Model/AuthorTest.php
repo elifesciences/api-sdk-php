@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 abstract class AuthorTest extends PHPUnit_Framework_TestCase
 {
@@ -97,7 +98,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_postal_addresses()
     {
-        $with = $this->createAuthor([], null, null, [], [], [], $postalAddresses = [new Address(['address'])]);
+        $with = $this->createAuthor([], null, null, [], [], [], $postalAddresses = [Builder::dummy(Address::class)]);
         $withOut = $this->createAuthor();
 
         $this->assertEquals($postalAddresses, $with->getPostalAddresses());

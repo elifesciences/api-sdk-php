@@ -14,7 +14,7 @@ interface Sequence extends Collection, ArrayAccess
     /**
      * @return Sequence
      */
-    public function filter(callable $callback) : Collection;
+    public function filter(callable $callback = null) : Collection;
 
     public function reduce(callable $callback, $initial = null);
 

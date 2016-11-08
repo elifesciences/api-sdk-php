@@ -6,13 +6,10 @@ use ArrayObject;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\AnnualReport;
-use eLife\ApiSdk\SlicedArrayAccess;
-use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -20,15 +17,8 @@ use function GuzzleHttp\Promise\promise_for;
 
 final class AnnualReports implements Iterator, Sequence
 {
-    use ArrayFromIterator;
-    use SlicedArrayAccess;
-    use SlicedIterator {
-        SlicedIterator::getPage insteadof SlicedArrayAccess;
-        SlicedIterator::isEmpty insteadof SlicedArrayAccess;
-        SlicedIterator::resetPages insteadof SlicedArrayAccess;
-    }
+    use Client;
 
-    private $count;
     private $reports;
     private $descendingOrder = true;
     private $annualReportsClient;
@@ -39,11 +29,6 @@ final class AnnualReports implements Iterator, Sequence
         $this->reports = new ArrayObject();
         $this->annualReportsClient = $annualReportsClient;
         $this->denormalizer = $denormalizer;
-    }
-
-    public function __clone()
-    {
-        $this->resetIterator();
     }
 
     public function get(int $year) : PromiseInterface
@@ -108,14 +93,5 @@ final class AnnualReports implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
-    }
-
-    public function count() : int
-    {
-        if (null === $this->count) {
-            $this->slice(0, 1)->count();
-        }
-
-        return $this->count;
     }
 }

@@ -6,26 +6,17 @@ use ArrayObject;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
-use eLife\ApiSdk\SlicedArrayAccess;
-use eLife\ApiSdk\SlicedIterator;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
 final class MediumArticles implements Iterator, Sequence
 {
-    use ArrayFromIterator;
-    use SlicedArrayAccess;
-    use SlicedIterator {
-        SlicedIterator::getPage insteadof SlicedArrayAccess;
-        SlicedIterator::isEmpty insteadof SlicedArrayAccess;
-        SlicedIterator::resetPages insteadof SlicedArrayAccess;
-    }
+    use Client;
 
     private $count;
     private $articles;
@@ -38,11 +29,6 @@ final class MediumArticles implements Iterator, Sequence
         $this->articles = new ArrayObject();
         $this->mediumArticlesClient = $mediumArticlesClient;
         $this->denormalizer = $denormalizer;
-    }
-
-    public function __clone()
-    {
-        $this->resetIterator();
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -92,14 +78,5 @@ final class MediumArticles implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
-    }
-
-    public function count() : int
-    {
-        if (null === $this->count) {
-            $this->slice(0, 1)->count();
-        }
-
-        return $this->count;
     }
 }

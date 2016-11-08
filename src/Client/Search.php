@@ -5,15 +5,12 @@ namespace eLife\ApiSdk\Client;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\SearchTypes;
-use eLife\ApiSdk\SlicedArrayAccess;
-use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,13 +18,7 @@ use function GuzzleHttp\Promise\promise_for;
 
 final class Search implements Iterator, Sequence
 {
-    use ArrayFromIterator;
-    use SlicedArrayAccess;
-    use SlicedIterator {
-        SlicedIterator::getPage insteadof SlicedArrayAccess;
-        SlicedIterator::isEmpty insteadof SlicedArrayAccess;
-        SlicedIterator::resetPages insteadof SlicedArrayAccess;
-    }
+    use Client;
 
     // collaborators
     private $searchClient;
@@ -192,15 +183,6 @@ final class Search implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
-    }
-
-    public function count() : int
-    {
-        if (null === $this->count) {
-            $this->slice(0, 1)->count();
-        }
-
-        return $this->count;
     }
 
     public function types() : SearchTypes

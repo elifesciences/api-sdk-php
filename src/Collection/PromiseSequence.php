@@ -4,6 +4,7 @@ namespace eLife\ApiSdk\Collection;
 
 use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\ImmutableArrayAccess;
 use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
 use LogicException;
@@ -12,6 +13,7 @@ use Traversable;
 final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInterface
 {
     use CanBeCounted;
+    use ImmutableArrayAccess;
 
     private $promise;
 
@@ -130,5 +132,15 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
     public function wait($unwrap = true)
     {
         return $this->promise->wait($unwrap);
+    }
+
+    public function offsetExists($offset) : bool
+    {
+        return $this->wait()->offsetExists($offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->wait()->offsetGet($offset);
     }
 }

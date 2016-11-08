@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Collection\Sequence;
@@ -78,6 +81,35 @@ final class BlogArticlesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockBlogArticleListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->blogArticles[0]));
+        $this->assertSame('blogArticle1', $this->blogArticles[0]->getId());
+
+        $this->mockNotFound(
+            'blog-articles?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->blogArticles[5]));
+        $this->assertSame(null, $this->blogArticles[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->blogArticles[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_blog_article()
     {
         $this->mockBlogArticleCall(7, true);
@@ -87,16 +119,16 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertInstanceOf(BlogArticle::class, $blogArticle);
         $this->assertSame('blogArticle7', $blogArticle->getId());
 
-        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
-        $this->assertSame('Blog article blogArticle7 text', $blogArticle->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
+        $this->assertSame('Blog article blogArticle7 text', $blogArticle->getContent()[0]->getText());
 
-        $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $blogArticle->getSubjects()->toArray()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()[0]);
+        $this->assertSame('Subject 1 name', $blogArticle->getSubjects()[0]->getName());
 
         $this->mockSubjectCall('1');
 
         $this->assertSame('Subject 1 impact statement',
-            $blogArticle->getSubjects()->toArray()[0]->getImpactStatement());
+            $blogArticle->getSubjects()[0]->getImpactStatement());
     }
 
     /**
@@ -116,8 +148,8 @@ final class BlogArticlesTest extends ApiTestCase
 
         $this->mockBlogArticleCall(1);
 
-        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()->toArray()[0]);
-        $this->assertSame('Blog article blogArticle1 text', $blogArticle->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
+        $this->assertSame('Blog article blogArticle1 text', $blogArticle->getContent()[0]->getText());
     }
 
     /**

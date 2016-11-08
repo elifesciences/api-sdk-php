@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Collection\Sequence;
@@ -78,6 +81,35 @@ final class CollectionsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockCollectionListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->collections[0]));
+        $this->assertSame('1', $this->collections[0]->getId());
+
+        $this->mockNotFound(
+            'collections?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->collections[5]));
+        $this->assertSame(null, $this->collections[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->collections[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_collection()
     {
         $this->mockCollectionCall('tropical-disease', true);
@@ -87,17 +119,17 @@ final class CollectionsTest extends ApiTestCase
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertSame('tropical-disease', $collection->getId());
 
-        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()->toArray()[0]);
-        $this->assertSame('Media coverage: Slime can see', $collection->getContent()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()[0]);
+        $this->assertSame('Media coverage: Slime can see', $collection->getContent()[0]->getTitle());
 
-        $this->assertInstanceOf(Subject::class, $collection->getSubjects()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $collection->getSubjects()->toArray()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $collection->getSubjects()[0]);
+        $this->assertSame('Subject 1 name', $collection->getSubjects()[0]->getName());
 
         $this->mockSubjectCall('1');
         $this->mockSubjectCall('biophysics-structural-biology');
 
         $this->assertSame('Subject 1 impact statement',
-            $collection->getSubjects()->toArray()[0]->getImpactStatement());
+            $collection->getSubjects()[0]->getImpactStatement());
     }
 
     /**
@@ -117,8 +149,8 @@ final class CollectionsTest extends ApiTestCase
 
         $this->mockCollectionCall(1);
 
-        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()->toArray()[0]);
-        $this->assertSame('Media coverage: Slime can see', $collection->getContent()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()[0]);
+        $this->assertSame('Media coverage: Slime can see', $collection->getContent()[0]->getTitle());
     }
 
     /**

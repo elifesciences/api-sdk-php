@@ -2,7 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
@@ -77,6 +79,35 @@ final class MediumArticlesTest extends ApiTestCase
             $this->assertInstanceOf(MediumArticle::class, $mediumArticle);
             $this->assertSame('Medium article '.($i + 1).' title', $mediumArticle->getTitle());
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockMediumArticleListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->mediumArticles[0]));
+        $this->assertSame('Medium article 1 title', $this->mediumArticles[0]->getTitle());
+
+        $this->mockNotFound(
+            'medium-articles?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->mediumArticles[5]));
+        $this->assertSame(null, $this->mediumArticles[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->mediumArticles[0] = 'foo';
     }
 
     /**

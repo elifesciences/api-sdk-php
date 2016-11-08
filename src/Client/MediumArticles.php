@@ -11,6 +11,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
+use eLife\ApiSdk\SlicedArrayAccess;
 use eLife\ApiSdk\SlicedIterator;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,7 +20,12 @@ use function GuzzleHttp\Promise\promise_for;
 final class MediumArticles implements Iterator, Sequence
 {
     use ArrayFromIterator;
-    use SlicedIterator;
+    use SlicedArrayAccess;
+    use SlicedIterator {
+        SlicedIterator::getPage insteadof SlicedArrayAccess;
+        SlicedIterator::isEmpty insteadof SlicedArrayAccess;
+        SlicedIterator::resetPages insteadof SlicedArrayAccess;
+    }
 
     private $count;
     private $articles;

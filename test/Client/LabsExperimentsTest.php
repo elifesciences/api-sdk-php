@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Collection\Sequence;
@@ -77,6 +80,35 @@ final class LabsExperimentsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->labsExperiments[0]));
+        $this->assertSame(1, $this->labsExperiments[0]->getNumber());
+
+        $this->mockNotFound(
+            'labs-experiments?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->labsExperiments[5]));
+        $this->assertSame(null, $this->labsExperiments[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->labsExperiments[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_labs_experiment()
     {
         $this->mockLabsExperimentCall(7);
@@ -86,8 +118,8 @@ final class LabsExperimentsTest extends ApiTestCase
         $this->assertInstanceOf(LabsExperiment::class, $labsExperiment);
         $this->assertSame(7, $labsExperiment->getNumber());
 
-        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()->toArray()[0]);
-        $this->assertSame('Labs experiment 7 text', $labsExperiment->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()[0]);
+        $this->assertSame('Labs experiment 7 text', $labsExperiment->getContent()[0]->getText());
     }
 
     /**
@@ -107,8 +139,8 @@ final class LabsExperimentsTest extends ApiTestCase
 
         $this->mockLabsExperimentCall(1);
 
-        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()->toArray()[0]);
-        $this->assertSame('Labs experiment 1 text', $labsExperiment->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()[0]);
+        $this->assertSame('Labs experiment 1 text', $labsExperiment->getContent()[0]->getText());
     }
 
     /**

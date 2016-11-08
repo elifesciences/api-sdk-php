@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\PeopleClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Collection\Sequence;
@@ -78,6 +81,35 @@ final class PeopleTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockPersonListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->people[0]));
+        $this->assertSame('person1', $this->people[0]->getId());
+
+        $this->mockNotFound(
+            'people?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->people[5]));
+        $this->assertSame(null, $this->people[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->people[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_person()
     {
         $this->mockPersonCall(7, true);
@@ -87,16 +119,16 @@ final class PeopleTest extends ApiTestCase
         $this->assertInstanceOf(Person::class, $person);
         $this->assertSame('person7', $person->getId());
 
-        $this->assertInstanceOf(Paragraph::class, $person->getProfile()->toArray()[0]);
-        $this->assertSame('person7 profile text', $person->getProfile()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $person->getProfile()[0]);
+        $this->assertSame('person7 profile text', $person->getProfile()[0]->getText());
 
-        $this->assertInstanceOf(Subject::class, $person->getResearch()->getExpertises()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $person->getResearch()->getExpertises()->toArray()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $person->getResearch()->getExpertises()[0]);
+        $this->assertSame('Subject 1 name', $person->getResearch()->getExpertises()[0]->getName());
 
         $this->mockSubjectCall(1);
 
         $this->assertSame('Subject subject1 impact statement',
-            $person->getResearch()->getExpertises()->toArray()[0]->getImpactStatement());
+            $person->getResearch()->getExpertises()[0]->getImpactStatement());
     }
 
     /**
@@ -116,8 +148,8 @@ final class PeopleTest extends ApiTestCase
 
         $this->mockPersonCall(1, true);
 
-        $this->assertInstanceOf(Paragraph::class, $person->getProfile()->toArray()[0]);
-        $this->assertSame('person1 profile text', $person->getProfile()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $person->getProfile()[0]);
+        $this->assertSame('person1 profile text', $person->getProfile()[0]->getText());
     }
 
     /**

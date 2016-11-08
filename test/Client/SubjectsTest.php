@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\Sequence;
@@ -71,6 +74,35 @@ final class SubjectsTest extends ApiTestCase
             $this->assertInstanceOf(Subject::class, $subject);
             $this->assertSame('subject'.($i + 1), $subject->getId());
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockSubjectListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->subjects[0]));
+        $this->assertSame('subject1', $this->subjects[0]->getId());
+
+        $this->mockNotFound(
+            'subjects?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->subjects[5]));
+        $this->assertSame(null, $this->subjects[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->subjects[0] = 'foo';
     }
 
     /**

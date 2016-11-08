@@ -68,6 +68,24 @@ abstract class ApiTestCase extends TestCase
         return $this->httpClient;
     }
 
+    final protected function mockNotFound(string $uri, array $headers)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/'.$uri,
+                $headers
+            ),
+            new Response(
+                404,
+                ['Content-Type' => 'application/problem+json'],
+                json_encode([
+                    'title' => 'Not found',
+                ])
+            )
+        );
+    }
+
     final protected function mockAnnualReportListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
         $annualReports = array_map(function (int $year) {

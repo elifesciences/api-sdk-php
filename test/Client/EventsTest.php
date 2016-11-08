@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Collection\Sequence;
@@ -77,6 +80,35 @@ final class EventsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockEventListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->events[0]));
+        $this->assertSame('event1', $this->events[0]->getId());
+
+        $this->mockNotFound(
+            'events?page=6&per-page=1&type=all&order=desc',
+            ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->events[5]));
+        $this->assertSame(null, $this->events[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->events[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_an_event()
     {
         $this->mockEventCall(7);
@@ -86,8 +118,8 @@ final class EventsTest extends ApiTestCase
         $this->assertInstanceOf(Event::class, $event);
         $this->assertSame('event7', $event->getId());
 
-        $this->assertInstanceOf(Paragraph::class, $event->getContent()->toArray()[0]);
-        $this->assertSame('Event 7 text', $event->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $event->getContent()[0]);
+        $this->assertSame('Event 7 text', $event->getContent()[0]->getText());
     }
 
     /**
@@ -107,8 +139,8 @@ final class EventsTest extends ApiTestCase
 
         $this->mockEventCall(1);
 
-        $this->assertInstanceOf(Paragraph::class, $event->getContent()->toArray()[0]);
-        $this->assertSame('Event 1 text', $event->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $event->getContent()[0]);
+        $this->assertSame('Event 1 text', $event->getContent()[0]->getText());
     }
 
     /**

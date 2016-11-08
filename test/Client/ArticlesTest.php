@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Collection\Sequence;
@@ -79,6 +82,35 @@ final class ArticlesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockArticleListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->articles[0]));
+        $this->assertSame('article1', $this->articles[0]->getId());
+
+        $this->mockNotFound(
+            'articles?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->articles[5]));
+        $this->assertSame(null, $this->articles[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->articles[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_an_article()
     {
         $this->mockArticleCall('article7', true, true);
@@ -88,15 +120,15 @@ final class ArticlesTest extends ApiTestCase
         $this->assertInstanceOf(ArticleVersion::class, $article);
         $this->assertSame('article7', $article->getId());
 
-        $this->assertInstanceOf(Section::class, $article->getContent()->toArray()[0]);
-        $this->assertSame('Article article7 section title', $article->getContent()->toArray()[0]->getTitle());
-        $this->assertInstanceOf(Paragraph::class, $article->getContent()->toArray()[0]->getContent()[0]);
-        $this->assertSame('Article article7 text', $article->getContent()->toArray()[0]->getContent()[0]->getText());
+        $this->assertInstanceOf(Section::class, $article->getContent()[0]);
+        $this->assertSame('Article article7 section title', $article->getContent()[0]->getTitle());
+        $this->assertInstanceOf(Paragraph::class, $article->getContent()[0]->getContent()[0]);
+        $this->assertSame('Article article7 text', $article->getContent()[0]->getContent()[0]->getText());
 
         $this->mockSubjectCall(1);
 
-        $this->assertInstanceOf(Subject::class, $article->getSubjects()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $article->getSubjects()->toArray()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $article->getSubjects()[0]);
+        $this->assertSame('Subject 1 name', $article->getSubjects()[0]->getName());
     }
 
     /**
@@ -116,8 +148,8 @@ final class ArticlesTest extends ApiTestCase
 
         $this->mockArticleCall('article1', false, true);
 
-        $this->assertInstanceOf(Section::class, $article->getContent()->toArray()[0]);
-        $this->assertSame('Article article1 section title', $article->getContent()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(Section::class, $article->getContent()[0]);
+        $this->assertSame('Article article1 section title', $article->getContent()[0]->getTitle());
     }
 
     /**

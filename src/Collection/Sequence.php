@@ -2,10 +2,11 @@
 
 namespace eLife\ApiSdk\Collection;
 
+use ArrayAccess;
 use eLife\ApiSdk\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 
-interface Sequence extends Collection
+interface Sequence extends Collection, ArrayAccess
 {
     public function map(callable $callback) : Sequence;
 

@@ -2,7 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\AnnualReport;
@@ -77,6 +79,35 @@ final class AnnualReportsTest extends ApiTestCase
             $this->assertInstanceOf(AnnualReport::class, $annualReport);
             $this->assertSame(2011 + $i + 1, $annualReport->getYear());
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockAnnualReportListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->annualReports[0]));
+        $this->assertSame(2012, $this->annualReports[0]->getYear());
+
+        $this->mockNotFound(
+            'annual-reports?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->annualReports[5]));
+        $this->assertSame(null, $this->annualReports[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->annualReports[0] = 'foo';
     }
 
     /**

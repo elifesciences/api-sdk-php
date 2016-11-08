@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\SearchClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Collection\Sequence;
@@ -74,12 +77,41 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockSearchCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->search[0]));
+        $this->assertInstanceOf(Model::class, $this->search[0]);
+
+        $this->mockNotFound(
+            'search?for=&page=6&per-page=1&sort=relevance&order=desc',
+            ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
+        );
+
+        $this->assertFalse(isset($this->search[5]));
+        $this->assertSame(null, $this->search[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->search[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_reuses_already_known_models()
     {
         $this->mockCountCall(1);
         $this->mockFirstPageCall(1);
 
-        $existingModel = $this->search->toArray()[0];
+        $existingModel = $this->search[0];
 
         $models = $this->search->toArray();
 

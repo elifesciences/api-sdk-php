@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Collection;
 use ArrayIterator;
 use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\ImmutableArrayAccess;
 use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
 use Traversable;
@@ -13,6 +14,7 @@ use function GuzzleHttp\Promise\promise_for;
 final class ArraySequence implements IteratorAggregate, Sequence
 {
     use CanBeCounted;
+    use ImmutableArrayAccess;
 
     private $array;
 
@@ -68,5 +70,19 @@ final class ArraySequence implements IteratorAggregate, Sequence
     public function reverse() : Sequence
     {
         return new self(array_reverse($this->array));
+    }
+
+    public function offsetExists($offset) : bool
+    {
+        return isset($this->array[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        if (!isset($this->array[$offset])) {
+            return null;
+        }
+
+        return $this->array[$offset];
     }
 }

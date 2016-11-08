@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Collection;
 
+use BadMethodCallException;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use PHPUnit_Framework_TestCase;
@@ -51,6 +52,31 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
         $collection = new ArraySequence($array);
 
         $this->assertSame($array, $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $this->assertTrue(isset($collection[0]));
+        $this->assertSame(1, $collection[0]);
+        $this->assertFalse(isset($collection[5]));
+        $this->assertSame(null, $collection[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $this->expectException(BadMethodCallException::class);
+
+        $collection[0] = 'foo';
     }
 
     /**

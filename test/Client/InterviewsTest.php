@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Collection\Sequence;
@@ -77,6 +80,35 @@ final class InterviewsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockInterviewListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->interviews[0]));
+        $this->assertSame('interview1', $this->interviews[0]->getId());
+
+        $this->mockNotFound(
+            'interviews?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->interviews[5]));
+        $this->assertSame(null, $this->interviews[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->interviews[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_an_interview()
     {
         $this->mockInterviewCall('interview7');
@@ -86,8 +118,8 @@ final class InterviewsTest extends ApiTestCase
         $this->assertInstanceOf(Interview::class, $interview);
         $this->assertSame('interview7', $interview->getId());
 
-        $this->assertInstanceOf(Paragraph::class, $interview->getContent()->toArray()[0]);
-        $this->assertSame('Interview interview7 text', $interview->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $interview->getContent()[0]);
+        $this->assertSame('Interview interview7 text', $interview->getContent()[0]->getText());
     }
 
     /**
@@ -107,8 +139,8 @@ final class InterviewsTest extends ApiTestCase
 
         $this->mockInterviewCall('interview1');
 
-        $this->assertInstanceOf(Paragraph::class, $interview->getContent()->toArray()[0]);
-        $this->assertSame('Interview interview1 text', $interview->getContent()->toArray()[0]->getText());
+        $this->assertInstanceOf(Paragraph::class, $interview->getContent()[0]);
+        $this->assertSame('Interview interview1 text', $interview->getContent()[0]->getText());
     }
 
     /**

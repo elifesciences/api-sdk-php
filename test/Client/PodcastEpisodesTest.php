@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Client;
 
+use BadMethodCallException;
+use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Collection\Sequence;
@@ -78,6 +81,35 @@ final class PodcastEpisodesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_accessed_like_an_array()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 1);
+
+        $this->assertTrue(isset($this->podcastEpisodes[0]));
+        $this->assertSame(1, $this->podcastEpisodes[0]->getNumber());
+
+        $this->mockNotFound(
+            'podcast-episodes?page=6&per-page=1&order=desc',
+            ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)]
+        );
+
+        $this->assertFalse(isset($this->podcastEpisodes[5]));
+        $this->assertSame(null, $this->podcastEpisodes[5]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_an_immutable_array()
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $this->podcastEpisodes[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_a_podcast_episode()
     {
         $this->mockPodcastEpisodeCall(7, true);
@@ -87,16 +119,16 @@ final class PodcastEpisodesTest extends ApiTestCase
         $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
         $this->assertSame(7, $podcastEpisode->getNumber());
 
-        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()->toArray()[0]);
-        $this->assertSame('Chapter title', $podcastEpisode->getChapters()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()[0]);
+        $this->assertSame('Chapter title', $podcastEpisode->getChapters()[0]->getTitle());
 
-        $this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()->toArray()[0]);
-        $this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()->toArray()[0]->getName());
+        $this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()[0]);
+        $this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()[0]->getName());
 
         $this->mockSubjectCall('1');
 
         $this->assertSame('Subject 1 impact statement',
-            $podcastEpisode->getSubjects()->toArray()[0]->getImpactStatement());
+            $podcastEpisode->getSubjects()[0]->getImpactStatement());
     }
 
     /**
@@ -116,8 +148,8 @@ final class PodcastEpisodesTest extends ApiTestCase
 
         $this->mockPodcastEpisodeCall(1);
 
-        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()->toArray()[0]);
-        $this->assertSame('Chapter title', $podcastEpisode->getChapters()->toArray()[0]->getTitle());
+        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()[0]);
+        $this->assertSame('Chapter title', $podcastEpisode->getChapters()[0]->getTitle());
     }
 
     /**

@@ -6,12 +6,10 @@ use ArrayObject;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\ArrayFromIterator;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Person;
-use eLife\ApiSdk\SlicedIterator;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,8 +17,7 @@ use function GuzzleHttp\Promise\promise_for;
 
 final class People implements Iterator, Sequence
 {
-    use ArrayFromIterator;
-    use SlicedIterator;
+    use Client;
 
     private $count;
     private $people;
@@ -35,11 +32,6 @@ final class People implements Iterator, Sequence
         $this->people = new ArrayObject();
         $this->peopleClient = $peopleClient;
         $this->denormalizer = $denormalizer;
-    }
-
-    public function __clone()
-    {
-        $this->resetIterator();
     }
 
     public function get(string $id) : PromiseInterface
@@ -133,14 +125,5 @@ final class People implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
-    }
-
-    public function count() : int
-    {
-        if (null === $this->count) {
-            $this->slice(0, 1)->count();
-        }
-
-        return $this->count;
     }
 }

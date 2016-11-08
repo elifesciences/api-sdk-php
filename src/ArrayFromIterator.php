@@ -15,7 +15,7 @@ trait ArrayFromIterator
         return $this->all()->map($callback);
     }
 
-    final public function filter(callable $callback) : Collection
+    final public function filter(callable $callback = null) : Collection
     {
         return $this->all()->filter($callback);
     }

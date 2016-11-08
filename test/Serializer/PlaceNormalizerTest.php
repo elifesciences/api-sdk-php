@@ -10,6 +10,7 @@ use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class PlaceNormalizerTest extends TestCase
@@ -105,7 +106,7 @@ final class PlaceNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
-        $address = new Address(['address'], ['street address'], ['locality'], ['area'], 'country', 'postal code');
+        $address = Builder::for(Address::class)->sample('simple');
         $coordinates = new Coordinates(123.45, 54.321);
 
         return [

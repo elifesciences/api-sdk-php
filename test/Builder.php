@@ -220,6 +220,22 @@ final class Builder
     {
         if (self::$sampleRecipes === null) {
             self::$sampleRecipes = [
+                Address::class => [
+                    'simple' => function($builder) {
+                        return $builder
+                            ->withSequenceOfFormatted('address')
+                            ->withSequenceOfStreetAddress('street address')
+                            ->withSequenceOfLocality('locality')
+                            ->withSequenceOfArea('area')
+                            ->withCountry('country')
+                            ->withPostalCode('postal code');
+                    },
+                    'somewhere' => function($builder) {
+                        return Builder::for(Address::class)
+                            ->withSequenceOfFormatted('somewhere')
+                            ->withSequenceOfLocality('somewhere');
+                    },
+                ],
                 Image::class => [
                     'banner' => function () {
                         return new Image(

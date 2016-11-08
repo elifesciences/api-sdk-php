@@ -15,6 +15,7 @@ use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 
 final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -80,7 +81,9 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                 new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
-                    [new Address(['somewhere'], [], ['somewhere'])]),
+                    [
+                        $somewhere = Builder::for(Address::class)->sample('somewhere')
+                    ]),
                 [
                     'affiliations' => [
                         [
@@ -192,7 +195,9 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                 new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
                     [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
-                    [new Address(['somewhere'], [], ['somewhere'])]),
+                    [
+                        $somewhere = Builder::for(Address::class)->sample('somewhere')
+                    ]),
             ],
             'minimum' => [
                 [

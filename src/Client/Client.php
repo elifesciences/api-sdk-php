@@ -13,6 +13,7 @@ trait Client
     use SlicedIterator {
         SlicedIterator::getPage insteadof SlicedArrayAccess;
         SlicedIterator::isEmpty insteadof SlicedArrayAccess;
+        SlicedIterator::notEmpty insteadof SlicedArrayAccess;
         SlicedIterator::resetPages insteadof SlicedArrayAccess;
     }
 

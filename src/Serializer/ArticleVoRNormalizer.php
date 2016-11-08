@@ -26,6 +26,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : ArticleVersion {
         if ($article) {
+            $data['acknowledgements'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['acknowledgements'] ?? [];
+                }));
+
             $data['authorResponse'] = $article
                 ->then(function (Result $article) {
                     return $article['authorResponse'] ?? null;
@@ -65,6 +70,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['references'] ?? [];
                 }));
         } else {
+            $data['acknowledgements'] = new ArraySequence($data['acknowledgements'] ?? []);
+
             $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
 
             $data['body'] = new ArraySequence($data['body']);
@@ -79,6 +86,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             $data['references'] = new ArraySequence($data['references'] ?? []);
         }
+
+        $data['acknowledgements'] = $data['acknowledgements']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
 
         $data['authorResponse'] = $data['authorResponse']
             ->then(function ($authorResponse) use ($format, $context) {
@@ -183,6 +194,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['digest'],
             $data['body'],
             $data['references'],
+            $data['acknowledgements'],
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse']
@@ -253,6 +265,14 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             if (empty($data['references'])) {
                 unset($data['references']);
             }
+
+            if (!$article->getAcknowledgements()->isEmpty()) {
+                $data['acknowledgements'] = $article->getAcknowledgements()
+                    ->map(function (Block $block) use ($format, $context) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray();
+            }
+
             if ($article->getDecisionLetter()) {
                 $data['decisionLetter'] = [
                     'description' => $article->getDecisionLetterDescription()

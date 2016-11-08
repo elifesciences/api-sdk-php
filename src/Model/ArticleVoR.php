@@ -15,6 +15,7 @@ final class ArticleVoR extends ArticleVersion
     private $digest;
     private $content;
     private $references;
+    private $acknowledgements;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -48,6 +49,7 @@ final class ArticleVoR extends ArticleVersion
         PromiseInterface $digest,
         Sequence $content,
         Sequence $references,
+        Sequence $acknowledgements,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
@@ -62,6 +64,7 @@ final class ArticleVoR extends ArticleVersion
         $this->digest = $digest;
         $this->content = $content;
         $this->references = $references;
+        $this->acknowledgements = $acknowledgements;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -115,6 +118,14 @@ final class ArticleVoR extends ArticleVersion
     public function getReferences() : Sequence
     {
         return $this->references;
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getAcknowledgements() : Sequence
+    {
+        return $this->acknowledgements;
     }
 
     /**

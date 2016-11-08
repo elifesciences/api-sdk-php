@@ -62,6 +62,21 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_sub_title()
+    {
+        $person = new PersonDetails('preferred name', 'index name');
+        $interviewee = new Interviewee($person,
+            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
+            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+        );
+
+        $this->assertSame('An interview with preferred name', $interview->getSubTitle());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_an_impact_statement()
     {
         $person = new PersonDetails('preferred name', 'index name');

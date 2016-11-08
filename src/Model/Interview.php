@@ -48,6 +48,11 @@ final class Interview implements Model
         return $this->title;
     }
 
+    public function getSubTitle() : String
+    {
+        return 'An interview with '.$this->interviewee->getPerson()->getPreferredName();
+    }
+
     /**
      * @return string|null
      */

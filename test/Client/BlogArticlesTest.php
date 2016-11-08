@@ -53,6 +53,7 @@ final class BlogArticlesTest extends ApiTestCase
     {
         $this->mockBlogArticleListCall(1, 1, 10);
 
+        $this->assertFalse($this->blogArticles->isEmpty());
         $this->assertSame(10, $this->blogArticles->count());
     }
 

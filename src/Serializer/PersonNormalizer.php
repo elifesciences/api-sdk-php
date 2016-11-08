@@ -155,7 +155,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
 
         if (empty($context['snippet'])) {
             if ($object->getResearch()) {
-                if (count($object->getResearch()->getExpertises()) > 0) {
+                if (!$object->getResearch()->getExpertises()->isEmpty()) {
                     $data['research']['expertises'] = $object->getResearch()->getExpertises()
                         ->map(function (Subject $subject) use ($format, $context) {
                             $context['snippet'] = true;
@@ -171,7 +171,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
                 }
             }
 
-            if (count($object->getProfile()) > 0) {
+            if (!$object->getProfile()->isEmpty()) {
                 $data['profile'] = $object->getProfile()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);

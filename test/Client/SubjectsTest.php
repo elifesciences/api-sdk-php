@@ -51,6 +51,7 @@ final class SubjectsTest extends ApiTestCase
     {
         $this->mockSubjectListCall(1, 1, 10);
 
+        $this->assertFalse($this->subjects->isEmpty());
         $this->assertSame(10, $this->subjects->count());
     }
 

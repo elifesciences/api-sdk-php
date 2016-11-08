@@ -129,7 +129,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if (count($object->getSubjects()) > 0) {
+        if (!$object->getSubjects()->isEmpty()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 

@@ -57,6 +57,7 @@ final class MediumArticlesTest extends ApiTestCase
     {
         $this->mockMediumArticleListCall(1, 1, 10);
 
+        $this->assertFalse($this->mediumArticles->isEmpty());
         $this->assertSame(10, $this->mediumArticles->count());
     }
 

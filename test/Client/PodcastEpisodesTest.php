@@ -53,6 +53,7 @@ final class PodcastEpisodesTest extends ApiTestCase
     {
         $this->mockPodcastEpisodeListCall(1, 1, 10);
 
+        $this->assertFalse($this->podcastEpisodes->isEmpty());
         $this->assertSame(10, $this->podcastEpisodes->count());
     }
 

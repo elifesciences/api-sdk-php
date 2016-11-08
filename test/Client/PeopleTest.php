@@ -53,6 +53,7 @@ final class PeopleTest extends ApiTestCase
     {
         $this->mockPersonListCall(1, 1, 10);
 
+        $this->assertFalse($this->people->isEmpty());
         $this->assertSame(10, $this->people->count());
     }
 

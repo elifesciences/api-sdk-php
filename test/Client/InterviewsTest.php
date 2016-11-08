@@ -52,6 +52,7 @@ final class InterviewsTest extends ApiTestCase
     {
         $this->mockInterviewListCall(1, 1, 10);
 
+        $this->assertFalse($this->interviews->isEmpty());
         $this->assertSame(10, $this->interviews->count());
     }
 

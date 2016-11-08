@@ -53,6 +53,7 @@ final class CollectionsTest extends ApiTestCase
     {
         $this->mockCollectionListCall(1, 1, 10);
 
+        $this->assertFalse($this->collections->isEmpty());
         $this->assertSame(10, $this->collections->count());
     }
 

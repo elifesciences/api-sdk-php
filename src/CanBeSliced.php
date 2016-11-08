@@ -7,12 +7,12 @@ use LogicException;
 
 trait CanBeSliced
 {
+    use CanBeCounted;
+
     private $pages = [];
     private $pageBatch = 100;
 
     abstract public function slice(int $offset, int $length = null) : Sequence;
-
-    abstract public function count() : int;
 
     final private function getPage(int $page) : array
     {

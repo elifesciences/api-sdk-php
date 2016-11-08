@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Collection;
 
 use ArrayIterator;
+use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
@@ -11,6 +12,8 @@ use function GuzzleHttp\Promise\promise_for;
 
 final class ArraySequence implements IteratorAggregate, Sequence
 {
+    use CanBeCounted;
+
     private $array;
 
     public function __construct(array $array = [])

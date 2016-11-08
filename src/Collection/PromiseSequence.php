@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Collection;
 
+use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 use IteratorAggregate;
@@ -10,6 +11,8 @@ use Traversable;
 
 final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInterface
 {
+    use CanBeCounted;
+
     private $promise;
 
     public function __construct(PromiseInterface $promise)

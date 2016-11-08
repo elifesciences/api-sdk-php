@@ -202,7 +202,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['pdf'] = $object->getPdf();
         }
 
-        if (count($object->getSubjects()) > 0) {
+        if (!$object->getSubjects()->isEmpty()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 

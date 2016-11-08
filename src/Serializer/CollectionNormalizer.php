@@ -144,7 +144,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data['updated'] = $object->getPublishedDate()->format(DATE_ATOM);
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
-        if (count($object->getSubjects()) > 0) {
+        if (!$object->getSubjects()->isEmpty()) {
             $data['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($object->getSubjects(), $context);
         }
 
@@ -165,10 +165,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['curators'] = $normalizationHelper->normalizeSequenceToSnippets($object->getCurators(), $context);
 
             $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($object->getContent(), $typeContext);
-            if (count($object->getRelatedContent()) > 0) {
+            if (!$object->getRelatedContent()->isEmpty()) {
                 $data['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedContent(), $typeContext);
             }
-            if (count($object->getPodcastEpisodes()) > 0) {
+            if (!$object->getPodcastEpisodes()->isEmpty()) {
                 $data['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($object->getPodcastEpisodes(), $context);
             }
         }

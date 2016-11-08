@@ -52,6 +52,7 @@ class SearchTest extends ApiTestCase
     {
         $this->mockCountCall(10);
 
+        $this->assertFalse($this->search->isEmpty());
         $this->assertSame(10, $this->search->count());
     }
 

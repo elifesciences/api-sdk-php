@@ -1,0 +1,13 @@
+<?php
+
+namespace eLife\ApiSdk;
+
+trait CanBeCounted
+{
+    abstract public function count() : int;
+
+    final public function isEmpty() : bool
+    {
+        return 0 === count($this);
+    }
+}

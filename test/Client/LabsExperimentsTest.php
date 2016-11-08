@@ -52,6 +52,7 @@ final class LabsExperimentsTest extends ApiTestCase
     {
         $this->mockLabsExperimentListCall(1, 1, 10);
 
+        $this->assertFalse($this->labsExperiments->isEmpty());
         $this->assertSame(10, $this->labsExperiments->count());
     }
 

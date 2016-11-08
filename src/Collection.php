@@ -9,5 +9,7 @@ interface Collection extends Countable, Traversable
 {
     public function filter(callable $callback) : Collection;
 
+    public function isEmpty() : bool;
+
     public function toArray() : array;
 }

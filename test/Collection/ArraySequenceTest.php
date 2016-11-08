@@ -37,6 +37,7 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
+        $this->assertFalse($collection->isEmpty());
         $this->assertSame(5, $collection->count());
     }
 

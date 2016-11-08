@@ -57,6 +57,7 @@ final class AnnualReportsTest extends ApiTestCase
     {
         $this->mockAnnualReportListCall(1, 1, 10);
 
+        $this->assertFalse($this->annualReports->isEmpty());
         $this->assertSame(10, $this->annualReports->count());
     }
 

@@ -52,6 +52,7 @@ final class EventsTest extends ApiTestCase
     {
         $this->mockEventListCall(1, 1, 10);
 
+        $this->assertFalse($this->events->isEmpty());
         $this->assertSame(10, $this->events->count());
     }
 

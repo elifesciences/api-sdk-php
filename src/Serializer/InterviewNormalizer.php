@@ -139,7 +139,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
         }
 
         if (empty($context['snippet'])) {
-            if (count($object->getInterviewee()->getCvLines()) > 0) {
+            if (!$object->getInterviewee()->getCvLines()->isEmpty()) {
                 $data['interviewee']['cv'] = $object->getInterviewee()->getCvLines()
                     ->map(function (IntervieweeCvLine $cvLine) {
                         return [

@@ -81,7 +81,7 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         });
     }
 
-    public function sort(callable $callback) : Sequence
+    public function sort(callable $callback = null) : Sequence
     {
         return new self(
             $this->then(function (Sequence $collection) use ($callback) {

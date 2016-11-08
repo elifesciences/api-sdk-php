@@ -147,6 +147,16 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_sorted()
     {
+        $collection = new ArraySequence([5, 4, 3, 2, 1]);
+
+        $this->assertSame([1, 2, 3, 4, 5], $collection->sort()->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_sorted_with_a_callback()
+    {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $sort = function (int $a, int $b) {

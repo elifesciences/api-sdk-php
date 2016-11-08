@@ -58,11 +58,15 @@ final class ArraySequence implements IteratorAggregate, Sequence
         return promise_for(array_reduce($this->array, $callback, $initial));
     }
 
-    public function sort(callable $callback) : Sequence
+    public function sort(callable $callback = null) : Sequence
     {
         $clone = clone $this;
 
-        usort($clone->array, $callback);
+        if (null === $callback) {
+            sort($clone->array);
+        } else {
+            usort($clone->array, $callback);
+        }
 
         return $clone;
     }

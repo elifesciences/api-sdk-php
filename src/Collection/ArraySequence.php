@@ -16,15 +16,6 @@ final class ArraySequence implements IteratorAggregate, Sequence
 
     private $array;
 
-    public static function coalesce(self $value = null) : self
-    {
-        if ($value === null) {
-            return new self();
-        } else {
-            return $value;
-        }
-    }
-
     public function __construct(array $array = [])
     {
         $this->array = array_values($array);

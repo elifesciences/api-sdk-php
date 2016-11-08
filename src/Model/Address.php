@@ -19,16 +19,16 @@ final class Address
      */
     public function __construct(
         Sequence $formatted,
-        Sequence $streetAddress = null,
-        Sequence $locality = null,
-        Sequence $area = null,
+        Sequence $streetAddress,
+        Sequence $locality,
+        Sequence $area,
         string $country = null,
         string $postalCode = null
     ) {
         $this->formatted = $formatted;
-        $this->streetAddress = ArraySequence::coalesce($streetAddress);
-        $this->locality = ArraySequence::coalesce($locality);
-        $this->area = ArraySequence::coalesce($area);
+        $this->streetAddress = $streetAddress;
+        $this->locality = $locality;
+        $this->area = $area;
         $this->country = $country;
         $this->postalCode = $postalCode;
     }

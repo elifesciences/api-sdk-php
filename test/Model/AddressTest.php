@@ -30,7 +30,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withStreetAddress($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withStreetAddress(null)
+            ->withStreetAddress(new ArraySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getStreetAddress());
@@ -46,7 +46,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withLocality($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withLocality(null)
+            ->withLocality(new ArraySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getLocality());
@@ -62,7 +62,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withArea($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withArea(null)
+            ->withArea(new ArraySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getArea());

@@ -201,7 +201,7 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_acknowledgements()
     {
         $article = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
+            new DateTimeImmutable(), 2, 'elocationId', null, new PromiseSequence(rejection_for('No subjects')), [],
             rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
             new PromiseSequence(rejection_for('No authors')), null, rejection_for('No banner'), null,
             new PromiseSequence(rejection_for('No keywords')),

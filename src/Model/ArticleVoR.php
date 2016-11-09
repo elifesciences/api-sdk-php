@@ -14,6 +14,7 @@ final class ArticleVoR extends ArticleVersion
     private $keywords;
     private $digest;
     private $content;
+    private $appendices;
     private $references;
     private $acknowledgements;
     private $decisionLetter;
@@ -48,6 +49,7 @@ final class ArticleVoR extends ArticleVersion
         Sequence $keywords,
         PromiseInterface $digest,
         Sequence $content,
+        Sequence $appendices,
         Sequence $references,
         Sequence $acknowledgements,
         PromiseInterface $decisionLetter,
@@ -63,6 +65,7 @@ final class ArticleVoR extends ArticleVersion
         $this->keywords = $keywords;
         $this->digest = $digest;
         $this->content = $content;
+        $this->appendices = $appendices;
         $this->references = $references;
         $this->acknowledgements = $acknowledgements;
         $this->decisionLetter = $decisionLetter;
@@ -110,6 +113,14 @@ final class ArticleVoR extends ArticleVersion
     public function getContent() : Sequence
     {
         return $this->content;
+    }
+
+    /**
+     * @return Sequence|Appendix[]
+     */
+    public function getAppendices() : Sequence
+    {
+        return $this->appendices;
     }
 
     /**

@@ -29,6 +29,7 @@ use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
+use eLife\ApiSdk\Serializer\AppendixNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\Block;
@@ -96,6 +97,7 @@ final class ApiSdk
         $this->serializer = new Serializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
+            new AppendixNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
             new BlogArticleNormalizer($this->blogClient),

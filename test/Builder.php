@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Address;
+use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -189,6 +190,20 @@ final class Builder
                             'keywords' => new ArraySequence(['Article 09560 keyword']),
                             'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
                             'content' => new ArraySequence([new Paragraph('content')]),
+                            'appendices' => new ArraySequence([
+                                new Appendix(
+                                    'app1',
+                                    'Appendix 1',
+                                    new ArraySequence([
+                                        new Section(
+                                            'Appendix 1 title',
+                                            'app1-1',
+                                            [new Paragraph('Appendix 1 text')]
+                                        ),
+                                    ]),
+                                    '10.7554/eLife.09560.app1'
+                                ),
+                            ]),
                             'references' => $references = new ArraySequence([
                                 new BookReference(
                                     new ReferenceDate(2000),

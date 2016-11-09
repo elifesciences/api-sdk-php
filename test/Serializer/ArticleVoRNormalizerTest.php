@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -66,7 +67,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
             new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
             promise_for(null), null, new ArraySequence([]), promise_for(null),
-            new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]),
+            new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]), new ArraySequence([]),
             new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
 
         return [
@@ -151,6 +152,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $date = new DateTimeImmutable();
         $statusDate = new DateTimeImmutable('-1 day');
 
+        $appendix = new Appendix(
+            'app1',
+            'Appendix 1',
+            new ArraySequence([
+                new Section(
+                    'Appendix 1 title',
+                    'app1-1',
+                    [new Paragraph('Appendix 1 text')]
+                ),
+            ]),
+            '10.7554/eLife.09560.app1'
+        );
+
         return [
             'complete' => [
                 new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
@@ -161,7 +175,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'impact statement', promise_for($banner), $thumbnail, new ArraySequence(['keyword']),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArraySequence([
+                    new ArraySequence([$appendix]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000-01-01'),
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
@@ -262,6 +276,26 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'id' => 'section',
                         ],
                     ],
+                    'appendices' => [
+                        [
+                            'id' => 'app1',
+                            'title' => 'Appendix 1',
+                            'content' => [
+                                [
+                                    'type' => 'section',
+                                    'title' => 'Appendix 1 title',
+                                    'content' => [
+                                        [
+                                            'type' => 'paragraph',
+                                            'text' => 'Appendix 1 text',
+                                        ],
+                                    ],
+                                    'id' => 'app1-1',
+                                ],
+                            ],
+                            'doi' => '10.7554/eLife.09560.app1',
+                        ],
+                    ],
                     'references' => [
                         [
                             'type' => 'book',
@@ -325,7 +359,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new Copyright('license', 'statement')),
                     new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null),
-                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
+                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]), new ArraySequence([]),
                     new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 [],
                 [
@@ -381,7 +415,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 digest')]),
                         '10.7554/eLife.article1digest')), new ArraySequence([
                         new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([
+                    ]), new ArraySequence([$appendix]), new ArraySequence([
                         new BookReference(ReferenceDate::fromString('2000'),
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
@@ -439,7 +473,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
                         new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
+                    ]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null),
+                    new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],
                 [
                     'id' => 'article1',

@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -29,6 +30,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['acknowledgements'] = new PromiseSequence($article
                 ->then(function (Result $article) {
                     return $article['acknowledgements'] ?? [];
+                }));
+
+            $data['appendices'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['appendices'] ?? [];
                 }));
 
             $data['authorResponse'] = $article
@@ -72,6 +78,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         } else {
             $data['acknowledgements'] = new ArraySequence($data['acknowledgements'] ?? []);
 
+            $data['appendices'] = new ArraySequence($data['appendices'] ?? []);
+
             $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
 
             $data['body'] = new ArraySequence($data['body']);
@@ -89,6 +97,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         $data['acknowledgements'] = $data['acknowledgements']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $data['appendices'] = $data['appendices']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Appendix::class, $format, $context);
         });
 
         $data['authorResponse'] = $data['authorResponse']
@@ -193,6 +205,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['keywords'],
             $data['digest'],
             $data['body'],
+            $data['appendices'],
             $data['references'],
             $data['acknowledgements'],
             $data['decisionLetter'],
@@ -254,6 +267,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['body'] = $article->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
+
+            if (!$article->getAppendices()->isEmpty()) {
+                $data['appendices'] = $article->getAppendices()
+                    ->map(function (Appendix $appendix) use ($format, $context) {
+                        return $this->normalizer->normalize($appendix, $format, $context);
+                    })->toArray();
+            }
 
             $data['references'] = $article->getReferences()->map(function (Reference $reference) use (
                 $format,

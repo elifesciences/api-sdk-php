@@ -837,6 +837,26 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'appendices' => [
+                [
+                    'id' => 'app1',
+                    'title' => 'Appendix 1',
+                    'content' => [
+                        [
+                            'type' => 'section',
+                            'id' => 'app1-1',
+                            'title' => 'Appendix 1 title',
+                            'content' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'Appendix 1 text',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'doi' => '10.7554/eLife.09560.app1',
+                ],
+            ],
             'references' => [
                 [
                     'id' => 'ref1',
@@ -894,6 +914,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['image']);
             unset($article['keywords']);
             unset($article['digest']);
+            unset($article['appendices']);
             unset($article['references']);
             unset($article['acknowledgements']);
             unset($article['decisionLetter']);
@@ -907,6 +928,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
+            unset($article['appendices']);
             unset($article['references']);
             unset($article['acknowledgements']);
             unset($article['decisionLetter']);

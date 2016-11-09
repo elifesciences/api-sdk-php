@@ -22,6 +22,7 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
     public function denormalize($data, $class, $format = null, array $context = []) : BookReference
     {
         return new BookReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -52,6 +53,7 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
     {
         $data = [
             'type' => 'book',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

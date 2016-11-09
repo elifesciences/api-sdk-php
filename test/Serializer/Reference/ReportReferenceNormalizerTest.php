@@ -56,7 +56,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ReportReference(ReferenceDate::fromString('2000'),
+        $reference = new ReportReference('id', ReferenceDate::fromString('2000'),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -80,12 +80,13 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new ReportReference(ReferenceDate::fromString('2000-01-01'),
+                new ReportReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
                 [
                     'type' => 'report',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -108,11 +109,12 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new ReportReference(ReferenceDate::fromString('2000'),
+                new ReportReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
                 [
                     'type' => 'report',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -174,6 +176,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'report',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -194,7 +197,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'isbn' => '978-3-16-148410-0',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ReportReference(ReferenceDate::fromString('2000-01-01'),
+                new ReportReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
@@ -202,6 +205,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 [
                     'type' => 'report',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -217,7 +221,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         'name' => ['publisher'],
                     ],
                 ],
-                new ReportReference(ReferenceDate::fromString('2000'),
+                new ReportReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['publisher'])),
             ],

@@ -17,7 +17,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new SoftwareReference(new ReferenceDate(2000),
+        $reference = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -27,9 +27,21 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_an_id()
+    {
+        $reference = new SoftwareReference('id', new ReferenceDate(2000),
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
+            new Place(null, null, ['publisher']));
+
+        $this->assertSame('id', $reference->getId());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_date()
     {
-        $reference = new SoftwareReference($date = new ReferenceDate(2000),
+        $reference = new SoftwareReference('id', $date = new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -41,7 +53,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $reference = new SoftwareReference(new ReferenceDate(2000),
+        $reference = new SoftwareReference('id', new ReferenceDate(2000),
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -53,10 +65,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new SoftwareReference(new ReferenceDate(2000),
+        $with = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
             new Place(null, null, ['publisher']));
-        $withOut = new SoftwareReference(new ReferenceDate(2000),
+        $withOut = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -69,7 +81,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $reference = new SoftwareReference(new ReferenceDate(2000),
+        $reference = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -81,7 +93,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_publisher()
     {
-        $reference = new SoftwareReference(new ReferenceDate(2000),
+        $reference = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             $software = new Place(null, null, ['publisher']));
 
@@ -93,10 +105,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_version()
     {
-        $with = new SoftwareReference(new ReferenceDate(2000),
+        $with = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']), '1.0');
-        $withOut = new SoftwareReference(new ReferenceDate(2000),
+        $withOut = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 
@@ -109,10 +121,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new SoftwareReference(new ReferenceDate(2000),
+        $with = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']), null, 'http://www.example.com/');
-        $withOut = new SoftwareReference(new ReferenceDate(2000),
+        $withOut = new SoftwareReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['publisher']));
 

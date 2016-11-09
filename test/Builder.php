@@ -206,6 +206,7 @@ final class Builder
                             ]),
                             'references' => $references = new ArraySequence([
                                 new BookReference(
+                                    'ref1',
                                     new ReferenceDate(2000),
                                     [
                                         new PersonAuthor(new PersonDetails(

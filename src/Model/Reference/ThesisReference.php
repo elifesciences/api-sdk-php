@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class ThesisReference implements Reference
 {
+    private $id;
     private $date;
     private $author;
     private $title;
@@ -19,6 +20,7 @@ final class ThesisReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         PersonDetails $author,
         string $title,
@@ -26,12 +28,18 @@ final class ThesisReference implements Reference
         string $doi = null,
         string $uri = null
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->author = $author;
         $this->title = $title;
         $this->publisher = $publisher;
         $this->doi = $doi;
         $this->uri = $uri;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

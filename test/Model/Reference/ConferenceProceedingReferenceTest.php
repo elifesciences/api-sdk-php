@@ -18,7 +18,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $reference = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -28,9 +28,21 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_an_id()
+    {
+        $reference = new ConferenceProceedingReference('id', new ReferenceDate(2000),
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
+            new Place(null, null, ['conference']));
+
+        $this->assertSame('id', $reference->getId());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_date()
     {
-        $reference = new ConferenceProceedingReference($date = new ReferenceDate(2000),
+        $reference = new ConferenceProceedingReference('id', $date = new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -42,7 +54,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $reference = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $reference = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -54,10 +66,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $with = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
             new Place(null, null, ['conference']));
-        $withOut = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $withOut = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -70,7 +82,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_article_title()
     {
-        $reference = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $reference = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -82,7 +94,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_conference()
     {
-        $reference = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $reference = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             $conference = new Place(null, null, ['conference']));
 
@@ -94,10 +106,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_pages()
     {
-        $with = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $with = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']), $pages = new StringReferencePage('foo'));
-        $withOut = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $withOut = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -110,10 +122,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $with = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']), null, '10.1000/182');
-        $withOut = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $withOut = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -126,10 +138,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $with = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']), null, null, 'http://www.example.com/');
-        $withOut = new ConferenceProceedingReference(new ReferenceDate(2000),
+        $withOut = new ConferenceProceedingReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 

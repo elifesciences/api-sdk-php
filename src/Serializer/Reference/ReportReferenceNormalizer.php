@@ -22,6 +22,7 @@ final class ReportReferenceNormalizer implements NormalizerInterface, Denormaliz
     public function denormalize($data, $class, $format = null, array $context = []) : ReportReference
     {
         return new ReportReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -51,6 +52,7 @@ final class ReportReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'type' => 'report',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

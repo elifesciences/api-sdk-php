@@ -23,6 +23,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
     public function denormalize($data, $class, $format = null, array $context = []) : JournalReference
     {
         return new JournalReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -52,6 +53,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
     {
         $data = [
             'type' => 'journal',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

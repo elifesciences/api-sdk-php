@@ -219,7 +219,7 @@ final class ArticleVoRTest extends ArticleTest
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No appendices')),
             $references = new ArraySequence([
-                new BookReference(new ReferenceDate(2000),
+                new BookReference('ref1', new ReferenceDate(2000),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
             ]), new PromiseSequence(rejection_for('No acknowledgements')),
@@ -241,11 +241,7 @@ final class ArticleVoRTest extends ArticleTest
             new PromiseSequence(rejection_for('No keywords')),
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No appendices')),
-            new ArraySequence([
-                new BookReference(new ReferenceDate(2000),
-                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-                    new Place(null, null, ['publisher'])),
-            ]), $acknowledgements = new ArraySequence([new Paragraph('acknowledgements')]),
+            new PromiseSequence(rejection_for('No references')), $acknowledgements = new ArraySequence([new Paragraph('acknowledgements')]),
             rejection_for('No decision letter'), new PromiseSequence(rejection_for('No decision letter description')),
             rejection_for('No author response'));
 

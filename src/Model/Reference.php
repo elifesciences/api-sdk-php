@@ -6,5 +6,7 @@ use eLife\ApiSdk\Model\Reference\ReferenceDate;
 
 interface Reference
 {
+    public function getId() : string;
+
     public function getDate() : ReferenceDate;
 }

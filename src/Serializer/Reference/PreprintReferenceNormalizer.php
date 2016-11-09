@@ -21,6 +21,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
     public function denormalize($data, $class, $format = null, array $context = []) : PreprintReference
     {
         return new PreprintReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -48,6 +49,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
     {
         $data = [
             'type' => 'preprint',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

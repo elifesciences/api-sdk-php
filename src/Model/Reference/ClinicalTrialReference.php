@@ -11,6 +11,7 @@ final class ClinicalTrialReference implements Reference
     const AUTHOR_TYPE_COLLABORATORS = 'collaborators';
     const AUTHOR_TYPE_SPONSORS = 'sponsors';
 
+    private $id;
     private $date;
     private $authors;
     private $authorsEtAl;
@@ -22,6 +23,7 @@ final class ClinicalTrialReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
@@ -29,12 +31,18 @@ final class ClinicalTrialReference implements Reference
         string $title,
         string $uri
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->authorsType = $authorsType;
         $this->title = $title;
         $this->uri = $uri;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

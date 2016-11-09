@@ -53,7 +53,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new WebReference(ReferenceDate::fromString('2000'),
+        $reference = new WebReference('id', ReferenceDate::fromString('2000'),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             'http://www.example.com/');
 
@@ -77,11 +77,12 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new WebReference(ReferenceDate::fromString('2000-01-01'),
+                new WebReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'http://www.example.com/', 'website'),
                 [
                     'type' => 'web',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -99,11 +100,12 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new WebReference(ReferenceDate::fromString('2000'),
+                new WebReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     'http://www.example.com/'),
                 [
                     'type' => 'web',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -163,6 +165,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'web',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -178,13 +181,14 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'website' => 'website',
                     'uri' => 'http://www.example.com/',
                 ],
-                new WebReference(ReferenceDate::fromString('2000-01-01'),
+                new WebReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'http://www.example.com/', 'website'),
             ],
             'minimum' => [
                 [
                     'type' => 'web',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -198,7 +202,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'uri' => 'http://www.example.com/',
                 ],
-                new WebReference(ReferenceDate::fromString('2000'),
+                new WebReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     'http://www.example.com/'),
             ],

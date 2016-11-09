@@ -21,6 +21,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
     public function denormalize($data, $class, $format = null, array $context = []) : WebReference
     {
         return new WebReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -47,6 +48,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
     {
         $data = [
             'type' => 'web',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

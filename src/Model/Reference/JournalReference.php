@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class JournalReference implements Reference
 {
+    private $id;
     private $date;
     private $authors;
     private $authorsEtAl;
@@ -22,6 +23,7 @@ final class JournalReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
@@ -32,6 +34,7 @@ final class JournalReference implements Reference
         string $doi = null,
         int $pmid = null
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
@@ -41,6 +44,11 @@ final class JournalReference implements Reference
         $this->volume = $volume;
         $this->doi = $doi;
         $this->pmid = $pmid;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

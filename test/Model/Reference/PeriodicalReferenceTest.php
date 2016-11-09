@@ -18,7 +18,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new PeriodicalReference(new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -28,9 +28,21 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_an_id()
+    {
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
+            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
+
+        $this->assertSame('id', $reference->getId());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_date()
     {
-        $reference = new PeriodicalReference($date = new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', $date = new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -42,7 +54,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $reference = new PeriodicalReference(new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -54,10 +66,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new PeriodicalReference(new ReferenceDate(2000),
+        $with = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
-        $withOut = new PeriodicalReference(new ReferenceDate(2000),
+        $withOut = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -70,7 +82,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_article_title()
     {
-        $reference = new PeriodicalReference(new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -82,7 +94,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_periodical()
     {
-        $reference = new PeriodicalReference(new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             $periodical = new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -94,7 +106,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_pages()
     {
-        $reference = new PeriodicalReference(new ReferenceDate(2000),
+        $reference = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), $pages = new StringReferencePage('pages'));
 
@@ -106,10 +118,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_volume()
     {
-        $with = new PeriodicalReference(new ReferenceDate(2000),
+        $with = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'), 'volume');
-        $withOut = new PeriodicalReference(new ReferenceDate(2000),
+        $withOut = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -122,10 +134,10 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new PeriodicalReference(new ReferenceDate(2000),
+        $with = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'), null, 'http://www.example.com/');
-        $withOut = new PeriodicalReference(new ReferenceDate(2000),
+        $withOut = new PeriodicalReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 

@@ -60,7 +60,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new PeriodicalReference(ReferenceDate::fromString('2000'),
+        $reference = new PeriodicalReference('id', ReferenceDate::fromString('2000'),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
@@ -84,12 +84,13 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new PeriodicalReference(ReferenceDate::fromString('2000-01-01'),
+                new PeriodicalReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     'http://www.example.com/'),
                 [
                     'type' => 'periodical',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -115,11 +116,12 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new PeriodicalReference(ReferenceDate::fromString('2000'),
+                new PeriodicalReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['periodical']), new StringReferencePage('pages')),
                 [
                     'type' => 'periodical',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -182,6 +184,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'periodical',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -205,7 +208,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'volume' => 'volume',
                     'uri' => 'http://www.example.com/',
                 ],
-                new PeriodicalReference(ReferenceDate::fromString('2000-01-01'),
+                new PeriodicalReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     'http://www.example.com/'),
@@ -213,6 +216,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 [
                     'type' => 'periodical',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -229,7 +233,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'pages' => 'pages',
                 ],
-                new PeriodicalReference(ReferenceDate::fromString('2000'),
+                new PeriodicalReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['periodical']), new StringReferencePage('pages')),
             ],

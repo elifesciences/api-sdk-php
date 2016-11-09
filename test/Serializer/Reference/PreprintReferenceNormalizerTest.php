@@ -55,7 +55,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new PreprintReference(ReferenceDate::fromString('2000'),
+        $reference = new PreprintReference('id', ReferenceDate::fromString('2000'),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         return [
@@ -78,12 +78,13 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new PreprintReference(ReferenceDate::fromString('2000-01-01'),
+                new PreprintReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     'source',
                     '10.1000/182', 'http://www.example.com/'),
                 [
                     'type' => 'preprint',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -102,11 +103,12 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new PreprintReference(ReferenceDate::fromString('2000'),
+                new PreprintReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     'source'),
                 [
                     'type' => 'preprint',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -166,6 +168,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'preprint',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -182,7 +185,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new PreprintReference(ReferenceDate::fromString('2000-01-01'),
+                new PreprintReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     'source',
                     '10.1000/182', 'http://www.example.com/'),
@@ -190,6 +193,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 [
                     'type' => 'preprint',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -203,7 +207,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'articleTitle' => 'article title',
                     'source' => 'source',
                 ],
-                new PreprintReference(ReferenceDate::fromString('2000'),
+                new PreprintReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     'source'),
             ],

@@ -21,6 +21,7 @@ final class ClinicalTrialReferenceNormalizer implements NormalizerInterface, Den
     public function denormalize($data, $class, $format = null, array $context = []) : ClinicalTrialReference
     {
         return new ClinicalTrialReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -47,6 +48,7 @@ final class ClinicalTrialReferenceNormalizer implements NormalizerInterface, Den
     {
         $data = [
             'type' => 'clinical-trial',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

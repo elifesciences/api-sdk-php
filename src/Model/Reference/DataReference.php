@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class DataReference implements Reference
 {
+    private $id;
     private $date;
     private $authors;
     private $authorsEtAl;
@@ -26,6 +27,7 @@ final class DataReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
@@ -40,6 +42,7 @@ final class DataReference implements Reference
         string $doi = null,
         string $uri = null
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
@@ -53,6 +56,11 @@ final class DataReference implements Reference
         $this->assigningAuthority = $assigningAuthority;
         $this->doi = $doi;
         $this->uri = $uri;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

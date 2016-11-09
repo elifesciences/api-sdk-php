@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class ConferenceProceedingReference implements Reference
 {
+    private $id;
     private $date;
     private $authors;
     private $authorsEtAl;
@@ -21,6 +22,7 @@ final class ConferenceProceedingReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
@@ -30,6 +32,7 @@ final class ConferenceProceedingReference implements Reference
         string $doi = null,
         string $uri = null
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
@@ -38,6 +41,11 @@ final class ConferenceProceedingReference implements Reference
         $this->pages = $pages;
         $this->doi = $doi;
         $this->uri = $uri;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

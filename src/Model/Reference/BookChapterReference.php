@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Reference;
 
 final class BookChapterReference implements Reference
 {
+    private $id;
     private $date;
     private $authors;
     private $authorsEtAl;
@@ -27,6 +28,7 @@ final class BookChapterReference implements Reference
      * @internal
      */
     public function __construct(
+        string $id,
         ReferenceDate $date,
         array $authors,
         bool $authorsEtAl,
@@ -42,6 +44,7 @@ final class BookChapterReference implements Reference
         int $pmid = null,
         string $isbn = null
     ) {
+        $this->id = $id;
         $this->date = $date;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
@@ -56,6 +59,11 @@ final class BookChapterReference implements Reference
         $this->doi = $doi;
         $this->pmid = $pmid;
         $this->isbn = $isbn;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
     }
 
     public function getDate() : ReferenceDate

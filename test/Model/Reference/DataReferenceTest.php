@@ -17,7 +17,7 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new DataReference(new ReferenceDate(2000),
+        $reference = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -27,9 +27,21 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_an_id()
+    {
+        $reference = new DataReference('id', new ReferenceDate(2000),
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
+            'source');
+
+        $this->assertSame('id', $reference->getId());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_date()
     {
-        $reference = new DataReference($date = new ReferenceDate(2000),
+        $reference = new DataReference('id', $date = new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -41,11 +53,11 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_authors()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [],
             false,
             'title', 'source');
-        $withOut = new DataReference(new ReferenceDate(2000), [], false,
+        $withOut = new DataReference('id', new ReferenceDate(2000), [], false,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'source');
 
         $this->assertEquals($authors, $with->getAuthors());
@@ -57,10 +69,10 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, [], false, [], false, 'title',
             'source');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -73,11 +85,11 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_compilers()
     {
-        $with = new DataReference(new ReferenceDate(2000), [], false,
+        $with = new DataReference('id', new ReferenceDate(2000), [], false,
             $compilers = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false,
             'title',
             'source');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -90,9 +102,9 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_compilers()
     {
-        $with = new DataReference(new ReferenceDate(2000), [], false,
+        $with = new DataReference('id', new ReferenceDate(2000), [], false,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, [], false, 'title', 'source');
-        $withOut = new DataReference(new ReferenceDate(2000), [], false,
+        $withOut = new DataReference('id', new ReferenceDate(2000), [], false,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'source');
 
         $this->assertTrue($with->compilersEtAl());
@@ -104,10 +116,10 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_curators()
     {
-        $with = new DataReference(new ReferenceDate(2000), [], false, [], false,
+        $with = new DataReference('id', new ReferenceDate(2000), [], false, [], false,
             $curators = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             'source');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -120,9 +132,9 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_curators()
     {
-        $with = new DataReference(new ReferenceDate(2000), [], false, [], false,
+        $with = new DataReference('id', new ReferenceDate(2000), [], false, [], false,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'source');
-        $withOut = new DataReference(new ReferenceDate(2000), [], false, [], false,
+        $withOut = new DataReference('id', new ReferenceDate(2000), [], false, [], false,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', 'source');
 
         $this->assertTrue($with->curatorsEtAl());
@@ -134,7 +146,7 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $reference = new DataReference(new ReferenceDate(2000),
+        $reference = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -146,7 +158,7 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_source()
     {
-        $reference = new DataReference(new ReferenceDate(2000),
+        $reference = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -158,10 +170,10 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_data_id()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source', 'data id', null, '10.1000/182');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -174,11 +186,11 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_assigning_authority()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source', null, $assigningAuthority = new Place(null, null, ['assigning authority']),
             '10.1000/182');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -191,10 +203,10 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source', null, null, '10.1000/182');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -207,10 +219,10 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new DataReference(new ReferenceDate(2000),
+        $with = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source', null, null, null, 'http://www.example.com/');
-        $withOut = new DataReference(new ReferenceDate(2000),
+        $withOut = new DataReference('id', new ReferenceDate(2000),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 

@@ -53,7 +53,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ThesisReference(ReferenceDate::fromString('2000'),
+        $reference = new ThesisReference('id', ReferenceDate::fromString('2000'),
             new PersonDetails('preferred name', 'index name'),
             'title', new Place(null, null, ['publisher']));
 
@@ -77,11 +77,12 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new ThesisReference(ReferenceDate::fromString('2000-01-01'),
+                new ThesisReference('id', ReferenceDate::fromString('2000-01-01'),
                     new PersonDetails('preferred name', 'index name'),
                     'title', new Place(null, null, ['publisher']), '10.1000/182', 'http://www.example.com/'),
                 [
                     'type' => 'thesis',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'author' => [
                         'name' => [
@@ -98,11 +99,12 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new ThesisReference(ReferenceDate::fromString('2000'),
+                new ThesisReference('id', ReferenceDate::fromString('2000'),
                     new PersonDetails('preferred name', 'index name'),
                     'title', new Place(null, null, ['publisher'])),
                 [
                     'type' => 'thesis',
+                    'id' => 'id',
                     'date' => '2000',
                     'author' => [
                         'name' => [
@@ -161,6 +163,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'thesis',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'author' => [
                         'name' => [
@@ -175,13 +178,14 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ThesisReference(ReferenceDate::fromString('2000-01-01'),
+                new ThesisReference('id', ReferenceDate::fromString('2000-01-01'),
                     new PersonDetails('preferred name', 'index name'),
                     'title', new Place(null, null, ['publisher']), '10.1000/182', 'http://www.example.com/'),
             ],
             'minimum' => [
                 [
                     'type' => 'thesis',
+                    'id' => 'id',
                     'date' => '2000',
                     'author' => [
                         'name' => [
@@ -194,7 +198,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         'name' => ['publisher'],
                     ],
                 ],
-                new ThesisReference(ReferenceDate::fromString('2000'),
+                new ThesisReference('id', ReferenceDate::fromString('2000'),
                     new PersonDetails('preferred name', 'index name'),
                     'title', new Place(null, null, ['publisher'])),
             ],

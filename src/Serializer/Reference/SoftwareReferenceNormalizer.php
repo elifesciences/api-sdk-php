@@ -22,6 +22,7 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
     public function denormalize($data, $class, $format = null, array $context = []) : SoftwareReference
     {
         return new SoftwareReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
@@ -49,6 +50,7 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
     {
         $data = [
             'type' => 'software',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);

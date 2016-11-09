@@ -22,6 +22,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
     public function denormalize($data, $class, $format = null, array $context = []) : ThesisReference
     {
         return new ThesisReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             $this->denormalizer->denormalize($data['author'], PersonDetails::class),
             $data['title'],
@@ -46,6 +47,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'type' => 'thesis',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'author' => $this->normalizer->normalize($object->getAuthor(), $format, $context),
             'title' => $object->getTitle(),

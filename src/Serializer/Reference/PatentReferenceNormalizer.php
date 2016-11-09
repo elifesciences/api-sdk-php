@@ -21,6 +21,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     public function denormalize($data, $class, $format = null, array $context = []) : PatentReference
     {
         return new PatentReference(
+            $data['id'],
             ReferenceDate::fromString($data['date']),
             array_map(function (array $inventor) {
                 return $this->denormalizer->denormalize($inventor, AuthorEntry::class);
@@ -53,6 +54,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'type' => 'patent',
+            'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'inventors' => array_map(function (AuthorEntry $inventors) use ($format, $context) {
                 return $this->normalizer->normalize($inventors, $format, $context);

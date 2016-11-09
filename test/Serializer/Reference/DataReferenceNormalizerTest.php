@@ -56,7 +56,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new DataReference(ReferenceDate::fromString('2000'),
+        $reference = new DataReference('id', ReferenceDate::fromString('2000'),
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
 
@@ -80,7 +80,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new DataReference(ReferenceDate::fromString('2000-01-01'),
+                new DataReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
@@ -89,6 +89,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'http://www.example.com/'),
                 [
                     'type' => 'data',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'title' => 'title',
                     'source' => 'source',
@@ -133,11 +134,12 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new DataReference(ReferenceDate::fromString('2000'),
+                new DataReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false,
                     'title', 'source'),
                 [
                     'type' => 'data',
+                    'id' => 'id',
                     'date' => '2000',
                     'title' => 'title',
                     'source' => 'source',
@@ -197,6 +199,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 [
                     'type' => 'data',
+                    'id' => 'id',
                     'date' => '2000-01-01',
                     'authors' => [
                         [
@@ -239,7 +242,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new DataReference(ReferenceDate::fromString('2000-01-01'),
+                new DataReference('id', ReferenceDate::fromString('2000-01-01'),
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
@@ -250,6 +253,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 [
                     'type' => 'data',
+                    'id' => 'id',
                     'date' => '2000',
                     'authors' => [
                         [
@@ -263,7 +267,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'source' => 'source',
                 ],
-                new DataReference(ReferenceDate::fromString('2000'),
+                new DataReference('id', ReferenceDate::fromString('2000'),
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false,
                     'title', 'source'),
             ],

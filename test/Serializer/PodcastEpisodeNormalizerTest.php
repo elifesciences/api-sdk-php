@@ -278,18 +278,29 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
-                    [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([]), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
-                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
-                                'Article 1 title', new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
-                                new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
-                                new ArraySequence([]), [], promise_for(null), promise_for(null),
-                                promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
-                        ])),
-                    ])),
+                new PodcastEpisode(
+                    1,
+                    'Podcast episode 1 title',
+                    null,
+                    $date,
+                    promise_for($banner),
+                    $thumbnail,
+                    [
+                        new PodcastEpisodeSource(
+                            'audio/mpeg', 
+                            'https://www.example.com/episode.mp3'
+                        )
+                    ],
+                    new ArraySequence([]),
+                    new ArraySequence([
+                        new PodcastEpisodeChapter(
+                            1,
+                            'Chapter title',
+                            0,
+                            null,
+                            new ArraySequence([ ])),
+                    ])
+                ),
                 [],
                 [
                     'number' => 1,
@@ -330,21 +341,6 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'number' => 1,
                             'title' => 'Chapter title',
                             'time' => 0,
-                            'content' => [
-                                [
-                                    'id' => '1',
-                                    'version' => 1,
-                                    'type' => 'research-article',
-                                    'doi' => '10.7554/eLife.1',
-                                    'authorLine' => 'Author et al',
-                                    'title' => 'Article 1 title',
-                                    'published' => '2000-01-01T00:00:00+00:00',
-                                    'statusDate' => '1999-12-31T00:00:00+00:00',
-                                    'volume' => 1,
-                                    'elocationId' => 'e1',
-                                    'status' => 'poa',
-                                ],
-                            ],
                         ],
                     ],
                 ],

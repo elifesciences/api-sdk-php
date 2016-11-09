@@ -52,4 +52,15 @@ final class Place
     {
         return $this->address;
     }
+
+    public function toString() : string
+    {
+        $string = implode(', ', $this->getName());
+
+        if ($this->getAddress()) {
+            $string .= ', '.implode(', ', $this->getAddress()->getFormatted()->toArray());
+        }
+
+        return $string;
+    }
 }

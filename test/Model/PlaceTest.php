@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
@@ -58,5 +59,21 @@ final class PlaceTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($address, $with->getAddress());
         $this->assertNull($withOut->getAddress());
+    }
+
+    /**
+     * @test
+     */
+    public function it_casts_to_a_string()
+    {
+        $address = Builder::for(Address::class)
+            ->withFormatted($sequence = new ArraySequence(['baz', 'qux']))
+            ->__invoke();
+
+        $withAddress = new Place(null, null, ['foo', 'bar'], $address);
+        $withOutAddress = new Place(null, null, ['foo']);
+
+        $this->assertSame('foo, bar, baz, qux', $withAddress->toString());
+        $this->assertSame('foo', $withOutAddress->toString());
     }
 }

@@ -67,7 +67,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                         $context['snippet'] = true;
 
                         return $this->denormalizer->denormalize($item, Model::class, $format, $context);
-                    }, $chapter['content'])));
+                    }, $chapter['content'] ?? [])));
             });
 
         $data['image']['banner'] = $data['image']['banner']
@@ -168,7 +168,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if (!$object->getSubjects()->isEmpty()) {
+        if ($object->getSubjects()->notEmpty()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 
@@ -190,8 +190,10 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     'number' => $chapter->getNumber(),
                     'title' => $chapter->getTitle(),
                     'time' => $chapter->getTime(),
-                    'content' => $normalizationHelper->normalizeSequenceToSnippets($chapter->getContent(), $typeContext),
                 ];
+                if ($chapter->getContent()->notEmpty()) {
+                    $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($chapter->getContent(), $typeContext);
+                }
 
                 if ($chapter->getImpactStatement()) {
                     $data['impactStatement'] = $chapter->getImpactStatement();

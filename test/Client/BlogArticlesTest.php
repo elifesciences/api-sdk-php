@@ -45,7 +45,7 @@ final class BlogArticlesTest extends ApiTestCase
 
         foreach ($this->blogArticles as $i => $blogArticle) {
             $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-            $this->assertSame('blogArticle'.$i, $blogArticle->getId());
+            $this->assertSame('blog-article-'.$i, $blogArticle->getId());
         }
     }
 
@@ -74,7 +74,7 @@ final class BlogArticlesTest extends ApiTestCase
 
         foreach ($array as $i => $blogArticle) {
             $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-            $this->assertSame('blogArticle'.($i + 1), $blogArticle->getId());
+            $this->assertSame('blog-article-'.($i + 1), $blogArticle->getId());
         }
     }
 
@@ -86,7 +86,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->mockBlogArticleListCall(1, 1, 1);
 
         $this->assertTrue(isset($this->blogArticles[0]));
-        $this->assertSame('blogArticle1', $this->blogArticles[0]->getId());
+        $this->assertSame('blog-article-1', $this->blogArticles[0]->getId());
 
         $this->mockNotFound(
             'blog-articles?page=6&per-page=1&order=desc',
@@ -114,13 +114,13 @@ final class BlogArticlesTest extends ApiTestCase
     {
         $this->mockBlogArticleCall(7, true);
 
-        $blogArticle = $this->blogArticles->get('blogArticle7')->wait();
+        $blogArticle = $this->blogArticles->get('blog-article-7')->wait();
 
         $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-        $this->assertSame('blogArticle7', $blogArticle->getId());
+        $this->assertSame('blog-article-7', $blogArticle->getId());
 
         $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
-        $this->assertSame('Blog article blogArticle7 text', $blogArticle->getContent()[0]->getText());
+        $this->assertSame('Blog article blog-article-7 text', $blogArticle->getContent()[0]->getText());
 
         $this->assertInstanceOf(Subject::class, $blogArticle->getSubjects()[0]);
         $this->assertSame('Subject 1 name', $blogArticle->getSubjects()[0]->getName());
@@ -141,15 +141,15 @@ final class BlogArticlesTest extends ApiTestCase
 
         $this->blogArticles->toArray();
 
-        $blogArticle = $this->blogArticles->get('blogArticle1')->wait();
+        $blogArticle = $this->blogArticles->get('blog-article-1')->wait();
 
         $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-        $this->assertSame('blogArticle1', $blogArticle->getId());
+        $this->assertSame('blog-article-1', $blogArticle->getId());
 
         $this->mockBlogArticleCall(1);
 
         $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
-        $this->assertSame('Blog article blogArticle1 text', $blogArticle->getContent()[0]->getText());
+        $this->assertSame('Blog article blog-article-1 text', $blogArticle->getContent()[0]->getText());
     }
 
     /**
@@ -161,7 +161,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->mockBlogArticleListCall(1, 100, 5, true, ['subject']);
 
         foreach ($this->blogArticles->forSubject('subject') as $i => $blogArticle) {
-            $this->assertSame('blogArticle'.$i, $blogArticle->getId());
+            $this->assertSame('blog-article-'.$i, $blogArticle->getId());
         }
     }
 
@@ -209,7 +209,7 @@ final class BlogArticlesTest extends ApiTestCase
 
         foreach ($this->blogArticles->slice($offset, $length) as $i => $blogArticle) {
             $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-            $this->assertSame('blogArticle'.($expected[$i]), $blogArticle->getId());
+            $this->assertSame('blog-article-'.($expected[$i]), $blogArticle->getId());
         }
     }
 
@@ -258,7 +258,7 @@ final class BlogArticlesTest extends ApiTestCase
             return $blogArticle->getId();
         };
 
-        $this->assertSame(['blogArticle1', 'blogArticle2', 'blogArticle3'], $this->blogArticles->map($map)->toArray());
+        $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-3'], $this->blogArticles->map($map)->toArray());
     }
 
     /**
@@ -274,7 +274,7 @@ final class BlogArticlesTest extends ApiTestCase
         };
 
         foreach ($this->blogArticles->filter($filter) as $i => $blogArticle) {
-            $this->assertSame('blogArticle'.($i + 4), $blogArticle->getId());
+            $this->assertSame('blog-article-'.($i + 4), $blogArticle->getId());
         }
     }
 
@@ -306,7 +306,7 @@ final class BlogArticlesTest extends ApiTestCase
         };
 
         foreach ($this->blogArticles->sort($sort) as $i => $blogArticle) {
-            $this->assertSame('blogArticle'.(5 - $i), $blogArticle->getId());
+            $this->assertSame('blog-article-'.(5 - $i), $blogArticle->getId());
         }
     }
 
@@ -319,7 +319,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->mockBlogArticleListCall(1, 100, 5, false);
 
         foreach ($this->blogArticles->reverse() as $i => $blogArticle) {
-            $this->assertSame('blogArticle'.$i, $blogArticle->getId());
+            $this->assertSame('blog-article-'.$i, $blogArticle->getId());
         }
     }
 

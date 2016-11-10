@@ -206,7 +206,7 @@ abstract class ApiTestCase extends TestCase
         array $subjects = []
     ) {
         $blogArticles = array_map(function (int $id) {
-            return $this->createBlogArticleJson('blogArticle'.$id, true);
+            return $this->createBlogArticleJson('blog-article-'.$id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -233,7 +233,7 @@ abstract class ApiTestCase extends TestCase
     final protected function mockBlogArticleCall($numberOrId, bool $complete = false)
     {
         if (is_integer($numberOrId)) {
-            $id = "blogArticle{$numberOrId}";
+            $id = "blog-article-{$numberOrId}";
         } else {
             $id = (string) $numberOrId;
         }

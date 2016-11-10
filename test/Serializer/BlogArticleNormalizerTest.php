@@ -179,11 +179,11 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new BlogArticle('blogArticle1', 'Blog article 1 title', $date, 'Blog article 1 impact statement',
-                    new ArraySequence([new Paragraph('Blog article blogArticle1 text')]), new ArraySequence([$subject])),
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, 'Blog article 1 impact statement',
+                    new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true, 'type' => true],
                 [
-                    'id' => 'blogArticle1',
+                    'id' => 'blog-article-1',
                     'title' => 'Blog article 1 title',
                     'published' => $date->format(DATE_ATOM),
                     'impactStatement' => 'Blog article 1 impact statement',
@@ -197,11 +197,11 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new BlogArticle('blogArticle1', 'Blog article 1 title', $date, null,
-                    new ArraySequence([new Paragraph('Blog article blogArticle1 text')]), new ArraySequence([])),
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null,
+                    new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([])),
                 ['snippet' => true],
                 [
-                    'id' => 'blogArticle1',
+                    'id' => 'blog-article-1',
                     'title' => 'Blog article 1 title',
                     'published' => $date->format(DATE_ATOM),
                 ],

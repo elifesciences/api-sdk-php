@@ -117,6 +117,20 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_also_provides_the_index_when_mapping()
+    {
+        $collection = new ArraySequence([5, 9, 100]);
+
+        $map = function (int $value, int $index) {
+            return $index;
+        };
+
+        $this->assertSame([0, 1, 2], $collection->map($map)->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered()
     {
         $collection = new ArraySequence([1, null, 2, 3, false, 4, 5]);

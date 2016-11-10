@@ -287,9 +287,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     $thumbnail,
                     [
                         new PodcastEpisodeSource(
-                            'audio/mpeg', 
+                            'audio/mpeg',
                             'https://www.example.com/episode.mp3'
-                        )
+                        ),
                     ],
                     new ArraySequence([]),
                     new ArraySequence([
@@ -298,7 +298,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'Chapter title',
                             0,
                             null,
-                            new ArraySequence([ ])),
+                            new ArraySequence([])),
                     ])
                 ),
                 [],

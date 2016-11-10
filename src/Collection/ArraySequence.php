@@ -43,7 +43,7 @@ final class ArraySequence implements IteratorAggregate, Sequence
 
     public function map(callable $callback) : Sequence
     {
-        return new self(array_map($callback, $this->array));
+        return new self(array_map($callback, $this->array, array_keys($this->array)));
     }
 
     public function filter(callable $callback = null) : Collection

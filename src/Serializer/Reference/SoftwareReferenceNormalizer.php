@@ -60,12 +60,12 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
         ];
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
-        }
-
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();
+        }
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
         }
 
         if ($object->getVersion()) {

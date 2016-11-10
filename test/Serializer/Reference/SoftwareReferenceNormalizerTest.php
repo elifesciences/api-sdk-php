@@ -100,8 +100,8 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'publisher' => [
                         'name' => ['publisher'],
                     ],
-                    'discriminator' => 'a',
                     'authorsEtAl' => true,
+                    'discriminator' => 'a',
                     'version' => '1.0',
                     'uri' => 'http://www.example.com/',
                 ],

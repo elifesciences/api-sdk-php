@@ -141,6 +141,7 @@ final class ApiSdk
             new Reference\ReportReferenceNormalizer(),
             new Reference\SoftwareReferenceNormalizer(),
             new Reference\ThesisReferenceNormalizer(),
+            new Reference\UnknownReferenceNormalizer(),
             new Reference\WebReferenceNormalizer(),
         ], [new JsonEncoder()]);
     }

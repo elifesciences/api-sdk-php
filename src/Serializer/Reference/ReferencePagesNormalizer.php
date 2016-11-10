@@ -33,7 +33,7 @@ final class ReferencePagesNormalizer implements NormalizerInterface, Denormalize
             return [
                 'first' => $object->getFirst(),
                 'last' => $object->getLast(),
-                'range' => $object->toString(),
+                'range' => $object->getRange(),
             ];
         }
 

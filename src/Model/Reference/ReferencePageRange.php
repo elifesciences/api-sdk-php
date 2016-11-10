@@ -28,8 +28,17 @@ final class ReferencePageRange implements ReferencePages
         return $this->last;
     }
 
-    public function toString() : string
+    public function getRange() : string
     {
         return $this->range;
+    }
+
+    public function toString() : string
+    {
+        if ($this->range === $this->first) {
+            return 'p. '.$this->range;
+        }
+
+        return 'pp. '.$this->range;
     }
 }

@@ -30,10 +30,22 @@ final class ReferencePageRangeTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_string()
+    public function it_has_a_range()
     {
         $page = new ReferencePageRange('foo', 'bar', 'foo, bar');
 
-        $this->assertSame('foo, bar', $page->toString());
+        $this->assertSame('foo, bar', $page->getRange());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_string()
+    {
+        $single = new ReferencePageRange('foo', 'foo', 'foo');
+        $range = new ReferencePageRange('foo', 'bar', 'foo, bar');
+
+        $this->assertSame('p. foo', $single->toString());
+        $this->assertSame('pp. foo, bar', $range->toString());
     }
 }

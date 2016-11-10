@@ -168,7 +168,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if (!$object->getSubjects()->isEmpty()) {
+        if ($object->getSubjects()->notEmpty()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 
@@ -191,7 +191,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     'title' => $chapter->getTitle(),
                     'time' => $chapter->getTime(),
                 ];
-                if (!$chapter->getContent()->isEmpty()) {
+                if ($chapter->getContent()->notEmpty()) {
                     $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($chapter->getContent(), $typeContext);
                 }
 

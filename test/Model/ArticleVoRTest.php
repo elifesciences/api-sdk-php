@@ -219,7 +219,7 @@ final class ArticleVoRTest extends ArticleTest
             promise_for($digest = new ArticleSection(new ArraySequence([new Paragraph('digest')]))),
             new PromiseSequence(rejection_for('No content')), new PromiseSequence(rejection_for('No appendices')),
             $references = new ArraySequence([
-                new BookReference('ref1', new ReferenceDate(2000),
+                new BookReference('ref1', new ReferenceDate(2000), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                     new Place(null, null, ['publisher'])),
             ]), new PromiseSequence(rejection_for('No acknowledgements')),

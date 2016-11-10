@@ -25,6 +25,7 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
         return new ConferenceProceedingReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -62,6 +63,10 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
             'articleTitle' => $object->getArticleTitle(),
             'conference' => $this->normalizer->normalize($object->getConference(), $format, $context),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();

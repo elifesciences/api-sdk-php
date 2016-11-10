@@ -10,6 +10,7 @@ final class SoftwareReference implements Reference
 {
     private $id;
     private $date;
+    private $discriminator;
     private $authors;
     private $authorsEtAl;
     private $title;
@@ -23,6 +24,7 @@ final class SoftwareReference implements Reference
     public function __construct(
         string $id,
         ReferenceDate $date,
+        string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
         string $title,
@@ -32,6 +34,7 @@ final class SoftwareReference implements Reference
     ) {
         $this->id = $id;
         $this->date = $date;
+        $this->discriminator = $discriminator;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->title = $title;
@@ -48,6 +51,11 @@ final class SoftwareReference implements Reference
     public function getDate() : ReferenceDate
     {
         return $this->date;
+    }
+
+    public function getDiscriminator()
+    {
+        return $this->discriminator;
     }
 
     /**

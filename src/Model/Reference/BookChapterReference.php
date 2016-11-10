@@ -10,6 +10,7 @@ final class BookChapterReference implements Reference
 {
     private $id;
     private $date;
+    private $discriminator;
     private $authors;
     private $authorsEtAl;
     private $editors;
@@ -30,6 +31,7 @@ final class BookChapterReference implements Reference
     public function __construct(
         string $id,
         ReferenceDate $date,
+        string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
         array $editors,
@@ -46,6 +48,7 @@ final class BookChapterReference implements Reference
     ) {
         $this->id = $id;
         $this->date = $date;
+        $this->discriminator = $discriminator;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->editors = $editors;
@@ -69,6 +72,11 @@ final class BookChapterReference implements Reference
     public function getDate() : ReferenceDate
     {
         return $this->date;
+    }
+
+    public function getDiscriminator()
+    {
+        return $this->discriminator;
     }
 
     /**

@@ -9,6 +9,7 @@ final class PatentReference implements Reference
 {
     private $id;
     private $date;
+    private $discriminator;
     private $inventors;
     private $inventorsEtAl;
     private $assignees;
@@ -25,6 +26,7 @@ final class PatentReference implements Reference
     public function __construct(
         string $id,
         ReferenceDate $date,
+        string $discriminator = null,
         array $inventors,
         bool $inventorsEtAl,
         array $assignees,
@@ -37,6 +39,7 @@ final class PatentReference implements Reference
     ) {
         $this->id = $id;
         $this->date = $date;
+        $this->discriminator = $discriminator;
         $this->inventors = $inventors;
         $this->inventorsEtAl = $inventorsEtAl;
         $this->assignees = $assignees;
@@ -56,6 +59,11 @@ final class PatentReference implements Reference
     public function getDate() : ReferenceDate
     {
         return $this->date;
+    }
+
+    public function getDiscriminator()
+    {
+        return $this->discriminator;
     }
 
     /**

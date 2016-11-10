@@ -25,6 +25,7 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
         return new PeriodicalReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -61,6 +62,10 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
             'periodical' => $this->normalizer->normalize($object->getPeriodical(), $format, $context),
             'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();

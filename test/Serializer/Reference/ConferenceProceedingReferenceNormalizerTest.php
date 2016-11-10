@@ -59,7 +59,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'),
+        $reference = new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -85,7 +85,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
     {
         return [
             'complete' => [
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'),
+                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
@@ -108,6 +108,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                             'conference',
                         ],
                     ],
+                    'discriminator' => 'a',
                     'authorsEtAl' => true,
                     'pages' => 'foo',
                     'doi' => '10.1000/182',
@@ -115,7 +116,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                 ],
             ],
             'minimum' => [
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'),
+                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))],
                     false, 'title', new Place(null, null, ['conference'])),
                 [
@@ -191,6 +192,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                     'type' => 'conference-proceeding',
                     'id' => 'id',
                     'date' => '2000-01-01',
+                    'discriminator' => 'a',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -211,7 +213,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'),
+                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
@@ -237,7 +239,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                         ],
                     ],
                 ],
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'),
+                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['conference'])),
             ],

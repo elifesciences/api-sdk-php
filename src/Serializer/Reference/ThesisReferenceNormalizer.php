@@ -24,6 +24,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
         return new ThesisReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             $this->denormalizer->denormalize($data['author'], PersonDetails::class),
             $data['title'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
@@ -53,6 +54,10 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
             'title' => $object->getTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->getDoi()) {
             $data['doi'] = $object->getDoi();

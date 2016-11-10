@@ -24,6 +24,7 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
         return new BookReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -61,6 +62,10 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
             'bookTitle' => $object->getBookTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();

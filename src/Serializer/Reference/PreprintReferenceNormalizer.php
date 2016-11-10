@@ -23,6 +23,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
         return new PreprintReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -57,6 +58,10 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
             'articleTitle' => $object->getArticleTitle(),
             'source' => $object->getSource(),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();

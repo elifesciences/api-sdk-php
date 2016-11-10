@@ -53,7 +53,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new UnknownReference('id', new ReferenceDate(2000),
+        $reference = new UnknownReference('id', new ReferenceDate(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title');
 
         return [
@@ -76,7 +76,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'),
+                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'details', 'http://www.example.com/'),
                 [
@@ -93,13 +93,14 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'title' => 'title',
+                    'discriminator' => 'a',
                     'authorsEtAl' => true,
                     'details' => 'details',
                     'uri' => 'http://www.example.com/',
                 ],
             ],
             'minimum' => [
-                new UnknownReference('id', ReferenceDate::fromString('2000'),
+                new UnknownReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title'),
                 [
                     'type' => 'unknown',
@@ -164,6 +165,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'type' => 'unknown',
                     'id' => 'id',
                     'date' => '2000-01-01',
+                    'discriminator' => 'a',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -178,7 +180,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'details' => 'details',
                     'uri' => 'http://www.example.com/',
                 ],
-                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'),
+                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'details', 'http://www.example.com/'),
             ],
@@ -198,7 +200,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'title' => 'title',
                 ],
-                new UnknownReference('id', ReferenceDate::fromString('2000'),
+                new UnknownReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title'),
             ],
         ];

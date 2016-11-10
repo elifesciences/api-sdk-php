@@ -23,6 +23,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
         return new PatentReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $inventor) {
                 return $this->denormalizer->denormalize($inventor, AuthorEntry::class);
             }, $data['inventors']),
@@ -63,6 +64,10 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
             'patentType' => $object->getPatentType(),
             'country' => $object->getCountry(),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->inventorsEtAl()) {
             $data['inventorsEtAl'] = $object->inventorsEtAl();

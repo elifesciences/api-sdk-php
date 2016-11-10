@@ -9,4 +9,9 @@ interface Reference
     public function getId() : string;
 
     public function getDate() : ReferenceDate;
+
+    /**
+     * @return string|null
+     */
+    public function getDiscriminator();
 }

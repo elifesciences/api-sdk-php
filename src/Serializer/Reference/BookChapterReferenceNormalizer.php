@@ -25,6 +25,7 @@ final class BookChapterReferenceNormalizer implements NormalizerInterface, Denor
         return new BookChapterReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
@@ -73,6 +74,10 @@ final class BookChapterReferenceNormalizer implements NormalizerInterface, Denor
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
             'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();

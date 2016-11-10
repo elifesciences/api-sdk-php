@@ -176,7 +176,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
                     new ArraySequence([$appendix]), new ArraySequence([
-                        new BookReference('ref1', ReferenceDate::fromString('2000-01-01'),
+                        new BookReference('ref1', ReferenceDate::fromString('2000-01-01'), 'a',
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
@@ -314,6 +314,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'publisher' => [
                                 'name' => ['publisher'],
                             ],
+                            'discriminator' => 'a',
                             'authorsEtAl' => true,
                             'volume' => 'volume',
                             'edition' => 'edition',
@@ -417,7 +418,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         '10.7554/eLife.article1digest')), new ArraySequence([
                         new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
                     ]), new ArraySequence([$appendix]), new ArraySequence([
-                        new BookReference('ref1', ReferenceDate::fromString('2000'),
+                        new BookReference('ref1', ReferenceDate::fromString('2000'), null,
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
                     ]),

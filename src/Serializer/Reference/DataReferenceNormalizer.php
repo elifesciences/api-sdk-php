@@ -24,6 +24,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
         return new DataReference(
             $data['id'],
             ReferenceDate::fromString($data['date']),
+            $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors'] ?? []),
@@ -66,6 +67,10 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
             'title' => $object->getTitle(),
             'source' => $object->getSource(),
         ];
+
+        if ($object->getDiscriminator()) {
+            $data['discriminator'] = $object->getDiscriminator();
+        }
 
         if ($object->getAuthors()) {
             $data['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {

@@ -10,6 +10,7 @@ final class ThesisReference implements Reference
 {
     private $id;
     private $date;
+    private $discriminator;
     private $author;
     private $title;
     private $publisher;
@@ -22,6 +23,7 @@ final class ThesisReference implements Reference
     public function __construct(
         string $id,
         ReferenceDate $date,
+        string $discriminator = null,
         PersonDetails $author,
         string $title,
         Place $publisher,
@@ -30,6 +32,7 @@ final class ThesisReference implements Reference
     ) {
         $this->id = $id;
         $this->date = $date;
+        $this->discriminator = $discriminator;
         $this->author = $author;
         $this->title = $title;
         $this->publisher = $publisher;
@@ -45,6 +48,11 @@ final class ThesisReference implements Reference
     public function getDate() : ReferenceDate
     {
         return $this->date;
+    }
+
+    public function getDiscriminator()
+    {
+        return $this->discriminator;
     }
 
     public function getAuthor() : PersonDetails

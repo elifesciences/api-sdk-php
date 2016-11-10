@@ -208,6 +208,7 @@ final class Builder
                                 new BookReference(
                                     'ref1',
                                     new ReferenceDate(2000),
+                                    null,
                                     [
                                         new PersonAuthor(new PersonDetails(
                                             'preferred name',
@@ -434,9 +435,11 @@ final class Builder
                                     'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3'
                                 ),
                             ])
-                            ->withChapters(new ArraySequence([new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
-                                self::for(ArticlePoA::class)->sample('1'),
-                            ]))]));
+                            ->withChapters(new ArraySequence([
+                                new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                                    self::for(ArticlePoA::class)->sample('1'),
+                                ])),
+                            ]));
                     },
                 ],
                 Subject::class => [

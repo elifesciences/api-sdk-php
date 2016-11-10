@@ -53,7 +53,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new PatentReference('id', ReferenceDate::fromString('2000'),
+        $reference = new PatentReference('id', ReferenceDate::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -77,7 +77,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new PatentReference('id', ReferenceDate::fromString('2000-01-01'),
+                new PatentReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], true,
                     [new PersonAuthor(new PersonDetails('assignee preferred name', 'assignee index name'))], true,
                     'title',
@@ -98,6 +98,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'patentType' => 'type',
                     'country' => 'country',
+                    'discriminator' => 'a',
                     'inventorsEtAl' => true,
                     'assignees' => [
                         [
@@ -114,7 +115,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new PatentReference('id', ReferenceDate::fromString('2000'),
+                new PatentReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title',
                     'type',
                     'country'),
@@ -183,6 +184,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'type' => 'patent',
                     'id' => 'id',
                     'date' => '2000-01-01',
+                    'discriminator' => 'a',
                     'inventors' => [
                         [
                             'type' => 'person',
@@ -209,7 +211,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'number' => 'number',
                     'uri' => 'http://www.example.com/',
                 ],
-                new PatentReference('id', ReferenceDate::fromString('2000-01-01'),
+                new PatentReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], true,
                     [new PersonAuthor(new PersonDetails('assignee preferred name', 'assignee index name'))], true,
                     'title',
@@ -233,7 +235,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'patentType' => 'type',
                     'country' => 'country',
                 ],
-                new PatentReference('id', ReferenceDate::fromString('2000'),
+                new PatentReference('id', ReferenceDate::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title',
                     'type',
                     'country'),

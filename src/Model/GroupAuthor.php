@@ -33,6 +33,11 @@ final class GroupAuthor extends Author
         $this->groups = $groups;
     }
 
+    public function toString() : string
+    {
+        return $this->getName();
+    }
+
     public function getName() : string
     {
         return $this->name;

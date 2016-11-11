@@ -18,6 +18,7 @@ final class GroupAuthorTest extends AuthorTest
         $author = new GroupAuthor('name', new ArraySequence([]));
 
         $this->assertSame('name', $author->getName());
+        $this->assertSame('name', $author->toString());
     }
 
     /**

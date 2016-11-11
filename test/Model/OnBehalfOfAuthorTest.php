@@ -21,10 +21,10 @@ final class OnBehalfOfAuthorTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_is_on_behalf_of()
+    public function it_is_a_string()
     {
         $author = new OnBehalfOfAuthor('on behalf of An Organisation');
 
-        $this->assertSame('on behalf of An Organisation', $author->getOnBehalfOf());
+        $this->assertSame('on behalf of An Organisation', $author->toString());
     }
 }

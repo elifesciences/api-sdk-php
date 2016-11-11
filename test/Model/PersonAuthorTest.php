@@ -16,6 +16,7 @@ final class PersonAuthorTest extends AuthorTest
         $author = new PersonAuthor(new PersonDetails('preferred name', 'index name'));
 
         $this->assertSame('preferred name', $author->getPreferredName());
+        $this->assertSame('preferred name', $author->toString());
     }
 
     /**

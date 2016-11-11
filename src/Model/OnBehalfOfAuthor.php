@@ -14,7 +14,7 @@ final class OnBehalfOfAuthor implements AuthorEntry
         $this->onBehalfOf = $onBehalfOf;
     }
 
-    public function getOnBehalfOf(): string
+    public function toString() : string
     {
         return $this->onBehalfOf;
     }

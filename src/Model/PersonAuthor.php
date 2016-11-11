@@ -28,6 +28,11 @@ final class PersonAuthor extends Author
         $this->deceased = $deceased;
     }
 
+    public function toString() : string
+    {
+        return $this->getPreferredName();
+    }
+
     public function getPreferredName() : string
     {
         return $this->person->getPreferredName();

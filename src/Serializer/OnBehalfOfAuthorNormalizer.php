@@ -29,7 +29,7 @@ final class OnBehalfOfAuthorNormalizer implements NormalizerInterface, Denormali
     {
         return [
             'type' => 'on-behalf-of',
-            'onBehalfOf' => $object->getOnBehalfOf(),
+            'onBehalfOf' => $object->toString(),
         ];
     }
 

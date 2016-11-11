@@ -13,6 +13,7 @@ final class File
     private $caption;
     private $mediaType;
     private $uri;
+    private $filename;
 
     /**
      * @internal
@@ -24,7 +25,8 @@ final class File
         string $title = null,
         array $caption,
         string $mediaType,
-        string $uri
+        string $uri,
+        string $filename
     ) {
         $this->doi = $doi;
         $this->id = $id;
@@ -33,6 +35,7 @@ final class File
         $this->caption = $caption;
         $this->mediaType = $mediaType;
         $this->uri = $uri;
+        $this->filename = $filename;
     }
 
     /**
@@ -83,5 +86,10 @@ final class File
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    public function getFilename(): string
+    {
+        return $this->filename;
     }
 }

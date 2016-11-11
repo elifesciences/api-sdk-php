@@ -108,7 +108,7 @@ final class ImageFileTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_source_data()
     {
-        $sourceData = [new File(null, null, null, null, [], 'text/csv', 'http://www.example.com/data.csv')];
+        $sourceData = [new File(null, null, null, null, [], 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
         $with = new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], $sourceData);
         $withOut = new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], []);
 

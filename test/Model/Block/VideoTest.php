@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
+use eLife\ApiSdk\Model\Block\VideoSource;
 use PHPUnit_Framework_TestCase;
 
 final class VideoTest extends PHPUnit_Framework_TestCase
@@ -15,7 +15,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_block()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
 
         $this->assertInstanceOf(Block::class, $video);
@@ -26,7 +26,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $with = new Video('10.1000/182', null, null, null, [], $sources, null, 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
 
@@ -39,7 +39,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_id()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $with = new Video(null, 'id', null, null, [], $sources, null, 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
 
@@ -52,7 +52,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_label()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $with = new Video(null, null, 'label', null, [], $sources, null, 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
 
@@ -65,7 +65,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_title()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $with = new Video(null, null, null, 'title', [], $sources, null, 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
 
@@ -78,7 +78,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_caption()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $caption = [new Paragraph('caption')];
         $with = new Video(null, null, null, null, $caption, $sources, '', 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
@@ -92,7 +92,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_sources()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
 
         $this->assertEquals($sources, $video->getSources());
@@ -103,7 +103,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_image()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $with = new Video(null, null, null, null, [], $sources, 'http://www.example.com/image.jpeg', 200, 100);
         $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
 
@@ -116,7 +116,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_width()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
 
         $this->assertEquals(200, $video->getWidth());
@@ -127,7 +127,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_height()
     {
-        $sources = [new File(null, null, null, null, [], 'video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
 
         $this->assertEquals(100, $video->getHeight());

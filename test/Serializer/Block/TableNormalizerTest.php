@@ -77,7 +77,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                 new Table('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('paragraph1')], ['<table></table>'],
                     [new Paragraph('footer')], [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
-                            'text/plain', 'http://www.example.com/data.txt'),
+                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
                 [
                     'type' => 'table',
@@ -102,6 +102,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                         [
                             'mediaType' => 'text/plain',
                             'uri' => 'http://www.example.com/data.txt',
+                            'filename' => 'data.txt',
                             'doi' => '10.1000/182.1',
                             'id' => 'id2',
                             'label' => 'label2',
@@ -199,13 +200,14 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                             ],
                             'mediaType' => 'text/plain',
                             'uri' => 'http://www.example.com/data.txt',
+                            'filename' => 'data.txt',
                         ],
                     ],
                 ],
                 new Table('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('caption')], ['<table></table>'],
                     [new Paragraph('footer')], [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
-                            'text/plain', 'http://www.example.com/data.txt'),
+                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
             ],
             'minimum' => [

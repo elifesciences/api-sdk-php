@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
@@ -131,5 +132,19 @@ final class VideoTest extends PHPUnit_Framework_TestCase
         $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
 
         $this->assertEquals(100, $video->getHeight());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_source_data()
+    {
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
+        $sourceData = [new File(null, null, null, null, [], 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
+        $with = new Video(null, null, null, null, [], $sources, '', 200, 100, $sourceData);
+        $withOut = new Video(null, null, null, null, [], $sources, '', 200, 100);
+
+        $this->assertEquals($sourceData, $with->getSourceData());
+        $this->assertEmpty($withOut->getSourceData());
     }
 }

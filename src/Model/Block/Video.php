@@ -15,6 +15,7 @@ final class Video implements Block
     private $image;
     private $width;
     private $height;
+    private $sourceData;
 
     /**
      * @internal
@@ -28,7 +29,8 @@ final class Video implements Block
         array $sources,
         string $image = null,
         int $width,
-        int $height
+        int $height,
+        array $sourceData = []
     ) {
         $this->doi = $doi;
         $this->id = $id;
@@ -39,6 +41,7 @@ final class Video implements Block
         $this->image = $image;
         $this->width = $width;
         $this->height = $height;
+        $this->sourceData = $sourceData;
     }
 
     /**
@@ -105,5 +108,13 @@ final class Video implements Block
     public function getHeight(): int
     {
         return $this->height;
+    }
+
+    /**
+     * @return File[]
+     */
+    public function getSourceData(): array
+    {
+        return $this->sourceData;
     }
 }

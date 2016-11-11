@@ -4,9 +4,11 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
+use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
+use eLife\ApiSdk\Serializer\Block\FileNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use PHPUnit_Framework_TestCase;
@@ -28,6 +30,7 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
 
         new Serializer([
             $this->normalizer,
+            new FileNormalizer(),
             new ParagraphNormalizer(),
         ]);
     }
@@ -76,7 +79,11 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new Video('10.1000/182', 'id', 'label', 'title', [new Paragraph('caption')],
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100),
+                    'http://www.example.com/image.jpeg', 200, 100,
+                    [
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                    ]),
                 [
                     'type' => 'video',
                     'sources' => [
@@ -98,6 +105,23 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'image' => 'http://www.example.com/image.jpeg',
+                    'sourceData' => [
+                        [
+                            'mediaType' => 'text/plain',
+                            'uri' => 'http://www.example.com/data.txt',
+                            'filename' => 'data.txt',
+                            'doi' => '10.1000/182.1',
+                            'id' => 'id2',
+                            'label' => 'label2',
+                            'title' => 'title2',
+                            'caption' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'paragraph2',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [
@@ -179,10 +203,31 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
                     'image' => 'http://www.example.com/image.jpeg',
                     'width' => 200,
                     'height' => 100,
+                    'sourceData' => [
+                        [
+                            'mediaType' => 'text/plain',
+                            'uri' => 'http://www.example.com/data.txt',
+                            'filename' => 'data.txt',
+                            'doi' => '10.1000/182.1',
+                            'id' => 'id2',
+                            'label' => 'label2',
+                            'title' => 'title2',
+                            'caption' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'paragraph2',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 new Video('10.1000/182', 'id', 'label', 'title', [new Paragraph('caption')],
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100),
+                    'http://www.example.com/image.jpeg', 200, 100,
+                    [
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                    ]),
             ],
             'minimum' => [
                 [

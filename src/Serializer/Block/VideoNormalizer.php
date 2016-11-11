@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -24,7 +25,10 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['caption'] ?? []), array_map(function (array $source) {
                 return new VideoSource($source['mediaType'], $source['uri']);
-            }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height']);
+            }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height'],
+            array_map(function (array $file) {
+                return $this->denormalizer->denormalize($file, File::class);
+            }, $data['sourceData'] ?? []));
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -76,6 +80,12 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
 
         if ($object->getImage()) {
             $data['image'] = $object->getImage();
+        }
+
+        if ($object->getSourceData()) {
+            $data['sourceData'] = array_map(function (File $file) {
+                return $this->normalizer->normalize($file);
+            }, $object->getSourceData());
         }
 
         return $data;

@@ -58,7 +58,7 @@ final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
     public function it_has_content()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', 0, null, $content = new ArraySequence([
-            Builder::for(ArticlePoA::class)->__invoke(),
+            Builder::dummy(ArticlePoA::class),
         ]));
 
         $this->assertEquals($content, $chapter->getContent());

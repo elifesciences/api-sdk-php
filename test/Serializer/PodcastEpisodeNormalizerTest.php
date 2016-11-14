@@ -8,15 +8,10 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleSection;
-use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Collection;
-use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\PersonAuthor;
-use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
@@ -129,7 +124,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         $actual = $this->normalizer->denormalize($json, PodcastEpisode::class, null, $context);
 
         $this->mockSubjectCall('1');
+        $this->mockSubjectCall('subject1');
         $this->mockArticleCall('1', !empty($context['complete']));
+        $this->mockArticleCall('14107', !empty($context['complete']));
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -149,8 +146,6 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 '140' => 'https://placehold.it/140x140',
             ]),
         ]);
-        $subject = new Subject('1', 'Subject 1 name', promise_for('Subject 1 impact statement'),
-            promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [
@@ -160,18 +155,17 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter 1 title', 0, 'Chapter impact statement',
                             new ArraySequence([
-                                new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
-                                    'Article 1 title prefix', 'Article 1 title',
-                                    new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
-                                    new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1',
-                                    'http://www.example.com/',
-                                    new ArraySequence([$subject]), ['Article 1 research organism'],
-                                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
-                                    promise_for(1),
-                                    promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
-                                Builder::for(Collection::class)
-                                    ->sample('tropical-disease'),
+                                Builder::for(ArticlePoA::class)
+                                    ->withTitlePrefix('title prefix')
+                                    ->withPdf('http://www.example.com/')
+                                    ->withSubjects(new ArraySequence([
+                                        Builder::for(Subject::class)
+                                            ->withId('subject1')
+                                            ->__invoke(),
+                                    ]))
+                                    ->withResearchOrganisms(['research organism'])
+                                    ->__invoke(),
+                                Builder::for(Collection::class)->sample('tropical-disease'),
                             ])),
                     ])),
                 ['complete' => true],
@@ -216,22 +210,22 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'time' => 0,
                             'content' => [
                                 [
-                                    'id' => '1',
+                                    'id' => '14107',
                                     'version' => 1,
                                     'type' => 'research-article',
-                                    'doi' => '10.7554/eLife.1',
-                                    'authorLine' => 'Author et al',
-                                    'title' => 'Article 1 title',
-                                    'published' => '2000-01-01T00:00:00+00:00',
-                                    'statusDate' => '1999-12-31T00:00:00+00:00',
-                                    'volume' => 1,
-                                    'elocationId' => 'e1',
-                                    'titlePrefix' => 'Article 1 title prefix',
+                                    'doi' => '10.7554/eLife.14107',
+                                    'authorLine' => 'Yongjian Huang et al',
+                                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                                    'published' => '2016-03-28T00:00:00+00:00',
+                                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                                    'volume' => 5,
+                                    'elocationId' => 'e14107',
+                                    'titlePrefix' => 'title prefix',
                                     'pdf' => 'http://www.example.com/',
                                     'subjects' => [
-                                        ['id' => '1', 'name' => 'Subject 1 name'],
+                                        ['id' => 'subject1', 'name' => 'Subject 1'],
                                     ],
-                                    'researchOrganisms' => ['Article 1 research organism'],
+                                    'researchOrganisms' => ['research organism'],
                                     'status' => 'poa',
                                 ],
                                 [
@@ -351,14 +345,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
-                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al',
-                                'Article 1 title prefix', 'Article 1 title',
-                                new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
-                                new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', 'http://www.example.com/',
-                                new ArraySequence([$subject]), ['Article 1 research organism'],
-                                promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')]))),
-                                promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
+                            Builder::for(ArticlePoA::class)->sample('1'),
                         ])),
                     ])),
                 ['snippet' => true, 'complete' => true, 'type' => true],
@@ -398,14 +385,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([]), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([
-                            new ArticlePoA('1', 1, 'research-article', '10.7554/eLife.1', 'Author et al', null,
-                                'Article 1 title', new DateTimeImmutable('2000-01-01T00:00:00+00:00'),
-                                new DateTimeImmutable('1999-12-31T00:00:00+00:00'), 1, 'e1', null,
-                                new ArraySequence([]), [], promise_for(null), promise_for(null),
-                                promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                                new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
-                        ])),
+                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([])),
                     ])),
                 ['snippet' => true],
                 [

@@ -2,13 +2,11 @@
 
 namespace test\eLife\ApiSdk\Model;
 
-use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use PHPUnit_Framework_TestCase;
-use function GuzzleHttp\Promise\rejection_for;
+use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
 {
@@ -60,10 +58,7 @@ final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
     public function it_has_content()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', 0, null, $content = new ArraySequence([
-            new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title',
-                new DateTimeImmutable(), new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [],
-                rejection_for('No abstract'), rejection_for('No issue'), rejection_for('No copyright'),
-                new PromiseSequence(rejection_for('No authors'))),
+            Builder::for(ArticlePoA::class)->__invoke(),
         ]));
 
         $this->assertEquals($content, $chapter->getContent());

@@ -113,7 +113,7 @@ final class Builder
                     return [
                         'id' => 'subject1',
                         'name' => 'Subject 1',
-                        'impactStatement' => promise_for('Impact statement'),
+                        'impactStatement' => promise_for('Subject subject1 impact statement'),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
                     ];
@@ -169,64 +169,68 @@ final class Builder
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                     ];
                 },
-                ArticleVoR::class => function () use ($articlePoA) {
-                    return array_merge(
-                        $articlePoA(),
-                        [
-                            'id' => '09560',
-                            'version' => 1,
-                            'type' => 'research-article',
-                            'doi' => '10.7554/eLife.09560',
-                            'authorLine' => 'Lee R Berger et al',
-                            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
-                            'titlePrefix' => null,
-                            'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
-                            'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
-                            'volume' => 4,
-                            'elocationId' => 'e09560',
-                            'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                            'banner' => promise_for(self::for(Image::class)->sample('banner')),
-                            'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                            'keywords' => new ArraySequence(['Article 09560 keyword']),
-                            'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
-                            'content' => new ArraySequence([new Paragraph('content')]),
-                            'appendices' => new ArraySequence([
-                                new Appendix(
-                                    'app1',
-                                    'Appendix 1',
-                                    new ArraySequence([
-                                        new Section(
-                                            'Appendix 1 title',
-                                            'app1-1',
-                                            [new Paragraph('Appendix 1 text')]
-                                        ),
-                                    ]),
-                                    '10.7554/eLife.09560.app1'
-                                ),
-                            ]),
-                            'references' => $references = new ArraySequence([
-                                new BookReference(
-                                    'ref1',
-                                    new ReferenceDate(2000),
-                                    null,
-                                    [
-                                        new PersonAuthor(new PersonDetails(
-                                            'preferred name',
-                                            'index name'
-                                        )),
-                                    ],
-                                    false,
-                                    'book title',
-                                    new Place(null, null, ['publisher'])
-                                ),
-                            ]),
-                            'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
-                            'ethics' => new ArraySequence([new Paragraph('ethics')]),
-                            'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
-                            'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
-                            'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
-                        ]
-                    );
+                ArticleVoR::class => function () {
+                    return [
+                        'id' => '09560',
+                        'version' => 1,
+                        'type' => 'research-article',
+                        'doi' => '10.7554/eLife.09560',
+                        'authorLine' => 'Lee R Berger et al',
+                        'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                        'titlePrefix' => null,
+                        'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'volume' => 4,
+                        'elocationId' => 'e09560',
+                        'pdf' => null,
+                        'subjects' => new ArraySequence(),
+                        'researchOrganisms' => [],
+                        'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]))),
+                        'issue' => promise_for(1),
+                        'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                        'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
+                        'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'keywords' => new ArraySequence(['Article 09560 keyword']),
+                        'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
+                        'content' => new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]),
+                        'appendices' => new ArraySequence([
+                            new Appendix(
+                                'app1',
+                                'Appendix 1',
+                                new ArraySequence([
+                                    new Section(
+                                        'Appendix 1 title',
+                                        'app1-1',
+                                        [new Paragraph('Appendix 1 text')]
+                                    ),
+                                ]),
+                                '10.7554/eLife.09560.app1'
+                            ),
+                        ]),
+                        'references' => $references = new ArraySequence([
+                            new BookReference(
+                                'ref1',
+                                new ReferenceDate(2000),
+                                null,
+                                [
+                                    new PersonAuthor(new PersonDetails(
+                                        'preferred name',
+                                        'index name'
+                                    )),
+                                ],
+                                false,
+                                'book title',
+                                new Place(null, null, ['publisher'])
+                            ),
+                        ]),
+                        'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
+                        'ethics' => new ArraySequence([new Paragraph('ethics')]),
+                        'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
+                        'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
+                        'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                    ];
                 },
             ];
         }

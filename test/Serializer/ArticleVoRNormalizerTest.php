@@ -2,7 +2,6 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
@@ -13,18 +12,13 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\PersonAuthor;
-use eLife\ApiSdk\Model\PersonDetails;
-use eLife\ApiSdk\Model\Place;
-use eLife\ApiSdk\Model\Reference\BookReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
@@ -62,13 +56,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articleVoR = new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
-            promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
-            promise_for(null), null, new ArraySequence([]), promise_for(null),
-            new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]), new ArraySequence([]),
-            new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
+        $articleVoR = Builder::for(ArticleVoR::class)->__invoke();
 
         return [
             'article vor' => [$articleVoR, null, true],
@@ -135,85 +123,50 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            promise_for($banner), promise_for($thumbnail));
-        $date = new DateTimeImmutable();
-        $statusDate = new DateTimeImmutable('-1 day');
-
-        $appendix = new Appendix(
-            'app1',
-            'Appendix 1',
-            new ArraySequence([
-                new Section(
-                    'Appendix 1 title',
-                    'app1-1',
-                    [new Paragraph('Appendix 1 text')]
-                ),
-            ]),
-            '10.7554/eLife.09560.app1'
-        );
-
         return [
             'complete' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 1,
-                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]), 'abstractDoi')),
-                    promise_for(1), promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]),
-                    'impact statement', promise_for($banner), $thumbnail, new ArraySequence(['keyword']),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('digest')]), 'digestDoi')),
-                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]),
-                    new ArraySequence([$appendix]), new ArraySequence([
-                        new BookReference('ref1', ReferenceDate::fromString('2000-01-01'), 'a',
-                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
-                            new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
-                            '978-3-16-148410-0'),
-                    ]), new ArraySequence([new Paragraph('acknowledgements')]), new ArraySequence([new Paragraph('ethics')]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter content')]),
-                        'decisionLetterDoi')), new ArraySequence([new Paragraph('Decision letter description')]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response content')]),
-                        'authorResponseDoi'))),
+                Builder::for(ArticleVoR::class)
+                    ->withTitlePrefix('title prefix')
+                    ->withPdf('http://www.example.com/')
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withResearchOrganisms(['research organism'])
+                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
+                    ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
+                    ->__invoke(),
                 [],
                 [
-                    'id' => 'id',
+                    'id' => '09560',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.09560',
+                    'authorLine' => 'Lee R Berger et al',
+                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                    'published' => '2015-09-10T00:00:00+00:00',
+                    'statusDate' => '2015-09-10T00:00:00+00:00',
+                    'volume' => 4,
+                    'elocationId' => 'e09560',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
-                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
                     'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                        'holder' => 'holder',
+                        'license' => 'CC-BY-4.0',
+                        'statement' => 'Statement',
+                        'holder' => 'Author et al',
                     ],
                     'authors' => [
                         [
                             'type' => 'person',
                             'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
+                                'preferred' => 'Author',
+                                'index' => 'Author',
                             ],
                         ],
                     ],
@@ -222,13 +175,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'abstract',
+                                'text' => 'Article 09560 abstract text',
                             ],
                         ],
-                        'doi' => 'abstractDoi',
+                        'doi' => '10.7554/eLife.09560abstract',
                     ],
                     'status' => 'vor',
-                    'impactStatement' => 'impact statement',
+                    'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -253,27 +206,27 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'keywords' => ['keyword'],
+                    'keywords' => ['Article 09560 keyword'],
                     'digest' => [
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'digest',
+                                'text' => 'Article 09560 digest',
                             ],
                         ],
-                        'doi' => 'digestDoi',
+                        'doi' => '10.7554/eLife.09560digest',
                     ],
                     'body' => [
                         [
                             'type' => 'section',
-                            'title' => 'Section',
+                            'title' => 'Article 09560 section title',
                             'content' => [
                                 [
                                     'type' => 'paragraph',
-                                    'text' => 'content',
+                                    'text' => 'Article 09560 text',
                                 ],
                             ],
-                            'id' => 'section',
+                            'id' => 'article09560section',
                         ],
                     ],
                     'appendices' => [
@@ -300,7 +253,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         [
                             'type' => 'book',
                             'id' => 'ref1',
-                            'date' => '2000-01-01',
+                            'date' => '2000',
                             'authors' => [
                                 [
                                     'type' => 'person',
@@ -314,13 +267,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'publisher' => [
                                 'name' => ['publisher'],
                             ],
-                            'discriminator' => 'a',
-                            'authorsEtAl' => true,
-                            'volume' => 'volume',
-                            'edition' => 'edition',
-                            'doi' => '10.1000/182',
-                            'pmid' => 18183754,
-                            'isbn' => '978-3-16-148410-0',
                         ],
                     ],
                     'acknowledgements' => [
@@ -345,42 +291,52 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'Decision letter content',
+                                'text' => 'Article 09560 decision letter text',
                             ],
                         ],
-                        'doi' => 'decisionLetterDoi',
+                        'doi' => '10.7554/eLife.09560decisionLetter',
                     ],
                     'authorResponse' => [
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'Author response content',
+                                'text' => 'Article 09560 author response text',
                             ],
                         ],
-                        'doi' => 'authorResponseDoi',
+                        'doi' => '10.7554/eLife.09560authorResponse',
                     ],
                 ],
             ],
             'minimum' => [
-                new ArticleVoR('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
-                    promise_for(new Copyright('license', 'statement')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
-                    promise_for(null), null, new ArraySequence([]), promise_for(null),
-                    new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]), new ArraySequence([]),
-                    new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
+                Builder::for(ArticleVoR::class)
+                    ->withPromiseOfCopyright(new Copyright('license', 'statement'))
+                    ->withPromiseOfIssue(null)
+                    ->withPromiseOfAbstract(null)
+                    ->withImpactStatement(null)
+                    ->withThumbnail(null)
+                    ->withPromiseOfBanner(null)
+                    ->withKeywords(new ArraySequence([]))
+                    ->withPromiseOfDigest(null)
+                    ->withAppendices(new ArraySequence([]))
+                    ->withReferences(new ArraySequence([]))
+                    ->withAcknowledgements(new ArraySequence([]))
+                    ->withEthics(new ArraySequence([]))
+                    ->withPromiseOfDecisionLetter(null)
+                    ->withDecisionLetterDescription(new ArraySequence([]))
+                    ->withPromiseOfAuthorResponse(null)
+                    ->__invoke(),
                 [],
                 [
-                    'id' => 'id',
+                    'id' => '09560',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.09560',
+                    'authorLine' => 'Lee R Berger et al',
+                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                    'published' => '2015-09-10T00:00:00+00:00',
+                    'statusDate' => '2015-09-10T00:00:00+00:00',
+                    'volume' => 4,
+                    'elocationId' => 'e09560',
                     'copyright' => [
                         'license' => 'license',
                         'statement' => 'statement',
@@ -389,8 +345,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         [
                             'type' => 'person',
                             'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
+                                'preferred' => 'Author',
+                                'index' => 'Author',
                             ],
                         ],
                     ],
@@ -398,62 +354,53 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'body' => [
                         [
                             'type' => 'section',
-                            'title' => 'Section',
+                            'title' => 'Article 09560 section title',
                             'content' => [
                                 [
                                     'type' => 'paragraph',
-                                    'text' => 'content',
+                                    'text' => 'Article 09560 text',
                                 ],
                             ],
-                            'id' => 'section',
+                            'id' => 'article09560section',
                         ],
                     ],
                 ],
             ],
             'complete snippet' => [
-                new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
-                    'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
-                    new ArraySequence([$subject]), ['Article 1 research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 abstract text')]),
-                        '10.7554/eLife.article1abstract')), promise_for(1),
-                    promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
-                    'Article 1 impact statement', promise_for($banner), $thumbnail,
-                    new ArraySequence(['Article article1 keyword']),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 digest')]),
-                        '10.7554/eLife.article1digest')), new ArraySequence([
-                        new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([$appendix]), new ArraySequence([
-                        new BookReference('ref1', ReferenceDate::fromString('2000'), null,
-                            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-                            new Place(null, null, ['publisher'])),
-                    ]),
-                    new ArraySequence([new Paragraph('acknowledgements')]), new ArraySequence([new Paragraph('ethics')]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 decision letter text')]),
-                        '10.7554/eLife.article1decisionLetter')),
-                    new ArraySequence([new Paragraph('Article article1 decision letter description')]),
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 author response text')]),
-                        '10.7554/eLife.article1authorResponse'))),
+                Builder::for(ArticleVoR::class)
+                    ->withTitlePrefix('title prefix')
+                    ->withPdf('http://www.example.com/')
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withResearchOrganisms(['research organism'])
+                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
+                    ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
+                    ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
+                    ->__invoke(),
                 ['snippet' => true],
                 [
-                    'id' => 'article1',
+                    'id' => '09560',
                     'version' => 1,
                     'type' => 'research-article',
-                    'doi' => '10.7554/eLife1',
-                    'authorLine' => 'Author et al',
-                    'title' => 'Article 1 title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'e1',
-                    'titlePrefix' => 'Article 1 title prefix',
+                    'doi' => '10.7554/eLife.09560',
+                    'authorLine' => 'Lee R Berger et al',
+                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                    'published' => '2015-09-10T00:00:00+00:00',
+                    'statusDate' => '2015-09-10T00:00:00+00:00',
+                    'volume' => 4,
+                    'elocationId' => 'e09560',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
-                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
-                    'researchOrganisms' => ['Article 1 research organism'],
+                    'researchOrganisms' => ['research organism'],
                     'status' => 'vor',
-                    'impactStatement' => 'Article 1 impact statement',
+                    'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -471,34 +418,42 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('article1', true, true);
+                    $test->mockArticleCall('09560', true, true);
                 },
             ],
             'minimum snippet' => [
-                new ArticleVoR('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
-                    'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
-                    promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
-                    promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
-                        new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null),
-                    new ArraySequence([]), promise_for(null)),
+                Builder::for(ArticleVoR::class)
+                    ->withPromiseOfIssue(null)
+                    ->withPromiseOfAbstract(null)
+                    ->withImpactStatement(null)
+                    ->withThumbnail(null)
+                    ->withPromiseOfBanner(null)
+                    ->withKeywords(new ArraySequence([]))
+                    ->withPromiseOfDigest(null)
+                    ->withAppendices(new ArraySequence([]))
+                    ->withReferences(new ArraySequence([]))
+                    ->withAcknowledgements(new ArraySequence([]))
+                    ->withEthics(new ArraySequence([]))
+                    ->withPromiseOfDecisionLetter(null)
+                    ->withDecisionLetterDescription(new ArraySequence([]))
+                    ->withPromiseOfAuthorResponse(null)
+                    ->__invoke(),
                 ['snippet' => true],
                 [
-                    'id' => 'article1',
+                    'id' => '09560',
                     'version' => 1,
                     'type' => 'research-article',
-                    'doi' => '10.7554/eLife1',
-                    'authorLine' => 'Author et al',
-                    'title' => 'Article 1 title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'e1',
+                    'doi' => '10.7554/eLife.09560',
+                    'authorLine' => 'Lee R Berger et al',
+                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                    'published' => '2015-09-10T00:00:00+00:00',
+                    'statusDate' => '2015-09-10T00:00:00+00:00',
+                    'volume' => 4,
+                    'elocationId' => 'e09560',
                     'status' => 'vor',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('article1', false, true);
+                    $test->mockArticleCall('09560', false, true);
                 },
             ],
         ];

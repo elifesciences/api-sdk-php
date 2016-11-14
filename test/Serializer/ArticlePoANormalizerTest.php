@@ -2,25 +2,19 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
-use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
-use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\PersonAuthor;
-use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\promise_for;
+use test\eLife\ApiSdk\Builder;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
@@ -57,10 +51,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articlePoA = new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', new DateTimeImmutable(),
-            new DateTimeImmutable(), 1, 'elocationId', null, new ArraySequence([]), [], promise_for(null),
-            promise_for(null), promise_for(new Copyright('license', 'statement', 'holder')),
-            new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]));
+        $articlePoA = Builder::for(ArticlePoA::class)->__invoke();
 
         return [
             'article poa' => [$articlePoA, null, true],
@@ -127,59 +118,47 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
-        $date = new DateTimeImmutable();
-        $statusDate = new DateTimeImmutable('-1 day');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            promise_for($banner), promise_for($thumbnail));
-
         return [
             'complete' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', 'title prefix', 'title', $date, $statusDate, 2,
-                    'elocationId', 'http://www.example.com/', new ArraySequence([$subject]), ['research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('abstract')]))), promise_for(1),
-                    promise_for(new Copyright('license', 'statement', 'holder')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))])),
+                Builder::for(ArticlePoA::class)
+                    ->withTitlePrefix('title prefix')
+                    ->withPdf('http://www.example.com/')
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->withResearchOrganisms(['research organism'])
+                    ->__invoke(),
                 [],
                 [
-                    'id' => 'id',
+                    'id' => '14107',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 2,
-                    'elocationId' => 'elocationId',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
-                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
                     'copyright' => [
-                        'license' => 'license',
-                        'statement' => 'statement',
-                        'holder' => 'holder',
+                        'license' => 'CC-BY-4.0',
+                        'statement' => 'Statement',
+                        'holder' => 'Author et al',
                     ],
                     'authors' => [
                         [
                             'type' => 'person',
                             'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
+                                'preferred' => 'Author',
+                                'index' => 'Author',
                             ],
                         ],
                     ],
@@ -188,7 +167,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'abstract',
+                                'text' => 'Article 14107 abstract text',
                             ],
                         ],
                     ],
@@ -196,22 +175,23 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new ArticlePoA('id', 1, 'type', 'doi', 'author line', null, 'title', $date, $statusDate, 1,
-                    'elocationId', null, new ArraySequence([]), [], promise_for(null), promise_for(null),
-                    promise_for(new Copyright('license', 'statement')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))])),
+                Builder::for(ArticlePoA::class)
+                    ->withPromiseOfCopyright(new Copyright('license', 'statement'))
+                    ->withPromiseOfIssue(null)
+                    ->withPromiseOfAbstract(null)
+                    ->__invoke(),
                 [],
                 [
-                    'id' => 'id',
+                    'id' => '14107',
                     'version' => 1,
-                    'type' => 'type',
-                    'doi' => 'doi',
-                    'authorLine' => 'author line',
-                    'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'elocationId',
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
                     'copyright' => [
                         'license' => 'license',
                         'statement' => 'statement',
@@ -220,8 +200,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         [
                             'type' => 'person',
                             'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
+                                'preferred' => 'Author',
+                                'index' => 'Author',
                             ],
                         ],
                     ],
@@ -229,57 +209,61 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al',
-                    'Article 1 title prefix', 'Article 1 title', $date, $statusDate, 1, 'e1', 'http://www.example.com/',
-                    new ArraySequence([$subject]), ['Article 1 research organism'],
-                    promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 abstract text')]))),
-                    promise_for(1), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
+                Builder::for(ArticlePoA::class)
+                    ->withTitlePrefix('title prefix')
+                    ->withPdf('http://www.example.com/')
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->withResearchOrganisms(['research organism'])
+                    ->__invoke(),
                 ['snippet' => true],
                 [
-                    'id' => 'article1',
+                    'id' => '14107',
                     'version' => 1,
                     'type' => 'research-article',
-                    'doi' => '10.7554/eLife1',
-                    'authorLine' => 'Author et al',
-                    'title' => 'Article 1 title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'e1',
-                    'titlePrefix' => 'Article 1 title prefix',
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                    'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
-                        ['id' => 'subject1', 'name' => 'Subject 1 name'],
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
-                    'researchOrganisms' => ['Article 1 research organism'],
+                    'researchOrganisms' => ['research organism'],
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('article1', true);
+                    $test->mockArticleCall('14107', true);
                 },
             ],
             'minimum snippet' => [
-                new ArticlePoA('article1', 1, 'research-article', '10.7554/eLife1', 'Author et al', null,
-                    'Article 1 title', $date, $statusDate, 1, 'e1', null, new ArraySequence([]), [], promise_for(null),
-                    promise_for(null), promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
-                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])),
+                Builder::for(ArticlePoA::class)
+                    ->withPromiseOfIssue(null)
+                    ->withPromiseOfAbstract(null)
+                    ->__invoke(),
                 ['snippet' => true],
                 [
-                    'id' => 'article1',
+                    'id' => '14107',
                     'version' => 1,
                     'type' => 'research-article',
-                    'doi' => '10.7554/eLife1',
-                    'authorLine' => 'Author et al',
-                    'title' => 'Article 1 title',
-                    'published' => $date->format(DATE_ATOM),
-                    'statusDate' => $statusDate->format(DATE_ATOM),
-                    'volume' => 1,
-                    'elocationId' => 'e1',
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('article1');
+                    $test->mockArticleCall('14107');
                 },
             ],
         ];

@@ -1,0 +1,274 @@
+<?php
+
+namespace test\eLife\ApiSdk\Model;
+
+use DateTimeImmutable;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\ArticleSection;
+use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\PersonAuthor;
+use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\Subject;
+use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
+
+abstract class ArticleTest extends PHPUnit_Framework_TestCase
+{
+    /** @var Builder */
+    protected $builder;
+
+    /**
+     * @test
+     */
+    final public function it_is_a_model()
+    {
+        $article = $this->builder
+            ->__invoke();
+
+        $this->assertInstanceOf(Model::class, $article);
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_an_id()
+    {
+        $article = $this->builder
+            ->withId('14107')
+            ->__invoke();
+
+        $this->assertSame('14107', $article->getId());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_version()
+    {
+        $article = $this->builder
+            ->withVersion(1)
+            ->__invoke();
+
+        $this->assertSame(1, $article->getVersion());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_type()
+    {
+        $article = $this->builder
+            ->withType('research-article')
+            ->__invoke();
+
+        $this->assertSame('research-article', $article->getType());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_doi()
+    {
+        $article = $this->builder
+            ->withDoi('10.7554/eLife.14107')
+            ->__invoke();
+
+        $this->assertSame('10.7554/eLife.14107', $article->getDoi());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_an_author_line()
+    {
+        $article = $this->builder
+            ->withAuthorLine('Yongjian Huang et al')
+            ->__invoke();
+
+        $this->assertSame('Yongjian Huang et al', $article->getAuthorLine());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_a_title_prefix()
+    {
+        $with = $this->builder
+            ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
+            ->withTitlePrefix('title prefix')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
+            ->withTitlePrefix(null)
+            ->__invoke();
+
+        $this->assertSame('title prefix', $with->getTitlePrefix());
+        $this->assertSame('title prefix: Molecular basis for multimerization in the activation of the epidermal growth factor', $with->getFullTitle());
+        $this->assertNull($withOut->getTitlePrefix());
+        $this->assertSame('Molecular basis for multimerization in the activation of the epidermal growth factor', $withOut->getFullTitle());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_title()
+    {
+        $article = $this->builder
+            ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
+            ->__invoke();
+
+        $this->assertSame('Molecular basis for multimerization in the activation of the epidermal growth factor', $article->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_published_date()
+    {
+        $article = $this->builder
+            ->withPublished($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+
+        $this->assertEquals($date, $article->getPublishedDate());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_status_date()
+    {
+        $article = $this->builder
+            ->withStatusDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+
+        $this->assertEquals($date, $article->getStatusDate());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_volume()
+    {
+        $article = $this->builder
+            ->withVolume(5)
+            ->__invoke();
+
+        $this->assertSame(5, $article->getVolume());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_an_elocation_id()
+    {
+        $article = $this->builder
+            ->withElocationId('e14107')
+            ->__invoke();
+
+        $this->assertSame('e14107', $article->getElocationId());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_a_pdf()
+    {
+        $with = $this->builder
+            ->withPdf('http://www.example.com/article14107.pdf')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPdf(null)
+            ->__invoke();
+
+        $this->assertSame('http://www.example.com/article14107.pdf', $with->getPdf());
+        $this->assertNull($withOut->getPdf());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_subjects()
+    {
+        $subjects = new ArraySequence([Builder::dummy(Subject::class)]);
+
+        $article = $this->builder
+            ->withSubjects($subjects)
+            ->__invoke();
+
+        $this->assertEquals($subjects, $article->getSubjects());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_research_organisms()
+    {
+        $with = $this->builder
+            ->withResearchOrganisms(['research organism'])
+            ->__invoke();
+        $withOut = $this->builder
+            ->withResearchOrganisms([])
+            ->__invoke();
+
+        $this->assertSame(['research organism'], $with->getResearchOrganisms());
+        $this->assertEmpty($withOut->getResearchOrganisms());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_an_abstract()
+    {
+        $with = $this->builder
+            ->withPromiseOfAbstract($abstract = new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfAbstract(null)
+            ->__invoke();
+
+        $this->assertEquals($abstract, $with->getAbstract());
+        $this->assertNull($withOut->getAbstract());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_an_issue()
+    {
+        $with = $this->builder
+            ->withPromiseOfIssue(1)
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfIssue(null)
+            ->__invoke();
+
+        $this->assertEquals(1, $with->getIssue());
+        $this->assertNull($withOut->getIssue());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_copyright()
+    {
+        $article = $this->builder
+            ->withPromiseOfCopyright($copyright = new Copyright('CC-BY-4.0', 'Statement', 'Author et al'))
+            ->__invoke();
+
+        $this->assertEquals($copyright, $article->getCopyright());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_authors()
+    {
+        $article = $this->builder
+            ->withAuthors($authors = new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]))
+            ->__invoke();
+
+        $this->assertEquals($authors, $article->getAuthors());
+    }
+}

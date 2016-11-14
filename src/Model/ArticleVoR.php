@@ -17,6 +17,7 @@ final class ArticleVoR extends ArticleVersion
     private $appendices;
     private $references;
     private $acknowledgements;
+    private $ethics;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -52,6 +53,7 @@ final class ArticleVoR extends ArticleVersion
         Sequence $appendices,
         Sequence $references,
         Sequence $acknowledgements,
+        Sequence $ethics,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
@@ -68,6 +70,7 @@ final class ArticleVoR extends ArticleVersion
         $this->appendices = $appendices;
         $this->references = $references;
         $this->acknowledgements = $acknowledgements;
+        $this->ethics = $ethics;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -137,6 +140,14 @@ final class ArticleVoR extends ArticleVersion
     public function getAcknowledgements() : Sequence
     {
         return $this->acknowledgements;
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getEthics() : Sequence
+    {
+        return $this->ethics;
     }
 
     /**

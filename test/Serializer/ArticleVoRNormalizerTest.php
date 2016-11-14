@@ -68,7 +68,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
             promise_for(null), null, new ArraySequence([]), promise_for(null),
             new ArraySequence([new Section('section', 'sectionId', [new Paragraph('paragraph')])]), new ArraySequence([]),
-            new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
+            new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null));
 
         return [
             'article vor' => [$articleVoR, null, true],
@@ -180,7 +180,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
                             new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                             '978-3-16-148410-0'),
-                    ]), new ArraySequence([new Paragraph('acknowledgements')]),
+                    ]), new ArraySequence([new Paragraph('acknowledgements')]), new ArraySequence([new Paragraph('ethics')]),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter content')]),
                         'decisionLetterDoi')), new ArraySequence([new Paragraph('Decision letter description')]),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response content')]),
@@ -329,6 +329,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'text' => 'acknowledgements',
                         ],
                     ],
+                    'ethics' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'ethics',
+                        ],
+                    ],
                     'decisionLetter' => [
                         'description' => [
                             [
@@ -362,7 +368,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null),
                     new ArraySequence([new Section('Section', 'section', [new Paragraph('content')])]), new ArraySequence([]),
-                    new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
+                    new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null), new ArraySequence([]), promise_for(null)),
                 [],
                 [
                     'id' => 'id',
@@ -422,7 +428,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
                             new Place(null, null, ['publisher'])),
                     ]),
-                    new ArraySequence([new Paragraph('acknowledgements')]),
+                    new ArraySequence([new Paragraph('acknowledgements')]), new ArraySequence([new Paragraph('ethics')]),
                     promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article article1 decision letter text')]),
                         '10.7554/eLife.article1decisionLetter')),
                     new ArraySequence([new Paragraph('Article article1 decision letter description')]),
@@ -475,7 +481,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]), null,
                     promise_for(null), null, new ArraySequence([]), promise_for(null), new ArraySequence([
                         new Section('Article article1 section title', 'articlearticle1section', [new Paragraph('Article article1 text')]),
-                    ]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null),
+                    ]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), new ArraySequence([]), promise_for(null),
                     new ArraySequence([]), promise_for(null)),
                 ['snippet' => true],
                 [

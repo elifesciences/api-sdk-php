@@ -57,6 +57,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['digest'] ?? null;
                 });
 
+            $data['ethics'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['ethics'] ?? [];
+                }));
+
             if (empty($data['image'])) {
                 $data['image']['banner'] = promise_for(null);
             } else {
@@ -87,6 +92,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
+
+            $data['ethics'] = new ArraySequence($data['ethics'] ?? []);
 
             $data['image']['banner'] = promise_for($data['image']['banner'] ?? null);
 
@@ -160,6 +167,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
+        $data['ethics'] = $data['ethics']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
         $data['image']['banner'] = $data['image']['banner']
             ->then(function (array $banner = null) use ($format, $context) {
                 if (empty($banner)) {
@@ -208,6 +219,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['appendices'],
             $data['references'],
             $data['acknowledgements'],
+            $data['ethics'],
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse']
@@ -288,6 +300,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if (!$article->getAcknowledgements()->isEmpty()) {
                 $data['acknowledgements'] = $article->getAcknowledgements()
+                    ->map(function (Block $block) use ($format, $context) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray();
+            }
+
+            if (!$article->getEthics()->isEmpty()) {
+                $data['ethics'] = $article->getEthics()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();

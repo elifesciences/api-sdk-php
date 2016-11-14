@@ -218,7 +218,7 @@ final class ArticlePoATest extends PHPUnit_Framework_TestCase
      */
     final public function it_has_a_copyright()
     {
-        $article = $this->builder->withCopyright($copyright = new Copyright('CC-BY-4.0', 'Statement', 'Author et al'))->__invoke();
+        $article = $this->builder->withPromiseOfCopyright($copyright = new Copyright('CC-BY-4.0', 'Statement', 'Author et al'))->__invoke();
 
         $this->assertEquals($copyright, $article->getCopyright());
     }

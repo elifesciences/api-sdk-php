@@ -3,10 +3,10 @@
 namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
+use eLife\ApiSdk\Model\File;
 use PHPUnit_Framework_TestCase;
 
 final class VideoTest extends PHPUnit_Framework_TestCase

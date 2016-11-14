@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\File;
 
 final class Video implements Block
 {

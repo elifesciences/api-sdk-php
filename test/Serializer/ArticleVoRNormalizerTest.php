@@ -269,6 +269,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'additionalFiles' => [
+                        [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://placehold.it/900x450',
+                            'filename' => 'image.jpeg',
+                        ],
+                    ],
                     'acknowledgements' => [
                         [
                             'type' => 'paragraph',
@@ -319,6 +326,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new ArraySequence([]))
                     ->withReferences(new ArraySequence([]))
+                    ->withAdditionalFiles(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
                     ->withPromiseOfDecisionLetter(null)
@@ -432,6 +440,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new ArraySequence([]))
                     ->withReferences(new ArraySequence([]))
+                    ->withAdditionalFiles(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
                     ->withPromiseOfDecisionLetter(null)

@@ -3,12 +3,12 @@
 namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
-use eLife\ApiSdk\Serializer\Block\FileNormalizer;
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

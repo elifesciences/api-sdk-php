@@ -1,9 +1,9 @@
 <?php
 
-namespace test\eLife\ApiSdk\Model\Block;
+namespace test\eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\File;
 use PHPUnit_Framework_TestCase;
 
 final class FileTest extends PHPUnit_Framework_TestCase

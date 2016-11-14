@@ -16,6 +16,7 @@ use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
@@ -225,6 +226,7 @@ final class Builder
                                 new Place(null, null, ['publisher'])
                             ),
                         ]),
+                        'additionalFiles' => new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
                         'ethics' => new ArraySequence([new Paragraph('ethics')]),
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),

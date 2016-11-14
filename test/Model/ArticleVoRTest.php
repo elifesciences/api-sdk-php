@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -166,6 +167,18 @@ final class ArticleVoRTest extends ArticleTest
             ->__invoke();
 
         $this->assertEquals($references, $article->getReferences());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_additional_files()
+    {
+        $article = $this->builder
+            ->withAdditionalFiles(new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
+            ->__invoke();
+
+        $this->assertEquals($files = new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]), $article->getAdditionalFiles());
     }
 
     /**

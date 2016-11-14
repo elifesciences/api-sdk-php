@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
+use eLife\ApiSdk\Model\File;
 use PHPUnit_Framework_TestCase;
 
 final class TableTest extends PHPUnit_Framework_TestCase

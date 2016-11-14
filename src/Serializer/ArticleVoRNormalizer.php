@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Reference;
@@ -30,6 +31,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['acknowledgements'] = new PromiseSequence($article
                 ->then(function (Result $article) {
                     return $article['acknowledgements'] ?? [];
+                }));
+
+            $data['additionalFiles'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['additionalFiles'] ?? [];
                 }));
 
             $data['appendices'] = new PromiseSequence($article
@@ -83,6 +89,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         } else {
             $data['acknowledgements'] = new ArraySequence($data['acknowledgements'] ?? []);
 
+            $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
+
             $data['appendices'] = new ArraySequence($data['appendices'] ?? []);
 
             $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
@@ -104,6 +112,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         $data['acknowledgements'] = $data['acknowledgements']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
+        $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
+            return $this->denormalizer->denormalize($file, File::class, $format, $context);
         });
 
         $data['appendices'] = $data['appendices']->map(function (array $block) use ($format, $context) {
@@ -218,6 +230,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['body'],
             $data['appendices'],
             $data['references'],
+            $data['additionalFiles'],
             $data['acknowledgements'],
             $data['ethics'],
             $data['decisionLetter'],
@@ -296,6 +309,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if (empty($data['references'])) {
                 unset($data['references']);
+            }
+
+            if ($article->getAdditionalFiles()->notEmpty()) {
+                $data['additionalFiles'] = $article->getAdditionalFiles()
+                    ->map(function (File $file) use ($format, $context) {
+                        return $this->normalizer->normalize($file, $format, $context);
+                    })->toArray();
             }
 
             if (!$article->getAcknowledgements()->isEmpty()) {

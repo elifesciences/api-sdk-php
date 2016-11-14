@@ -3,13 +3,13 @@
 namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\File;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\ImageFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Serializer\Block\FileNormalizer;
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ImageNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

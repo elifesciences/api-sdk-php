@@ -877,6 +877,13 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'additionalFiles' => [
+                [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://placehold.it/900x450',
+                    'filename' => 'image.jpeg',
+                ],
+            ],
             'acknowledgements' => [
                 [
                     'type' => 'paragraph',
@@ -922,6 +929,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['digest']);
             unset($article['appendices']);
             unset($article['references']);
+            unset($article['additionalFiles']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
             unset($article['decisionLetter']);
@@ -937,6 +945,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['body']);
             unset($article['appendices']);
             unset($article['references']);
+            unset($article['additionalFiles']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
             unset($article['decisionLetter']);

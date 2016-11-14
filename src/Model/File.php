@@ -1,8 +1,6 @@
 <?php
 
-namespace eLife\ApiSdk\Model\Block;
-
-use eLife\ApiSdk\Model\Block;
+namespace eLife\ApiSdk\Model;
 
 final class File
 {

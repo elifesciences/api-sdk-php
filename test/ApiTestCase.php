@@ -1237,7 +1237,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($podcastEpisode['image']['banner']);
-            unset($podcastEpisode['chapters'][0]['content']);
+            unset($podcastEpisode['chapters']);
         }
 
         return $podcastEpisode;

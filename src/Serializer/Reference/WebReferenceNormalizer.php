@@ -3,8 +3,8 @@
 namespace eLife\ApiSdk\Serializer\Reference;
 
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\WebReference;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -22,7 +22,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
     {
         return new WebReference(
             $data['id'],
-            ReferenceDate::fromString($data['date']),
+            Date::fromString($data['date']),
             $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);

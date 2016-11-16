@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
@@ -52,6 +53,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 ->then(function (Result $article) {
                     return $article['body'];
                 }));
+
+            $data['dataSets'] = $article
+                ->then(function (Result $article) {
+                    return $article['dataSets'] ?? null;
+                });
 
             $data['decisionLetter'] = $article
                 ->then(function (Result $article) {
@@ -97,6 +103,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             $data['body'] = new ArraySequence($data['body']);
 
+            $data['dataSets'] = promise_for($data['dataSets'] ?? null);
+
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
@@ -139,6 +147,20 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         $data['body'] = $data['body']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
+
+        $generatedDataSets = new PromiseSequence($data['dataSets']
+            ->then(function (array $dataSets = null) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
+                }, $dataSets['generated'] ?? []);
+            }));
+
+        $usedDataSets = new PromiseSequence($data['dataSets']
+            ->then(function (array $dataSets = null) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
+                }, $dataSets['used'] ?? []);
+            }));
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
@@ -231,6 +253,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['appendices'],
             $data['references'],
             $data['additionalFiles'],
+            $generatedDataSets,
+            $usedDataSets,
             $data['acknowledgements'],
             $data['ethics'],
             $data['decisionLetter'],
@@ -315,6 +339,20 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 $data['additionalFiles'] = $article->getAdditionalFiles()
                     ->map(function (File $file) use ($format, $context) {
                         return $this->normalizer->normalize($file, $format, $context);
+                    })->toArray();
+            }
+
+            if ($article->getGeneratedDataSets()->notEmpty()) {
+                $data['dataSets']['generated'] = $article->getGeneratedDataSets()
+                    ->map(function (DataSet $dataSet) use ($format, $context) {
+                        return $this->normalizer->normalize($dataSet, $format, $context);
+                    })->toArray();
+            }
+
+            if ($article->getUsedDataSets()->notEmpty()) {
+                $data['dataSets']['used'] = $article->getUsedDataSets()
+                    ->map(function (DataSet $dataSet) use ($format, $context) {
+                        return $this->normalizer->normalize($dataSet, $format, $context);
                     })->toArray();
             }
 

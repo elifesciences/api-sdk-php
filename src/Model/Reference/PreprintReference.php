@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 
 final class PreprintReference implements Reference
@@ -22,7 +23,7 @@ final class PreprintReference implements Reference
      */
     public function __construct(
         string $id,
-        ReferenceDate $date,
+        Date $date,
         string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
@@ -47,7 +48,7 @@ final class PreprintReference implements Reference
         return $this->id;
     }
 
-    public function getDate() : ReferenceDate
+    public function getDate() : Date
     {
         return $this->date;
     }

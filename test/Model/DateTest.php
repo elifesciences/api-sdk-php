@@ -1,18 +1,18 @@
 <?php
 
-namespace test\eLife\ApiSdk\Model\Reference;
+namespace test\eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
+use eLife\ApiSdk\Model\Date;
 use PHPUnit_Framework_TestCase;
 
-final class ReferenceDateTest extends PHPUnit_Framework_TestCase
+final class DateTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     public function it_has_a_year()
     {
-        $date = new ReferenceDate(2000);
+        $date = new Date(2000);
 
         $this->assertSame(2000, $date->getYear());
     }
@@ -22,8 +22,8 @@ final class ReferenceDateTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_month()
     {
-        $with = new ReferenceDate(2000, 1);
-        $withOut = new ReferenceDate(2000);
+        $with = new Date(2000, 1);
+        $withOut = new Date(2000);
 
         $this->assertSame(1, $with->getMonth());
         $this->assertNull($withOut->getMonth());
@@ -34,8 +34,8 @@ final class ReferenceDateTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_day()
     {
-        $with = new ReferenceDate(2000, 1, 1);
-        $withOut = new ReferenceDate(2000);
+        $with = new Date(2000, 1, 1);
+        $withOut = new Date(2000);
 
         $this->assertSame(1, $with->getDay());
         $this->assertNull($withOut->getDay());
@@ -47,7 +47,7 @@ final class ReferenceDateTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_created_from_a_string(string $string, int $year, int $month = null, int $day = null)
     {
-        $date = ReferenceDate::fromString($string);
+        $date = Date::fromString($string);
 
         $this->assertSame($year, $date->getYear());
         $this->assertSame($month, $date->getMonth());
@@ -69,7 +69,7 @@ final class ReferenceDateTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_cast_to_a_string(string $date)
     {
-        $this->assertSame($date, ReferenceDate::fromString($date)->toString());
+        $this->assertSame($date, Date::fromString($date)->toString());
     }
 
     public function formatStringProvider() : array
@@ -87,7 +87,7 @@ final class ReferenceDateTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_formated(string $date, string $expected)
     {
-        $date = ReferenceDate::fromString($date);
+        $date = Date::fromString($date);
 
         $this->assertSame($expected, $date->format());
     }

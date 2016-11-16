@@ -1,8 +1,8 @@
 <?php
 
-namespace eLife\ApiSdk\Model\Reference;
+namespace eLife\ApiSdk\Model;
 
-final class ReferenceDate
+final class Date
 {
     private $year;
     private $month;
@@ -21,7 +21,7 @@ final class ReferenceDate
     /**
      * @internal
      */
-    public static function fromString(string $string) : ReferenceDate
+    public static function fromString(string $string) : Date
     {
         $parts = explode('-', $string);
 

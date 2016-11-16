@@ -2,12 +2,12 @@
 
 namespace test\eLife\ApiSdk\Model\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use PHPUnit_Framework_TestCase;
 
@@ -18,7 +18,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -30,7 +30,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -42,7 +42,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_date()
     {
-        $reference = new JournalReference('id', $date = new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -54,10 +54,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_discriminator()
     {
-        $with = new JournalReference('id', new ReferenceDate(2000), 'a',
+        $with = new JournalReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
-        $withOut = new JournalReference('id', new ReferenceDate(2000), null,
+        $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -70,7 +70,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -82,10 +82,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new JournalReference('id', new ReferenceDate(2000), null,
+        $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
-        $withOut = new JournalReference('id', new ReferenceDate(2000), null,
+        $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -98,7 +98,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_article_title()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -110,7 +110,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_journal()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             $journal = new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -122,7 +122,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_pages()
     {
-        $reference = new JournalReference('id', new ReferenceDate(2000), null,
+        $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), $pages = new StringReferencePage('pages'));
 
@@ -134,10 +134,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_volume()
     {
-        $with = new JournalReference('id', new ReferenceDate(2000), null,
+        $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'), 'volume');
-        $withOut = new JournalReference('id', new ReferenceDate(2000), null,
+        $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -150,10 +150,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new JournalReference('id', new ReferenceDate(2000), null,
+        $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'), null, '10.1000/182');
-        $withOut = new JournalReference('id', new ReferenceDate(2000), null,
+        $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 
@@ -166,10 +166,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_pmid()
     {
-        $with = new JournalReference('id', new ReferenceDate(2000), null,
+        $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'), null, null, 18183754);
-        $withOut = new JournalReference('id', new ReferenceDate(2000), null,
+        $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('pages'));
 

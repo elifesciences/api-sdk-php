@@ -2,10 +2,10 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\WebReference;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
@@ -53,7 +53,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new WebReference('id', ReferenceDate::fromString('2000'), null,
+        $reference = new WebReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             'http://www.example.com/');
 
@@ -77,7 +77,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new WebReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new WebReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'http://www.example.com/', 'website'),
                 [
@@ -101,7 +101,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new WebReference('id', ReferenceDate::fromString('2000'), null,
+                new WebReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     'http://www.example.com/'),
                 [
@@ -183,7 +183,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'website' => 'website',
                     'uri' => 'http://www.example.com/',
                 ],
-                new WebReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new WebReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'http://www.example.com/', 'website'),
             ],
@@ -204,7 +204,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'uri' => 'http://www.example.com/',
                 ],
-                new WebReference('id', ReferenceDate::fromString('2000'), null,
+                new WebReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     'http://www.example.com/'),
             ],

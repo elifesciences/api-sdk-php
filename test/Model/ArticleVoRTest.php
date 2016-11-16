@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
@@ -15,7 +16,6 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use test\eLife\ApiSdk\Builder;
 
 final class ArticleVoRTest extends ArticleTest
@@ -148,7 +148,7 @@ final class ArticleVoRTest extends ArticleTest
         $references = new ArraySequence([
             new BookReference(
                 'ref1',
-                new ReferenceDate(2000),
+                new Date(2000),
                 null,
                 [
                     new PersonAuthor(new PersonDetails(

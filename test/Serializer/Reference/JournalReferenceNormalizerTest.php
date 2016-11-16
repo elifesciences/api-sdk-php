@@ -2,12 +2,12 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
@@ -60,7 +60,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new JournalReference('id', ReferenceDate::fromString('2000'), null,
+        $reference = new JournalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['journal']), new StringReferencePage('foo'));
 
@@ -84,7 +84,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new JournalReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new JournalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
@@ -118,7 +118,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new JournalReference('id', ReferenceDate::fromString('2000'), null,
+                new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['journal']), new StringReferencePage('pages')),
                 [
@@ -212,7 +212,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'pmid' => 18183754,
                 ],
-                new JournalReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new JournalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
                     new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
@@ -237,7 +237,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'pages' => 'pages',
                 ],
-                new JournalReference('id', ReferenceDate::fromString('2000'), null,
+                new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
                     new Place(null, null, ['journal']), new StringReferencePage('pages')),
             ],

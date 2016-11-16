@@ -2,11 +2,11 @@
 
 namespace test\eLife\ApiSdk\Model\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use PHPUnit_Framework_TestCase;
 
 final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
@@ -16,7 +16,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new PreprintReference('id', new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertInstanceOf(Reference::class, $reference);
@@ -27,7 +27,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $reference = new PreprintReference('id', new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('id', $reference->getId());
@@ -38,7 +38,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_date()
     {
-        $reference = new PreprintReference('id', $date = new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertEquals($date, $reference->getDate());
@@ -49,9 +49,9 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_discriminator()
     {
-        $with = new PreprintReference('id', new ReferenceDate(2000), 'a',
+        $with = new PreprintReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
-        $withOut = new PreprintReference('id', new ReferenceDate(2000), null,
+        $withOut = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('a', $with->getDiscriminator());
@@ -63,7 +63,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $reference = new PreprintReference('id', new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             'source');
 
@@ -75,9 +75,9 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_authors()
     {
-        $with = new PreprintReference('id', new ReferenceDate(2000), null,
+        $with = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title', 'source');
-        $withOut = new PreprintReference('id', new ReferenceDate(2000), null,
+        $withOut = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertTrue($with->authorsEtAl());
@@ -89,7 +89,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_article_title()
     {
-        $reference = new PreprintReference('id', new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('article title', $reference->getArticleTitle());
@@ -100,7 +100,7 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_source()
     {
-        $reference = new PreprintReference('id', new ReferenceDate(2000), null,
+        $reference = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('source', $reference->getSource());
@@ -111,10 +111,10 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new PreprintReference('id', new ReferenceDate(2000), null,
+        $with = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source',
             '10.1000/182');
-        $withOut = new PreprintReference('id', new ReferenceDate(2000), null,
+        $withOut = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -126,11 +126,11 @@ final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new PreprintReference('id', new ReferenceDate(2000), null,
+        $with = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source',
             null,
             'http://www.example.com/');
-        $withOut = new PreprintReference('id', new ReferenceDate(2000), null,
+        $withOut = new PreprintReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
 
         $this->assertSame('http://www.example.com/', $with->getUri());

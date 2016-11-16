@@ -884,6 +884,46 @@ abstract class ApiTestCase extends TestCase
                     'filename' => 'image.jpeg',
                 ],
             ],
+            'dataSets' => [
+                'generated' => [
+                    [
+                        'id' => 'id',
+                        'date' => '2000-01-02',
+                        'authors' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'preferred name',
+                                    'index' => 'index name',
+                                ],
+                            ],
+                        ],
+                        'title' => 'title',
+                        'uri' => 'https://doi.org/10.1000/182',
+                        'authorsEtAl' => true,
+                        'dataId' => 'data id',
+                        'details' => 'details',
+                        'doi' => '10.1000/182',
+                    ],
+                ],
+                'used' => [
+                    [
+                        'id' => 'id',
+                        'date' => '2000',
+                        'authors' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'preferred name',
+                                    'index' => 'index name',
+                                ],
+                            ],
+                        ],
+                        'title' => 'title',
+                        'uri' => 'http://www.example.com/',
+                    ],
+                ],
+            ],
             'acknowledgements' => [
                 [
                     'type' => 'paragraph',
@@ -930,6 +970,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['appendices']);
             unset($article['references']);
             unset($article['additionalFiles']);
+            unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
             unset($article['decisionLetter']);
@@ -946,6 +987,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['appendices']);
             unset($article['references']);
             unset($article['additionalFiles']);
+            unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
             unset($article['decisionLetter']);

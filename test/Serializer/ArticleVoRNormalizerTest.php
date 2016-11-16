@@ -276,6 +276,46 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'filename' => 'image.jpeg',
                         ],
                     ],
+                    'dataSets' => [
+                        'generated' => [
+                            [
+                                'id' => 'id',
+                                'date' => '2000-01-02',
+                                'authors' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'preferred name',
+                                            'index' => 'index name',
+                                        ],
+                                    ],
+                                ],
+                                'title' => 'title',
+                                'uri' => 'https://doi.org/10.1000/182',
+                                'authorsEtAl' => true,
+                                'dataId' => 'data id',
+                                'details' => 'details',
+                                'doi' => '10.1000/182',
+                            ],
+                        ],
+                        'used' => [
+                            [
+                                'id' => 'id',
+                                'date' => '2000',
+                                'authors' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'preferred name',
+                                            'index' => 'index name',
+                                        ],
+                                    ],
+                                ],
+                                'title' => 'title',
+                                'uri' => 'http://www.example.com/',
+                            ],
+                        ],
+                    ],
                     'acknowledgements' => [
                         [
                             'type' => 'paragraph',
@@ -327,6 +367,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAppendices(new ArraySequence([]))
                     ->withReferences(new ArraySequence([]))
                     ->withAdditionalFiles(new ArraySequence([]))
+                    ->withGeneratedDataSets(new ArraySequence([]))
+                    ->withUsedDataSets(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
                     ->withPromiseOfDecisionLetter(null)
@@ -441,6 +483,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAppendices(new ArraySequence([]))
                     ->withReferences(new ArraySequence([]))
                     ->withAdditionalFiles(new ArraySequence([]))
+                    ->withGeneratedDataSets(new ArraySequence([]))
+                    ->withUsedDataSets(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
                     ->withPromiseOfDecisionLetter(null)

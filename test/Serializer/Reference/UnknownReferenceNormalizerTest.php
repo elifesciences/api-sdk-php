@@ -2,10 +2,10 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\UnknownReference;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
@@ -53,7 +53,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $reference = new UnknownReference('id', new ReferenceDate(2000), null,
+        $reference = new UnknownReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title');
 
         return [
@@ -76,7 +76,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new UnknownReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'details', 'http://www.example.com/'),
                 [
@@ -100,7 +100,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new UnknownReference('id', ReferenceDate::fromString('2000'), null,
+                new UnknownReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title'),
                 [
                     'type' => 'unknown',
@@ -180,7 +180,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'details' => 'details',
                     'uri' => 'http://www.example.com/',
                 ],
-                new UnknownReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new UnknownReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     'details', 'http://www.example.com/'),
             ],
@@ -200,7 +200,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'title' => 'title',
                 ],
-                new UnknownReference('id', ReferenceDate::fromString('2000'), null,
+                new UnknownReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title'),
             ],
         ];

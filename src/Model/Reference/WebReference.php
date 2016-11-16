@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 
 final class WebReference implements Reference
@@ -22,14 +23,14 @@ final class WebReference implements Reference
      */
     public function __construct(
         string $id,
-        ReferenceDate $date,
+        Date $date,
         string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
         string $title,
         string $uri,
         string $website = null,
-        ReferenceDate $accessed = null
+        Date $accessed = null
     ) {
         $this->id = $id;
         $this->date = $date;
@@ -47,7 +48,7 @@ final class WebReference implements Reference
         return $this->id;
     }
 
-    public function getDate() : ReferenceDate
+    public function getDate() : Date
     {
         return $this->date;
     }
@@ -89,7 +90,7 @@ final class WebReference implements Reference
     }
 
     /**
-     * @return ReferenceDate|null
+     * @return Date|null
      */
     public function getAccessed()
     {

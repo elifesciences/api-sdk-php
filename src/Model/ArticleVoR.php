@@ -17,6 +17,8 @@ final class ArticleVoR extends ArticleVersion
     private $appendices;
     private $references;
     private $additionalFiles;
+    private $generatedDataSets;
+    private $usedDataSets;
     private $acknowledgements;
     private $ethics;
     private $decisionLetter;
@@ -54,6 +56,8 @@ final class ArticleVoR extends ArticleVersion
         Sequence $appendices,
         Sequence $references,
         Sequence $additionalFiles,
+        Sequence $generatedDataSets,
+        Sequence $usedDataSets,
         Sequence $acknowledgements,
         Sequence $ethics,
         PromiseInterface $decisionLetter,
@@ -72,6 +76,8 @@ final class ArticleVoR extends ArticleVersion
         $this->appendices = $appendices;
         $this->references = $references;
         $this->additionalFiles = $additionalFiles;
+        $this->generatedDataSets = $generatedDataSets;
+        $this->usedDataSets = $usedDataSets;
         $this->acknowledgements = $acknowledgements;
         $this->ethics = $ethics;
         $this->decisionLetter = $decisionLetter;
@@ -143,6 +149,22 @@ final class ArticleVoR extends ArticleVersion
     public function getAdditionalFiles() : Sequence
     {
         return $this->additionalFiles;
+    }
+
+    /**
+     * @return Sequence|DataSet[]
+     */
+    public function getGeneratedDataSets() : Sequence
+    {
+        return $this->generatedDataSets;
+    }
+
+    /**
+     * @return Sequence|DataSet[]
+     */
+    public function getUsedDataSets() : Sequence
+    {
+        return $this->usedDataSets;
     }
 
     /**

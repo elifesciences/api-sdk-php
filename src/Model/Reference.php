@@ -2,13 +2,11 @@
 
 namespace eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
-
 interface Reference
 {
     public function getId() : string;
 
-    public function getDate() : ReferenceDate;
+    public function getDate() : Date;
 
     /**
      * @return string|null

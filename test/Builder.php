@@ -16,6 +16,8 @@ use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\DataSet;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
@@ -30,7 +32,6 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use LogicException;
@@ -213,7 +214,7 @@ final class Builder
                         'references' => $references = new ArraySequence([
                             new BookReference(
                                 'ref1',
-                                new ReferenceDate(2000),
+                                new Date(2000),
                                 null,
                                 [
                                     new PersonAuthor(new PersonDetails(
@@ -227,6 +228,8 @@ final class Builder
                             ),
                         ]),
                         'additionalFiles' => new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
+                        'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
                         'ethics' => new ArraySequence([new Paragraph('ethics')]),
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),

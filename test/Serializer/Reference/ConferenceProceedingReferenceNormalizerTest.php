@@ -2,12 +2,12 @@
 
 namespace test\eLife\ApiSdk\Serializer\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
@@ -59,7 +59,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
 
     public function canNormalizeProvider() : array
     {
-        $reference = new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
+        $reference = new ConferenceProceedingReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
             new Place(null, null, ['conference']));
 
@@ -85,7 +85,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
     {
         return [
             'complete' => [
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new ConferenceProceedingReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
@@ -116,7 +116,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                 ],
             ],
             'minimum' => [
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
+                new ConferenceProceedingReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))],
                     false, 'title', new Place(null, null, ['conference'])),
                 [
@@ -213,7 +213,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                     'doi' => '10.1000/182',
                     'uri' => 'http://www.example.com/',
                 ],
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000-01-01'), 'a',
+                new ConferenceProceedingReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
                     new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
@@ -239,7 +239,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                         ],
                     ],
                 ],
-                new ConferenceProceedingReference('id', ReferenceDate::fromString('2000'), null,
+                new ConferenceProceedingReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
                     new Place(null, null, ['conference'])),
             ],

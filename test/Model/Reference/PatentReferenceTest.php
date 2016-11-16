@@ -2,11 +2,11 @@
 
 namespace test\eLife\ApiSdk\Model\Reference;
 
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
-use eLife\ApiSdk\Model\Reference\ReferenceDate;
 use PHPUnit_Framework_TestCase;
 
 final class PatentReferenceTest extends PHPUnit_Framework_TestCase
@@ -16,7 +16,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_reference()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -28,7 +28,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -40,7 +40,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_date()
     {
-        $reference = new PatentReference('id', $date = new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -52,10 +52,10 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_discriminator()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), 'a',
+        $with = new PatentReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -68,7 +68,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_inventors()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             $inventors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false,
             'title',
             'type', 'country');
@@ -81,10 +81,10 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_inventors()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), null,
+        $with = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, [], false, 'title', 'type',
             'country');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -97,11 +97,11 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_assignees()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), null,
+        $with = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], false,
             $assignees = [new PersonAuthor(new PersonDetails('assignee preferred name', 'assignee index name'))], false,
             'title', 'type', 'country');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('inventor preferred name', 'inventor index name'))], false, [], false,
             'title',
             'type', 'country');
@@ -115,10 +115,10 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_further_assignees()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), null,
+        $with = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, [], false, 'title', 'type',
             'country');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -131,7 +131,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -143,7 +143,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_type()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -155,7 +155,7 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_country()
     {
-        $reference = new PatentReference('id', new ReferenceDate(2000), null,
+        $reference = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -167,10 +167,10 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_number()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), null,
+        $with = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country', 'number');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 
@@ -183,10 +183,10 @@ final class PatentReferenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new PatentReference('id', new ReferenceDate(2000), null,
+        $with = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country', null, 'http://www.example.com/');
-        $withOut = new PatentReference('id', new ReferenceDate(2000), null,
+        $withOut = new PatentReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
             'country');
 

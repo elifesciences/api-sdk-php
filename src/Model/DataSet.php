@@ -1,22 +1,17 @@
 <?php
 
-namespace eLife\ApiSdk\Model\Reference;
+namespace eLife\ApiSdk\Model;
 
-use eLife\ApiSdk\Model\AuthorEntry;
-use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\Place;
-use eLife\ApiSdk\Model\Reference;
-
-final class SoftwareReference implements Reference
+final class DataSet
 {
     private $id;
     private $date;
-    private $discriminator;
     private $authors;
     private $authorsEtAl;
     private $title;
-    private $publisher;
-    private $version;
+    private $dataId;
+    private $details;
+    private $doi;
     private $uri;
 
     /**
@@ -25,44 +20,39 @@ final class SoftwareReference implements Reference
     public function __construct(
         string $id,
         Date $date,
-        string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
         string $title,
-        Place $publisher,
-        string $version = null,
-        string $uri = null
+        string $dataId = null,
+        string $details = null,
+        string $doi = null,
+        string $uri
     ) {
         $this->id = $id;
         $this->date = $date;
-        $this->discriminator = $discriminator;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
         $this->title = $title;
-        $this->publisher = $publisher;
-        $this->version = $version;
+        $this->dataId = $dataId;
+        $this->details = $details;
+        $this->doi = $doi;
         $this->uri = $uri;
     }
 
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function getDate() : Date
+    public function getDate(): Date
     {
         return $this->date;
-    }
-
-    public function getDiscriminator()
-    {
-        return $this->discriminator;
     }
 
     /**
      * @return AuthorEntry[]
      */
-    public function getAuthors() : array
+    public function getAuthors(): array
     {
         return $this->authors;
     }
@@ -77,23 +67,31 @@ final class SoftwareReference implements Reference
         return $this->title;
     }
 
-    public function getPublisher() : Place
+    /**
+     * @return string|null
+     */
+    public function getDataId()
     {
-        return $this->publisher;
+        return $this->dataId;
     }
 
     /**
      * @return string|null
      */
-    public function getVersion()
+    public function getDetails()
     {
-        return $this->version;
+        return $this->details;
     }
 
     /**
      * @return string|null
      */
-    public function getUri()
+    public function getDoi()
+    {
+        return $this->doi;
+    }
+
+    public function getUri(): string
     {
         return $this->uri;
     }

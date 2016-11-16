@@ -35,6 +35,7 @@ use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
+use eLife\ApiSdk\Serializer\DataSetNormalizer;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
@@ -103,6 +104,7 @@ final class ApiSdk
             new ArticleVoRNormalizer($this->articlesClient),
             new BlogArticleNormalizer($this->blogClient),
             new CollectionNormalizer($this->collectionsClient),
+            new DataSetNormalizer(),
             new EventNormalizer($this->eventsClient),
             new FileNormalizer(),
             new GroupAuthorNormalizer(),

@@ -877,13 +877,6 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
-            'additionalFiles' => [
-                [
-                    'mediaType' => 'image/jpeg',
-                    'uri' => 'https://placehold.it/900x450',
-                    'filename' => 'image.jpeg',
-                ],
-            ],
             'dataSets' => [
                 'generated' => [
                     [
@@ -922,6 +915,13 @@ abstract class ApiTestCase extends TestCase
                         'title' => 'title',
                         'uri' => 'http://www.example.com/',
                     ],
+                ],
+            ],
+            'additionalFiles' => [
+                [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://placehold.it/900x450',
+                    'filename' => 'image.jpeg',
                 ],
             ],
             'acknowledgements' => [

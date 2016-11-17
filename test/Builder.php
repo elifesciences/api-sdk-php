@@ -92,6 +92,19 @@ final class Builder
                         'podcastEpisodes' => new ArraySequence(),
                     ];
                 },
+                DataSet::class => function () {
+                    return [
+                        'id' => 'id',
+                        'date' => new Date(2000),
+                        'authors' => [new PersonAuthor(new PersonDetails('preferred name', 'index name'))],
+                        'authorsEtAl' => false,
+                        'title' => 'title',
+                        'dataId' => null,
+                        'details' => null,
+                        'doi' => null,
+                        'uri' => 'http://www.example.com/',
+                    ];
+                },
                 Image::class => function () {
                     return [
                         'altText' => 'Image alt text',

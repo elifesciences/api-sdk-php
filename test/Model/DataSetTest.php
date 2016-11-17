@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class DataSetTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $dataSet = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withId('id')
+            ->__invoke();
 
         $this->assertSame('id', $dataSet->getId());
     }
@@ -25,7 +28,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_date()
     {
-        $dataSet = new DataSet('id', $date = new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withDate($date = new Date(2000))
+            ->__invoke();
 
         $this->assertEquals($date, $dataSet->getDate());
     }
@@ -35,7 +40,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_authors()
     {
-        $dataSet = new DataSet('id', new Date(2000), $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withAuthors($authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))])
+            ->__invoke();
 
         $this->assertEquals($authors, $dataSet->getAuthors());
     }
@@ -45,7 +52,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_more_authors()
     {
-        $dataSet = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withAuthorsEtAl(true)
+            ->__invoke();
 
         $this->assertTrue($dataSet->authorsEtAl());
     }
@@ -55,7 +64,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $dataSet = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withTitle('title')
+            ->__invoke();
 
         $this->assertSame('title', $dataSet->getTitle());
     }
@@ -65,8 +76,12 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_data_id()
     {
-        $with = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', 'data id', null, null, 'http://www.example.com/');
-        $withOut = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $with = Builder::for(DataSet::class)
+            ->withDataId('data id')
+            ->__invoke();
+        $withOut = Builder::for(DataSet::class)
+            ->withDataId(null)
+            ->__invoke();
 
         $this->assertSame('data id', $with->getDataId());
         $this->assertNull($withOut->getDataId());
@@ -77,8 +92,12 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_details()
     {
-        $with = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, 'details', null, 'http://www.example.com/');
-        $withOut = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $with = Builder::for(DataSet::class)
+            ->withDetails('details')
+            ->__invoke();
+        $withOut = Builder::for(DataSet::class)
+            ->withDetails(null)
+            ->__invoke();
 
         $this->assertSame('details', $with->getDetails());
         $this->assertNull($withOut->getDetails());
@@ -89,8 +108,12 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, '10.1000/182', 'http://www.example.com/');
-        $withOut = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $with = Builder::for(DataSet::class)
+            ->withDoi('10.1000/182')
+            ->__invoke();
+        $withOut = Builder::for(DataSet::class)
+            ->withDoi(null)
+            ->__invoke();
 
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
@@ -101,7 +124,9 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_uri()
     {
-        $dataSet = new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/');
+        $dataSet = Builder::for(DataSet::class)
+            ->withUri('http://www.example.com/')
+            ->__invoke();
 
         $this->assertSame('http://www.example.com/', $dataSet->getUri());
     }

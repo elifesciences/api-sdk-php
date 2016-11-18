@@ -76,9 +76,9 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_doi()
+    public function it_may_have_a_doi()
     {
-        $appendix = new Appendix(
+        $with = new Appendix(
             'id',
             'title',
             new ArraySequence([
@@ -90,7 +90,19 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
             ]),
             '10.7554/eLife.09560.app1'
         );
+        $withOut = new Appendix(
+            'id',
+            'title',
+            new ArraySequence([
+                new Section(
+                    'Section title',
+                    'id-section',
+                    [new Paragraph('Text')]
+                ),
+            ])
+        );
 
-        $this->assertSame('10.7554/eLife.09560.app1', $appendix->getDoi());
+        $this->assertSame('10.7554/eLife.09560.app1', $with->getDoi());
+        $this->assertNull($withOut->getDoi());
     }
 }

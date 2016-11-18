@@ -14,7 +14,7 @@ final class Appendix
     /**
      * @internal
      */
-    public function __construct(string $id, string $title, Sequence $content, string $doi)
+    public function __construct(string $id, string $title, Sequence $content, string $doi = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -40,7 +40,10 @@ final class Appendix
         return $this->content;
     }
 
-    public function getDoi() : string
+    /**
+     * @return string|null
+     */
+    public function getDoi()
     {
         return $this->doi;
     }

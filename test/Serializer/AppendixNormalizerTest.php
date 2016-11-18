@@ -69,41 +69,10 @@ final class AppendixNormalizerTest extends ApiTestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_normalize_appendices()
+    public function it_normalize_appendices(Appendix $appendix, array $expected)
     {
-        $appendix = new Appendix(
-            'id',
-            'title',
-            new ArraySequence([
-                new Section(
-                    'Section title',
-                    'id-section',
-                    [new Paragraph('Text')]
-                ),
-            ]),
-            '10.7554/eLife.09560.app1'
-        );
-
-        $expected = [
-            'id' => 'id',
-            'title' => 'title',
-            'content' => [
-                [
-                    'type' => 'section',
-                    'title' => 'Section title',
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'Text',
-                        ],
-                    ],
-                    'id' => 'id-section',
-                ],
-            ],
-            'doi' => '10.7554/eLife.09560.app1',
-        ];
-
         $this->assertSame($expected, $this->normalizer->normalize($appendix));
     }
 
@@ -134,43 +103,66 @@ final class AppendixNormalizerTest extends ApiTestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_appendices()
+    public function it_denormalize_appendices(Appendix $expected, array $json)
     {
-        $json = [
-            'id' => 'id',
-            'title' => 'title',
-            'content' => [
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Appendix::class));
+    }
+
+    public function normalizeProvider() :array
+    {
+        return [
+            'complete' => [
+                new Appendix(
+                    'id',
+                    'title',
+                    new ArraySequence([new Section('Section title', 'id-section', [new Paragraph('Text')])]),
+                    '10.7554/eLife.09560.app1'
+                ),
                 [
-                    'type' => 'section',
-                    'title' => 'Section title',
+                    'id' => 'id',
+                    'title' => 'title',
                     'content' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'Text',
+                            'type' => 'section',
+                            'title' => 'Section title',
+                            'content' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'Text',
+                                ],
+                            ],
+                            'id' => 'id-section',
                         ],
                     ],
-                    'id' => 'id-section',
+                    'doi' => '10.7554/eLife.09560.app1',
                 ],
             ],
-            'doi' => '10.7554/eLife.09560.app1',
-        ];
-
-        $expected = new Appendix(
-            'id',
-            'title',
-            new ArraySequence([
-                new Section(
-                    'Section title',
-                    'id-section',
-                    [new Paragraph('Text')]
+            'minimum' => [
+                new Appendix(
+                    'id',
+                    'title',
+                    new ArraySequence([new Section('Section title', 'id-section', [new Paragraph('Text')])])
                 ),
-            ]),
-            '10.7554/eLife.09560.app1'
-        );
-
-        $actual = $this->normalizer->denormalize($json, Appendix::class);
-
-        $this->assertObjectsAreEqual($expected, $actual);
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'content' => [
+                        [
+                            'type' => 'section',
+                            'title' => 'Section title',
+                            'content' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'Text',
+                                ],
+                            ],
+                            'id' => 'id-section',
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 }

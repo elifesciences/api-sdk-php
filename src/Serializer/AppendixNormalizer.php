@@ -21,7 +21,7 @@ final class AppendixNormalizer implements NormalizerInterface, DenormalizerInter
     {
         return new Appendix($data['id'], $data['title'], new ArraySequence(array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
-        }, $data['content'])), $data['doi']);
+        }, $data['content'])), $data['doi'] ?? null);
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -34,14 +34,19 @@ final class AppendixNormalizer implements NormalizerInterface, DenormalizerInter
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        return [
+        $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
             'content' => $object->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray(),
-            'doi' => $object->getDoi(),
         ];
+
+        if ($object->getDoi()) {
+            $data['doi'] = $object->getDoi();
+        }
+
+        return $data;
     }
 
     public function supportsNormalization($data, $format = null) : bool

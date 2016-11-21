@@ -749,6 +749,15 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'reviewers' => [
+                [
+                    'name' => [
+                        'preferred' => 'Reviewer',
+                        'index' => 'Reviewer',
+                    ],
+                    'role' => 'Role',
+                ],
+            ],
             'abstract' => [
                 'content' => [
                     [
@@ -765,6 +774,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['pdf']);
             unset($article['subjects']);
             unset($article['researchOrganisms']);
+            unset($article['reviewers']);
             unset($article['abstract']);
         }
 
@@ -772,6 +782,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['issue']);
             unset($article['copyright']);
             unset($article['authors']);
+            unset($article['reviewers']);
             unset($article['abstract']);
         }
 

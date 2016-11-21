@@ -170,6 +170,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'reviewers' => [
+                        [
+                            'name' => [
+                                'preferred' => 'Reviewer',
+                                'index' => 'Reviewer',
+                            ],
+                            'role' => 'Role',
+                        ],
+                    ],
                     'issue' => 1,
                     'abstract' => [
                         'content' => [
@@ -356,6 +365,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 Builder::for(ArticleVoR::class)
+                    ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
                     ->withPromiseOfAbstract(null)
@@ -473,6 +483,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 Builder::for(ArticleVoR::class)
+                    ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
                     ->withPromiseOfAbstract(null)
                     ->withImpactStatement(null)

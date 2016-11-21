@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -96,6 +97,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 ->then(function (Result $article) {
                     return $article['issue'] ?? null;
                 });
+
+            $data['reviewers'] = new PromiseSequence($complete
+                ->then(function (Result $article) {
+                    return $article['reviewers'] ?? [];
+                }));
         } else {
             $complete = null;
 
@@ -106,6 +112,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['copyright'] = promise_for($data['copyright']);
 
             $data['issue'] = promise_for($data['issue'] ?? null);
+
+            $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
         }
 
         $data['abstract'] = $data['abstract']
@@ -130,6 +138,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             ->then(function (array $copyright) {
                 return new Copyright($copyright['license'], $copyright['statement'], $copyright['holder'] ?? null);
             });
+
+        $data['reviewers'] = $data['reviewers']->map(function (array $reviewer) use ($format, $context) {
+            return $this->denormalizer->denormalize($reviewer, Reviewer::class, $format, $context);
+        });
 
         $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
             $context['snippet'] = true;
@@ -227,6 +239,12 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, $context);
             })->toArray();
+
+            if ($object->getReviewers()->notEmpty()) {
+                $data['reviewers'] = $object->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {
+                    return $this->normalizer->normalize($reviewer, $format, $context);
+                })->toArray();
+            }
 
             if ($object->getIssue()) {
                 $data['issue'] = $object->getIssue();

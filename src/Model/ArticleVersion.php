@@ -26,6 +26,7 @@ abstract class ArticleVersion implements Model
     private $issue;
     private $copyright;
     private $authors;
+    private $reviewers;
 
     /**
      * @internal
@@ -48,7 +49,8 @@ abstract class ArticleVersion implements Model
         PromiseInterface $abstract,
         PromiseInterface $issue,
         PromiseInterface $copyright,
-        Sequence $authors
+        Sequence $authors,
+        Sequence $reviewers
     ) {
         $this->id = $id;
         $this->version = $version;
@@ -68,6 +70,7 @@ abstract class ArticleVersion implements Model
         $this->issue = $issue;
         $this->copyright = $copyright;
         $this->authors = $authors;
+        $this->reviewers = $reviewers;
     }
 
     final public function getId(): string
@@ -181,5 +184,10 @@ abstract class ArticleVersion implements Model
     final public function getAuthors(): Sequence
     {
         return $this->authors;
+    }
+
+    final public function getReviewers(): Sequence
+    {
+        return $this->reviewers;
     }
 }

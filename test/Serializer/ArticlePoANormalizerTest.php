@@ -162,6 +162,15 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'reviewers' => [
+                        [
+                            'name' => [
+                                'preferred' => 'Reviewer',
+                                'index' => 'Reviewer',
+                            ],
+                            'role' => 'Role',
+                        ],
+                    ],
                     'issue' => 1,
                     'abstract' => [
                         'content' => [
@@ -178,6 +187,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 Builder::for(ArticlePoA::class)
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
+                    ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
                     ->__invoke(),
                 [],
@@ -246,6 +256,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 Builder::for(ArticlePoA::class)
                     ->withPromiseOfIssue(null)
+                    ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
                     ->__invoke(),
                 ['snippet' => true],

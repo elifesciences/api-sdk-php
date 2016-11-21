@@ -32,6 +32,7 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Reference\BookReference;
+use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use InvalidArgumentException;
 use LogicException;
@@ -124,6 +125,13 @@ final class Builder
                         'content' => $this->rejectSequence(),
                     ];
                 },
+                Reviewer::class => function () {
+                    return [
+                        'person' => new PersonDetails('Josiah Carberry', 'Carberry, Josiah', '0000-0002-1825-0097'),
+                        'role' => 'Reviewing editor',
+                        'affiliations' => [],
+                    ];
+                },
                 Subject::class => function () {
                     return [
                         'id' => 'subject1',
@@ -182,6 +190,7 @@ final class Builder
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
+                        'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -204,6 +213,7 @@ final class Builder
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
+                        'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),

@@ -47,6 +47,7 @@ final class ArticleVoR extends ArticleVersion
         PromiseInterface $issue,
         PromiseInterface $copyright,
         Sequence $authors,
+        Sequence $reviewers,
         string $impactStatement = null,
         PromiseInterface $banner,
         Image $thumbnail = null,
@@ -65,7 +66,7 @@ final class ArticleVoR extends ArticleVersion
         PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $statusDate,
-            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors);
+            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers);
 
         $this->impactStatement = $impactStatement;
         $this->banner = $banner;

@@ -244,6 +244,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['issue'],
             $data['copyright'],
             $data['authors'],
+            $data['reviewers'],
             $data['impactStatement'] ?? null,
             $data['image']['banner'],
             $data['image']['thumbnail'] ?? null,

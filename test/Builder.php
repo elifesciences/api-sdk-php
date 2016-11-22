@@ -19,6 +19,9 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Funder;
+use eLife\ApiSdk\Model\Funding;
+use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
@@ -255,6 +258,17 @@ final class Builder
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
                         'ethics' => new ArraySequence([new Paragraph('ethics')]),
+                        'funding' => promise_for(new Funding(
+                            new ArraySequence([
+                                new FundingAward(
+                                    'award',
+                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                'awardId',
+                                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                                ),
+                            ]),
+                            'Funding statement'
+                        )),
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),

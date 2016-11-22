@@ -947,6 +947,30 @@ abstract class ApiTestCase extends TestCase
                     'text' => 'ethics',
                 ],
             ],
+            'funding' => [
+                'awards' => [
+                    [
+                        'id' => 'award',
+                        'source' => [
+                            'funderId' => '10.13039/501100001659',
+                            'name' => [
+                                'Funder',
+                            ],
+                        ],
+                        'awardId' => 'awardId',
+                        'recipients' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'Author',
+                                    'index' => 'Author',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'statement' => 'Funding statement',
+            ],
             'decisionLetter' => [
                 'doi' => '10.7554/eLife.'.$id.'decisionLetter',
                 'description' => [
@@ -984,6 +1008,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
+            unset($article['funding']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }
@@ -1001,6 +1026,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
+            unset($article['funding']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }

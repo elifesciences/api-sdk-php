@@ -10,6 +10,9 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Funder;
+use eLife\ApiSdk\Model\Funding;
+use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -203,6 +206,32 @@ final class ArticleVoRTest extends ArticleTest
             ->__invoke();
 
         $this->assertEquals($ethics, $article->getEthics());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_funding()
+    {
+        $with = $this->builder
+            ->withPromiseOfFunding($funding = new Funding(
+                new ArraySequence([
+                    new FundingAward(
+                        'award',
+                        new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                        'awardId',
+                        new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                    ),
+                ]),
+                'Funding statement'
+            ))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfFunding(null)
+            ->__invoke();
+
+        $this->assertEquals($funding, $with->getFunding());
+        $this->assertNull($withOut->getFunding());
     }
 
     /**

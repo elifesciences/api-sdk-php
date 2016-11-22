@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Address;
+use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -148,6 +149,8 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
             'person author' => [[], PersonAuthor::class, [], true],
             'author entry that is a person' => [['type' => 'person'], AuthorEntry::class, [], true],
             'author entry that isn\'t a person' => [['type' => 'foo'], AuthorEntry::class, [], false],
+            'author that is a person' => [['type' => 'person'], Author::class, [], true],
+            'author that isn\'t a person' => [['type' => 'foo'], Author::class, [], false],
             'non-person author' => [[], get_class($this), [], false],
         ];
     }

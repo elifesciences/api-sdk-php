@@ -337,6 +337,30 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'text' => 'ethics',
                         ],
                     ],
+                    'funding' => [
+                        'awards' => [
+                            [
+                                'id' => 'award',
+                                'source' => [
+                                    'name' => [
+                                        'Funder',
+                                    ],
+                                    'funderId' => '10.13039/501100001659',
+                                ],
+                                'recipients' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'Author',
+                                            'index' => 'Author',
+                                        ],
+                                    ],
+                                ],
+                                'awardId' => 'awardId',
+                            ],
+                        ],
+                        'statement' => 'Funding statement',
+                    ],
                     'decisionLetter' => [
                         'description' => [
                             [
@@ -381,6 +405,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withUsedDataSets(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
+                    ->withPromiseOfFunding(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new ArraySequence([]))
                     ->withPromiseOfAuthorResponse(null)
@@ -498,6 +523,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withUsedDataSets(new ArraySequence([]))
                     ->withAcknowledgements(new ArraySequence([]))
                     ->withEthics(new ArraySequence([]))
+                    ->withPromiseOfFunding(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new ArraySequence([]))
                     ->withPromiseOfAuthorResponse(null)

@@ -45,7 +45,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
         return
             GroupAuthor::class === $type
             ||
-            (AuthorEntry::class === $type && 'group' === $data['type']);
+            (in_array($type, [AuthorEntry::class, Author::class]) && 'group' === $data['type']);
     }
 
     /**

@@ -21,6 +21,7 @@ final class ArticleVoR extends ArticleVersion
     private $usedDataSets;
     private $acknowledgements;
     private $ethics;
+    private $funding;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -61,6 +62,7 @@ final class ArticleVoR extends ArticleVersion
         Sequence $usedDataSets,
         Sequence $acknowledgements,
         Sequence $ethics,
+        PromiseInterface $funding,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
@@ -81,6 +83,7 @@ final class ArticleVoR extends ArticleVersion
         $this->usedDataSets = $usedDataSets;
         $this->acknowledgements = $acknowledgements;
         $this->ethics = $ethics;
+        $this->funding = $funding;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -182,6 +185,14 @@ final class ArticleVoR extends ArticleVersion
     public function getEthics() : Sequence
     {
         return $this->ethics;
+    }
+
+    /**
+     * @return Funding|null
+     */
+    public function getFunding()
+    {
+        return $this->funding->wait();
     }
 
     /**

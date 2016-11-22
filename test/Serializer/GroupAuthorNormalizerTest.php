@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
+use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -189,6 +190,8 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
             'group author' => [[], GroupAuthor::class, [], true],
             'author entry that is a group' => [['type' => 'group'], AuthorEntry::class, [], true],
             'author entry that isn\'t a group' => [['type' => 'foo'], AuthorEntry::class, [], false],
+            'author that is a group' => [['type' => 'group'], Author::class, [], true],
+            'author that isn\'t a group' => [['type' => 'foo'], Author::class, [], false],
             'non-group author' => [[], get_class($this), [], false],
         ];
     }

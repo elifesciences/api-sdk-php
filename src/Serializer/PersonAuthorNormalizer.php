@@ -33,7 +33,7 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
         return
             PersonAuthor::class === $type
             ||
-            (AuthorEntry::class === $type && 'person' === $data['type']);
+            (in_array($type, [AuthorEntry::class, Author::class]) && 'person' === $data['type']);
     }
 
     /**

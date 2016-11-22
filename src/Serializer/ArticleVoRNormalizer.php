@@ -24,8 +24,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,
-        $class,
-        $format = null,
+        string $class,
+        string $format = null,
         array $context = []
     ) : ArticleVersion {
         if ($article) {
@@ -280,7 +280,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     protected function normalizeArticle(
         ArticleVersion $article,
         array $data,
-        $format = null,
+        string $format = null,
         array $context = []
     ) : array {
         $data['status'] = 'vor';

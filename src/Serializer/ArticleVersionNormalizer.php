@@ -290,15 +290,15 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     abstract protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,
-        $class,
-        $format = null,
+        string $class,
+        string $format = null,
         array $context = []
     ) : ArticleVersion;
 
     abstract protected function normalizeArticle(
         ArticleVersion $article,
         array $data,
-        $format = null,
+        string $format = null,
         array $context = []
     ) : array;
 }

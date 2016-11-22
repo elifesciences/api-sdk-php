@@ -231,7 +231,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                                 $this->denormalizer->denormalize($award['source'], Place::class, $format, $context),
                                 $award['source']['funderId'] ?? null
                             ),
-                            $award['awardId'],
+                            $award['awardId'] ?? null,
                             new ArraySequence(array_map(function (array $recipient) use ($format, $context) {
                                 return $this->denormalizer->denormalize($recipient, Author::class, $format, $context);
                             }, $award['recipients']))

@@ -122,15 +122,15 @@ final class DataSetNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'title' => 'title',
-                    'uri' => 'https://doi.org/10.1000/182',
                     'authorsEtAl' => true,
                     'dataId' => 'data id',
                     'details' => 'details',
                     'doi' => '10.1000/182',
+                    'uri' => 'https://doi.org/10.1000/182',
                 ],
             ],
             'minimum' => [
-                new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/'),
+                new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null),
                 [
                     'id' => 'id',
                     'date' => '2000',
@@ -144,7 +144,6 @@ final class DataSetNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'title' => 'title',
-                    'uri' => 'http://www.example.com/',
                 ],
             ],
         ];

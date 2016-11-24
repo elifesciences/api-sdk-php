@@ -124,10 +124,14 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_uri()
     {
-        $dataSet = Builder::for(DataSet::class)
+        $with = Builder::for(DataSet::class)
             ->withUri('http://www.example.com/')
             ->__invoke();
+        $withOut = Builder::for(DataSet::class)
+            ->withUri(null)
+            ->__invoke();
 
-        $this->assertSame('http://www.example.com/', $dataSet->getUri());
+        $this->assertSame('http://www.example.com/', $with->getUri());
+        $this->assertNull($withOut->getUri());
     }
 }

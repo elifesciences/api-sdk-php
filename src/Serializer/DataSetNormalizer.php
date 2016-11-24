@@ -30,7 +30,7 @@ final class DataSetNormalizer implements NormalizerInterface, DenormalizerInterf
             $data['dataId'] ?? null,
             $data['details'] ?? null,
             $data['doi'] ?? null,
-            $data['uri']
+            $data['uri'] ?? null
         );
     }
 
@@ -51,7 +51,6 @@ final class DataSetNormalizer implements NormalizerInterface, DenormalizerInterf
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),
             'title' => $object->getTitle(),
-            'uri' => $object->getUri(),
         ];
 
         if ($object->authorsEtAl()) {
@@ -68,6 +67,10 @@ final class DataSetNormalizer implements NormalizerInterface, DenormalizerInterf
 
         if ($object->getDoi()) {
             $data['doi'] = $object->getDoi();
+        }
+
+        if ($object->getUri()) {
+            $data['uri'] = $object->getUri();
         }
 
         return $data;

@@ -300,11 +300,11 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                     ],
                                 ],
                                 'title' => 'title',
-                                'uri' => 'https://doi.org/10.1000/182',
                                 'authorsEtAl' => true,
                                 'dataId' => 'data id',
                                 'details' => 'details',
                                 'doi' => '10.1000/182',
+                                'uri' => 'https://doi.org/10.1000/182',
                             ],
                         ],
                         'used' => [

@@ -26,7 +26,7 @@ final class DataSet
         string $dataId = null,
         string $details = null,
         string $doi = null,
-        string $uri
+        string $uri = null
     ) {
         $this->id = $id;
         $this->date = $date;
@@ -91,7 +91,10 @@ final class DataSet
         return $this->doi;
     }
 
-    public function getUri(): string
+    /**
+     * @return string|null
+     */
+    public function getUri()
     {
         return $this->uri;
     }

@@ -133,15 +133,17 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 [],
                 [
                     'id' => '14107',
+                    'stage' => 'published',
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                    'published' => '2016-03-28T00:00:00+00:00',
-                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'volume' => 5,
                     'elocationId' => 'e14107',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'versionDate' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
@@ -185,6 +187,10 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 Builder::for(ArticlePoA::class)
+                    ->withStage(ArticlePoA::STAGE_PREVIEW)
+                    ->withPublished(null)
+                    ->withVersionDate(null)
+                    ->withStatusDate(null)
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
@@ -193,13 +199,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 [],
                 [
                     'id' => '14107',
+                    'stage' => 'preview',
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                    'published' => '2016-03-28T00:00:00+00:00',
-                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'volume' => 5,
                     'elocationId' => 'e14107',
                     'copyright' => [
@@ -232,15 +237,17 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ['snippet' => true],
                 [
                     'id' => '14107',
+                    'stage' => 'published',
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                    'published' => '2016-03-28T00:00:00+00:00',
-                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'volume' => 5,
                     'elocationId' => 'e14107',
+                    'published' => '2016-03-28T00:00:00+00:00',
+                    'versionDate' => '2016-03-28T00:00:00+00:00',
+                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'titlePrefix' => 'title prefix',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
@@ -255,6 +262,10 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 Builder::for(ArticlePoA::class)
+                    ->withStage(ArticlePoA::STAGE_PREVIEW)
+                    ->withPublished(null)
+                    ->withVersionDate(null)
+                    ->withStatusDate(null)
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
@@ -262,13 +273,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ['snippet' => true],
                 [
                     'id' => '14107',
+                    'stage' => 'preview',
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                    'published' => '2016-03-28T00:00:00+00:00',
-                    'statusDate' => '2016-03-28T00:00:00+00:00',
                     'volume' => 5,
                     'elocationId' => 'e14107',
                     'status' => 'poa',

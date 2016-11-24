@@ -720,6 +720,7 @@ abstract class ApiTestCase extends TestCase
     {
         $article = [
             'status' => 'poa',
+            'stage' => 'published',
             'id' => $id,
             'version' => 1,
             'type' => 'research-article',
@@ -727,6 +728,7 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Article '.$id.' title',
             'titlePrefix' => 'Article '.$id.' title prefix',
             'published' => '2000-01-01T00:00:00+00:00',
+            'versionDate' => '1999-12-31T00:00:00+00:00',
             'statusDate' => '1999-12-31T00:00:00+00:00',
             'volume' => 1,
             'issue' => 1,
@@ -769,7 +771,11 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if (!$complete) {
+            $article['stage'] = 'preview';
             unset($article['titlePrefix']);
+            unset($article['published']);
+            unset($article['versionDate']);
+            unset($article['statusDate']);
             unset($article['issue']);
             unset($article['pdf']);
             unset($article['subjects']);
@@ -1409,12 +1415,14 @@ abstract class ApiTestCase extends TestCase
                 [
                     'type' => 'research-article',
                     'status' => 'poa',
+                    'stage' => 'published',
                     'id' => '14107',
                     'version' => 1,
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                     'published' => '2016-03-28T00:00:00+00:00',
+                    'versionDate' => '2016-03-28T00:00:00+00:00',
                     'statusDate' => '2016-03-28T00:00:00+00:00',
                     'volume' => 5,
                     'elocationId' => 'e14107',

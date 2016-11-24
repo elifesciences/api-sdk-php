@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -263,14 +262,16 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         return new ArticleVoR(
             $data['id'],
+            $data['stage'],
             $data['version'],
             $data['type'],
             $data['doi'],
             $data['authorLine'],
             $data['titlePrefix'] ?? null,
             $data['title'],
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']),
+            $data['published'],
+            $data['versionDate'],
+            $data['statusDate'],
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,

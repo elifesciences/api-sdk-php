@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ArticleSection;
+use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
@@ -40,6 +41,18 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertSame('14107', $article->getId());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_a_stage()
+    {
+        $article = $this->builder
+            ->withStage(ArticleVersion::STAGE_PREVIEW)
+            ->__invoke();
+
+        $this->assertSame(ArticleVersion::STAGE_PREVIEW, $article->getStage());
     }
 
     /**
@@ -125,25 +138,65 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_has_a_published_date()
+    final public function it_may_be_published()
     {
-        $article = $this->builder
-            ->withPublished($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+        $with = $this->builder
+            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublished(null)
             ->__invoke();
 
-        $this->assertEquals($date, $article->getPublishedDate());
+        $this->assertTrue($with->isPublished());
+        $this->assertFalse($withOut->isPublished());
     }
 
     /**
      * @test
      */
-    final public function it_has_a_status_date()
+    final public function it_may_have_a_published_date()
     {
-        $article = $this->builder
-            ->withStatusDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+        $with = $this->builder
+            ->withPublished($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublished(null)
             ->__invoke();
 
-        $this->assertEquals($date, $article->getStatusDate());
+        $this->assertEquals($date, $with->getPublishedDate());
+        $this->assertNull($withOut->getPublishedDate());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_a_version_date()
+    {
+        $with = $this->builder
+            ->withVersionDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withVersionDate(null)
+            ->__invoke();
+
+        $this->assertEquals($date, $with->getVersionDate());
+        $this->assertNull($withOut->getVersionDate());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_a_status_date()
+    {
+        $with = $this->builder
+            ->withStatusDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withStatusDate(null)
+            ->__invoke();
+
+        $this->assertEquals($date, $with->getStatusDate());
+        $this->assertNull($withOut->getStatusDate());
     }
 
     /**

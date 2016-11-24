@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -149,6 +150,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
+        $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']) : null;
+        $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
+        $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
+
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
     }
 
@@ -195,16 +200,25 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     {
         $data = [
             'id' => $object->getId(),
+            'stage' => $object->getStage(),
             'version' => $object->getVersion(),
             'type' => $object->getType(),
             'doi' => $object->getDoi(),
             'authorLine' => $object->getAuthorLine(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
-            'statusDate' => $object->getStatusDate()->format(DATE_ATOM),
             'volume' => $object->getVolume(),
             'elocationId' => $object->getElocationId(),
         ];
+
+        if ($object->getPublishedDate()) {
+            $data['published'] = $object->getPublishedDate()->format(DATE_ATOM);
+        }
+        if ($object->getVersionDate()) {
+            $data['versionDate'] = $object->getPublishedDate()->format(DATE_ATOM);
+        }
+        if ($object->getStatusDate()) {
+            $data['statusDate'] = $object->getStatusDate()->format(DATE_ATOM);
+        }
 
         if ($object->getTitlePrefix()) {
             $data['titlePrefix'] = $object->getTitlePrefix();

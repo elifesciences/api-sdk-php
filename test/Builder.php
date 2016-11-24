@@ -176,6 +176,7 @@ final class Builder
                 ArticlePoA::class => $articlePoA = function () {
                     return [
                         'id' => '14107',
+                        'stage' => 'published',
                         'type' => 'research-article',
                         'version' => 1,
                         'doi' => '10.7554/eLife.14107',
@@ -183,6 +184,7 @@ final class Builder
                         'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                         'titlePrefix' => null,
                         'published' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
+                        'versionDate' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
                         'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
                         'volume' => 5,
                         'elocationId' => 'e14107',
@@ -199,6 +201,7 @@ final class Builder
                 ArticleVoR::class => function () {
                     return [
                         'id' => '09560',
+                        'stage' => 'published',
                         'version' => 1,
                         'type' => 'research-article',
                         'doi' => '10.7554/eLife.09560',
@@ -206,6 +209,7 @@ final class Builder
                         'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                         'titlePrefix' => null,
                         'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'versionDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'volume' => 4,
                         'elocationId' => 'e09560',
@@ -263,7 +267,7 @@ final class Builder
                                 new FundingAward(
                                     'award',
                                     new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
-                                'awardId',
+                                    'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),
                             ]),
@@ -324,11 +328,13 @@ final class Builder
                     'growth-factor' => function ($builder) {
                         return $builder
                             ->withId('14107')
+                            ->withStage('published')
                             ->withVersion(1)
                             ->withDoi('10.7554/eLife.14107')
                             ->withAuthorLine('Yongjian Huang et al')
                             ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
                             ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+                            ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
                             ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
                             ->withVolume(5)
                             ->withElocationId('e14107')
@@ -337,12 +343,14 @@ final class Builder
                     '1' => function ($builder) {
                         return $builder
                             ->withId('1')
+                            ->withStage('published')
                             ->withVersion(1)
                             ->withDoi('10.7554/eLife.1')
                             ->withAuthorLine('Author et al')
                             ->withTitle('Article 1 title')
                             ->withTitlePrefix('Article 1 title prefix')
                             ->withPublished(new DateTimeImmutable('2000-01-01T00:00:00+00:00'))
+                            ->withVersionDate(new DateTimeImmutable('1999-12-31T00:00:00+00:00'))
                             ->withStatusDate(new DateTimeImmutable('1999-12-31T00:00:00+00:00'))
                             ->withVolume(1)
                             ->withElocationId('e1')
@@ -360,11 +368,13 @@ final class Builder
                     'homo-naledi' => function ($builder) {
                         return $builder
                             ->withId('09560')
+                            ->withStage('published')
                             ->withVersion(1)
                             ->withDoi('10.7554/eLife.09560')
                             ->withAuthorLine('Lee R Berger et al')
                             ->withTitle('<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa')
                             ->withPublished(new DateTimeImmutable('2015-09-10T00:00:00Z'))
+                            ->withVersionDate(new DateTimeImmutable('2015-09-10T00:00:00Z'))
                             ->withStatusDate(new DateTimeImmutable('2015-09-10T00:00:00Z'))
                             ->withVolume(4)
                             ->withElocationId('e09560')

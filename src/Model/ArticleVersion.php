@@ -8,7 +8,11 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 abstract class ArticleVersion implements Model
 {
+    const STAGE_PREVIEW = 'preview';
+    const STAGE_PUBLISHED = 'published';
+
     private $id;
+    private $stage;
     private $version;
     private $type;
     private $doi;
@@ -16,6 +20,7 @@ abstract class ArticleVersion implements Model
     private $titlePrefix;
     private $title;
     private $published;
+    private $versionDate;
     private $statusDate;
     private $volume;
     private $elocationId;
@@ -33,14 +38,16 @@ abstract class ArticleVersion implements Model
      */
     public function __construct(
         string $id,
+        string $stage,
         int $version,
         string $type,
         string $doi,
         string $authorLine,
         string $titlePrefix = null,
         string $title,
-        DateTimeImmutable $published,
-        DateTimeImmutable $statusDate,
+        DateTimeImmutable $published = null,
+        DateTimeImmutable $versionDate = null,
+        DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
         string $pdf = null,
@@ -53,6 +60,7 @@ abstract class ArticleVersion implements Model
         Sequence $reviewers
     ) {
         $this->id = $id;
+        $this->stage = $stage;
         $this->version = $version;
         $this->type = $type;
         $this->doi = $doi;
@@ -60,6 +68,7 @@ abstract class ArticleVersion implements Model
         $this->titlePrefix = $titlePrefix;
         $this->title = $title;
         $this->published = $published;
+        $this->versionDate = $versionDate;
         $this->statusDate = $statusDate;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
@@ -76,6 +85,11 @@ abstract class ArticleVersion implements Model
     final public function getId(): string
     {
         return $this->id;
+    }
+
+    final public function getStage(): string
+    {
+        return $this->stage;
     }
 
     final public function getVersion(): int
@@ -116,12 +130,31 @@ abstract class ArticleVersion implements Model
         return implode(': ', array_filter([$this->titlePrefix, $this->title]));
     }
 
-    final public function getPublishedDate(): DateTimeImmutable
+    final public function isPublished() : bool
+    {
+        return null !== $this->published;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    final public function getPublishedDate()
     {
         return $this->published;
     }
 
-    final public function getStatusDate(): DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    final public function getVersionDate()
+    {
+        return $this->versionDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    final public function getStatusDate()
     {
         return $this->statusDate;
     }

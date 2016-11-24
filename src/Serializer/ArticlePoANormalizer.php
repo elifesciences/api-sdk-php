@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Model;
@@ -19,14 +18,16 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
     ) : ArticleVersion {
         return new ArticlePoA(
             $data['id'],
+            $data['stage'],
             $data['version'],
             $data['type'],
             $data['doi'],
             $data['authorLine'],
             $data['titlePrefix'] ?? null,
             $data['title'],
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']),
+            $data['published'],
+            $data['versionDate'],
+            $data['statusDate'],
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,

@@ -31,14 +31,16 @@ final class ArticleVoR extends ArticleVersion
      */
     public function __construct(
         string $id,
+        string $stage,
         int $version,
         string $type,
         string $doi,
         string $authorLine,
         string $titlePrefix = null,
         string $title,
-        DateTimeImmutable $published,
-        DateTimeImmutable $statusDate,
+        DateTimeImmutable $published = null,
+        DateTimeImmutable $versionDate = null,
+        DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
         string $pdf = null,
@@ -67,7 +69,7 @@ final class ArticleVoR extends ArticleVersion
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
     ) {
-        parent::__construct($id, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $statusDate,
+        parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
             $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers);
 
         $this->impactStatement = $impactStatement;

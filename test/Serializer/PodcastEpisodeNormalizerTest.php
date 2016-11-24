@@ -211,15 +211,17 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'content' => [
                                 [
                                     'id' => '14107',
+                                    'stage' => 'published',
                                     'version' => 1,
                                     'type' => 'research-article',
                                     'doi' => '10.7554/eLife.14107',
                                     'authorLine' => 'Yongjian Huang et al',
                                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                                    'published' => '2016-03-28T00:00:00+00:00',
-                                    'statusDate' => '2016-03-28T00:00:00+00:00',
                                     'volume' => 5,
                                     'elocationId' => 'e14107',
+                                    'published' => '2016-03-28T00:00:00+00:00',
+                                    'versionDate' => '2016-03-28T00:00:00+00:00',
+                                    'statusDate' => '2016-03-28T00:00:00+00:00',
                                     'titlePrefix' => 'title prefix',
                                     'pdf' => 'http://www.example.com/',
                                     'subjects' => [

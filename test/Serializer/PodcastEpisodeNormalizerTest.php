@@ -172,7 +172,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -219,9 +219,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                                     'volume' => 5,
                                     'elocationId' => 'e14107',
-                                    'published' => '2016-03-28T00:00:00+00:00',
-                                    'versionDate' => '2016-03-28T00:00:00+00:00',
-                                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                                    'published' => '2016-03-28T00:00:00Z',
+                                    'versionDate' => '2016-03-28T00:00:00Z',
+                                    'statusDate' => '2016-03-28T00:00:00Z',
                                     'titlePrefix' => 'title prefix',
                                     'pdf' => 'http://www.example.com/',
                                     'subjects' => [
@@ -234,7 +234,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'id' => 'tropical-disease',
                                     'type' => 'collection',
                                     'title' => 'Tropical disease',
-                                    'updated' => '2000-01-01T00:00:00+00:00',
+                                    'updated' => '2000-01-01T00:00:00Z',
                                     'image' => [
                                         'thumbnail' => [
                                             'alt' => '',
@@ -301,7 +301,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -355,7 +355,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
                     'impactStatement' => 'Podcast episode 1 impact statement',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -393,7 +393,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

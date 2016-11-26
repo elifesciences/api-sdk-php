@@ -183,9 +183,9 @@ final class Builder
                         'authorLine' => 'Yongjian Huang et al',
                         'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                         'titlePrefix' => null,
-                        'published' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
-                        'versionDate' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
-                        'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00+00:00'),
+                        'published' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
+                        'versionDate' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
+                        'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
                         'volume' => 5,
                         'elocationId' => 'e14107',
                         'pdf' => null,
@@ -333,9 +333,9 @@ final class Builder
                             ->withDoi('10.7554/eLife.14107')
                             ->withAuthorLine('Yongjian Huang et al')
                             ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
-                            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
-                            ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
-                            ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+                            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+                            ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+                            ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withVolume(5)
                             ->withElocationId('e14107')
                             ->withSubjects(new ArraySequence([]));
@@ -349,9 +349,9 @@ final class Builder
                             ->withAuthorLine('Author et al')
                             ->withTitle('Article 1 title')
                             ->withTitlePrefix('Article 1 title prefix')
-                            ->withPublished(new DateTimeImmutable('2000-01-01T00:00:00+00:00'))
-                            ->withVersionDate(new DateTimeImmutable('1999-12-31T00:00:00+00:00'))
-                            ->withStatusDate(new DateTimeImmutable('1999-12-31T00:00:00+00:00'))
+                            ->withPublished(new DateTimeImmutable('2000-01-01T00:00:00Z'))
+                            ->withVersionDate(new DateTimeImmutable('1999-12-31T00:00:00Z'))
+                            ->withStatusDate(new DateTimeImmutable('1999-12-31T00:00:00Z'))
                             ->withVolume(1)
                             ->withElocationId('e1')
                             ->withPdf('http://www.example.com/')
@@ -399,7 +399,7 @@ final class Builder
                             ->withId(359325)
                             ->withTitle('Media coverage: Slime can see')
                             ->withImpactStatement('In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.')
-                            ->withPublished(new DateTimeImmutable('2016-07-08T08:33:25+00:00'))
+                            ->withPublished(new DateTimeImmutable('2016-07-08T08:33:25Z'))
                             ->withSubjects(new ArraySequence([
                                 self::for(Subject::class)->sample('biophysics-structural-biology'),
                             ]))
@@ -413,7 +413,7 @@ final class Builder
                         return $builder
                             ->withId('tropical-disease')
                             ->withTitle('Tropical disease')
-                            ->withPublishedDate(new DateTimeImmutable('2000-01-01T00:00:00+00:00'))
+                            ->withPublishedDate(new DateTimeImmutable('2000-01-01T00:00:00Z'))
                             ->withThumbnail(Builder::for(Image::class)->sample('thumbnail'))
                             ->withSelectedCurator($pjha = Builder::for(Person::class)->sample('pjha'))
                             ->withCurators(new ArraySequence([
@@ -438,7 +438,7 @@ final class Builder
                                 ])
                             ))
                             ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
-                            ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28+00:00'))
+                            ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28Z'))
                             ->withContent(new ArraySequence([new Paragraph('Interview 1 text')]));
                     },
                 ],
@@ -484,7 +484,7 @@ final class Builder
                         return $builder
                             ->withNumber(29)
                             ->withTitle('April/May 2016')
-                            ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42+00:00'))
+                            ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42Z'))
                             ->withPromiseOfBanner(self::for(Image::class)->sample('banner'))
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withSources([

@@ -141,7 +141,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_be_published()
     {
         $with = $this->builder
-            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
             ->__invoke();
         $withOut = $this->builder
             ->withPublished(null)
@@ -157,7 +157,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_a_published_date()
     {
         $with = $this->builder
-            ->withPublished($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->withPublished($date = new DateTimeImmutable('2016-03-28T00:00:00Z'))
             ->__invoke();
         $withOut = $this->builder
             ->withPublished(null)
@@ -173,7 +173,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_a_version_date()
     {
         $with = $this->builder
-            ->withVersionDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->withVersionDate($date = new DateTimeImmutable('2016-03-28T00:00:00Z'))
             ->__invoke();
         $withOut = $this->builder
             ->withVersionDate(null)
@@ -189,7 +189,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_a_status_date()
     {
         $with = $this->builder
-            ->withStatusDate($date = new DateTimeImmutable('2016-03-28T00:00:00+00:00'))
+            ->withStatusDate($date = new DateTimeImmutable('2016-03-28T00:00:00Z'))
             ->__invoke();
         $withOut = $this->builder
             ->withStatusDate(null)

@@ -59,7 +59,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
         if ($value instanceof Traversable) {
             return iterator_to_array($value);
         } elseif ($value instanceof DateTimeInterface) {
-            return $value->format(DATE_ATOM);
+            return $value->format('Y-m-d\TH:i:s\Z');
         } elseif ($value instanceof PromiseInterface) {
             return $this->normalise($value->wait());
         }

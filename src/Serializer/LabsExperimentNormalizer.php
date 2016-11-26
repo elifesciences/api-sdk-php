@@ -72,7 +72,7 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         return new LabsExperiment(
             $data['number'],
             $data['title'],
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
             $data['impactStatement'] ?? null,
             $data['image']['banner'],
             $data['image']['thumbnail'],
@@ -127,7 +127,7 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         $data = [
             'number' => $object->getNumber(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
             'image' => [
                 'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
             ],

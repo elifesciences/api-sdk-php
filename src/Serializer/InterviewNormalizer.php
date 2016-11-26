@@ -73,7 +73,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
                 $data['interviewee']['cv']
             ),
             $data['title'],
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
             $data['impactStatement'] ?? null,
             $data['content']
         );
@@ -127,7 +127,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             'id' => $object->getId(),
             'interviewee' => $this->normalizer->normalize($object->getInterviewee()->getPerson(), $format, $context),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
         ];
 
         if (!empty($context['type'])) {

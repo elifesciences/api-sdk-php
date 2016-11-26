@@ -92,7 +92,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['number'],
             $data['title'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
             $data['image']['banner'],
             $data['image']['thumbnail'],
             $data['sources'],
@@ -150,7 +150,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
         $data = [
             'number' => $object->getNumber(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
             'image' => ['thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context)],
             'sources' => array_map(function (PodcastEpisodeSource $source) {
                 return [

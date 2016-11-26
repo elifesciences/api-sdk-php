@@ -75,8 +75,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['id'],
             $data['title'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['starts']),
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['ends']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['starts']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['ends']),
             !empty($data['timezone']) ? new DateTimeZone($data['timezone']) : null,
             $data['content'],
             $data['venue']
@@ -130,8 +130,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
-            'starts' => $object->getStarts()->format(DATE_ATOM),
-            'ends' => $object->getStarts()->format(DATE_ATOM),
+            'starts' => $object->getStarts()->format('Y-m-d\TH:i:s\Z'),
+            'ends' => $object->getStarts()->format('Y-m-d\TH:i:s\Z'),
         ];
 
         if (!empty($context['type'])) {

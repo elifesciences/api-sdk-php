@@ -113,7 +113,7 @@ final class MediumArticleNormalizerTest extends TestCase
                 [
                     'uri' => 'http://www.example.com/',
                     'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'impactStatement' => 'impact statement',
                     'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
                 ],
@@ -123,7 +123,7 @@ final class MediumArticleNormalizerTest extends TestCase
                 [
                     'uri' => 'http://www.example.com/',
                     'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                 ],
             ],
         ];

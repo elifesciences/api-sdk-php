@@ -150,9 +150,9 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
-        $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']) : null;
-        $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
-        $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
+        $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']) : null;
+        $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['versionDate']) : null;
+        $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['statusDate']) : null;
 
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
     }
@@ -211,13 +211,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         ];
 
         if ($object->getPublishedDate()) {
-            $data['published'] = $object->getPublishedDate()->format(DATE_ATOM);
+            $data['published'] = $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z');
         }
         if ($object->getVersionDate()) {
-            $data['versionDate'] = $object->getPublishedDate()->format(DATE_ATOM);
+            $data['versionDate'] = $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z');
         }
         if ($object->getStatusDate()) {
-            $data['statusDate'] = $object->getStatusDate()->format(DATE_ATOM);
+            $data['statusDate'] = $object->getStatusDate()->format('Y-m-d\TH:i:s\Z');
         }
 
         if ($object->getTitlePrefix()) {

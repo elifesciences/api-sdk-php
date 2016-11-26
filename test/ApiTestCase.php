@@ -727,9 +727,9 @@ abstract class ApiTestCase extends TestCase
             'doi' => '10.7554/eLife.'.$id,
             'title' => 'Article '.$id.' title',
             'titlePrefix' => 'Article '.$id.' title prefix',
-            'published' => '2000-01-01T00:00:00+00:00',
-            'versionDate' => '1999-12-31T00:00:00+00:00',
-            'statusDate' => '1999-12-31T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
+            'versionDate' => '1999-12-31T00:00:00Z',
+            'statusDate' => '1999-12-31T00:00:00Z',
             'volume' => 1,
             'issue' => 1,
             'elocationId' => 'e'.$id,
@@ -1045,7 +1045,7 @@ abstract class ApiTestCase extends TestCase
         $blogArticle = [
             'id' => $id,
             'title' => 'Blog article '.$id.' title',
-            'published' => '2000-01-01T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -1072,8 +1072,8 @@ abstract class ApiTestCase extends TestCase
             'id' => 'event'.$number,
             'title' => 'Event '.$number.' title',
             'impactStatement' => 'Event '.$number.' impact statement',
-            'starts' => '2000-01-01T00:00:00+00:00',
-            'ends' => '2100-01-01T00:00:00+00:00',
+            'starts' => '2000-01-01T00:00:00Z',
+            'ends' => '2100-01-01T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -1114,7 +1114,7 @@ abstract class ApiTestCase extends TestCase
             ],
             'title' => 'Interview '.$id.' title',
             'impactStatement' => 'Interview '.$id.' impact statement',
-            'published' => '2000-01-01T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -1142,7 +1142,7 @@ abstract class ApiTestCase extends TestCase
             'number' => $number,
             'title' => 'Labs experiment '.$number.' title',
             'impactStatement' => 'Labs experiment '.$number.' impact statement',
-            'published' => '2000-01-01T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1193,7 +1193,7 @@ abstract class ApiTestCase extends TestCase
             'uri' => 'http://www.example.com/mediumArticle'.$number,
             'title' => 'Medium article '.$number.' title',
             'impactStatement' => 'Subject '.$number.' impact statement',
-            'published' => '2000-01-01T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
             'image' => [
                 'alt' => '',
                 'sizes' => [
@@ -1279,7 +1279,7 @@ abstract class ApiTestCase extends TestCase
             'number' => $number,
             'title' => 'Podcast episode '.$number.' title',
             'impactStatement' => 'Podcast episode '.$number.' impact statement',
-            'published' => '2000-01-01T00:00:00+00:00',
+            'published' => '2000-01-01T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1344,7 +1344,7 @@ abstract class ApiTestCase extends TestCase
             'title' => ucfirst($id),
             'subTitle' => ucfirst($id).' subtitle',
             'impactStatement' => ucfirst($id).' impact statement',
-            'updated' => '2000-01-01T00:00:00+00:00',
+            'updated' => '2000-01-01T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1402,7 +1402,7 @@ abstract class ApiTestCase extends TestCase
                     'id' => '359325',
                     'title' => 'Media coverage: Slime can see',
                     'impactStatement' => 'In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.',
-                    'published' => '2016-07-08T08:33:25+00:00',
+                    'published' => '2016-07-08T08:33:25Z',
                     'subjects' => [
                         [
                             'id' => 'biophysics-structural-biology',
@@ -1421,9 +1421,9 @@ abstract class ApiTestCase extends TestCase
                     'doi' => '10.7554/eLife.14107',
                     'authorLine' => 'Yongjian Huang et al',
                     'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                    'published' => '2016-03-28T00:00:00+00:00',
-                    'versionDate' => '2016-03-28T00:00:00+00:00',
-                    'statusDate' => '2016-03-28T00:00:00+00:00',
+                    'published' => '2016-03-28T00:00:00Z',
+                    'versionDate' => '2016-03-28T00:00:00Z',
+                    'statusDate' => '2016-03-28T00:00:00Z',
                     'volume' => 5,
                     'elocationId' => 'e14107',
                 ],
@@ -1432,7 +1432,7 @@ abstract class ApiTestCase extends TestCase
                 $podcastEpisode = [
                     'number' => 29,
                     'title' => 'April/May 2016',
-                    'published' => '2016-05-27T13:19:42+00:00',
+                    'published' => '2016-05-27T13:19:42Z',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

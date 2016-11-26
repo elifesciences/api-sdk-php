@@ -144,7 +144,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -185,7 +185,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -225,7 +225,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -255,7 +255,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
-                    'published' => $date->format(DATE_ATOM),
+                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

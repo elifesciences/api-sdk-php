@@ -23,7 +23,7 @@ final class MediumArticleNormalizer implements NormalizerInterface, Denormalizer
             $data['uri'],
             $data['title'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
             !empty($data['image']) ? $this->denormalizer->denormalize($data['image'], Image::class, $format,
                 $context) : null
         );
@@ -42,7 +42,7 @@ final class MediumArticleNormalizer implements NormalizerInterface, Denormalizer
         $data = [
             'uri' => $object->getUri(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
         ];
 
         if ($object->getImpactStatement()) {

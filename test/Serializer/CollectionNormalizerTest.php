@@ -131,7 +131,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withTitle('Tropical disease')
                     ->withPromiseOfSubTitle('A selection of papers')
                     ->withImpactStatement('eLife has published papers on many...')
-                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->sample('epidemiology-global-health'),
@@ -171,7 +171,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'title' => 'Tropical disease',
                     'subTitle' => 'A selection of papers',
                     'impactStatement' => 'eLife has published papers on many...',
-                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'updated' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'banner' => [
                             'alt' => '',
@@ -245,9 +245,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                             'volume' => 4,
                             'elocationId' => 'e09560',
-                            'published' => '2015-09-10T00:00:00+00:00',
-                            'versionDate' => '2015-09-10T00:00:00+00:00',
-                            'statusDate' => '2015-09-10T00:00:00+00:00',
+                            'published' => '2015-09-10T00:00:00Z',
+                            'versionDate' => '2015-09-10T00:00:00Z',
+                            'statusDate' => '2015-09-10T00:00:00Z',
                             'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
                             'subjects' => [
                                 0 => [
@@ -277,7 +277,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'id' => '359325',
                             'title' => 'Media coverage: Slime can see',
                             'impactStatement' => 'In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.',
-                            'published' => '2016-07-08T08:33:25+00:00',
+                            'published' => '2016-07-08T08:33:25Z',
                             'subjects' => [
                                 0 => [
                                     'id' => 'biophysics-structural-biology',
@@ -296,7 +296,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ],
                             'title' => 'Controlling traffic',
                             'impactStatement' => 'Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.',
-                            'published' => '2016-01-29T16:22:28+00:00',
+                            'published' => '2016-01-29T16:22:28Z',
                         ],
                     ],
                     'relatedContent' => [
@@ -311,16 +311,16 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                             'volume' => 5,
                             'elocationId' => 'e14107',
-                            'published' => '2016-03-28T00:00:00+00:00',
-                            'versionDate' => '2016-03-28T00:00:00+00:00',
-                            'statusDate' => '2016-03-28T00:00:00+00:00',
+                            'published' => '2016-03-28T00:00:00Z',
+                            'versionDate' => '2016-03-28T00:00:00Z',
+                            'statusDate' => '2016-03-28T00:00:00Z',
                         ],
                     ],
                     'podcastEpisodes' => [
                         0 => [
                             'number' => 29,
                             'title' => 'April/May 2016',
-                            'published' => '2016-05-27T13:19:42+00:00',
+                            'published' => '2016-05-27T13:19:42Z',
                             'image' => [
                                 'thumbnail' => [
                                     'alt' => '',
@@ -363,7 +363,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false])
@@ -380,7 +380,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'updated' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'banner' => [
                             'alt' => '',
@@ -433,9 +433,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'doi' => '10.7554/eLife.14107',
                             'authorLine' => 'Yongjian Huang et al',
                             'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                            'published' => '2016-03-28T00:00:00+00:00',
-                            'versionDate' => '2016-03-28T00:00:00+00:00',
-                            'statusDate' => '2016-03-28T00:00:00+00:00',
+                            'published' => '2016-03-28T00:00:00Z',
+                            'versionDate' => '2016-03-28T00:00:00Z',
+                            'statusDate' => '2016-03-28T00:00:00Z',
                             'volume' => 5,
                             'elocationId' => 'e14107',
                         ],
@@ -452,7 +452,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withTitle('Tropical disease')
                     ->withPromiseOfSubTitle('1 subtitle')
                     ->withImpactStatement('eLife has published papers on many...')
-                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->sample('epidemiology-global-health'),
@@ -488,7 +488,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'id' => '1',
                     'title' => 'Tropical disease',
                     'impactStatement' => 'eLife has published papers on many...',
-                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'updated' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -541,7 +541,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26+00:00'))
+                    ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSelectedCurator(
                         $selectedCurator = Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false])
@@ -560,7 +560,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'updated' => '2015-09-16T11:19:26+00:00',
+                    'updated' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

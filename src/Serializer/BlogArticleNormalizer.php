@@ -64,7 +64,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         return new BlogArticle(
             $data['id'],
             $data['title'],
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
             $data['impactStatement'] ?? null,
             $data['content'],
             $data['subjects']
@@ -118,7 +118,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(DATE_ATOM),
+            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
         ];
 
         if (!empty($context['type'])) {

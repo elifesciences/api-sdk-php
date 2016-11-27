@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
@@ -55,7 +56,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable(), null, rejection_for('No banner'),
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'),
             $thumbnail, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
@@ -122,7 +123,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable();
+        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = new Image('',
             [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
         $thumbnail = new Image('', [

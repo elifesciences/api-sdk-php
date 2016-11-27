@@ -54,7 +54,7 @@ final class EventNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable(), new DateTimeImmutable(), null,
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
@@ -121,8 +121,8 @@ final class EventNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $starts = new DateTimeImmutable();
-        $ends = new DateTimeImmutable();
+        $starts = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $ends = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $timezone = new DateTimeZone('Europe/London');
         $venue = new Place(null, null, ['venue']);
 

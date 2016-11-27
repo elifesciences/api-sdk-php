@@ -92,7 +92,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['number'],
             $data['title'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             $data['image']['banner'],
             $data['image']['thumbnail'],
             $data['sources'],

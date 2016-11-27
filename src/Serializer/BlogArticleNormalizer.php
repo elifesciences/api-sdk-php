@@ -64,7 +64,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         return new BlogArticle(
             $data['id'],
             $data['title'],
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             $data['impactStatement'] ?? null,
             $data['content'],
             $data['subjects']

@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use BadMethodCallException;
 use DateTimeImmutable;
+use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Address;
@@ -68,7 +69,7 @@ final class Builder
                     return [
                         'id' => '359325',
                         'title' => 'Media coverage: Slime can see',
-                        'published' => new DateTimeImmutable(),
+                        'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'impactStatement' => null,
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
@@ -82,7 +83,7 @@ final class Builder
                         'title' => 'Tropical disease',
                         'subTitle' => promise_for(null),
                         'impactStatement' => null,
-                        'publishedDate' => new DateTimeImmutable(),
+                        'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'subjects' => new ArraySequence([]),
@@ -123,7 +124,7 @@ final class Builder
                             new ArraySequence([])
                         ),
                         'title' => 'Controlling traffic',
-                        'published' => new DateTimeImmutable(),
+                        'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'impactStatement' => null,
                         'content' => $this->rejectSequence(),
                     ];
@@ -160,7 +161,7 @@ final class Builder
                         'number' => 4,
                         'title' => 'September 2013',
                         'impactStatement' => null,
-                        'published' => new DateTimeImmutable(),
+                        'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'banner' => rejection_for('No banner'),
                         'thumbnail' => new Image('thumbnail', [900 => 'https://placehold.it/900x450']),
                         'sources' => [

@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
@@ -59,7 +60,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable(), rejection_for('No banner'),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), rejection_for('No banner'),
             new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -133,7 +134,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable();
+        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = new Image('',
             [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
         $thumbnail = new Image('', [

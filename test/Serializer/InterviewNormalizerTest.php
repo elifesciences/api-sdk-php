@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
@@ -57,7 +58,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable(), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -129,7 +130,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $date = new DateTimeImmutable(), 'impact statement', new ArraySequence([new Paragraph('text')])
+                    $date = new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement', new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [

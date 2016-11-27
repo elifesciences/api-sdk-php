@@ -86,7 +86,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['title'],
             $data['subTitle'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['updated']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
             promise_for($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
             $data['subjects'],

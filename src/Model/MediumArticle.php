@@ -26,7 +26,7 @@ final class MediumArticle implements Model
         $this->uri = $uri;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
-        $this->published = $published->setTimezone(new DateTimeZone('UTC'));
+        $this->published = $published;
         $this->image = $image;
     }
 

@@ -73,7 +73,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
                 $data['interviewee']['cv']
             ),
             $data['title'],
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             $data['impactStatement'] ?? null,
             $data['content']
         );

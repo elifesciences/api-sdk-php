@@ -75,8 +75,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['id'],
             $data['title'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['starts']),
-            DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['ends']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['starts']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['ends']),
             !empty($data['timezone']) ? new DateTimeZone($data['timezone']) : null,
             $data['content'],
             $data['venue']

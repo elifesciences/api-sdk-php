@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -94,7 +95,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_published_date()
     {
         $collection = $this->builder
-            ->withPublishedDate($publishedDate = new DateTimeImmutable())
+            ->withPublishedDate($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
             ->__invoke();
 
         $this->assertEquals($publishedDate, $collection->getPublishedDate());

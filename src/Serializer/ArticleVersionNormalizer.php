@@ -150,9 +150,9 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
-        $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['published']) : null;
-        $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['versionDate']) : null;
-        $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $data['statusDate']) : null;
+        $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']) : null;
+        $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
+        $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
 
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
     }

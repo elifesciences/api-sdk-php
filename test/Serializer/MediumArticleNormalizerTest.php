@@ -48,7 +48,7 @@ final class MediumArticleNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $mediumArticle = new MediumArticle('id', 'name', null, new DateTimeImmutable());
+        $mediumArticle = new MediumArticle('id', 'name', null, new DateTimeImmutable('now', new DateTimeZone('Z')));
 
         return [
             'medium article' => [$mediumArticle, null, true],
@@ -104,7 +104,7 @@ final class MediumArticleNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
-        $date = (new DateTimeImmutable())->setTimezone(new DateTimeZone('UTC'));
+        $date = (new DateTimeImmutable('now', new DateTimeZone('Z')))->setTimezone(new DateTimeZone('Z'));
         $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
 
         return [

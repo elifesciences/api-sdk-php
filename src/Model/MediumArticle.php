@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use DateTimeZone;
 
 final class MediumArticle implements Model
 {

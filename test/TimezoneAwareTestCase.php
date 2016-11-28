@@ -4,14 +4,14 @@ namespace test\eLife\ApiSdk;
 
 trait TimezoneAwareTestCase
 {
-    private $originalTimezone;
+    private static $originalTimezone;
 
     /**
-     * @before
+     * @beforeClass
      */
-    final public function setUpTimezone()
+    final public static function recordTimezone()
     {
-        $this->originalTimezone = date_default_timezone_get();
+        self::$originalTimezone = date_default_timezone_get();
     }
 
     /**
@@ -19,6 +19,6 @@ trait TimezoneAwareTestCase
      */
     final public function resetTimezone()
     {
-        date_default_timezone_set($this->originalTimezone);
+        date_default_timezone_set(self::$originalTimezone);
     }
 }

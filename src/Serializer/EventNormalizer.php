@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -130,8 +131,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
-            'starts' => $object->getStarts()->format('Y-m-d\TH:i:s\Z'),
-            'ends' => $object->getStarts()->format('Y-m-d\TH:i:s\Z'),
+            'starts' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
+            'ends' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {

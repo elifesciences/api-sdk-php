@@ -3,6 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -42,7 +43,7 @@ final class MediumArticleNormalizer implements NormalizerInterface, Denormalizer
         $data = [
             'uri' => $object->getUri(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
+            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if ($object->getImpactStatement()) {

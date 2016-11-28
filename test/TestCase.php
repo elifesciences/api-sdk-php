@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk;
 
 use DateTimeInterface;
 use DateTimeZone;
+use eLife\ApiSdk\ApiSdk;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectionException;
 use PHPUnit_Framework_TestCase;
@@ -62,7 +63,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
         } elseif ($value instanceof DateTimeInterface) {
             $this->assertEquals(new DateTimeZone('Z'), $value->getTimezone());
 
-            return $value->format('Y-m-d\TH:i:s\Z');
+            return $value->format(ApiSdk::DATE_FORMAT);
         } elseif ($value instanceof PromiseInterface) {
             return $this->normalise($value->wait());
         }

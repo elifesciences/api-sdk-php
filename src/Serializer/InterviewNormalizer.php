@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -127,7 +128,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             'id' => $object->getId(),
             'interviewee' => $this->normalizer->normalize($object->getInterviewee()->getPerson(), $format, $context),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
+            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {

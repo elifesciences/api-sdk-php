@@ -173,7 +173,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -302,7 +302,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -356,7 +356,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
                     'impactStatement' => 'Podcast episode 1 impact statement',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -394,7 +394,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

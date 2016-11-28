@@ -150,7 +150,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 [
                     'id' => 'id',
                     'title' => 'title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'content' => [
                         [
@@ -170,7 +170,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 [
                     'id' => 'id',
                     'title' => 'title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -186,7 +186,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 [
                     'id' => 'blog-article-1',
                     'title' => 'Blog article 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Blog article 1 impact statement',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1 name'],
@@ -204,7 +204,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 [
                     'id' => 'blog-article-1',
                     'title' => 'Blog article 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
                     $test->mockBlogArticleCall(1);

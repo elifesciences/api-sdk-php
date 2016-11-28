@@ -149,7 +149,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'content' => [
                         [
@@ -173,7 +173,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -199,7 +199,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         'orcid' => '0000-0002-1825-0097',
                     ],
                     'title' => 'Interview 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Interview 1 impact statement',
                     'type' => 'interview',
                 ],
@@ -222,7 +222,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'Interview 1 title',
-                    'published' => $date->format('Y-m-d\TH:i:s\Z'),
+                    'published' => $date->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
                     $test->mockInterviewCall('interview1');

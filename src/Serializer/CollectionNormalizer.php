@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Collection;
@@ -141,7 +142,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();
         }
-        $data['updated'] = $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z');
+        $data['updated'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         if (!$object->getSubjects()->isEmpty()) {

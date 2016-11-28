@@ -134,8 +134,8 @@ final class EventNormalizerTest extends ApiTestCase
                 [
                     'id' => 'id',
                     'title' => 'title',
-                    'starts' => $starts->format('Y-m-d\TH:i:s\Z'),
-                    'ends' => $ends->format('Y-m-d\TH:i:s\Z'),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'timezone' => $timezone->getName(),
                     'content' => [
@@ -154,8 +154,8 @@ final class EventNormalizerTest extends ApiTestCase
                 [
                     'id' => 'id',
                     'title' => 'title',
-                    'starts' => $starts->format('Y-m-d\TH:i:s\Z'),
-                    'ends' => $ends->format('Y-m-d\TH:i:s\Z'),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -171,8 +171,8 @@ final class EventNormalizerTest extends ApiTestCase
                 [
                     'id' => 'event1',
                     'title' => 'Event 1 title',
-                    'starts' => $starts->format('Y-m-d\TH:i:s\Z'),
-                    'ends' => $ends->format('Y-m-d\TH:i:s\Z'),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Event 1 impact statement',
                     'timezone' => $timezone->getName(),
                     'type' => 'event',
@@ -188,8 +188,8 @@ final class EventNormalizerTest extends ApiTestCase
                 [
                     'id' => 'event1',
                     'title' => 'Event 1 title',
-                    'starts' => $starts->format('Y-m-d\TH:i:s\Z'),
-                    'ends' => $ends->format('Y-m-d\TH:i:s\Z'),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
                     $test->mockEventCall(1);

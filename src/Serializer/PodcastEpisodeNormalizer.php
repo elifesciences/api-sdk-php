@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
@@ -150,7 +151,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
         $data = [
             'number' => $object->getNumber(),
             'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z'),
+            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
             'image' => ['thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context)],
             'sources' => array_map(function (PodcastEpisodeSource $source) {
                 return [

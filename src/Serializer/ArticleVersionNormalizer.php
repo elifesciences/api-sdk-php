@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
@@ -211,13 +212,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         ];
 
         if ($object->getPublishedDate()) {
-            $data['published'] = $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z');
+            $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         }
         if ($object->getVersionDate()) {
-            $data['versionDate'] = $object->getPublishedDate()->format('Y-m-d\TH:i:s\Z');
+            $data['versionDate'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         }
         if ($object->getStatusDate()) {
-            $data['statusDate'] = $object->getStatusDate()->format('Y-m-d\TH:i:s\Z');
+            $data['statusDate'] = $object->getStatusDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getTitlePrefix()) {

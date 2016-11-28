@@ -30,15 +30,15 @@ final class Date
 
     public function toString() : string
     {
-        $time = mktime(0, 0, 0, $this->month ?? 1, $this->day ?? 1, $this->year);
+        $time = gmmktime(0, 0, 0, $this->month ?? 1, $this->day ?? 1, $this->year);
 
         if (null === $this->month) {
             return $this->year;
         } elseif (null === $this->day) {
-            return date('Y-m', $time);
+            return gmdate('Y-m', $time);
         }
 
-        return date('Y-m-d', $time);
+        return gmdate('Y-m-d', $time);
     }
 
     public function getYear() : int
@@ -64,14 +64,14 @@ final class Date
 
     public function format() : string
     {
-        $time = mktime(0, 0, 0, $this->month ?? 1, $this->day ?? 1, $this->year);
+        $time = gmmktime(0, 0, 0, $this->month ?? 1, $this->day ?? 1, $this->year);
 
         if (null === $this->month) {
             return $this->year;
         } elseif (null === $this->day) {
-            return date('F Y', $time);
+            return gmdate('F Y', $time);
         }
 
-        return date('F j, Y', $time);
+        return gmdate('F j, Y', $time);
     }
 }

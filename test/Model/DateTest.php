@@ -4,9 +4,12 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Date;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\TimezoneAwareTestCase;
 
 final class DateTest extends PHPUnit_Framework_TestCase
 {
+    use TimezoneAwareTestCase;
+
     /**
      * @test
      */
@@ -98,6 +101,29 @@ final class DateTest extends PHPUnit_Framework_TestCase
             'day' => ['2000-01-01', 'January 1, 2000'],
             'month' => ['2000-01', 'January 2000'],
             'year' => ['2000', '2000'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider timezoneProvider
+     */
+    public function it_works_in_different_timezones(string $timezone = null, string $string, string $format)
+    {
+        if ($timezone) {
+            date_default_timezone_set($timezone);
+        }
+
+        $date = Date::fromString($string);
+        $this->assertEquals($string, $date->toString());
+        $this->assertEquals($format, $date->format());
+    }
+
+    public function timezoneProvider() : array
+    {
+        return [
+            'UTC' => [null, '2011-12-30', 'December 30, 2011'],
+            'http://www.bbc.co.uk/news/world-asia-16351377' => ['Pacific/Apia', '2011-12-30', 'December 30, 2011'],
         ];
     }
 }

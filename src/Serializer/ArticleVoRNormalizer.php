@@ -235,7 +235,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                                 return $this->denormalizer->denormalize($recipient, Author::class, $format, $context);
                             }, $award['recipients']))
                         );
-                    }, $funding['awards'])),
+                    }, $funding['awards'] ?? [])),
                     $funding['statement']
                 );
             });
@@ -410,28 +410,30 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             }
 
             if ($article->getFunding()) {
-                $data['funding']['awards'] = $article->getFunding()->getAwards()
-                    ->map(function (FundingAward $award) use ($format, $context) {
-                        $source = $this->normalizer->normalize($award->getSource()->getPlace(), $format, $context);
-                        if ($award->getSource()->getFunderId()) {
-                            $source['funderId'] = $award->getSource()->getFunderId();
-                        }
+                if ($article->getFunding()->getAwards()->notEmpty()) {
+                    $data['funding']['awards'] = $article->getFunding()->getAwards()
+                        ->map(function (FundingAward $award) use ($format, $context) {
+                            $source = $this->normalizer->normalize($award->getSource()->getPlace(), $format, $context);
+                            if ($award->getSource()->getFunderId()) {
+                                $source['funderId'] = $award->getSource()->getFunderId();
+                            }
 
-                        $data = [
-                            'id' => $award->getId(),
-                            'source' => $source,
-                            'recipients' => $award->getRecipients()
-                                ->map(function (Author $author) use ($format, $context) {
-                                    return $this->normalizer->normalize($author, $format, $context);
-                                })->toArray(),
-                        ];
+                            $data = [
+                                'id' => $award->getId(),
+                                'source' => $source,
+                                'recipients' => $award->getRecipients()
+                                    ->map(function (Author $author) use ($format, $context) {
+                                        return $this->normalizer->normalize($author, $format, $context);
+                                    })->toArray(),
+                            ];
 
-                        if ($award->getAwardId()) {
-                            $data['awardId'] = $award->getAwardId();
-                        }
+                            if ($award->getAwardId()) {
+                                $data['awardId'] = $award->getAwardId();
+                            }
 
-                        return $data;
-                    })->toArray();
+                            return $data;
+                        })->toArray();
+                }
                 $data['funding']['statement'] = $article->getFunding()->getStatement();
             }
 

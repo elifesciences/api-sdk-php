@@ -19,7 +19,7 @@ final class Funding
     }
 
     /**
-     * @return Sequence
+     * @return Sequence|FundingAward[]
      */
     public function getAwards(): Sequence
     {

@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Collection;
@@ -153,7 +154,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([]), new ArraySequence([
+                    new EmptySequence(), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter 1 title', 0, 'Chapter impact statement',
                             new ArraySequence([
                                 Builder::for(ArticlePoA::class)
@@ -288,14 +289,14 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'https://www.example.com/episode.mp3'
                         ),
                     ],
-                    new ArraySequence([]),
+                    new EmptySequence(),
                     new ArraySequence([
                         new PodcastEpisodeChapter(
                             1,
                             'Chapter title',
                             0,
                             null,
-                            new ArraySequence([])),
+                            new EmptySequence()),
                     ])
                 ),
                 [],
@@ -346,7 +347,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([]), new ArraySequence([
+                    new EmptySequence(), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
                             Builder::for(ArticlePoA::class)->sample('1'),
                         ])),
@@ -387,8 +388,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([]), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new ArraySequence([])),
+                    new EmptySequence(), new ArraySequence([
+                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
                     ])),
                 ['snippet' => true],
                 [

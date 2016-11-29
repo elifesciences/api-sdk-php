@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Address;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -30,7 +31,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withStreetAddress($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withStreetAddress(new ArraySequence())
+            ->withStreetAddress(new EmptySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getStreetAddress());
@@ -46,7 +47,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withLocality($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withLocality(new ArraySequence())
+            ->withLocality(new EmptySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getLocality());
@@ -62,7 +63,7 @@ final class AddressTest extends PHPUnit_Framework_TestCase
             ->withArea($sequence = new ArraySequence(['foo', 'bar']))
             ->__invoke();
         $withOut = Builder::for(Address::class)
-            ->withArea(new ArraySequence())
+            ->withArea(new EmptySequence())
             ->__invoke();
 
         $this->assertSame($sequence, $with->getArea());

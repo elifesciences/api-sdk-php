@@ -12,13 +12,13 @@ use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
+use test\eLife\ApiSdk\TestCase;
 
-final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
+final class PersonAuthorNormalizerTest extends TestCase
 {
     /** @var PersonAuthorNormalizer */
     private $normalizer;
@@ -161,7 +161,7 @@ final class PersonAuthorNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_people(array $json, PersonAuthor $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, PersonAuthor::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PersonAuthor::class));
     }
 
     public function denormalizeProvider() : array

@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
@@ -186,7 +187,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    null, promise_for(null), new ArraySequence([]), promise_for(null)),
+                    null, promise_for(null), new EmptySequence(), promise_for(null)),
                 [],
                 [
                     'name' => [
@@ -232,7 +233,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    null, promise_for(null), new ArraySequence([]), promise_for(null)),
+                    null, promise_for(null), new EmptySequence(), promise_for(null)),
                 ['snippet' => true],
                 [
                     'name' => [

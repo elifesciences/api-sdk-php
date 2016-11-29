@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -15,7 +16,7 @@ final class GroupAuthorTest extends AuthorTest
      */
     public function it_has_a_name()
     {
-        $author = new GroupAuthor('name', new ArraySequence([]));
+        $author = new GroupAuthor('name', new EmptySequence());
 
         $this->assertSame('name', $author->getName());
         $this->assertSame('name', $author->toString());
@@ -28,7 +29,7 @@ final class GroupAuthorTest extends AuthorTest
     {
         $with = new GroupAuthor('name',
             $people = new ArraySequence([new PersonAuthor(new PersonDetails('preferred name', 'index name'))]));
-        $withOut = new GroupAuthor('name', new ArraySequence([]));
+        $withOut = new GroupAuthor('name', new EmptySequence());
 
         $this->assertEquals($people, $with->getPeople());
         $this->assertEmpty($withOut->getPeople());
@@ -39,9 +40,9 @@ final class GroupAuthorTest extends AuthorTest
      */
     public function it_may_have_groups()
     {
-        $with = new GroupAuthor('name', new ArraySequence([]),
+        $with = new GroupAuthor('name', new EmptySequence(),
             $groups = ['group' => [new PersonDetails('preferred name', 'index name')]]);
-        $withOut = new GroupAuthor('name', new ArraySequence([]));
+        $withOut = new GroupAuthor('name', new EmptySequence());
 
         $this->assertEquals($groups, $with->getGroups());
         $this->assertEmpty($withOut->getGroups());
@@ -56,7 +57,7 @@ final class GroupAuthorTest extends AuthorTest
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author {
-        return new GroupAuthor('name', new ArraySequence([]), [], $affiliations,
+        return new GroupAuthor('name', new EmptySequence(), [], $affiliations,
             $competingInterests, $contribution, $emailAddresses, $equalContributionGroups, $phoneNumbers,
             $postalAddresses);
     }

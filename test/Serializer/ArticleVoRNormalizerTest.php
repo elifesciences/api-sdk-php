@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -402,18 +403,18 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
                     ->withPromiseOfBanner(null)
-                    ->withKeywords(new ArraySequence([]))
+                    ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
-                    ->withAppendices(new ArraySequence([]))
-                    ->withReferences(new ArraySequence([]))
-                    ->withAdditionalFiles(new ArraySequence([]))
-                    ->withGeneratedDataSets(new ArraySequence([]))
-                    ->withUsedDataSets(new ArraySequence([]))
-                    ->withAcknowledgements(new ArraySequence([]))
-                    ->withEthics(new ArraySequence([]))
+                    ->withAppendices(new EmptySequence())
+                    ->withReferences(new EmptySequence())
+                    ->withAdditionalFiles(new EmptySequence())
+                    ->withGeneratedDataSets(new EmptySequence())
+                    ->withUsedDataSets(new EmptySequence())
+                    ->withAcknowledgements(new EmptySequence())
+                    ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
                     ->withPromiseOfDecisionLetter(null)
-                    ->withDecisionLetterDescription(new ArraySequence([]))
+                    ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
                     ->__invoke(),
                 [],
@@ -525,18 +526,18 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
                     ->withPromiseOfBanner(null)
-                    ->withKeywords(new ArraySequence([]))
+                    ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
-                    ->withAppendices(new ArraySequence([]))
-                    ->withReferences(new ArraySequence([]))
-                    ->withAdditionalFiles(new ArraySequence([]))
-                    ->withGeneratedDataSets(new ArraySequence([]))
-                    ->withUsedDataSets(new ArraySequence([]))
-                    ->withAcknowledgements(new ArraySequence([]))
-                    ->withEthics(new ArraySequence([]))
+                    ->withAppendices(new EmptySequence())
+                    ->withReferences(new EmptySequence())
+                    ->withAdditionalFiles(new EmptySequence())
+                    ->withGeneratedDataSets(new EmptySequence())
+                    ->withUsedDataSets(new EmptySequence())
+                    ->withAcknowledgements(new EmptySequence())
+                    ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
                     ->withPromiseOfDecisionLetter(null)
-                    ->withDecisionLetterDescription(new ArraySequence([]))
+                    ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
                     ->__invoke(),
                 ['snippet' => true],

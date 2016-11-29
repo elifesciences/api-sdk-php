@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\PersonResearch;
@@ -34,7 +35,7 @@ final class PersonResearchTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                new ArraySequence([]),
+                new EmptySequence(),
                 [],
             ],
             'collection' => [

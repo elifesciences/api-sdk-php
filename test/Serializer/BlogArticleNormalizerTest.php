@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -165,7 +166,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new BlogArticle('id', 'title', $date, null, new ArraySequence([new Paragraph('text')]),
-                    new ArraySequence([])),
+                    new EmptySequence()),
                 [],
                 [
                     'id' => 'id',
@@ -199,7 +200,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null,
-                    new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([])),
+                    new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new EmptySequence()),
                 ['snippet' => true],
                 [
                     'id' => 'blog-article-1',

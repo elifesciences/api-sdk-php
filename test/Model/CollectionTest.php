@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
@@ -137,8 +138,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = $this->builder
             ->withSubjects($subjects)
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($expected, $collection->getSubjects()->toArray());
     }
@@ -156,7 +156,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                new ArraySequence([]),
+                new EmptySequence(),
                 [],
             ],
             'collection' => [
@@ -174,8 +174,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $collection = $this->builder
             ->withSelectedCurator($person = Builder::dummy(Person::class))
             ->withSelectedCuratorEtAl(true)
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($person, $collection->getSelectedCurator());
         $this->assertTrue($collection->selectedCuratorEtAl());
@@ -188,8 +187,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     {
         $collection = $this->builder
             ->withCurators($curators = new ArraySequence([Builder::dummy(Person::class)]))
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($curators, $collection->getCurators());
     }
@@ -203,8 +201,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withContent($content = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($content, $collection->getContent());
     }
@@ -218,8 +215,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withRelatedContent($relatedContent = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($relatedContent, $collection->getRelatedContent());
     }
@@ -233,8 +229,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withPodcastEpisodes($podcastEpisodes = new ArraySequence([
                 Builder::dummy(PodcastEpisode::class),
             ]))
-            ->__invoke()
-        ;
+            ->__invoke();
 
         $this->assertEquals($podcastEpisodes, $collection->getPodcastEpisodes());
     }

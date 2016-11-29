@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
@@ -15,13 +16,13 @@ use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
+use test\eLife\ApiSdk\TestCase;
 
-final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
+final class GroupAuthorNormalizerTest extends TestCase
 {
     /** @var GroupAuthorNormalizer */
     private $normalizer;
@@ -61,7 +62,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $groupAuthor = new GroupAuthor('group', new ArraySequence([]));
+        $groupAuthor = new GroupAuthor('group', new EmptySequence());
 
         return [
             'group author' => [$groupAuthor, null, true],
@@ -158,7 +159,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new GroupAuthor('group', new ArraySequence([])),
+                new GroupAuthor('group', new EmptySequence()),
                 [
                     'type' => 'group',
                     'name' => 'group',
@@ -202,7 +203,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_group_authors(array $json, GroupAuthor $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, GroupAuthor::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, GroupAuthor::class));
     }
 
     public function denormalizeProvider() : array
@@ -290,7 +291,7 @@ final class GroupAuthorNormalizerTest extends PHPUnit_Framework_TestCase
                     'type' => 'group',
                     'name' => 'group',
                 ],
-                $groupAuthor = new GroupAuthor('group', new ArraySequence([])),
+                $groupAuthor = new GroupAuthor('group', new EmptySequence()),
             ],
         ];
     }

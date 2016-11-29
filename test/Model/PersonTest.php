@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
@@ -93,7 +94,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
     public function it_may_have_research()
     {
         $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
-            promise_for($research = new PersonResearch(new ArraySequence([]), ['focus'], [])),
+            promise_for($research = new PersonResearch(new EmptySequence(), ['focus'], [])),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
         $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
@@ -113,7 +114,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
             rejection_for('Research should not be unwrapped'), $profile = new ArraySequence([new Paragraph('profile')]),
             rejection_for('Competing interests should not be unwrapped'));
         $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
-            rejection_for('Research should not be unwrapped'), new ArraySequence([]),
+            rejection_for('Research should not be unwrapped'), new EmptySequence(),
             rejection_for('Competing interests should not be unwrapped'));
 
         $this->assertEquals($profile, $with->getProfile());

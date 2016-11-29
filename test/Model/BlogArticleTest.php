@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
@@ -110,7 +111,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                new ArraySequence([]),
+                new EmptySequence(),
                 [],
             ],
             'collection' => [

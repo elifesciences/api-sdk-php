@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
@@ -161,7 +162,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new Interview('id',
-                    new Interviewee(new PersonDetails('preferred name', 'index name'), new ArraySequence([])),
+                    new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
                     'title', $date, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -209,7 +210,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 $interview = new Interview('interview1',
-                    new Interviewee(new PersonDetails('preferred name', 'index name'), new ArraySequence([])),
+                    new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
                     'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],

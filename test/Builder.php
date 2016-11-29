@@ -6,6 +6,7 @@ use BadMethodCallException;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Appendix;
@@ -58,9 +59,9 @@ final class Builder
                 Address::class => function () {
                     return [
                         'formatted' => new ArraySequence(['foo', 'bar']),
-                        'streetAddress' => new ArraySequence(),
-                        'locality' => new ArraySequence(),
-                        'area' => new ArraySequence(),
+                        'streetAddress' => new EmptySequence(),
+                        'locality' => new EmptySequence(),
+                        'area' => new EmptySequence(),
                         'country' => null,
                         'postalCode' => null,
                     ];
@@ -74,7 +75,7 @@ final class Builder
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
                         ]),
-                        'subjects' => new ArraySequence([]),
+                        'subjects' => new EmptySequence(),
                     ];
                 },
                 Collection::class => function () {
@@ -86,15 +87,15 @@ final class Builder
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                        'subjects' => new ArraySequence([]),
+                        'subjects' => new EmptySequence(),
                         'selectedCurator' => self::dummy(Person::class),
                         'selectedCuratorEtAl' => false,
                         'curators' => new ArraySequence([
                             self::dummy(Person::class),
                         ]),
-                        'content' => new ArraySequence(),
-                        'relatedContent' => new ArraySequence(),
-                        'podcastEpisodes' => new ArraySequence(),
+                        'content' => new EmptySequence(),
+                        'relatedContent' => new EmptySequence(),
+                        'podcastEpisodes' => new EmptySequence(),
                     ];
                 },
                 DataSet::class => function () {
@@ -121,7 +122,7 @@ final class Builder
                         'id' => '1',
                         'interviewee' => new Interviewee(
                             new PersonDetails('Ramanath Hegde', 'Hegde, Ramanath'),
-                            new ArraySequence([])
+                            new EmptySequence()
                         ),
                         'title' => 'Controlling traffic',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
@@ -152,7 +153,7 @@ final class Builder
                         'type' => 'senior-editor',
                         'image' => null,
                         'research' => promise_for(null),
-                        'profile' => new ArraySequence(),
+                        'profile' => new EmptySequence(),
                         'competingInterests' => promise_for(null),
                     ];
                 },
@@ -170,7 +171,7 @@ final class Builder
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'subjects' => new ArraySequence(),
+                        'subjects' => new EmptySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
                     ];
                 },
@@ -190,7 +191,7 @@ final class Builder
                         'volume' => 5,
                         'elocationId' => 'e14107',
                         'pdf' => null,
-                        'subjects' => new ArraySequence(),
+                        'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
                         'issue' => promise_for(1),
@@ -215,7 +216,7 @@ final class Builder
                         'volume' => 4,
                         'elocationId' => 'e09560',
                         'pdf' => null,
-                        'subjects' => new ArraySequence(),
+                        'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]))),
                         'issue' => promise_for(1),
@@ -339,7 +340,7 @@ final class Builder
                             ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withVolume(5)
                             ->withElocationId('e14107')
-                            ->withSubjects(new ArraySequence([]));
+                            ->withSubjects(new EmptySequence());
                     },
                     '1' => function ($builder) {
                         return $builder
@@ -456,7 +457,7 @@ final class Builder
                         if (!$context['snippet']) {
                             $person
                                 ->withPromiseOfResearch('')
-                                ->withProfile(new ArraySequence([]))
+                                ->withProfile(new EmptySequence())
                                 ->withPromiseOfCompetingInterests('');
                         }
 
@@ -473,7 +474,7 @@ final class Builder
                         if (!$context['snippet']) {
                             $person
                                 ->withPromiseOfResearch('')
-                                ->withProfile(new ArraySequence([]))
+                                ->withProfile(new EmptySequence())
                                 ->withPromiseOfCompetingInterests('');
                         }
 

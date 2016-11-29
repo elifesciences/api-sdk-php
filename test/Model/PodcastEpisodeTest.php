@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Image;
@@ -162,7 +163,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
 
         return [
             'none' => [
-                new ArraySequence([]),
+                new EmptySequence(),
                 [],
             ],
             'collection' => [
@@ -181,7 +182,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
-            $chapters = new ArraySequence([new PodcastEpisodeChapter(2, 'chapter', 0, null, new ArraySequence([]))]));
+            $chapters = new ArraySequence([new PodcastEpisodeChapter(2, 'chapter', 0, null, new EmptySequence())]));
 
         $this->assertEquals($chapters, $podcastEpisode->getChapters());
     }

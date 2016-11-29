@@ -14,7 +14,7 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_sequence()
     {
-        $collection = new ArraySequence([]);
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
 
         $this->assertInstanceOf(Sequence::class, $collection);
     }

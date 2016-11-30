@@ -9,6 +9,11 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -44,6 +49,8 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $collection = $this->builder
             ->withId('tropical-disease')
             ->__invoke();
+
+        $this->assertInstanceOf(HasId::class, $collection);
         $this->assertSame('tropical-disease', $collection->getId());
     }
 
@@ -86,6 +93,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withImpactStatement(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('Tropical disease impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -113,6 +121,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             )
             ->__invoke();
 
+        $this->assertInstanceOf(HasBanner::class, $collection);
         $this->assertEquals($image, $collection->getBanner());
     }
 
@@ -127,6 +136,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             )
             ->__invoke();
 
+        $this->assertInstanceOf(HasThumbnail::class, $collection);
         $this->assertEquals($image, $collection->getThumbnail());
     }
 
@@ -140,6 +150,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withSubjects($subjects)
             ->__invoke();
 
+        $this->assertInstanceOf(HasSubjects::class, $collection);
         $this->assertEquals($expected, $collection->getSubjects()->toArray());
     }
 

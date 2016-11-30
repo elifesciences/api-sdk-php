@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Collection implements Model
+final class Collection implements Model, HasBanner, HasId, HasImpactStatement, HasSubjects, HasThumbnail
 {
     private $id;
     private $title;

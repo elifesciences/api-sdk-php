@@ -8,6 +8,9 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -40,6 +43,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
             ->withId('14107')
             ->__invoke();
 
+        $this->assertInstanceOf(HasId::class, $article);
         $this->assertSame('14107', $article->getId());
     }
 
@@ -88,6 +92,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
             ->withDoi('10.7554/eLife.14107')
             ->__invoke();
 
+        $this->assertInstanceOf(HasDoi::class, $article);
         $this->assertSame('10.7554/eLife.14107', $article->getDoi());
     }
 
@@ -250,6 +255,7 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
             ->withSubjects($subjects)
             ->__invoke();
 
+        $this->assertInstanceOf(HasSubjects::class, $article);
         $this->assertEquals($subjects, $article->getSubjects());
     }
 

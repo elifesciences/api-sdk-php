@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class PodcastEpisode implements Model
+final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasSubjects, HasThumbnail
 {
     private $number;
     private $title;

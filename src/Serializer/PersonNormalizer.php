@@ -149,8 +149,8 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         $data['id'] = $object->getId();
         $data['type'] = $object->getType();
 
-        if ($object->getImage()) {
-            $data['image'] = $this->normalizer->normalize($object->getImage(), $format, $context);
+        if ($object->getThumbnail()) {
+            $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {

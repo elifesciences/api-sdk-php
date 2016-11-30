@@ -6,6 +6,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\HasDoi;
 use PHPUnit_Framework_TestCase;
 
 final class ArticleSectionTest extends PHPUnit_Framework_TestCase
@@ -29,6 +30,7 @@ final class ArticleSectionTest extends PHPUnit_Framework_TestCase
         $with = new ArticleSection(new EmptySequence(), '10.1000/182');
         $withOut = new ArticleSection(new EmptySequence());
 
+        $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
     }

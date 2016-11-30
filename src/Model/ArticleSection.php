@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class ArticleSection
+final class ArticleSection implements HasContent, HasDoi
 {
     private $content;
     private $doi;

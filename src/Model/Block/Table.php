@@ -2,13 +2,15 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\File;
 
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table implements Block
+final class Table implements Block, Asset
 {
     private $doi;
     private $id;
@@ -27,7 +29,7 @@ final class Table implements Block
         string $id = null,
         string $label = null,
         string $title = null,
-        array $caption,
+        Sequence $caption,
         array $tables,
         array $footer = [],
         array $sourceData = []
@@ -75,9 +77,9 @@ final class Table implements Block
     }
 
     /**
-     * @return Block[]
+     * @return Sequence|Block[]
      */
-    public function getCaption() : array
+    public function getCaption() : Sequence
     {
         return $this->caption;
     }

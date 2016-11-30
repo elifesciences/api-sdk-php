@@ -2,6 +2,9 @@
 
 namespace test\eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
@@ -17,9 +20,10 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_is_a_block()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertInstanceOf(Block::class, $video);
+        $this->assertInstanceOf(Asset::class, $video);
     }
 
     /**
@@ -28,8 +32,8 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_doi()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $with = new Video('10.1000/182', null, null, null, [], $sources, null, 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $with = new Video('10.1000/182', null, null, null, new EmptySequence(), $sources, null, 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
@@ -41,8 +45,8 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_id()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $with = new Video(null, 'id', null, null, [], $sources, null, 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $with = new Video(null, 'id', null, null, new EmptySequence(), $sources, null, 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertSame('id', $with->getId());
         $this->assertNull($withOut->getId());
@@ -54,8 +58,8 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_label()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $with = new Video(null, null, 'label', null, [], $sources, null, 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $with = new Video(null, null, 'label', null, new EmptySequence(), $sources, null, 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertSame('label', $with->getLabel());
         $this->assertNull($withOut->getLabel());
@@ -67,8 +71,8 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_title()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $with = new Video(null, null, null, 'title', [], $sources, null, 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $with = new Video(null, null, null, 'title', new EmptySequence(), $sources, null, 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertSame('title', $with->getTitle());
         $this->assertNull($withOut->getTitle());
@@ -80,9 +84,9 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_caption()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $caption = [new Paragraph('caption')];
+        $caption = new ArraySequence([new Paragraph('caption')]);
         $with = new Video(null, null, null, null, $caption, $sources, '', 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertEquals($caption, $with->getCaption());
         $this->assertEmpty($withOut->getCaption());
@@ -94,7 +98,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_has_sources()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertEquals($sources, $video->getSources());
     }
@@ -105,8 +109,8 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_image()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $with = new Video(null, null, null, null, [], $sources, 'http://www.example.com/image.jpeg', 200, 100);
-        $withOut = new Video(null, null, null, null, [], $sources, null, 200, 100);
+        $with = new Video(null, null, null, null, new EmptySequence(), $sources, 'http://www.example.com/image.jpeg', 200, 100);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, null, 200, 100);
 
         $this->assertEquals('http://www.example.com/image.jpeg', $with->getImage());
         $this->assertEmpty($withOut->getImage());
@@ -118,7 +122,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_has_a_width()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertEquals(200, $video->getWidth());
     }
@@ -129,7 +133,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_has_a_height()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertEquals(100, $video->getHeight());
     }
@@ -140,9 +144,9 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_source_data()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $sourceData = [new File(null, null, null, null, [], 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
-        $with = new Video(null, null, null, null, [], $sources, '', 200, 100, $sourceData);
-        $withOut = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $sourceData = [new File(null, null, null, null, new EmptySequence(), 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
+        $with = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, $sourceData);
+        $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertEquals($sourceData, $with->getSourceData());
         $this->assertEmpty($withOut->getSourceData());

@@ -4,6 +4,8 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit_Framework_TestCase;
@@ -20,6 +22,7 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
             ->withId('id')
             ->__invoke();
 
+        $this->assertInstanceOf(HasId::class, $dataSet);
         $this->assertSame('id', $dataSet->getId());
     }
 
@@ -115,6 +118,7 @@ final class DataSetTest extends PHPUnit_Framework_TestCase
             ->withDoi(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
     }

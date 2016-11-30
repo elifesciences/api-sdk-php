@@ -10,6 +10,10 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
@@ -40,6 +44,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasId::class, $blogArticle);
         $this->assertSame('id', $blogArticle->getId());
     }
 
@@ -70,6 +75,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -97,6 +103,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
         );
 
+        $this->assertInstanceOf(HasSubjects::class, $blogArticle);
         $this->assertEquals($expected, $blogArticle->getSubjects()->toArray());
     }
 
@@ -129,10 +136,10 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
         $content = [
             new Block\Paragraph('foo'),
             new Block\Image(
-                new Block\ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], [])
+                new Block\ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
             ),
             new Block\Image(
-                new Block\ImageFile('10.1000/182', 'foo', 'bar', 'baz', [new Block\Paragraph('qux')], 'quxx',
+                new Block\ImageFile('10.1000/182', 'foo', 'bar', 'baz', new ArraySequence([new Block\Paragraph('qux')]), 'quxx',
                     'http://www.example.com/image.jpg', ['corge'], ['grault'])
             ),
             new Block\YouTube('foo', 300, 200),
@@ -142,6 +149,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasContent::class, $blogArticle);
         $this->assertEquals($content, $blogArticle->getContent()->toArray());
     }
 }

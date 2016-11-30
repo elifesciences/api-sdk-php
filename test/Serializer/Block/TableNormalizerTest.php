@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
@@ -9,12 +11,12 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class TableNormalizerTest extends PHPUnit_Framework_TestCase
+final class TableNormalizerTest extends TestCase
 {
     /** @var TableNormalizer */
     private $normalizer;
@@ -52,7 +54,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $table = new Table(null, null, null, null, [], ['<table></table>'], [], []);
+        $table = new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []);
 
         return [
             'table' => [$table, null, true],
@@ -74,9 +76,9 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Table('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('paragraph1')], ['<table></table>'],
+                new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), ['<table></table>'],
                     [new Paragraph('footer')], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
                 [
@@ -118,7 +120,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new Table(null, null, null, null, [], ['<table></table>'], [], []),
+                new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []),
                 [
                     'type' => 'table',
                     'tables' => ['<table></table>'],
@@ -160,7 +162,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_tables(array $json, Table $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Table::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Table::class));
     }
 
     public function denormalizeProvider() : array
@@ -204,9 +206,9 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Table('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('caption')], ['<table></table>'],
+                new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('caption')]), ['<table></table>'],
                     [new Paragraph('footer')], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
             ],
@@ -215,7 +217,7 @@ final class TableNormalizerTest extends PHPUnit_Framework_TestCase
                     'type' => 'table',
                     'tables' => ['<table></table>'],
                 ],
-                new Table(null, null, null, null, [], ['<table></table>'], [], []),
+                new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []),
             ],
         ];
     }

@@ -3,8 +3,9 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasId;
 
-final class MathML implements Block
+final class MathML implements Block, HasId
 {
     private $id;
     private $label;

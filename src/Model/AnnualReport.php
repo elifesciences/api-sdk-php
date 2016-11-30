@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class AnnualReport implements Model
+final class AnnualReport implements Model, HasImpactStatement
 {
     private $year;
     private $uri;

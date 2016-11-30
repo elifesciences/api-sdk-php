@@ -8,6 +8,9 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
@@ -37,6 +40,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
+        $this->assertInstanceOf(HasId::class, $event);
         $this->assertSame('id', $event->getId());
     }
 
@@ -64,6 +68,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -120,6 +125,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new ArraySequence($content),
             rejection_for('Event venue should not be unwrapped'));
 
+        $this->assertInstanceOf(HasContent::class, $event);
         $this->assertEquals($content, $event->getContent()->toArray());
     }
 

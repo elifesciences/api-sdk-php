@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion
+final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, HasImpactStatement, HasReferences, HasThumbnail
 {
     private $impactStatement;
     private $banner;
@@ -141,9 +141,6 @@ final class ArticleVoR extends ArticleVersion
         return $this->appendices;
     }
 
-    /**
-     * @return Sequence|Reference[]
-     */
     public function getReferences() : Sequence
     {
         return $this->references;

@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-interface Reference
+interface Reference extends HasId
 {
     public function getId() : string;
 

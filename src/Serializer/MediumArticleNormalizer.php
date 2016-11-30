@@ -50,8 +50,8 @@ final class MediumArticleNormalizer implements NormalizerInterface, Denormalizer
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if ($object->getImage()) {
-            $data['image'] = $this->normalizer->normalize($object->getImage(), $format, $context);
+        if ($object->getThumbnail()) {
+            $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         }
 
         return $data;

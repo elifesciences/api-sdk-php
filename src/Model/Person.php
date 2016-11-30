@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Person implements Model
+final class Person implements Model, HasId, HasThumbnail
 {
     private $id;
     private $details;
@@ -54,7 +54,7 @@ final class Person implements Model
     /**
      * @return Image|null
      */
-    public function getImage()
+    public function getThumbnail()
     {
         return $this->image;
     }

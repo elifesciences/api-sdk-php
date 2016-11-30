@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
@@ -49,7 +51,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $section = new Section('foo', null, []);
+        $section = new Section('foo', null, new EmptySequence());
 
         return [
             'section' => [$section, null, true],
@@ -71,7 +73,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Section('title', 'id', [new Paragraph('paragraph')]),
+                new Section('title', 'id', new ArraySequence([new Paragraph('paragraph')])),
                 [
                     'type' => 'section',
                     'title' => 'title',
@@ -85,7 +87,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new Section('title', null, [new Paragraph('paragraph')]),
+                new Section('title', null, new ArraySequence([new Paragraph('paragraph')])),
                 [
                     'type' => 'section',
                     'title' => 'title',
@@ -151,7 +153,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Section('title', 'id', [new Paragraph('paragraph')]),
+                new Section('title', 'id', new ArraySequence([new Paragraph('paragraph')])),
             ],
             'minimum' => [
                 [
@@ -164,7 +166,7 @@ final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Section('title', null, [new Paragraph('paragraph')]),
+                new Section('title', null, new ArraySequence([new Paragraph('paragraph')])),
             ],
         ];
     }

@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class FundingAward
+final class FundingAward implements HasId
 {
     private $id;
     private $source;

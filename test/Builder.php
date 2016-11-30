@@ -228,7 +228,7 @@ final class Builder
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'keywords' => new ArraySequence(['Article 09560 keyword']),
                         'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
-                        'content' => new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]),
+                        'content' => new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]),
                         'appendices' => new ArraySequence([
                             new Appendix(
                                 'app1',
@@ -237,7 +237,7 @@ final class Builder
                                     new Section(
                                         'Appendix 1 title',
                                         'app1-1',
-                                        [new Paragraph('Appendix 1 text')]
+                                        new ArraySequence([new Paragraph('Appendix 1 text')])
                                     ),
                                 ]),
                                 '10.7554/eLife.09560.app1'
@@ -259,7 +259,7 @@ final class Builder
                                 new Place(null, null, ['publisher'])
                             ),
                         ]),
-                        'additionalFiles' => new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
@@ -387,7 +387,7 @@ final class Builder
                             ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
-                            ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]))
+                            ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
                             ->withAcknowledgements(new ArraySequence([new Paragraph('acknowledgements')]))
                             ->withEthics(new ArraySequence([new Paragraph('ethics')]))
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))

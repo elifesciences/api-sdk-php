@@ -3,6 +3,8 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
@@ -32,6 +34,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
             new PersonDetails('preferred name', 'index name'),
             'title', new Place(null, null, ['publisher']));
 
+        $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
     }
 
@@ -110,6 +113,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
             'title',
             new Place(null, null, ['publisher']));
 
+        $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
     }

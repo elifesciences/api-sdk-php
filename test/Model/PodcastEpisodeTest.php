@@ -8,6 +8,10 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
@@ -78,6 +82,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -107,6 +112,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasBanner::class, $podcastEpisode);
         $this->assertEquals($image, $podcastEpisode->getBanner());
     }
 
@@ -121,6 +127,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasThumbnail::class, $podcastEpisode);
         $this->assertEquals($image, $podcastEpisode->getThumbnail());
     }
 
@@ -149,6 +156,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')], $subjects,
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasSubjects::class, $podcastEpisode);
         $this->assertEquals($expected, $podcastEpisode->getSubjects()->toArray());
     }
 

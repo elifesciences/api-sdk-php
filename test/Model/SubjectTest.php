@@ -2,6 +2,10 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
@@ -30,6 +34,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
         $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
             rejection_for('No banner'), rejection_for('Image should not be unwrapped'));
 
+        $this->assertInstanceOf(HasId::class, $subject);
         $this->assertSame('id', $subject->getId());
     }
 
@@ -54,6 +59,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
         $withOut = new Subject('id', 'name', promise_for(null), rejection_for('No banner'),
             rejection_for('Image should not be unwrapped'));
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -67,6 +73,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
             promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])),
             rejection_for('No thumbnail'));
 
+        $this->assertInstanceOf(HasBanner::class, $subject);
         $this->assertEquals($image, $subject->getBanner());
     }
 
@@ -78,6 +85,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
         $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
             rejection_for('No banner'), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
 
+        $this->assertInstanceOf(HasThumbnail::class, $subject);
         $this->assertEquals($image, $subject->getThumbnail());
     }
 }

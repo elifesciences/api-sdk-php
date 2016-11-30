@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Place
+final class Place implements HasId
 {
     private $id;
     private $coordinates;

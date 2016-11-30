@@ -5,6 +5,8 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -49,6 +51,7 @@ final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
         $with = new PodcastEpisodeChapter(1, 'chapter', 0, 'impact statement', new EmptySequence());
         $withOut = new PodcastEpisodeChapter(1, 'chapter', 0, null, new EmptySequence());
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -62,6 +65,7 @@ final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
             Builder::dummy(ArticlePoA::class),
         ]));
 
+        $this->assertInstanceOf(HasContent::class, $chapter);
         $this->assertEquals($content, $chapter->getContent());
     }
 }

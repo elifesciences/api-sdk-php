@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\File;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -19,9 +20,9 @@ final class FileNormalizer implements NormalizerInterface, DenormalizerInterface
     public function denormalize($data, $class, $format = null, array $context = []) : File
     {
         return new File($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'] ?? null,
-            array_map(function (array $block) {
+            new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? []), $data['mediaType'], $data['uri'], $data['filename']);
+            }, $data['caption'] ?? [])), $data['mediaType'], $data['uri'], $data['filename']);
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -56,10 +57,10 @@ final class FileNormalizer implements NormalizerInterface, DenormalizerInterface
             $data['title'] = $object->getTitle();
         }
 
-        if ($object->getCaption()) {
-            $data['caption'] = array_map(function (Block $block) {
+        if ($object->getCaption()->notEmpty()) {
+            $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
-            }, $object->getCaption());
+            })->toArray();
         }
 
         return $data;

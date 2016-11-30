@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
@@ -21,9 +22,9 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
     public function denormalize($data, $class, $format = null, array $context = []) : Video
     {
         return new Video($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'] ?? null,
-            array_map(function (array $block) {
+            new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? []), array_map(function (array $source) {
+            }, $data['caption'] ?? [])), array_map(function (array $source) {
                 return new VideoSource($source['mediaType'], $source['uri']);
             }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height'],
             array_map(function (array $file) {
@@ -72,10 +73,10 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['title'] = $object->getTitle();
         }
 
-        if ($object->getCaption()) {
-            $data['caption'] = array_map(function (Block $block) {
+        if ($object->getCaption()->notEmpty()) {
+            $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
-            }, $object->getCaption());
+            })->toArray();
         }
 
         if ($object->getImage()) {

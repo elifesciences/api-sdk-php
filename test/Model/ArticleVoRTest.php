@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -13,6 +14,11 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
+use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasReferences;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -40,6 +46,7 @@ final class ArticleVoRTest extends ArticleTest
             ->withImpactStatement(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -56,6 +63,7 @@ final class ArticleVoRTest extends ArticleTest
             ->withPromiseOfBanner(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasBanner::class, $with);
         $this->assertEquals($banner, $with->getBanner());
         $this->assertNull($withOut->getBanner());
     }
@@ -72,6 +80,7 @@ final class ArticleVoRTest extends ArticleTest
             ->withThumbnail(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasThumbnail::class, $with);
         $this->assertEquals($thumbnail, $with->getThumbnail());
         $this->assertNull($withOut->getThumbnail());
     }
@@ -110,9 +119,10 @@ final class ArticleVoRTest extends ArticleTest
     public function it_has_content()
     {
         $article = $this->builder
-            ->withContent($content = new ArraySequence([new Section('Article 09560 section title', 'article09560section', [new Paragraph('Article 09560 text')])]))
+            ->withContent($content = new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
             ->__invoke();
 
+        $this->assertInstanceOf(HasContent::class, $article);
         $this->assertEquals($content, $article->getContent());
     }
 
@@ -129,7 +139,7 @@ final class ArticleVoRTest extends ArticleTest
                     new Section(
                         'Appendix 1 title',
                         'app1-1',
-                        [new Paragraph('Appendix 1 text')]
+                        new ArraySequence([new Paragraph('Appendix 1 text')])
                     ),
                 ]),
                 '10.7554/eLife.09560.app1'
@@ -169,6 +179,7 @@ final class ArticleVoRTest extends ArticleTest
             ->withReferences($references)
             ->__invoke();
 
+        $this->assertInstanceOf(HasReferences::class, $article);
         $this->assertEquals($references, $article->getReferences());
     }
 
@@ -178,10 +189,10 @@ final class ArticleVoRTest extends ArticleTest
     public function it_may_have_additional_files()
     {
         $article = $this->builder
-            ->withAdditionalFiles(new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
+            ->withAdditionalFiles(new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
             ->__invoke();
 
-        $this->assertEquals($files = new ArraySequence([new File(null, null, null, null, [], 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]), $article->getAdditionalFiles());
+        $this->assertEquals($files = new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]), $article->getAdditionalFiles());
     }
 
     /**

@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Interview implements Model
+final class Interview implements Model, HasContent, HasId, HasImpactStatement
 {
     private $id;
     private $interviewee;

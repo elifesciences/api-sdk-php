@@ -2,10 +2,12 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\File;
 
-final class ImageFile
+final class ImageFile implements Asset
 {
     private $doi;
     private $id;
@@ -25,7 +27,7 @@ final class ImageFile
         string $id = null,
         string $label = null,
         string $title = null,
-        array $caption,
+        Sequence $caption,
         string $altText,
         string $uri,
         array $attribution = [],
@@ -75,9 +77,9 @@ final class ImageFile
     }
 
     /**
-     * @return Block[]
+     * @return Sequence|Block[]
      */
-    public function getCaption() : array
+    public function getCaption() : Sequence
     {
         return $this->caption;
     }

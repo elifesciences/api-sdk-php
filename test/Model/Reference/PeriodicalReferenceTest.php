@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -34,6 +35,7 @@ final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             new Place(null, null, ['periodical']), new StringReferencePage('pages'));
 
+        $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
     }
 

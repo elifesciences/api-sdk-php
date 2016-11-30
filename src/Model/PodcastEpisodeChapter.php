@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class PodcastEpisodeChapter
+final class PodcastEpisodeChapter implements HasContent, HasImpactStatement
 {
     private $number;
     private $title;

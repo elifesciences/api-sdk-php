@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -11,12 +13,12 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
+final class VideoNormalizerTest extends TestCase
 {
     /** @var VideoNormalizer */
     private $normalizer;
@@ -55,7 +57,7 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, [], $sources, '', 200, 100);
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         return [
             'video' => [$video, null, true],
@@ -77,11 +79,11 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Video('10.1000/182', 'id', 'label', 'title', [new Paragraph('caption')],
+                new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
                     'http://www.example.com/image.jpeg', 200, 100,
                     [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
                 [
@@ -125,7 +127,7 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new Video(null, null, null, null, [],
+                new Video(null, null, null, null, new EmptySequence(),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')], null, 200, 100),
                 [
                     'type' => 'video',
@@ -175,7 +177,7 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_videos(array $json, Video $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Video::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Video::class));
     }
 
     public function denormalizeProvider() : array
@@ -221,11 +223,11 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Video('10.1000/182', 'id', 'label', 'title', [new Paragraph('caption')],
+                new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
                     'http://www.example.com/image.jpeg', 200, 100,
                     [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
             ],
@@ -241,7 +243,7 @@ final class VideoNormalizerTest extends PHPUnit_Framework_TestCase
                     'width' => 200,
                     'height' => 100,
                 ],
-                new Video(null, null, null, null, [],
+                new Video(null, null, null, null, new EmptySequence(),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')], null, 200, 100),
             ],
         ];

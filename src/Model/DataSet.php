@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class DataSet
+final class DataSet implements HasDoi, HasId
 {
     private $id;
     private $date;

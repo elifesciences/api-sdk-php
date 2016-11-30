@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\ImageFile;
@@ -60,9 +61,9 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     private function denormalizeImageFile(array $image) : ImageFile
     {
         return new ImageFile($image['doi'] ?? null, $image['id'] ?? null, $image['label'] ?? null,
-            $image['title'] ?? null, array_map(function (array $block) {
+            $image['title'] ?? null, new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $image['caption'] ?? []), $image['alt'], $image['uri'],
+            }, $image['caption'] ?? [])), $image['alt'], $image['uri'],
             $image['attribution'] ?? [], array_map(function (array $file) {
                 return $this->denormalizer->denormalize($file, File::class);
             }, $image['sourceData'] ?? []));
@@ -91,10 +92,10 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['title'] = $image->getTitle();
         }
 
-        if (count($image->getCaption())) {
-            $data['caption'] = array_map(function (Block $block) {
+        if ($image->getCaption()->notEmpty()) {
+            $data['caption'] = $image->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
-            }, $image->getCaption());
+            })->toArray();
         }
 
         if ($image->getAttribution()) {

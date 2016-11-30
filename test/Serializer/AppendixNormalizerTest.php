@@ -54,7 +54,7 @@ final class AppendixNormalizerTest extends ApiTestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ]),
             '10.7554/eLife.09560.app1'
@@ -117,7 +117,7 @@ final class AppendixNormalizerTest extends ApiTestCase
                 new Appendix(
                     'id',
                     'title',
-                    new ArraySequence([new Section('Section title', 'id-section', [new Paragraph('Text')])]),
+                    new ArraySequence([new Section('Section title', 'id-section', new ArraySequence([new Paragraph('Text')]))]),
                     '10.7554/eLife.09560.app1'
                 ),
                 [
@@ -143,7 +143,7 @@ final class AppendixNormalizerTest extends ApiTestCase
                 new Appendix(
                     'id',
                     'title',
-                    new ArraySequence([new Section('Section title', 'id-section', [new Paragraph('Text')])])
+                    new ArraySequence([new Section('Section title', 'id-section', new ArraySequence([new Paragraph('Text')]))])
                 ),
                 [
                     'id' => 'id',

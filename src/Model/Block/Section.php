@@ -2,9 +2,12 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasId;
 
-final class Section implements Block
+final class Section implements Block, HasContent, HasId
 {
     private $title;
     private $id;
@@ -13,7 +16,7 @@ final class Section implements Block
     /**
      * @internal
      */
-    public function __construct(string $title, string $id = null, array $content)
+    public function __construct(string $title, string $id = null, Sequence $content)
     {
         $this->title = $title;
         $this->id = $id;
@@ -37,9 +40,9 @@ final class Section implements Block
     }
 
     /**
-     * @return Block[]
+     * @return Sequence|Block[]
      */
-    public function getContent() : array
+    public function getContent() : Sequence
     {
         return $this->content;
     }

@@ -7,6 +7,9 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -27,6 +30,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasId::class, $interview);
         $this->assertSame('id', $interview->getId());
     }
 
@@ -93,6 +97,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -127,6 +132,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
             new ArraySequence($content)
         );
 
+        $this->assertInstanceOf(HasContent::class, $interview);
         $this->assertEquals($content, $interview->getContent()->toArray());
     }
 }

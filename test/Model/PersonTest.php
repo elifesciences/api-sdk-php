@@ -6,6 +6,8 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -40,6 +42,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
 
+        $this->assertInstanceOf(HasId::class, $person);
         $this->assertSame('id', $person->getId());
     }
 
@@ -72,7 +75,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_an_image()
+    public function it_may_have_a_thumbnail()
     {
         $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor',
             $image = new Image('', [900 => 'https://placehold.it/900x450']),
@@ -84,8 +87,9 @@ final class PersonTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
 
-        $this->assertEquals($image, $with->getImage());
-        $this->assertNull($withOut->getImage());
+        $this->assertInstanceOf(HasThumbnail::class, $with);
+        $this->assertEquals($image, $with->getThumbnail());
+        $this->assertNull($withOut->getThumbnail());
     }
 
     /**

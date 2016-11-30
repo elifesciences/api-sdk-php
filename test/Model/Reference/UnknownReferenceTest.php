@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
@@ -30,6 +31,7 @@ final class UnknownReferenceTest extends PHPUnit_Framework_TestCase
         $reference = new UnknownReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title');
 
+        $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
     }
 

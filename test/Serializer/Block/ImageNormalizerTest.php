@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\ImageFile;
@@ -10,12 +12,12 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ImageNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
+final class ImageNormalizerTest extends TestCase
 {
     /** @var ImageNormalizer */
     private $normalizer;
@@ -54,7 +56,7 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
     public function canNormalizeProvider() : array
     {
         $image = new Image(
-            new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], [])
+            new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
         );
 
         return [
@@ -78,14 +80,14 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
         return [
             'complete' => [
                 new Image(
-                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('paragraph1')],
+                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
                         'alt1', 'http://www.example.com/image1.jpg', ['attribution1'], [
-                            new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                            new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                                 'text/plain', 'http://www.example.com/image1.txt', 'image1.txt'),
                         ]),
-                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', [new Paragraph('paragraph3')],
+                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', new ArraySequence([new Paragraph('paragraph3')]),
                         'alt2', 'http://www.example.com/image2.jpg', ['attribution2'], [
-                            new File('10.1000/182.3', 'id4', 'label4', 'title4', [new Paragraph('paragraph4')],
+                            new File('10.1000/182.3', 'id4', 'label4', 'title4', new ArraySequence([new Paragraph('paragraph4')]),
                                 'text/plain', 'http://www.example.com/image2.txt', 'image2.txt'),
                         ])
                 ),
@@ -163,7 +165,7 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
             ],
             'minimum' => [
                 new Image(
-                    new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], [])
+                    new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
                 ),
                 [
                     'type' => 'image',
@@ -207,7 +209,7 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_images(array $json, Image $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, Image::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Image::class));
     }
 
     public function denormalizeProvider() : array
@@ -286,14 +288,14 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                 ],
                 new Image(
-                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', [new Paragraph('paragraph1')],
+                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
                         'alt1', 'http://www.example.com/image1.jpg', ['attribution1'], [
-                            new File('10.1000/182.1', 'id2', 'label2', 'title2', [new Paragraph('paragraph2')],
+                            new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                                 'text/plain', 'http://www.example.com/image1.txt', 'image1.txt'),
                         ]),
-                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', [new Paragraph('paragraph3')],
+                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', new ArraySequence([new Paragraph('paragraph3')]),
                         'alt2', 'http://www.example.com/image2.jpg', ['attribution2'], [
-                            new File('10.1000/182.3', 'id4', 'label4', 'title4', [new Paragraph('paragraph4')],
+                            new File('10.1000/182.3', 'id4', 'label4', 'title4', new ArraySequence([new Paragraph('paragraph4')]),
                                 'text/plain', 'http://www.example.com/image2.txt', 'image2.txt'),
                         ])
                 ),
@@ -305,7 +307,7 @@ final class ImageNormalizerTest extends PHPUnit_Framework_TestCase
                     'alt' => '',
                 ],
                 new Image(
-                    new ImageFile(null, null, null, null, [], '', 'http://www.example.com/image.jpg', [], [])
+                    new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
                 ),
             ],
         ];

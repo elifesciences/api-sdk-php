@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
+use eLife\ApiSdk\Model\HasId;
 use PHPUnit_Framework_TestCase;
 
 final class MathMLTest extends PHPUnit_Framework_TestCase
@@ -26,6 +27,7 @@ final class MathMLTest extends PHPUnit_Framework_TestCase
         $with = new MathML('id', null, '<math></math>');
         $withOut = new MathML(null, null, '<math></math>');
 
+        $this->assertInstanceOf(HasId::class, $with);
         $this->assertSame('id', $with->getId());
         $this->assertNull($withOut->getId());
     }

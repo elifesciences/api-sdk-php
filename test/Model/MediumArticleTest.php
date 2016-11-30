@@ -4,6 +4,8 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Model\Model;
@@ -50,6 +52,7 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
             null);
         $withOut = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null);
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -68,13 +71,14 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_an_image()
+    public function it_may_have_a_thumbnail()
     {
         $image = new Image('', [900 => 'https://placehold.it/900x450']);
         $with = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $image);
         $withOut = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null);
 
-        $this->assertEquals($image, $with->getImage());
-        $this->assertNull($withOut->getImage());
+        $this->assertInstanceOf(HasThumbnail::class, $with);
+        $this->assertEquals($image, $with->getThumbnail());
+        $this->assertNull($withOut->getThumbnail());
     }
 }

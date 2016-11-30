@@ -3,8 +3,9 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasId;
 
-final class YouTube implements Block
+final class YouTube implements Block, HasId
 {
     private $id;
     private $width;

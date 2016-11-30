@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -49,7 +51,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $box = new Box(null, null, null, 'foo', []);
+        $box = new Box(null, null, null, 'foo', new EmptySequence());
 
         return [
             'box' => [$box, null, true],
@@ -71,7 +73,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Box('10.1000/182', 'id', 'label', 'title', [new Paragraph('paragraph')]),
+                new Box('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('paragraph')])),
                 [
                     'type' => 'box',
                     'title' => 'title',
@@ -87,7 +89,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new Box(null, null, null, 'title', [new Paragraph('paragraph')]),
+                new Box(null, null, null, 'title', new ArraySequence([new Paragraph('paragraph')])),
                 [
                     'type' => 'box',
                     'title' => 'title',
@@ -155,7 +157,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
                     'id' => 'id',
                     'label' => 'label',
                 ],
-                new Box('10.1000/182', 'id', 'label', 'title', [new Paragraph('paragraph')]),
+                new Box('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('paragraph')])),
             ],
             'minimum' => [
                 [
@@ -168,7 +170,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Box(null, null, null, 'title', [new Paragraph('paragraph')]),
+                new Box(null, null, null, 'title', new ArraySequence([new Paragraph('paragraph')])),
             ],
         ];
     }

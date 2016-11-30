@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Section;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -18,9 +19,11 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
 
     public function denormalize($data, $class, $format = null, array $context = []) : Section
     {
-        return new Section($data['title'], $data['id'] ?? null, array_map(function (array $block) {
+        $data['content'] = new ArraySequence(array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
         }, $data['content']));
+
+        return new Section($data['title'], $data['id'] ?? null, $data['content']);
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -39,9 +42,9 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
         $data = [
             'type' => 'section',
             'title' => $object->getTitle(),
-            'content' => array_map(function (Block $block) {
+            'content' => $object->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
-            }, $object->getContent()),
+            })->toArray(),
         ];
 
         if ($object->getId()) {

@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 
-final class MediumArticle implements Model
+final class MediumArticle implements Model, HasImpactStatement, HasThumbnail
 {
     private $uri;
     private $title;
@@ -55,7 +55,7 @@ final class MediumArticle implements Model
     /**
      * @return Image|null
      */
-    public function getImage()
+    public function getThumbnail()
     {
         return $this->image;
     }

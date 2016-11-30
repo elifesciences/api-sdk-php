@@ -3,11 +3,12 @@
 namespace eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 
-final class ThesisReference implements Reference
+final class ThesisReference implements Reference, HasDoi
 {
     private $id;
     private $date;

@@ -2,10 +2,12 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\File;
 
-final class Video implements Block
+final class Video implements Block, Asset
 {
     private $doi;
     private $id;
@@ -26,7 +28,7 @@ final class Video implements Block
         string $id = null,
         string $label = null,
         string $title = null,
-        array $caption,
+        Sequence $caption,
         array $sources,
         string $image = null,
         int $width,
@@ -78,9 +80,9 @@ final class Video implements Block
     }
 
     /**
-     * @return Block[]
+     * @return Sequence|Block[]
      */
-    public function getCaption() : array
+    public function getCaption() : Sequence
     {
         return $this->caption;
     }

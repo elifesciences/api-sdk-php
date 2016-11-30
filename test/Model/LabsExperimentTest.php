@@ -7,6 +7,10 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsExperiment;
 use eLife\ApiSdk\Model\Model;
@@ -69,6 +73,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }
@@ -96,6 +101,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             $image, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasBanner::class, $labsExperiment);
         $this->assertEquals($image, $labsExperiment->getBanner());
     }
 
@@ -109,6 +115,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasThumbnail::class, $labsExperiment);
         $this->assertEquals($image, $labsExperiment->getThumbnail());
     }
 
@@ -123,6 +130,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']), new ArraySequence($content)
         );
 
+        $this->assertInstanceOf(HasContent::class, $labsExperiment);
         $this->assertEquals($content, $labsExperiment->getContent()->toArray());
     }
 }

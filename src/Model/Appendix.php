@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Appendix
+final class Appendix implements HasContent, HasDoi, HasId
 {
     private $id;
     private $title;

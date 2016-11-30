@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Model
+abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';

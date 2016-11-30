@@ -2,9 +2,13 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 
-final class Box implements Block
+final class Box implements Block, HasContent, HasDoi, HasId
 {
     private $doi;
     private $id;
@@ -20,7 +24,7 @@ final class Box implements Block
         string $id = null,
         string $label = null,
         string $title,
-        array $content
+        Sequence $content
     ) {
         $this->doi = $doi;
         $this->id = $id;
@@ -62,9 +66,9 @@ final class Box implements Block
     }
 
     /**
-     * @return Block[]
+     * @return Sequence|Block[]
      */
-    public function getContent() : array
+    public function getContent() : Sequence
     {
         return $this->content;
     }

@@ -6,6 +6,8 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 use PHPUnit_Framework_TestCase;
 
 final class AppendixTest extends PHPUnit_Framework_TestCase
@@ -22,12 +24,13 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ]),
             '10.7554/eLife.09560.app1'
         );
 
+        $this->assertInstanceOf(HasId::class, $appendix);
         $this->assertSame('id', $appendix->getId());
     }
 
@@ -43,7 +46,7 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ]),
             '10.7554/eLife.09560.app1'
@@ -64,7 +67,7 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ]),
             '10.7554/eLife.09560.app1'
@@ -85,7 +88,7 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ]),
             '10.7554/eLife.09560.app1'
@@ -97,11 +100,12 @@ final class AppendixTest extends PHPUnit_Framework_TestCase
                 new Section(
                     'Section title',
                     'id-section',
-                    [new Paragraph('Text')]
+                    new ArraySequence([new Paragraph('Text')])
                 ),
             ])
         );
 
+        $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.7554/eLife.09560.app1', $with->getDoi());
         $this->assertNull($withOut->getDoi());
     }

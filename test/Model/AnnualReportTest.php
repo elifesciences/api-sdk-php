@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AnnualReport;
+use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use PHPUnit_Framework_TestCase;
@@ -51,6 +52,7 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
         $with = new AnnualReport(2012, 'http://www.example.com/2012', 'title', 'impact statement', $image);
         $withOut = new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image);
 
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
     }

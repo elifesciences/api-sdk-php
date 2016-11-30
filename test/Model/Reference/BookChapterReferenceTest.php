@@ -3,6 +3,8 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -36,6 +38,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
             [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], false, 'chapter title',
             'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
+        $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
     }
 
@@ -236,6 +239,7 @@ final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
             [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], false, 'chapter title',
             'book title', new Place(null, null, ['publisher']), new StringReferencePage('foo'));
 
+        $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
     }

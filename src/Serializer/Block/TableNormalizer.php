@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
@@ -20,9 +21,9 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
     public function denormalize($data, $class, $format = null, array $context = []) : Table
     {
         return new Table($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null,
-            $data['title'] ?? null, array_map(function (array $block) {
+            $data['title'] ?? null, new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? []), $data['tables'], array_map(function (array $block) {
+            }, $data['caption'] ?? [])), $data['tables'], array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['footer'] ?? []), array_map(function (array $file) {
                 return $this->denormalizer->denormalize($file, File::class);
@@ -63,10 +64,10 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['title'] = $object->getTitle();
         }
 
-        if (count($object->getCaption())) {
-            $data['caption'] = array_map(function (Block $block) {
+        if ($object->getCaption()->notEmpty()) {
+            $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
-            }, $object->getCaption());
+            })->toArray();
         }
 
         if (count($object->getFooter())) {

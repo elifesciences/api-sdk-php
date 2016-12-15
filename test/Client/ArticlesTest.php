@@ -352,4 +352,17 @@ final class ArticlesTest extends ApiTestCase
 
         $this->articles->reverse()->toArray();
     }
+
+    /**
+     * @test
+     */
+    public function it_silently_skips_articles_marked_as_invalid_to_allow_bulk_imports_to_work()
+    {
+        $this->mockArticleListCall(1, 1, 100);
+        $this->mockArticleListCallWithAnInvalidArticle(1, 100, 100);
+
+        foreach ($this->articles as $article) {
+
+        }
+    }
 }

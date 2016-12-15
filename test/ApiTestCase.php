@@ -199,6 +199,43 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockArticleListCallWithAnInvalidArticle(
+        int $page = 1,
+        int $perPage = 100,
+        int $total = 200
+    ) {
+        $articles = array_map(function (int $id) {
+            $body = $this->createArticlePoAJson('article'.$id, true);
+            if ($id == 42) {
+                $body = [
+                    "-invalid" => true,
+                    "published" => "2016-12-13T00:00:00Z",
+                    "status" => "vor",
+                    "version" => 1,
+                    "versionDate" => "2016-12-13T00:00:00Z",
+                ];
+            }
+            return $body;
+
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/articles?page='.$page.'&per-page='.$perPage.'&order=desc',
+                ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $articles,
+                ])
+            )
+        );
+    }
+
     final protected function mockBlogArticleListCall(
         int $page,
         int $perPage,

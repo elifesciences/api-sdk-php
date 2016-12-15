@@ -117,6 +117,9 @@ final class Articles implements Iterator, Sequence
                 $articles = [];
 
                 foreach ($result['items'] as $article) {
+                    if (isset($article['-invalid'])) {
+                        continue;
+                    }
                     if (isset($this->articles[$article['id']])) {
                         $articles[] = $this->articles[$article['id']]->wait();
                     } else {

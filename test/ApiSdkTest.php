@@ -7,6 +7,7 @@ use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
@@ -16,6 +17,7 @@ use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Reference;
 
 final class ApiSdkTest extends ApiTestCase
@@ -81,6 +83,21 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockCollectionCall('1');
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->collections()->get('1')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_covers()
+    {
+        $this->assertInstanceOf(Covers::class, $this->apiSdk->covers());
+
+        $this->mockCoverListCall(1, 1, 10);
+        $this->mockCoverListCall(1, 100, 10);
+
+        foreach ($this->apiSdk->covers() as $cover) {
+            $this->apiSdk->getSerializer()->normalize($cover);
+        }
     }
 
     /**

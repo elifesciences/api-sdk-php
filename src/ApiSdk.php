@@ -6,6 +6,7 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
@@ -19,6 +20,7 @@ use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
@@ -35,6 +37,7 @@ use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
+use eLife\ApiSdk\Serializer\CoverNormalizer;
 use eLife\ApiSdk\Serializer\DataSetNormalizer;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -63,6 +66,7 @@ final class ApiSdk
     private $httpClient;
     private $articlesClient;
     private $blogClient;
+    private $coversClient;
     private $eventsClient;
     private $interviewsClient;
     private $labsClient;
@@ -75,6 +79,7 @@ final class ApiSdk
     private $annualReports;
     private $articles;
     private $blogArticles;
+    private $covers;
     private $events;
     private $interviews;
     private $labsExperiments;
@@ -91,6 +96,7 @@ final class ApiSdk
         $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->collectionsClient = new CollectionsClient($this->httpClient);
+        $this->coversClient = new CoversClient($this->httpClient);
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
@@ -107,6 +113,7 @@ final class ApiSdk
             new ArticleVoRNormalizer($this->articlesClient),
             new BlogArticleNormalizer($this->blogClient),
             new CollectionNormalizer($this->collectionsClient),
+            new CoverNormalizer(),
             new DataSetNormalizer(),
             new EventNormalizer($this->eventsClient),
             new FileNormalizer(),
@@ -178,6 +185,15 @@ final class ApiSdk
         }
 
         return $this->blogArticles;
+    }
+
+    public function covers() : Covers
+    {
+        if (empty($this->covers)) {
+            $this->covers = new Covers($this->coversClient, $this->serializer);
+        }
+
+        return $this->covers;
     }
 
     public function events() : Events

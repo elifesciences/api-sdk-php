@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
@@ -247,6 +248,52 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
                 json_encode($this->createBlogArticleJson($id, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockCoverListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    {
+        $covers = array_map(function (int $id) {
+            return $this->createCoverJson($id, $this->createArticleVoRJson($id));
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $covers,
+                ])
+            )
+        );
+    }
+
+    final protected function mockCurrentCoverListCall(int $total)
+    {
+        $covers = array_map(function (int $id) {
+            return $this->createCoverJson($id, $this->createArticleVoRJson($id));
+        }, range($total, 1));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/covers/current',
+                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $covers,
+                ])
             )
         );
     }
@@ -1064,6 +1111,23 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $blogArticle;
+    }
+
+    private function createCoverJson(int $number, array $item) : array
+    {
+        return [
+            'title' => 'Cover '.$number.' title',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '2:1' => [
+                        '900' => 'https://placehold.it/900x450',
+                        '1800' => 'https://placehold.it/1800x900',
+                    ],
+                ],
+            ],
+            'item' => $item,
+        ];
     }
 
     private function createEventJson(int $number, bool $isSnippet = false, bool $complete = false) : array

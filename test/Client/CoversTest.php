@@ -9,10 +9,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Cover;
-use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
-use eLife\ApiSdk\Serializer\CoverNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class CoversTest extends ApiTestCase

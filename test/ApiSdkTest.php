@@ -17,7 +17,6 @@ use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Reference;
 
 final class ApiSdkTest extends ApiTestCase

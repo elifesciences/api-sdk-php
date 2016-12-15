@@ -3,20 +3,15 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
-use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\CoverNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use test\eLife\ApiSdk\TestCase;
 
 final class CoverNormalizerTest extends ApiTestCase
 {
@@ -118,7 +113,7 @@ final class CoverNormalizerTest extends ApiTestCase
 
         return [
             [
-                new Cover('title', $image, Builder::for (ArticleVoR::class)->sample('homo-naledi')),
+                new Cover('title', $image, Builder::for(ArticleVoR::class)->sample('homo-naledi')),
                 [
                     'title' => 'title',
                     'image' => [

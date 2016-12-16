@@ -363,9 +363,9 @@ final class ArticlesTest extends ApiTestCase
 
         $count = $nullsCount = 0;
         foreach ($this->articles as $article) {
-            $count++; 
+            ++$count;
             if ($article === null) {
-                $nullsCount++;
+                ++$nullsCount;
             }
         }
         $this->assertEquals(100, $count);

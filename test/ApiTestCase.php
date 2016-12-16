@@ -208,15 +208,15 @@ abstract class ApiTestCase extends TestCase
             $body = $this->createArticlePoAJson('article'.$id, true);
             if ($id == 42) {
                 $body = [
-                    "-invalid" => true,
-                    "published" => "2016-12-13T00:00:00Z",
-                    "status" => "vor",
-                    "version" => 1,
-                    "versionDate" => "2016-12-13T00:00:00Z",
+                    '-invalid' => true,
+                    'published' => '2016-12-13T00:00:00Z',
+                    'status' => 'vor',
+                    'version' => 1,
+                    'versionDate' => '2016-12-13T00:00:00Z',
                 ];
             }
-            return $body;
 
+            return $body;
         }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(

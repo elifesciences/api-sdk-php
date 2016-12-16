@@ -118,9 +118,8 @@ final class Articles implements Iterator, Sequence
 
                 foreach ($result['items'] as $article) {
                     if (isset($article['-invalid'])) {
-                        continue;
-                    }
-                    if (isset($this->articles[$article['id']])) {
+                        $articles[] = null;
+                    } elseif (isset($this->articles[$article['id']])) {
                         $articles[] = $this->articles[$article['id']]->wait();
                     } else {
                         $articles[] = $article = $this->denormalizer->denormalize($article, ArticleVersion::class, null,

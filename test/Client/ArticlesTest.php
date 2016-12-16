@@ -361,8 +361,14 @@ final class ArticlesTest extends ApiTestCase
         $this->mockArticleListCall(1, 1, 100);
         $this->mockArticleListCallWithAnInvalidArticle(1, 100, 100);
 
+        $count = $nullsCount = 0;
         foreach ($this->articles as $article) {
-
+            $count++; 
+            if ($article === null) {
+                $nullsCount++;
+            }
         }
+        $this->assertEquals(100, $count);
+        $this->assertEquals(1, $nullsCount);
     }
 }

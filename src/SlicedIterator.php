@@ -2,6 +2,8 @@
 
 namespace eLife\ApiSdk;
 
+use LogicException;
+
 trait SlicedIterator
 {
     use CanBeSliced;
@@ -13,7 +15,11 @@ trait SlicedIterator
         $page = ceil($this->key / $this->pageBatch);
         $inPage = $this->key - ($page * $this->pageBatch) + $this->pageBatch - 1;
 
-        return $this->getPage($page)[$inPage];
+        $pageContents = $this->getPage($page);
+        if (!array_key_exists($inPage, $pageContents)) {
+            throw new LogicException("Cannot find element with key $inPage in page $page");
+        }
+        return $pageContents[$inPage];
     }
 
     final public function next()

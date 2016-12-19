@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk;
 
-use LogicException;
+use OutOfRangeException;
 
 trait SlicedIterator
 {
@@ -17,8 +17,9 @@ trait SlicedIterator
 
         $pageContents = $this->getPage($page);
         if (!array_key_exists($inPage, $pageContents)) {
-            throw new LogicException("Cannot find element with key $inPage in page $page");
+            throw new OutOfRangeException("Cannot find element with key $inPage in page $page");
         }
+
         return $pageContents[$inPage];
     }
 

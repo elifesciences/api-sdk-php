@@ -132,6 +132,7 @@ final class ApiSdk
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
+            new Block\CodeNormalizer(),
             new Block\ImageNormalizer(),
             new Block\ListingNormalizer(),
             new Block\MathMLNormalizer(),

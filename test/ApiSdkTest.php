@@ -230,6 +230,7 @@ final class ApiSdkTest extends ApiTestCase
     {
         return $this->classNameProvider(
             Block\Box::class,
+            Block\Code::class,
             Block\Image::class,
             Block\Listing::class,
             Block\MathML::class,

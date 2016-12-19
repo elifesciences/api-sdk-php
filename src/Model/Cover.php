@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Cover implements Model
+final class Cover implements Model, HasBanner
 {
     private $title;
     private $image;
@@ -23,7 +23,7 @@ final class Cover implements Model
         return $this->title;
     }
 
-    public function getImage() : Image
+    public function getBanner() : Image
     {
         return $this->image;
     }

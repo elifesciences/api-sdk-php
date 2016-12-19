@@ -38,7 +38,7 @@ final class CoverNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         return [
             'title' => $object->getTitle(),
-            'image' => $this->normalizer->normalize($object->getImage()),
+            'image' => $this->normalizer->normalize($object->getBanner()),
             'item' => $this->normalizer->normalize($object->getItem(), null, ['snippet' => true]),
         ];
     }

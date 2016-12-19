@@ -14,7 +14,14 @@ use Traversable;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase
 {
-    protected function assertObjectsAreEqual($expected, $actual, $detail = '')
+    final protected function classNameProvider(string ...$classes) : Traversable
+    {
+        foreach ($classes as $class) {
+            yield $class => [$class];
+        }
+    }
+
+    final protected function assertObjectsAreEqual($expected, $actual, $detail = '')
     {
         $this->assertInternalType('object', $expected, $detail);
         $this->assertInternalType('object', $actual, $detail);

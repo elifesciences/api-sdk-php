@@ -18,6 +18,7 @@ use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Reference;
+use Traversable;
 
 final class ApiSdkTest extends ApiTestCase
 {
@@ -106,10 +107,9 @@ final class ApiSdkTest extends ApiTestCase
     {
         $this->assertInstanceOf(Events::class, $this->apiSdk->events());
 
-        /*$this->mockBlogArticleCall(7, true);
-        $this->mockSubjectCall(1);
+        $this->mockEventCall(7, true);
 
-        $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blogArticle7')->wait());*/
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->events()->get('event7')->wait());
     }
 
     /**
@@ -206,7 +206,7 @@ final class ApiSdkTest extends ApiTestCase
      */
     public function it_support_encoding()
     {
-        $this->apiSdk->getSerializer()->supportsEncoding('json');
+        $this->assertTrue($this->apiSdk->getSerializer()->supportsEncoding('json'));
     }
 
     /**
@@ -214,7 +214,7 @@ final class ApiSdkTest extends ApiTestCase
      */
     public function it_support_decoding()
     {
-        $this->apiSdk->getSerializer()->supportsDecoding('json');
+        $this->assertTrue($this->apiSdk->getSerializer()->supportsDecoding('json'));
     }
 
     /**
@@ -223,25 +223,24 @@ final class ApiSdkTest extends ApiTestCase
      */
     public function it_can_denormalize_blocks(string $block)
     {
-        $this->apiSdk->getSerializer()->supportsDenormalization([], $block);
+        $this->assertTrue($this->apiSdk->getSerializer()->supportsDenormalization([], $block));
     }
 
-    public function denormalizeBlocksProvider() : array
+    public function denormalizeBlocksProvider() : Traversable
     {
-        return [
-            [Block\Box::class],
-            [Block\File::class],
-            [Block\Image::class],
-            [Block\Listing::class],
-            [Block\MathML::class],
-            [Block\Paragraph::class],
-            [Block\Question::class],
-            [Block\Quote::class],
-            [Block\Section::class],
-            [Block\Table::class],
-            [Block\Video::class],
-            [Block\YouTube::class],
-        ];
+        return $this->classNameProvider(
+            Block\Box::class,
+            Block\Image::class,
+            Block\Listing::class,
+            Block\MathML::class,
+            Block\Paragraph::class,
+            Block\Question::class,
+            Block\Quote::class,
+            Block\Section::class,
+            Block\Table::class,
+            Block\Video::class,
+            Block\YouTube::class
+        );
     }
 
     /**
@@ -250,25 +249,26 @@ final class ApiSdkTest extends ApiTestCase
      */
     public function it_can_denormalize_references(string $reference)
     {
-        $this->apiSdk->getSerializer()->supportsDenormalization([], $reference);
+        $this->assertTrue($this->apiSdk->getSerializer()->supportsDenormalization([], $reference));
     }
 
-    public function denormalizeReferencesProvider() : array
+    public function denormalizeReferencesProvider() : Traversable
     {
-        return [
-            [Reference\BookReference::class],
-            [Reference\BookChapterReference::class],
-            [Reference\ClinicalTrialReference::class],
-            [Reference\ConferenceProceedingReference::class],
-            [Reference\DataReference::class],
-            [Reference\JournalReference::class],
-            [Reference\PatentReference::class],
-            [Reference\PeriodicalReference::class],
-            [Reference\PreprintReference::class],
-            [Reference\ReportReference::class],
-            [Reference\SoftwareReference::class],
-            [Reference\ThesisReference::class],
-            [Reference\WebReference::class],
-        ];
+        return $this->classNameProvider(
+            Reference\BookChapterReference::class,
+            Reference\BookReference::class,
+            Reference\ClinicalTrialReference::class,
+            Reference\ConferenceProceedingReference::class,
+            Reference\DataReference::class,
+            Reference\JournalReference::class,
+            Reference\PatentReference::class,
+            Reference\PeriodicalReference::class,
+            Reference\PreprintReference::class,
+            Reference\ReportReference::class,
+            Reference\SoftwareReference::class,
+            Reference\ThesisReference::class,
+            Reference\UnknownReference::class,
+            Reference\WebReference::class
+        );
     }
 }

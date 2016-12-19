@@ -2,7 +2,8 @@
 
 namespace eLife\ApiSdk\Model\Reference;
 
-interface ReferencePages
+use eLife\ApiSdk\Model\CastsToString;
+
+interface ReferencePages extends CastsToString
 {
-    public function toString() : string;
 }

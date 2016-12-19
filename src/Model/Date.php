@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Date
+final class Date implements CastsToString
 {
     private $year;
     private $month;

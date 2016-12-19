@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Model;
 
-interface AuthorEntry
+interface AuthorEntry extends CastsToString
 {
-    public function toString() : string;
 }

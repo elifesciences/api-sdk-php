@@ -4,21 +4,22 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasSubjects;
-use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 
-abstract class ArticleTest extends PHPUnit_Framework_TestCase
+abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
 {
     /** @var Builder */
     protected $builder;
@@ -26,12 +27,12 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_is_a_model()
+    final public function it_is_an_article()
     {
         $article = $this->builder
             ->__invoke();
 
-        $this->assertInstanceOf(Model::class, $article);
+        $this->assertInstanceOf(Article::class, $article);
     }
 
     /**
@@ -329,5 +330,19 @@ abstract class ArticleTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertEquals($authors, $article->getAuthors());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_related_articles()
+    {
+        $relatedArticles = new ArraySequence([Builder::dummy(ExternalArticle::class)]);
+
+        $article = $this->builder
+            ->withRelatedArticles($relatedArticles)
+            ->__invoke();
+
+        $this->assertEquals($relatedArticles, $article->getRelatedArticles());
     }
 }

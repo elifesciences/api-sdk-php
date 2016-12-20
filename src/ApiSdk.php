@@ -40,6 +40,7 @@ use eLife\ApiSdk\Serializer\CollectionNormalizer;
 use eLife\ApiSdk\Serializer\CoverNormalizer;
 use eLife\ApiSdk\Serializer\DataSetNormalizer;
 use eLife\ApiSdk\Serializer\EventNormalizer;
+use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
@@ -116,6 +117,7 @@ final class ApiSdk
             new CoverNormalizer(),
             new DataSetNormalizer(),
             new EventNormalizer($this->eventsClient),
+            new ExternalArticleNormalizer(),
             new FileNormalizer(),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),

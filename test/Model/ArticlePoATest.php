@@ -5,7 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\ArticlePoA;
 use test\eLife\ApiSdk\Builder;
 
-final class ArticlePoATest extends ArticleTest
+final class ArticlePoATest extends ArticleVersionTest
 {
     public function setUp()
     {

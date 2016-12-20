@@ -852,6 +852,17 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'relatedArticles' => [
+                [
+                    'type' => 'external-article',
+                    'articleTitle' => 'Related article title',
+                    'journal' => [
+                        'name' => ['Journal'],
+                    ],
+                    'authorLine' => 'Author line',
+                    'uri' => 'http://www.example.com/',
+                ],
+            ],
         ];
 
         if (!$complete) {
@@ -866,6 +877,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['researchOrganisms']);
             unset($article['reviewers']);
             unset($article['abstract']);
+            unset($article['relatedArticles']);
         }
 
         if ($isSnippet) {
@@ -874,6 +886,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['authors']);
             unset($article['reviewers']);
             unset($article['abstract']);
+            unset($article['relatedArticles']);
         }
 
         return $article;

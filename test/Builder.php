@@ -20,6 +20,7 @@ use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
@@ -111,6 +112,14 @@ final class Builder
                         'uri' => 'http://www.example.com/',
                     ];
                 },
+                ExternalArticle::class => function () {
+                    return [
+                        'articleTitle' => 'External article title',
+                        'journal' => new Place(null, null, ['Another journal']),
+                        'authorLine' => 'Author et al',
+                        'uri' => 'http://www.example.com/',
+                    ];
+                },
                 Image::class => function () {
                     return [
                         'altText' => 'Image alt text',
@@ -198,6 +207,7 @@ final class Builder
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
+                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -278,6 +288,7 @@ final class Builder
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                     ];
                 },
             ];

@@ -27,7 +27,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use test\eLife\ApiSdk\Builder;
 
-final class ArticleVoRTest extends ArticleTest
+final class ArticleVoRTest extends ArticleVersionTest
 {
     public function setUp()
     {

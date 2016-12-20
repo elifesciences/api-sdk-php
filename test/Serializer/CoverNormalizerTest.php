@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Image;
@@ -113,7 +114,7 @@ final class CoverNormalizerTest extends ApiTestCase
 
         return [
             [
-                new Cover('title', $image, Builder::for(ArticleVoR::class)->sample('homo-naledi')),
+                new Cover('title', $image, Builder::for(ArticlePoA::class)->sample('growth-factor')),
                 [
                     'title' => 'title',
                     'image' => [
@@ -126,47 +127,23 @@ final class CoverNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'item' => [
-                        'id' => '09560',
+                        'id' => '14107',
                         'stage' => 'published',
                         'version' => 1,
                         'type' => 'research-article',
-                        'doi' => '10.7554/eLife.09560',
-                        'authorLine' => 'Lee R Berger et al',
-                        'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
-                        'volume' => 4,
-                        'elocationId' => 'e09560',
-                        'published' => '2015-09-10T00:00:00Z',
-                        'versionDate' => '2015-09-10T00:00:00Z',
-                        'statusDate' => '2015-09-10T00:00:00Z',
-                        'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
-                        'subjects' => [
-                            0 => [
-                                'id' => 'genomics-evolutionary-biology',
-                                'name' => 'Genomics and Evolutionary Biology',
-                            ],
-                        ],
-                        'status' => 'vor',
-                        'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                        'image' => [
-                            'thumbnail' => [
-                                'alt' => '',
-                                'sizes' => [
-                                    '16:9' => [
-                                        250 => 'https://placehold.it/250x141',
-                                        500 => 'https://placehold.it/500x281',
-                                    ],
-                                    '1:1' => [
-                                        70 => 'https://placehold.it/70x70',
-                                        140 => 'https://placehold.it/140x140',
-                                    ],
-                                ],
-                            ],
-                        ],
+                        'doi' => '10.7554/eLife.14107',
+                        'authorLine' => 'Yongjian Huang et al',
+                        'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                        'volume' => 5,
+                        'elocationId' => 'e14107',
+                        'published' => '2016-03-28T00:00:00Z',
+                        'versionDate' => '2016-03-28T00:00:00Z',
+                        'statusDate' => '2016-03-28T00:00:00Z',
+                        'status' => 'poa',
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockSubjectCall('genomics-evolutionary-biology', true);
-                    $test->mockArticleCall('09560', true, true);
+                    $test->mockArticleCall('14107', true);
                 },
             ],
         ];

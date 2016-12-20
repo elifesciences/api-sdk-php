@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
+abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -32,6 +32,7 @@ abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
     private $copyright;
     private $authors;
     private $reviewers;
+    private $relatedArticles;
 
     /**
      * @internal
@@ -57,7 +58,8 @@ abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
         PromiseInterface $issue,
         PromiseInterface $copyright,
         Sequence $authors,
-        Sequence $reviewers
+        Sequence $reviewers,
+        Sequence $relatedArticles
     ) {
         $this->id = $id;
         $this->stage = $stage;
@@ -80,6 +82,7 @@ abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
         $this->copyright = $copyright;
         $this->authors = $authors;
         $this->reviewers = $reviewers;
+        $this->relatedArticles = $relatedArticles;
     }
 
     final public function getId(): string
@@ -222,5 +225,13 @@ abstract class ArticleVersion implements Model, HasDoi, HasId, HasSubjects
     final public function getReviewers(): Sequence
     {
         return $this->reviewers;
+    }
+
+    /**
+     * @return Sequence|Article[]
+     */
+    final public function getRelatedArticles(): Sequence
+    {
+        return $this->relatedArticles;
     }
 }

@@ -37,7 +37,8 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['issue'],
             $data['copyright'],
             $data['authors'],
-            $data['reviewers']
+            $data['reviewers'],
+            $data['relatedArticles']
         );
     }
 
@@ -48,7 +49,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             ||
             (ArticleVersion::class === $type && 'poa' === $data['status'])
             ||
-            Model::class === $type && $this->isArticleType($data['type'] ?? 'unknown') && 'poa' === ($data['status'] ?? 'unknown');
+            is_a($type, Model::class, true) && $this->isArticleType($data['type'] ?? 'unknown') && 'poa' === ($data['status'] ?? 'unknown');
     }
 
     /**

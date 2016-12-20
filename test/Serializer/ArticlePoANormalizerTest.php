@@ -5,10 +5,13 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -90,7 +93,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     {
         return [
             'article poa' => [[], ArticlePoA::class, [], true],
-            'article poa by type' => [['type' => 'research-article', 'status' => 'poa'], Model::class, [], true],
+            'article poa by article type' => [['type' => 'research-article', 'status' => 'poa'], Article::class, [], true],
+            'article poa by model type' => [['type' => 'research-article', 'status' => 'poa'], Model::class, [], true],
             'non-article poa' => [[], get_class($this), [], false],
         ];
     }
@@ -129,6 +133,15 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ->__invoke(),
                     ]))
                     ->withResearchOrganisms(['research organism'])
+                    ->withSequenceOfRelatedArticles(
+                        Builder::for(ArticlePoA::class)->sample('growth-factor'),
+                        Builder::for(ExternalArticle::class)
+                            ->withArticleTitle('External related article title')
+                            ->withJournal(new Place(null, null, ['Journal']))
+                            ->withAuthorLine('Author line')
+                            ->withUri('http://www.example.com/')
+                            ->__invoke()
+                    )
                     ->__invoke(),
                 [],
                 [
@@ -173,6 +186,32 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             'role' => 'Role',
                         ],
                     ],
+                    'relatedArticles' => [
+                        [
+                            'id' => '14107',
+                            'stage' => 'published',
+                            'version' => 1,
+                            'type' => 'research-article',
+                            'doi' => '10.7554/eLife.14107',
+                            'authorLine' => 'Yongjian Huang et al',
+                            'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                            'volume' => 5,
+                            'elocationId' => 'e14107',
+                            'published' => '2016-03-28T00:00:00Z',
+                            'versionDate' => '2016-03-28T00:00:00Z',
+                            'statusDate' => '2016-03-28T00:00:00Z',
+                            'status' => 'poa',
+                        ],
+                        [
+                            'articleTitle' => 'External related article title',
+                            'journal' => [
+                                'name' => ['Journal'],
+                            ],
+                            'authorLine' => 'Author line',
+                            'uri' => 'http://www.example.com/',
+                            'type' => 'external-article',
+                        ],
+                    ],
                     'issue' => 1,
                     'abstract' => [
                         'content' => [
@@ -184,6 +223,11 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ],
                     'status' => 'poa',
                 ],
+                function ($test) {
+                    $test->mockSubjectCall('genomics-evolutionary-biology', true);
+                    $test->mockArticleCall('09560', true, $vor = true);
+                    $test->mockArticleCall('14107', true);
+                },
             ],
             'minimum' => [
                 Builder::for(ArticlePoA::class)
@@ -195,6 +239,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
+                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 [],
                 [
@@ -269,6 +314,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
+                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 ['snippet' => true],
                 [

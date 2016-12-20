@@ -108,7 +108,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
         return
             BlogArticle::class === $type
             ||
-            Model::class === $type && 'blog-article' === ($data['type'] ?? 'unknown');
+            is_a($type, Model::class, true) && 'blog-article' === ($data['type'] ?? 'unknown');
     }
 
     /**

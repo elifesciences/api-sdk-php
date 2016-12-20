@@ -12,7 +12,7 @@ trait SlicedIterator
 
     final public function current()
     {
-        $page = ceil($this->key / $this->pageBatch);
+        $page = (int) ceil($this->key / $this->pageBatch);
         $inPage = $this->key - ($page * $this->pageBatch) + $this->pageBatch - 1;
 
         $pageContents = $this->getPage($page);

@@ -115,15 +115,6 @@ final class Articles implements Iterator, Sequence
             })
             ->then(function (Result $result) {
                 return array_map(function (array $article) {
-                    // *** temporary hack for invalid articles
-                    // we resolve them as null, and let the client applications
-                    // skip them rather than exploding when encountering them
-                    if (isset($article['-invalid'])) {
-                        return null;
-                    }
-
-                    // *** end of temporary hack
-
                     return $this->denormalizer->denormalize($article, ArticleVersion::class, null, ['snippet' => true]);
                 }, $result['items']);
             })

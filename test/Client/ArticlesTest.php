@@ -363,23 +363,4 @@ final class ArticlesTest extends ApiTestCase
 
         $this->articles->reverse()->toArray();
     }
-
-    /**
-     * @test
-     */
-    public function it_silently_skips_articles_marked_as_invalid_to_allow_bulk_imports_to_work()
-    {
-        $this->mockArticleListCall(1, 1, 100);
-        $this->mockArticleListCallWithAnInvalidArticle(1, 100, 100);
-
-        $count = $nullsCount = 0;
-        foreach ($this->articles as $article) {
-            ++$count;
-            if ($article === null) {
-                ++$nullsCount;
-            }
-        }
-        $this->assertEquals(100, $count);
-        $this->assertEquals(1, $nullsCount);
-    }
 }

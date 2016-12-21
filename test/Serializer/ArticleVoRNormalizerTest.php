@@ -254,6 +254,79 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
+                    'funding' => [
+                        'awards' => [
+                            [
+                                'id' => 'award',
+                                'source' => [
+                                    'name' => [
+                                        'Funder',
+                                    ],
+                                    'funderId' => '10.13039/501100001659',
+                                ],
+                                'recipients' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'Author',
+                                            'index' => 'Author',
+                                        ],
+                                    ],
+                                ],
+                                'awardId' => 'awardId',
+                            ],
+                        ],
+                        'statement' => 'Funding statement',
+                    ],
+                    'dataSets' => [
+                        'generated' => [
+                            [
+                                'id' => 'id',
+                                'date' => '2000-01-02',
+                                'authors' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'preferred name',
+                                            'index' => 'index name',
+                                        ],
+                                    ],
+                                ],
+                                'title' => 'title',
+                                'authorsEtAl' => true,
+                                'dataId' => 'data id',
+                                'details' => 'details',
+                                'doi' => '10.1000/182',
+                                'uri' => 'https://doi.org/10.1000/182',
+                            ],
+                        ],
+                        'used' => [
+                            [
+                                'id' => 'id',
+                                'date' => '2000',
+                                'authors' => [
+                                    [
+                                        'type' => 'person',
+                                        'name' => [
+                                            'preferred' => 'preferred name',
+                                            'index' => 'index name',
+                                        ],
+                                    ],
+                                ],
+                                'title' => 'title',
+                                'uri' => 'http://www.example.com/',
+                            ],
+                        ],
+                    ],
+                    'additionalFiles' => [
+                        [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://placehold.it/900x450',
+                            'filename' => 'image.jpeg',
+                            'id' => 'file1',
+                            'title' => 'Additional file 1',
+                        ],
+                    ],
                     'status' => 'vor',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
@@ -343,53 +416,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'additionalFiles' => [
-                        [
-                            'mediaType' => 'image/jpeg',
-                            'uri' => 'https://placehold.it/900x450',
-                            'filename' => 'image.jpeg',
-                        ],
-                    ],
-                    'dataSets' => [
-                        'generated' => [
-                            [
-                                'id' => 'id',
-                                'date' => '2000-01-02',
-                                'authors' => [
-                                    [
-                                        'type' => 'person',
-                                        'name' => [
-                                            'preferred' => 'preferred name',
-                                            'index' => 'index name',
-                                        ],
-                                    ],
-                                ],
-                                'title' => 'title',
-                                'authorsEtAl' => true,
-                                'dataId' => 'data id',
-                                'details' => 'details',
-                                'doi' => '10.1000/182',
-                                'uri' => 'https://doi.org/10.1000/182',
-                            ],
-                        ],
-                        'used' => [
-                            [
-                                'id' => 'id',
-                                'date' => '2000',
-                                'authors' => [
-                                    [
-                                        'type' => 'person',
-                                        'name' => [
-                                            'preferred' => 'preferred name',
-                                            'index' => 'index name',
-                                        ],
-                                    ],
-                                ],
-                                'title' => 'title',
-                                'uri' => 'http://www.example.com/',
-                            ],
-                        ],
-                    ],
                     'acknowledgements' => [
                         [
                             'type' => 'paragraph',
@@ -401,30 +427,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'type' => 'paragraph',
                             'text' => 'ethics',
                         ],
-                    ],
-                    'funding' => [
-                        'awards' => [
-                            [
-                                'id' => 'award',
-                                'source' => [
-                                    'name' => [
-                                        'Funder',
-                                    ],
-                                    'funderId' => '10.13039/501100001659',
-                                ],
-                                'recipients' => [
-                                    [
-                                        'type' => 'person',
-                                        'name' => [
-                                            'preferred' => 'Author',
-                                            'index' => 'Author',
-                                        ],
-                                    ],
-                                ],
-                                'awardId' => 'awardId',
-                            ],
-                        ],
-                        'statement' => 'Funding statement',
                     ],
                     'decisionLetter' => [
                         'description' => [

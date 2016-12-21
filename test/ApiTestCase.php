@@ -863,6 +863,79 @@ abstract class ApiTestCase extends TestCase
                     'uri' => 'http://www.example.com/',
                 ],
             ],
+            'funding' => [
+                'awards' => [
+                    [
+                        'id' => 'award',
+                        'source' => [
+                            'funderId' => '10.13039/501100001659',
+                            'name' => [
+                                'Funder',
+                            ],
+                        ],
+                        'awardId' => 'awardId',
+                        'recipients' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'Author',
+                                    'index' => 'Author',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'statement' => 'Funding statement',
+            ],
+            'dataSets' => [
+                'generated' => [
+                    [
+                        'id' => 'id',
+                        'date' => '2000-01-02',
+                        'authors' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'preferred name',
+                                    'index' => 'index name',
+                                ],
+                            ],
+                        ],
+                        'title' => 'title',
+                        'uri' => 'https://doi.org/10.1000/182',
+                        'authorsEtAl' => true,
+                        'dataId' => 'data id',
+                        'details' => 'details',
+                        'doi' => '10.1000/182',
+                    ],
+                ],
+                'used' => [
+                    [
+                        'id' => 'id',
+                        'date' => '2000',
+                        'authors' => [
+                            [
+                                'type' => 'person',
+                                'name' => [
+                                    'preferred' => 'preferred name',
+                                    'index' => 'index name',
+                                ],
+                            ],
+                        ],
+                        'title' => 'title',
+                        'uri' => 'http://www.example.com/',
+                    ],
+                ],
+            ],
+            'additionalFiles' => [
+                [
+                    'id' => 'file1',
+                    'title' => 'Additional file 1',
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://placehold.it/900x450',
+                    'filename' => 'image.jpeg',
+                ],
+            ],
         ];
 
         if (!$complete) {
@@ -878,6 +951,9 @@ abstract class ApiTestCase extends TestCase
             unset($article['reviewers']);
             unset($article['abstract']);
             unset($article['relatedArticles']);
+            unset($article['funding']);
+            unset($article['dataSets']);
+            unset($article['additionalFiles']);
         }
 
         if ($isSnippet) {
@@ -887,6 +963,9 @@ abstract class ApiTestCase extends TestCase
             unset($article['reviewers']);
             unset($article['abstract']);
             unset($article['relatedArticles']);
+            unset($article['funding']);
+            unset($article['dataSets']);
+            unset($article['additionalFiles']);
         }
 
         return $article;
@@ -991,53 +1070,6 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
-            'dataSets' => [
-                'generated' => [
-                    [
-                        'id' => 'id',
-                        'date' => '2000-01-02',
-                        'authors' => [
-                            [
-                                'type' => 'person',
-                                'name' => [
-                                    'preferred' => 'preferred name',
-                                    'index' => 'index name',
-                                ],
-                            ],
-                        ],
-                        'title' => 'title',
-                        'uri' => 'https://doi.org/10.1000/182',
-                        'authorsEtAl' => true,
-                        'dataId' => 'data id',
-                        'details' => 'details',
-                        'doi' => '10.1000/182',
-                    ],
-                ],
-                'used' => [
-                    [
-                        'id' => 'id',
-                        'date' => '2000',
-                        'authors' => [
-                            [
-                                'type' => 'person',
-                                'name' => [
-                                    'preferred' => 'preferred name',
-                                    'index' => 'index name',
-                                ],
-                            ],
-                        ],
-                        'title' => 'title',
-                        'uri' => 'http://www.example.com/',
-                    ],
-                ],
-            ],
-            'additionalFiles' => [
-                [
-                    'mediaType' => 'image/jpeg',
-                    'uri' => 'https://placehold.it/900x450',
-                    'filename' => 'image.jpeg',
-                ],
-            ],
             'acknowledgements' => [
                 [
                     'type' => 'paragraph',
@@ -1049,30 +1081,6 @@ abstract class ApiTestCase extends TestCase
                     'type' => 'paragraph',
                     'text' => 'ethics',
                 ],
-            ],
-            'funding' => [
-                'awards' => [
-                    [
-                        'id' => 'award',
-                        'source' => [
-                            'funderId' => '10.13039/501100001659',
-                            'name' => [
-                                'Funder',
-                            ],
-                        ],
-                        'awardId' => 'awardId',
-                        'recipients' => [
-                            [
-                                'type' => 'person',
-                                'name' => [
-                                    'preferred' => 'Author',
-                                    'index' => 'Author',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                'statement' => 'Funding statement',
             ],
             'decisionLetter' => [
                 'doi' => '10.7554/eLife.'.$id.'decisionLetter',
@@ -1107,11 +1115,8 @@ abstract class ApiTestCase extends TestCase
             unset($article['digest']);
             unset($article['appendices']);
             unset($article['references']);
-            unset($article['additionalFiles']);
-            unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
-            unset($article['funding']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }
@@ -1125,11 +1130,8 @@ abstract class ApiTestCase extends TestCase
             unset($article['body']);
             unset($article['appendices']);
             unset($article['references']);
-            unset($article['additionalFiles']);
-            unset($article['dataSets']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
-            unset($article['funding']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }

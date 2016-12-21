@@ -4,17 +4,24 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\ExternalArticle;
+use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Funder;
+use eLife\ApiSdk\Model\Funding;
+use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -344,5 +351,67 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertEquals($relatedArticles, $article->getRelatedArticles());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_funding()
+    {
+        $with = $this->builder
+            ->withPromiseOfFunding($funding = new Funding(
+                new ArraySequence([
+                    new FundingAward(
+                        'award',
+                        new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                        'awardId',
+                        new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                    ),
+                ]),
+                'Funding statement'
+            ))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfFunding(null)
+            ->__invoke();
+
+        $this->assertEquals($funding, $with->getFunding());
+        $this->assertNull($withOut->getFunding());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_generated_data_sets()
+    {
+        $article = $this->builder
+            ->withGeneratedDataSets($dataSets = new ArraySequence([Builder::for(DataSet::class)->__invoke()]))
+            ->__invoke();
+
+        $this->assertEquals($dataSets, $article->getGeneratedDataSets());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_used_data_sets()
+    {
+        $article = $this->builder
+            ->withUsedDataSets($dataSets = new ArraySequence([Builder::for(DataSet::class)->__invoke()]))
+            ->__invoke();
+
+        $this->assertEquals($dataSets, $article->getUsedDataSets());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_additional_files()
+    {
+        $article = $this->builder
+            ->withAdditionalFiles($files = new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
+            ->__invoke();
+
+        $this->assertEquals($files, $article->getAdditionalFiles());
     }
 }

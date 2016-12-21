@@ -3,17 +3,12 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\File;
-use eLife\ApiSdk\Model\Funder;
-use eLife\ApiSdk\Model\Funding;
-use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
@@ -186,18 +181,6 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
-    public function it_may_have_additional_files()
-    {
-        $article = $this->builder
-            ->withAdditionalFiles(new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
-            ->__invoke();
-
-        $this->assertEquals($files = new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]), $article->getAdditionalFiles());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_acknowledgements()
     {
         $article = $this->builder
@@ -217,32 +200,6 @@ final class ArticleVoRTest extends ArticleVersionTest
             ->__invoke();
 
         $this->assertEquals($ethics, $article->getEthics());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_funding()
-    {
-        $with = $this->builder
-            ->withPromiseOfFunding($funding = new Funding(
-                new ArraySequence([
-                    new FundingAward(
-                        'award',
-                        new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
-                        'awardId',
-                        new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
-                    ),
-                ]),
-                'Funding statement'
-            ))
-            ->__invoke();
-        $withOut = $this->builder
-            ->withPromiseOfFunding(null)
-            ->__invoke();
-
-        $this->assertEquals($funding, $with->getFunding());
-        $this->assertNull($withOut->getFunding());
     }
 
     /**

@@ -33,6 +33,10 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     private $authors;
     private $reviewers;
     private $relatedArticles;
+    private $funding;
+    private $generatedDataSets;
+    private $usedDataSets;
+    private $additionalFiles;
 
     /**
      * @internal
@@ -59,7 +63,11 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         PromiseInterface $copyright,
         Sequence $authors,
         Sequence $reviewers,
-        Sequence $relatedArticles
+        Sequence $relatedArticles,
+        PromiseInterface $funding,
+        Sequence $generatedDataSets,
+        Sequence $usedDataSets,
+        Sequence $additionalFiles
     ) {
         $this->id = $id;
         $this->stage = $stage;
@@ -83,6 +91,10 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         $this->authors = $authors;
         $this->reviewers = $reviewers;
         $this->relatedArticles = $relatedArticles;
+        $this->funding = $funding;
+        $this->generatedDataSets = $generatedDataSets;
+        $this->usedDataSets = $usedDataSets;
+        $this->additionalFiles = $additionalFiles;
     }
 
     final public function getId(): string
@@ -233,5 +245,37 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     final public function getRelatedArticles(): Sequence
     {
         return $this->relatedArticles;
+    }
+
+    /**
+     * @return Funding|null
+     */
+    public function getFunding()
+    {
+        return $this->funding->wait();
+    }
+
+    /**
+     * @return Sequence|DataSet[]
+     */
+    public function getGeneratedDataSets() : Sequence
+    {
+        return $this->generatedDataSets;
+    }
+
+    /**
+     * @return Sequence|DataSet[]
+     */
+    public function getUsedDataSets() : Sequence
+    {
+        return $this->usedDataSets;
+    }
+
+    /**
+     * @return Sequence|File[]
+     */
+    public function getAdditionalFiles() : Sequence
+    {
+        return $this->additionalFiles;
     }
 }

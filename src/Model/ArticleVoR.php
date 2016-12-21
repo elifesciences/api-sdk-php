@@ -16,12 +16,8 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
     private $content;
     private $appendices;
     private $references;
-    private $additionalFiles;
-    private $generatedDataSets;
-    private $usedDataSets;
     private $acknowledgements;
     private $ethics;
-    private $funding;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -71,7 +67,8 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         Sequence $relatedArticles
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
-            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $relatedArticles);
+            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $relatedArticles,
+            $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->impactStatement = $impactStatement;
         $this->banner = $banner;
@@ -81,12 +78,8 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         $this->content = $content;
         $this->appendices = $appendices;
         $this->references = $references;
-        $this->additionalFiles = $additionalFiles;
-        $this->generatedDataSets = $generatedDataSets;
-        $this->usedDataSets = $usedDataSets;
         $this->acknowledgements = $acknowledgements;
         $this->ethics = $ethics;
-        $this->funding = $funding;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -148,30 +141,6 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
     }
 
     /**
-     * @return Sequence|File[]
-     */
-    public function getAdditionalFiles() : Sequence
-    {
-        return $this->additionalFiles;
-    }
-
-    /**
-     * @return Sequence|DataSet[]
-     */
-    public function getGeneratedDataSets() : Sequence
-    {
-        return $this->generatedDataSets;
-    }
-
-    /**
-     * @return Sequence|DataSet[]
-     */
-    public function getUsedDataSets() : Sequence
-    {
-        return $this->usedDataSets;
-    }
-
-    /**
      * @return Sequence|Block[]
      */
     public function getAcknowledgements() : Sequence
@@ -185,14 +154,6 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
     public function getEthics() : Sequence
     {
         return $this->ethics;
-    }
-
-    /**
-     * @return Funding|null
-     */
-    public function getFunding()
-    {
-        return $this->funding->wait();
     }
 
     /**

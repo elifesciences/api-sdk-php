@@ -208,6 +208,20 @@ final class Builder
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
+                        'funding' => promise_for(new Funding(
+                            new ArraySequence([
+                                new FundingAward(
+                                    'award',
+                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                    'awardId',
+                                    new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                                ),
+                            ]),
+                            'Funding statement'
+                        )),
+                        'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
+                        'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
+                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -269,7 +283,7 @@ final class Builder
                                 new Place(null, null, ['publisher'])
                             ),
                         ]),
-                        'additionalFiles' => new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),

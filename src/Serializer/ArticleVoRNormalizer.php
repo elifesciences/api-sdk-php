@@ -9,16 +9,10 @@ use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\DataSet;
-use eLife\ApiSdk\Model\File;
-use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
-use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
@@ -38,11 +32,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['acknowledgements'] ?? [];
                 }));
 
-            $data['additionalFiles'] = new PromiseSequence($article
-                ->then(function (Result $article) {
-                    return $article['additionalFiles'] ?? [];
-                }));
-
             $data['appendices'] = new PromiseSequence($article
                 ->then(function (Result $article) {
                     return $article['appendices'] ?? [];
@@ -58,11 +47,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['body'];
                 }));
 
-            $data['dataSets'] = $article
-                ->then(function (Result $article) {
-                    return $article['dataSets'] ?? null;
-                });
-
             $data['decisionLetter'] = $article
                 ->then(function (Result $article) {
                     return $article['decisionLetter'] ?? null;
@@ -77,11 +61,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 ->then(function (Result $article) {
                     return $article['ethics'] ?? [];
                 }));
-
-            $data['funding'] = $article
-                ->then(function (Result $article) {
-                    return $article['funding'] ?? null;
-                });
 
             if (empty($data['image'])) {
                 $data['image']['banner'] = promise_for(null);
@@ -104,23 +83,17 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         } else {
             $data['acknowledgements'] = new ArraySequence($data['acknowledgements'] ?? []);
 
-            $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
-
             $data['appendices'] = new ArraySequence($data['appendices'] ?? []);
 
             $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
 
             $data['body'] = new ArraySequence($data['body']);
 
-            $data['dataSets'] = promise_for($data['dataSets'] ?? null);
-
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
 
             $data['ethics'] = new ArraySequence($data['ethics'] ?? []);
-
-            $data['funding'] = promise_for($data['funding'] ?? null);
 
             $data['image']['banner'] = promise_for($data['image']['banner'] ?? null);
 
@@ -131,10 +104,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         $data['acknowledgements'] = $data['acknowledgements']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-        });
-
-        $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
-            return $this->denormalizer->denormalize($file, File::class, $format, $context);
         });
 
         $data['appendices'] = $data['appendices']->map(function (array $block) use ($format, $context) {
@@ -158,20 +127,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         $data['body'] = $data['body']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
-
-        $generatedDataSets = new PromiseSequence($data['dataSets']
-            ->then(function (array $dataSets = null) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
-                }, $dataSets['generated'] ?? []);
-            }));
-
-        $usedDataSets = new PromiseSequence($data['dataSets']
-            ->then(function (array $dataSets = null) use ($format, $context) {
-                return array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
-                }, $dataSets['used'] ?? []);
-            }));
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
@@ -215,30 +170,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         $data['ethics'] = $data['ethics']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
-
-        $data['funding'] = $data['funding']
-            ->then(function (array $funding = null) use ($format, $context) {
-                if (empty($funding)) {
-                    return null;
-                }
-
-                return new Funding(
-                    new ArraySequence(array_map(function (array $award) use ($format, $context) {
-                        return new FundingAward(
-                            $award['id'],
-                            new Funder(
-                                $this->denormalizer->denormalize($award['source'], Place::class, $format, $context),
-                                $award['source']['funderId'] ?? null
-                            ),
-                            $award['awardId'] ?? null,
-                            new ArraySequence(array_map(function (array $recipient) use ($format, $context) {
-                                return $this->denormalizer->denormalize($recipient, Author::class, $format, $context);
-                            }, $award['recipients']))
-                        );
-                    }, $funding['awards'] ?? [])),
-                    $funding['statement']
-                );
-            });
 
         $data['image']['banner'] = $data['image']['banner']
             ->then(function (array $banner = null) use ($format, $context) {
@@ -291,8 +222,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['appendices'],
             $data['references'],
             $data['additionalFiles'],
-            $generatedDataSets,
-            $usedDataSets,
+            $data['generatedDataSets'],
+            $data['usedDataSets'],
             $data['acknowledgements'],
             $data['ethics'],
             $data['funding'],
@@ -375,27 +306,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 unset($data['references']);
             }
 
-            if ($article->getAdditionalFiles()->notEmpty()) {
-                $data['additionalFiles'] = $article->getAdditionalFiles()
-                    ->map(function (File $file) use ($format, $context) {
-                        return $this->normalizer->normalize($file, $format, $context);
-                    })->toArray();
-            }
-
-            if ($article->getGeneratedDataSets()->notEmpty()) {
-                $data['dataSets']['generated'] = $article->getGeneratedDataSets()
-                    ->map(function (DataSet $dataSet) use ($format, $context) {
-                        return $this->normalizer->normalize($dataSet, $format, $context);
-                    })->toArray();
-            }
-
-            if ($article->getUsedDataSets()->notEmpty()) {
-                $data['dataSets']['used'] = $article->getUsedDataSets()
-                    ->map(function (DataSet $dataSet) use ($format, $context) {
-                        return $this->normalizer->normalize($dataSet, $format, $context);
-                    })->toArray();
-            }
-
             if (!$article->getAcknowledgements()->isEmpty()) {
                 $data['acknowledgements'] = $article->getAcknowledgements()
                     ->map(function (Block $block) use ($format, $context) {
@@ -408,34 +318,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
-            }
-
-            if ($article->getFunding()) {
-                if ($article->getFunding()->getAwards()->notEmpty()) {
-                    $data['funding']['awards'] = $article->getFunding()->getAwards()
-                        ->map(function (FundingAward $award) use ($format, $context) {
-                            $source = $this->normalizer->normalize($award->getSource()->getPlace(), $format, $context);
-                            if ($award->getSource()->getFunderId()) {
-                                $source['funderId'] = $award->getSource()->getFunderId();
-                            }
-
-                            $data = [
-                                'id' => $award->getId(),
-                                'source' => $source,
-                                'recipients' => $award->getRecipients()
-                                    ->map(function (Author $author) use ($format, $context) {
-                                        return $this->normalizer->normalize($author, $format, $context);
-                                    })->toArray(),
-                            ];
-
-                            if ($award->getAwardId()) {
-                                $data['awardId'] = $award->getAwardId();
-                            }
-
-                            return $data;
-                        })->toArray();
-                }
-                $data['funding']['statement'] = $article->getFunding()->getStatement();
             }
 
             if ($article->getDecisionLetter()) {

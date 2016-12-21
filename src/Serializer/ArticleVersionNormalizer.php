@@ -14,9 +14,16 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
+use eLife\ApiSdk\Model\DataSet;
+use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Funder;
+use eLife\ApiSdk\Model\Funding;
+use eLife\ApiSdk\Model\FundingAward;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Promise\CallbackPromise;
@@ -88,6 +95,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                     return $article['abstract'] ?? null;
                 });
 
+            $data['additionalFiles'] = new PromiseSequence($complete
+                ->then(function (Result $article) {
+                    return $article['additionalFiles'] ?? [];
+                }));
+
             $data['authors'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
                     return $article['authors'];
@@ -96,6 +108,16 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['copyright'] = $complete
                 ->then(function (Result $article) {
                     return $article['copyright'];
+                });
+
+            $data['dataSets'] = $complete
+                ->then(function (Result $article) {
+                    return $article['dataSets'] ?? null;
+                });
+
+            $data['funding'] = $complete
+                ->then(function (Result $article) {
+                    return $article['funding'] ?? null;
                 });
 
             $data['issue'] = $complete
@@ -117,9 +139,15 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['abstract'] = promise_for($data['abstract'] ?? null);
 
+            $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
+
             $data['authors'] = new ArraySequence($data['authors']);
 
             $data['copyright'] = promise_for($data['copyright']);
+
+            $data['dataSets'] = promise_for($data['dataSets'] ?? null);
+
+            $data['funding'] = promise_for($data['funding'] ?? null);
 
             $data['issue'] = promise_for($data['issue'] ?? null);
 
@@ -142,6 +170,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 );
             });
 
+        $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
+            return $this->denormalizer->denormalize($file, File::class, $format, $context);
+        });
+
         $data['authors'] = $data['authors']->map(function (array $author) use ($format, $context) {
             return $this->denormalizer->denormalize($author, AuthorEntry::class, $format, $context);
         });
@@ -149,6 +181,44 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $data['copyright'] = $data['copyright']
             ->then(function (array $copyright) {
                 return new Copyright($copyright['license'], $copyright['statement'], $copyright['holder'] ?? null);
+            });
+
+        $data['generatedDataSets'] = new PromiseSequence($data['dataSets']
+            ->then(function (array $dataSets = null) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
+                }, $dataSets['generated'] ?? []);
+            }));
+
+        $data['usedDataSets'] = new PromiseSequence($data['dataSets']
+            ->then(function (array $dataSets = null) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, DataSet::class, $format, $context);
+                }, $dataSets['used'] ?? []);
+            }));
+
+        $data['funding'] = $data['funding']
+            ->then(function (array $funding = null) use ($format, $context) {
+                if (empty($funding)) {
+                    return null;
+                }
+
+                return new Funding(
+                    new ArraySequence(array_map(function (array $award) use ($format, $context) {
+                        return new FundingAward(
+                            $award['id'],
+                            new Funder(
+                                $this->denormalizer->denormalize($award['source'], Place::class, $format, $context),
+                                $award['source']['funderId'] ?? null
+                            ),
+                            $award['awardId'] ?? null,
+                            new ArraySequence(array_map(function (array $recipient) use ($format, $context) {
+                                return $this->denormalizer->denormalize($recipient, Author::class, $format, $context);
+                            }, $award['recipients']))
+                        );
+                    }, $funding['awards'] ?? [])),
+                    $funding['statement']
+                );
             });
 
         $data['reviewers'] = $data['reviewers']->map(function (array $reviewer) use ($format, $context) {
@@ -297,6 +367,55 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 if ($object->getAbstract()->getDoi()) {
                     $data['abstract']['doi'] = $object->getAbstract()->getDoi();
                 }
+            }
+
+            if ($object->getFunding()) {
+                if ($object->getFunding()->getAwards()->notEmpty()) {
+                    $data['funding']['awards'] = $object->getFunding()->getAwards()
+                        ->map(function (FundingAward $award) use ($format, $context) {
+                            $source = $this->normalizer->normalize($award->getSource()->getPlace(), $format, $context);
+                            if ($award->getSource()->getFunderId()) {
+                                $source['funderId'] = $award->getSource()->getFunderId();
+                            }
+
+                            $data = [
+                                'id' => $award->getId(),
+                                'source' => $source,
+                                'recipients' => $award->getRecipients()
+                                    ->map(function (Author $author) use ($format, $context) {
+                                        return $this->normalizer->normalize($author, $format, $context);
+                                    })->toArray(),
+                            ];
+
+                            if ($award->getAwardId()) {
+                                $data['awardId'] = $award->getAwardId();
+                            }
+
+                            return $data;
+                        })->toArray();
+                }
+                $data['funding']['statement'] = $object->getFunding()->getStatement();
+            }
+
+            if ($object->getGeneratedDataSets()->notEmpty()) {
+                $data['dataSets']['generated'] = $object->getGeneratedDataSets()
+                    ->map(function (DataSet $dataSet) use ($format, $context) {
+                        return $this->normalizer->normalize($dataSet, $format, $context);
+                    })->toArray();
+            }
+
+            if ($object->getUsedDataSets()->notEmpty()) {
+                $data['dataSets']['used'] = $object->getUsedDataSets()
+                    ->map(function (DataSet $dataSet) use ($format, $context) {
+                        return $this->normalizer->normalize($dataSet, $format, $context);
+                    })->toArray();
+            }
+
+            if ($object->getAdditionalFiles()->notEmpty()) {
+                $data['additionalFiles'] = $object->getAdditionalFiles()
+                    ->map(function (File $file) use ($format, $context) {
+                        return $this->normalizer->normalize($file, $format, $context);
+                    })->toArray();
             }
         }
 

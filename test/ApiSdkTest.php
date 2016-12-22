@@ -56,8 +56,10 @@ final class ApiSdkTest extends ApiTestCase
 
         $this->mockArticleCall(7, true, true);
         $this->mockSubjectCall(1);
+        $this->mockArticleHistoryCall(7, true);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->articles()->get('article7')->wait());
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->articles()->getHistory('article7')->wait());
     }
 
     /**

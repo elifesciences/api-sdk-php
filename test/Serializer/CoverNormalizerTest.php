@@ -143,7 +143,7 @@ final class CoverNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('14107', true, false, 1);
                 },
             ],
         ];

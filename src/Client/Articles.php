@@ -9,6 +9,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -22,6 +23,7 @@ final class Articles implements Iterator, Sequence
     private $count;
     private $articles;
     private $articleVersions;
+    private $articleHistories;
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $articlesClient;
@@ -87,6 +89,24 @@ final class Articles implements Iterator, Sequence
             )
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), ArticleVersion::class);
+            });
+    }
+
+    public function getHistory(string $id) : PromiseInterface
+    {
+        if (isset($this->articleHistories[$id])) {
+            return $this->articleHistories[$id];
+        }
+
+        return $this->articleHistories[$id] = $this->articlesClient
+            ->getArticleHistory(
+                [
+                    'Accept' => [new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1)],
+                ],
+                $id
+            )
+            ->then(function (Result $result) {
+                return $this->denormalizer->denormalize($result->toArray(), ArticleHistory::class);
             });
     }
 

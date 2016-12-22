@@ -298,8 +298,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 ],
                 function ($test) {
                     $test->mockSubjectCall('genomics-evolutionary-biology', true);
-                    $test->mockArticleCall('09560', true, $vor = true);
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('09560', true, $vor = true, 1);
+                    $test->mockArticleCall('14107', true, false, 1);
                 },
             ],
             'minimum' => [
@@ -379,7 +379,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('14107', true, false, 1);
                 },
             ],
             'minimum snippet' => [
@@ -411,7 +411,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('14107');
+                    $test->mockArticleCall('14107', false, false, 1);
                 },
             ],
         ];

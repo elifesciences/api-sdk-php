@@ -127,8 +127,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         $this->mockSubjectCall('1');
         $this->mockSubjectCall('subject1');
-        $this->mockArticleCall('1', !empty($context['complete']));
-        $this->mockArticleCall('14107', !empty($context['complete']));
+        $this->mockArticleCall('1', !empty($context['complete']), false, 1);
+        $this->mockArticleCall('14107', !empty($context['complete']), false, 1);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }

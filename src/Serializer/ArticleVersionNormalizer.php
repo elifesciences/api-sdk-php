@@ -242,24 +242,29 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
     private function denormalizeSnippet(array $article) : PromiseInterface
     {
-        if (isset($this->found[$article['id']])) {
-            return $this->found[$article['id']];
+        $id = $article['id'].'.'.$article['version'];
+
+        if (isset($this->found[$id])) {
+            return $this->found[$id];
         }
 
-        $this->found[$article['id']] = null;
+        $this->found[$id] = null;
 
         if (empty($this->globalCallback)) {
             $this->globalCallback = new CallbackPromise(function () {
                 foreach ($this->found as $id => $article) {
                     if (null === $article) {
-                        $this->found[$id] = $this->articlesClient->getArticleLatestVersion(
+                        list($id, $version) = explode('.', $id);
+
+                        $this->found[$id] = $this->articlesClient->getArticleVersion(
                             [
                                 'Accept' => [
                                     new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
                                     new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
                                 ],
                             ],
-                            $id
+                            $id,
+                            $version
                         );
                     }
                 }

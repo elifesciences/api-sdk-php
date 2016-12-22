@@ -351,12 +351,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
                     $test->mockSubjectCall('genomics-evolutionary-biology', true);
                     $test->mockBlogArticleCall('359325');
-                    $test->mockArticleCall('09560', true, $vor = true);
+                    $test->mockArticleCall('09560', true, $vor = true, 1);
                     $test->mockInterviewCall('1', true);
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('14107', true, false, 1);
                     $test->mockPodcastEpisodeCall(29, true);
                     $test->mockSubjectCall('1', true);
-                    $test->mockArticleCall('1', true);
+                    $test->mockArticleCall('1', true, false, 1);
                 },
             ],
             'minimum' => [
@@ -443,7 +443,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 ],
                 function (ApiTestCase $test) {
                     $test->mockSubjectCall('biophysics-structural-biology', true);
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('14107', true, false, 1);
                 },
             ],
             'complete snippet' => [
@@ -531,10 +531,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('epidemiology-global-health', true);
                     $test->mockSubjectCall('microbiology-infectious-disease', true);
                     $test->mockBlogArticleCall('359325');
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('14107', true, false, 1);
                     $test->mockPodcastEpisodeCall('29', true);
                     $test->mockSubjectCall('1', true);
-                    $test->mockArticleCall('1', true);
+                    $test->mockArticleCall('1', true, false, 1);
                 },
             ],
             'minimum snippet' => [

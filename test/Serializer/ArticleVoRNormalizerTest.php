@@ -455,8 +455,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 ],
                 function ($test) {
                     $test->mockSubjectCall('genomics-evolutionary-biology', true);
-                    $test->mockArticleCall('09560', true, $vor = true);
-                    $test->mockArticleCall('14107', true);
+                    $test->mockArticleCall('09560', true, $vor = true, 1);
+                    $test->mockArticleCall('14107', true, false, 1);
                 },
             ],
             'minimum' => [
@@ -581,7 +581,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('09560', true, true);
+                    $test->mockArticleCall('09560', true, true, 1);
                 },
             ],
             'minimum snippet' => [
@@ -625,7 +625,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'status' => 'vor',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockArticleCall('09560', false, true);
+                    $test->mockArticleCall('09560', false, true, 1);
                 },
             ],
         ];

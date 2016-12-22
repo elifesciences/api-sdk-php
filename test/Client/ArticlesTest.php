@@ -8,7 +8,9 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Subject;
@@ -146,10 +148,53 @@ final class ArticlesTest extends ApiTestCase
         $this->assertInstanceOf(ArticleVersion::class, $article);
         $this->assertSame('article1', $article->getId());
 
-        $this->mockArticleCall('article1', false, true);
+        $this->mockArticleCall('article1', false, true, 1);
 
         $this->assertInstanceOf(Section::class, $article->getContent()[0]);
         $this->assertSame('Article article1 section title', $article->getContent()[0]->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_an_article_history()
+    {
+        $this->mockArticleHistoryCall('article7', true);
+
+        $articleHistory = $this->articles->getHistory('article7')->wait();
+
+        $this->assertInstanceOf(ArticleHistory::class, $articleHistory);
+
+        $this->mockArticleCall('article7', true, false, 1);
+        $this->mockArticleCall('article7', true, true, 2);
+        $this->mockSubjectCall(1);
+
+        foreach ($articleHistory->getVersions() as $articleVersion) {
+            $this->assertSame('article7', $articleVersion->getId());
+
+            if ($articleVersion instanceof ArticleVoR) {
+                $this->assertInstanceOf(Section::class, $articleVersion->getContent()[0]);
+                $this->assertSame('Article article7 section title', $articleVersion->getContent()[0]->getTitle());
+                $this->assertInstanceOf(Paragraph::class, $articleVersion->getContent()[0]->getContent()[0]);
+                $this->assertSame('Article article7 text', $articleVersion->getContent()[0]->getContent()[0]->getText());
+            }
+
+            $this->assertInstanceOf(Subject::class, $articleVersion->getSubjects()[0]);
+            $this->assertSame('Subject 1 name', $articleVersion->getSubjects()[0]->getName());
+        }
+    }
+
+    /**
+     * @test.
+     */
+    public function it_reuses_already_known_article_histories()
+    {
+        $this->mockArticleHistoryCall('article7', true);
+
+        $articleHistory1 = $this->articles->getHistory('article7')->wait();
+        $articleHistory2 = $this->articles->getHistory('article7')->wait();
+
+        $this->assertSame($articleHistory1, $articleHistory2);
     }
 
     /**

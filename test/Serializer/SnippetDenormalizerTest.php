@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Serializer\SnippetDenormalizer;
-use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use PHPUnit_Framework_TestCase;
+use function GuzzleHttp\Promise\promise_for;
 
 final class SnippetDenormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,7 @@ final class SnippetDenormalizerTest extends PHPUnit_Framework_TestCase
             function (int $id) use (&$settled) : PromiseInterface {
                 return promise_for(['id' => $id, 'name' => 'Item '.$id])
                     ->then(function (array $item) use (&$settled) {
-                        $settled++;
+                        ++$settled;
 
                         return $item;
                     });

@@ -2,25 +2,21 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class BlogArticles implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $articles;
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $blogClient;
@@ -28,18 +24,13 @@ final class BlogArticles implements Iterator, Sequence
 
     public function __construct(BlogClient $blogClient, DenormalizerInterface $denormalizer)
     {
-        $this->articles = new ArrayObject();
         $this->blogClient = $blogClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->articles[$id])) {
-            return $this->articles[$id];
-        }
-
-        return $this->articles[$id] = $this->blogClient
+        return $this->blogClient
             ->getArticle(
                 ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
                 $id
@@ -86,19 +77,9 @@ final class BlogArticles implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $articles = [];
-
-                foreach ($result['items'] as $article) {
-                    if (isset($this->articles[$article['id']])) {
-                        $articles[] = $this->articles[$article['id']]->wait();
-                    } else {
-                        $articles[] = $article = $this->denormalizer->denormalize($article, BlogArticle::class, null,
-                            ['snippet' => true]);
-                        $this->articles[$article->getId()] = promise_for($article);
-                    }
-                }
-
-                return new ArraySequence($articles);
+                return array_map(function (array $article) {
+                    return $this->denormalizer->denormalize($article, BlogArticle::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

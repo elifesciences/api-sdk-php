@@ -2,31 +2,26 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class MediumArticles implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $articles;
     private $descendingOrder = true;
     private $mediumArticlesClient;
     private $denormalizer;
 
     public function __construct(MediumClient $mediumArticlesClient, DenormalizerInterface $denormalizer)
     {
-        $this->articles = new ArrayObject();
         $this->mediumArticlesClient = $mediumArticlesClient;
         $this->denormalizer = $denormalizer;
     }
@@ -54,19 +49,9 @@ final class MediumArticles implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $mediumArticles = [];
-
-                foreach ($result['items'] as $mediumArticle) {
-                    if (isset($this->articles[$mediumArticle['uri']])) {
-                        $mediumArticles[] = $this->articles[$mediumArticle['uri']]->wait();
-                    } else {
-                        $mediumArticles[] = $mediumArticle = $this->denormalizer->denormalize($mediumArticle,
-                            MediumArticle::class);
-                        $this->articles[$mediumArticle->getUri()] = promise_for($mediumArticle);
-                    }
-                }
-
-                return new ArraySequence($mediumArticles);
+                return array_map(function (array $mediumArticle) {
+                    return $this->denormalizer->denormalize($mediumArticle, MediumArticle::class);
+                }, $result['items']);
             })
         );
     }

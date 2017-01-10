@@ -134,27 +134,6 @@ final class BlogArticlesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_blog_articles()
-    {
-        $this->mockBlogArticleListCall(1, 1, 1);
-        $this->mockBlogArticleListCall(1, 100, 1);
-
-        $this->blogArticles->toArray();
-
-        $blogArticle = $this->blogArticles->get('blog-article-1')->wait();
-
-        $this->assertInstanceOf(BlogArticle::class, $blogArticle);
-        $this->assertSame('blog-article-1', $blogArticle->getId());
-
-        $this->mockBlogArticleCall(1);
-
-        $this->assertInstanceOf(Paragraph::class, $blogArticle->getContent()[0]);
-        $this->assertSame('Blog article blog-article-1 text', $blogArticle->getContent()[0]->getText());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_subject()
     {
         $this->mockBlogArticleListCall(1, 1, 5, true, ['subject']);

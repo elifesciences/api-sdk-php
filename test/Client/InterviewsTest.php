@@ -124,27 +124,6 @@ final class InterviewsTest extends ApiTestCase
 
     /**
      * @test
-     */
-    public function it_reuses_already_known_interviews()
-    {
-        $this->mockInterviewListCall(1, 1, 1);
-        $this->mockInterviewListCall(1, 100, 1);
-
-        $this->interviews->toArray();
-
-        $interview = $this->interviews->get('interview1')->wait();
-
-        $this->assertInstanceOf(Interview::class, $interview);
-        $this->assertSame('interview1', $interview->getId());
-
-        $this->mockInterviewCall('interview1');
-
-        $this->assertInstanceOf(Paragraph::class, $interview->getContent()[0]);
-        $this->assertSame('Interview interview1 text', $interview->getContent()[0]->getText());
-    }
-
-    /**
-     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

@@ -15,7 +15,6 @@ use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -23,26 +22,33 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 
 final class InterviewNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $interviewsClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(InterviewsClient $interviewsClient)
     {
-        $this->interviewsClient = $interviewsClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $event) : string {
+                return $event['id'];
+            },
+            function (string $id) use ($interviewsClient) : PromiseInterface {
+                return $interviewsClient->getInterview(
+                    ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Interview
     {
         if (!empty($context['snippet'])) {
-            $interview = $this->denormalizeSnippet($data);
+            $interview = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['content'] = new PromiseSequence($interview
                 ->then(function (Result $interview) {
@@ -78,37 +84,6 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             $data['impactStatement'] ?? null,
             $data['content']
         );
-    }
-
-    private function denormalizeSnippet(array $interview) : PromiseInterface
-    {
-        if (isset($this->found[$interview['id']])) {
-            return $this->found[$interview['id']];
-        }
-
-        $this->found[$interview['id']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $interview) {
-                    if (null === $interview) {
-                        $this->found[$id] = $this->interviewsClient->getInterview(
-                            ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
-                            $id
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $interviews) use ($interview) {
-                return $interviews[$interview['id']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

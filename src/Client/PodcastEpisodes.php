@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -13,14 +12,12 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PodcastEpisodes implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $episodes;
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $podcastClient;
@@ -28,18 +25,13 @@ final class PodcastEpisodes implements Iterator, Sequence
 
     public function __construct(PodcastClient $podcastClient, DenormalizerInterface $denormalizer)
     {
-        $this->episodes = new ArrayObject();
         $this->podcastClient = $podcastClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(int $number) : PromiseInterface
     {
-        if (isset($this->episodes[$number])) {
-            return $this->episodes[$number];
-        }
-
-        return $this->episodes[$number] = $this->podcastClient
+        return $this->podcastClient
             ->getEpisode(
                 ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
                 $number
@@ -89,13 +81,9 @@ final class PodcastEpisodes implements Iterator, Sequence
                 $episodes = [];
 
                 foreach ($result['items'] as $episode) {
-                    if (isset($this->episodes[$episode['number']])) {
-                        $episodes[] = $this->episodes[$episode['number']]->wait();
-                    } else {
-                        $episodes[] = $episode = $this->denormalizer->denormalize($episode, PodcastEpisode::class,
-                            null, ['snippet' => true]);
-                        $this->episodes[$episode->getNumber()] = promise_for($episode);
-                    }
+                    return array_map(function (array $episode) {
+                        return $this->denormalizer->denormalize($episode, PodcastEpisode::class, null, ['snippet' => true]);
+                    }, $result['items']);
                 }
 
                 return new ArraySequence($episodes);

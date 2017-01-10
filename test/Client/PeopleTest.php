@@ -134,27 +134,6 @@ final class PeopleTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_people()
-    {
-        $this->mockPersonListCall(1, 1, 1);
-        $this->mockPersonListCall(1, 100, 1);
-
-        $this->people->toArray();
-
-        $person = $this->people->get('person1')->wait();
-
-        $this->assertInstanceOf(Person::class, $person);
-        $this->assertSame('person1', $person->getId());
-
-        $this->mockPersonCall(1, true);
-
-        $this->assertInstanceOf(Paragraph::class, $person->getProfile()[0]);
-        $this->assertSame('person1 profile text', $person->getProfile()[0]->getText());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_subject()
     {
         $this->mockPersonListCall(1, 1, 5, true, ['subject']);

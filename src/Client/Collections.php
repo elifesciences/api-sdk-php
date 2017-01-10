@@ -2,25 +2,21 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Collections implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $collections = [];
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $collectionsClient;
@@ -28,18 +24,13 @@ final class Collections implements Iterator, Sequence
 
     public function __construct(CollectionsClient $collectionsClient, DenormalizerInterface $denormalizer)
     {
-        $this->collections = new ArrayObject();
         $this->collectionsClient = $collectionsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->collections[$id])) {
-            return $this->collections[$id];
-        }
-
-        return $this->collections[$id] = $this->collectionsClient
+        return $this->collectionsClient
             ->getCollection(
                 ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                 $id
@@ -86,19 +77,9 @@ final class Collections implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $collections = [];
-
-                foreach ($result['items'] as $collection) {
-                    if (isset($this->collections[$collection['id']])) {
-                        $collections[] = $this->collections[$collection['id']]->wait();
-                    } else {
-                        $collections[] = $collection = $this->denormalizer->denormalize($collection, Collection::class,
-                            null, ['snippet' => true]);
-                        $this->collections[$collection->getId()] = promise_for($collection);
-                    }
-                }
-
-                return new ArraySequence($collections);
+                return array_map(function (array $collection) {
+                    return $this->denormalizer->denormalize($collection, Collection::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

@@ -7,7 +7,6 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -15,7 +14,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -23,19 +21,27 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $subjectsClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(SubjectsClient $subjectsClient)
     {
-        $this->subjectsClient = $subjectsClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $subject) : string {
+                return $subject['id'];
+            },
+            function (string $id) use ($subjectsClient) : PromiseInterface {
+                return $subjectsClient->getSubject(
+                    ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Subject
     {
         if (!empty($context['snippet'])) {
-            $subject = $this->denormalizeSnippet($data);
+            $subject = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['impactStatement'] = $subject->then(function (Result $subject) {
                 return $subject['impactStatement'] ?? null;
@@ -67,37 +73,6 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             $banner,
             $thumbnail
         );
-    }
-
-    private function denormalizeSnippet(array $subject) : PromiseInterface
-    {
-        if (isset($this->found[$subject['id']])) {
-            return $this->found[$subject['id']];
-        }
-
-        $this->found[$subject['id']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $subject) {
-                    if (null === $subject) {
-                        $this->found[$id] = $this->subjectsClient->getSubject(
-                            ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
-                            $id
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $subjects) use ($subject) {
-                return $subjects[$subject['id']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

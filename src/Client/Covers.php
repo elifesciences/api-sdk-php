@@ -66,9 +66,9 @@ final class Covers implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                return new ArraySequence(array_map(function (array $cover) {
+                return array_map(function (array $cover) {
                     return $this->denormalizer->denormalize($cover, Cover::class);
-                }, $result['items']));
+                }, $result['items']);
             }));
     }
 

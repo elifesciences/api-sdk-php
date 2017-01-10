@@ -134,27 +134,6 @@ final class PodcastEpisodesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_podcast_episodes()
-    {
-        $this->mockPodcastEpisodeListCall(1, 1, 1);
-        $this->mockPodcastEpisodeListCall(1, 100, 1);
-
-        $this->podcastEpisodes->toArray();
-
-        $podcastEpisode = $this->podcastEpisodes->get(1)->wait();
-
-        $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
-        $this->assertSame(1, $podcastEpisode->getNumber());
-
-        $this->mockPodcastEpisodeCall(1);
-
-        $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()[0]);
-        $this->assertSame('Chapter title', $podcastEpisode->getChapters()[0]->getTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_subject()
     {
         $this->mockPodcastEpisodeListCall(1, 1, 5, true, ['subject']);

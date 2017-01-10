@@ -125,27 +125,6 @@ final class EventsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_events()
-    {
-        $this->mockEventListCall(1, 1, 1);
-        $this->mockEventListCall(1, 100, 1);
-
-        $this->events->toArray();
-
-        $event = $this->events->get('event1')->wait();
-
-        $this->assertInstanceOf(Event::class, $event);
-        $this->assertSame('event1', $event->getId());
-
-        $this->mockEventCall(1);
-
-        $this->assertInstanceOf(Paragraph::class, $event->getContent()[0]);
-        $this->assertSame('Event 1 text', $event->getContent()[0]->getText());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_type()
     {
         $this->mockEventListCall(1, 1, 5, true, 'open');

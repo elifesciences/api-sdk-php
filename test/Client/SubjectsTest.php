@@ -120,22 +120,6 @@ final class SubjectsTest extends ApiTestCase
 
     /**
      * @test
-     */
-    public function it_reuses_already_known_subjects()
-    {
-        $this->mockSubjectListCall(1, 1, 10);
-        $this->mockSubjectListCall(1, 100, 10);
-
-        $this->subjects->toArray();
-
-        $subject = $this->subjects->get('subject7')->wait();
-
-        $this->assertInstanceOf(Subject::class, $subject);
-        $this->assertSame('subject7', $subject->getId());
-    }
-
-    /**
-     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

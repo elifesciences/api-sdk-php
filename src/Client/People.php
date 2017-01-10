@@ -2,25 +2,21 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Person;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class People implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $people;
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $typeQuery;
@@ -29,18 +25,13 @@ final class People implements Iterator, Sequence
 
     public function __construct(PeopleClient $peopleClient, DenormalizerInterface $denormalizer)
     {
-        $this->people = new ArrayObject();
         $this->peopleClient = $peopleClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->people[$id])) {
-            return $this->people[$id];
-        }
-
-        return $this->people[$id] = $this->peopleClient
+        return $this->peopleClient
             ->getPerson(
                 ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
                 $id
@@ -101,19 +92,9 @@ final class People implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $people = [];
-
-                foreach ($result['items'] as $person) {
-                    if (isset($this->people[$person['id']])) {
-                        $people[] = $this->people[$person['id']]->wait();
-                    } else {
-                        $people[] = $person = $this->denormalizer->denormalize($person, Person::class, null,
-                            ['snippet' => true]);
-                        $this->people[$person->getId()] = promise_for($person);
-                    }
-                }
-
-                return new ArraySequence($people);
+                return array_map(function (array $person) {
+                    return $this->denormalizer->denormalize($person, Person::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

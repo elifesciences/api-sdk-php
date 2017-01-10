@@ -6,21 +6,18 @@ use ArrayObject;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Event;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Events implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $events;
     private $descendingOrder = true;
     private $type = 'all';
     private $eventsClient;
@@ -35,11 +32,7 @@ final class Events implements Iterator, Sequence
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->events[$id])) {
-            return $this->events[$id];
-        }
-
-        return $this->events[$id] = $this->eventsClient
+        return $this->eventsClient
             ->getEvent(
                 ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
                 $id
@@ -86,19 +79,9 @@ final class Events implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $events = [];
-
-                foreach ($result['items'] as $event) {
-                    if (isset($this->events[$event['id']])) {
-                        $events[] = $this->events[$event['id']]->wait();
-                    } else {
-                        $events[] = $event = $this->denormalizer->denormalize($event, Event::class, null,
-                            ['snippet' => true]);
-                        $this->events[$event->getId()] = promise_for($event);
-                    }
-                }
-
-                return new ArraySequence($events);
+                return array_map(function (array $event) {
+                    return $this->denormalizer->denormalize($event, Event::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

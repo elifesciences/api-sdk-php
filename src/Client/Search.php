@@ -5,7 +5,6 @@ namespace eLife\ApiSdk\Client;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
@@ -14,7 +13,6 @@ use eLife\ApiSdk\Model\SearchTypes;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Search implements Iterator, Sequence
 {
@@ -33,7 +31,6 @@ final class Search implements Iterator, Sequence
 
     // cached outputs
     private $count;
-    private $items = [];
     /**
      * @var PromiseInterface
      */
@@ -140,40 +137,11 @@ final class Search implements Iterator, Sequence
 
         return new PromiseSequence($resultPromise
             ->then(function (Result $result) {
-                $items = [];
-
-                foreach ($result['items'] as $item) {
-                    $key = $this->keyFor($item);
-                    if (isset($this->items[$key])) {
-                        $items[] = $this->items[$key]->wait();
-                    } else {
-                        $items[] = $model = $this->denormalizer->denormalize($item, Model::class, null, ['snippet' => true]);
-                        $this->items[$key] = promise_for($model);
-                    }
-                }
-
-                return new ArraySequence($items);
+                return array_map(function (array $item) {
+                    return $this->denormalizer->denormalize($item, Model::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
-
-        return $sequencePromise;
-    }
-
-    private function keyFor(array $item)
-    {
-        return
-            $item['type']
-            .(
-                isset($item['status'])
-                ? '-'.$item['status']
-                : ''
-            )
-            .'::'
-            .(
-                isset($item['id'])
-                ? $item['id']
-                : $item['number']
-            );
     }
 
     public function reverse() : Sequence
@@ -209,7 +177,6 @@ final class Search implements Iterator, Sequence
             $this->count = null;
             $this->types = null;
             $this->subjects = null;
-            $this->items = [];
         }
     }
 }

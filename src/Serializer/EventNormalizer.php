@@ -14,7 +14,6 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -22,7 +21,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class EventNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -30,19 +28,27 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $eventsClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(EventsClient $eventsClient)
     {
-        $this->eventsClient = $eventsClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $event) : string {
+                return $event['id'];
+            },
+            function (string $id) use ($eventsClient) : PromiseInterface {
+                return $eventsClient->getEvent(
+                    ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Event
     {
         if (!empty($context['snippet'])) {
-            $event = $this->denormalizeSnippet($data);
+            $event = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['content'] = new PromiseSequence($event
                 ->then(function (Result $event) {
@@ -82,37 +88,6 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['content'],
             $data['venue']
         );
-    }
-
-    private function denormalizeSnippet(array $event) : PromiseInterface
-    {
-        if (isset($this->found[$event['id']])) {
-            return $this->found[$event['id']];
-        }
-
-        $this->found[$event['id']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $event) {
-                    if (null === $event) {
-                        $this->found[$id] = $this->eventsClient->getEvent(
-                            ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
-                            $id
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $events) use ($event) {
-                return $events[$event['id']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

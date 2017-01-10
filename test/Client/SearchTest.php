@@ -106,25 +106,6 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_models()
-    {
-        $this->mockCountCall(1);
-        $this->mockFirstPageCall(1);
-
-        $existingModel = $this->search[0];
-
-        $models = $this->search->toArray();
-
-        $this->assertInstanceOf(Model::class, $models[0]);
-
-        $this->mockArticleCall(1);
-        $this->assertSame($existingModel, $models[0]);
-        $this->assertSame('Article 1 title', $models[0]->getTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_query()
     {
         $this->mockCountCall(5, 'bacteria');
@@ -318,21 +299,6 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
 
         $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()));
-    }
-
-    /**
-     * @test
-     */
-    public function it_reuses_models_when_reversed_or_in_general_resliced()
-    {
-        $this->mockCountCall(10, $query = '');
-        $this->mockFirstPageCall(10, $query = '', $descendingOrder = true);
-        $models = $this->search->toArray();
-
-        $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
-        foreach ($this->search->reverse() as $item) {
-            $this->assertTrue(array_search($item, $models, $strict = true) !== false, 'Search item not found in previous items objects set');
-        }
     }
 
     /**

@@ -14,7 +14,6 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -29,14 +28,21 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $collectionsClient;
-    private $identityMap;
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(CollectionsClient $collectionsClient)
     {
-        $this->collectionsClient = $collectionsClient;
-        $this->identityMap = new IdentityMap();
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $collection) : string {
+                return $collection['id'];
+            },
+            function (string $id) use ($collectionsClient) : PromiseInterface {
+                return $collectionsClient->getCollection(
+                    ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Collection
@@ -44,7 +50,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
         if (!empty($context['snippet'])) {
-            $collection = $this->denormalizeSnippet($data);
+            $collection = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['subTitle'] = $normalizationHelper->selectField($collection, 'subTitle');
             $data['image']['banner'] = $normalizationHelper->selectField($collection, 'image.banner');
@@ -98,35 +104,6 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['relatedContent'],
             $data['podcastEpisodes']
         );
-    }
-
-    private function denormalizeSnippet(array $collection) : PromiseInterface
-    {
-        if ($this->identityMap->has($collection['id'])) {
-            return $this->identityMap->get($collection['id']);
-        }
-
-        $this->identityMap->reset($collection['id']);
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                $this->identityMap->fillMissingWith(function ($id) : PromiseInterface {
-                    return $this->collectionsClient->getCollection(
-                        ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
-                        $id
-                    );
-                });
-
-                $this->globalCallback = null;
-
-                return $this->identityMap->waitForAll();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $collections) use ($collection) {
-                return $collections[$collection['id']];
-            });
     }
 
     public function normalize($object, $format = null, array $context = []) : array

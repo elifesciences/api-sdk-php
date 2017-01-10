@@ -26,7 +26,6 @@ use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -34,7 +33,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 abstract class ArticleVersionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -42,13 +40,29 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $articlesClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(ArticlesClient $articlesClient)
     {
-        $this->articlesClient = $articlesClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $article) : string {
+                return $article['id'].'.'.$article['version'];
+            },
+            function (string $id) use ($articlesClient) : PromiseInterface {
+                list($id, $version) = explode('.', $id);
+
+                return $articlesClient->getArticleVersion(
+                    [
+                        'Accept' => [
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                        ],
+                    ],
+                    $id,
+                    $version
+                );
+            }
+        );
     }
 
     /**
@@ -88,7 +102,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
         if (!empty($context['snippet'])) {
-            $complete = $this->denormalizeSnippet($data);
+            $complete = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['abstract'] = $complete
                 ->then(function (Result $article) {
@@ -238,47 +252,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $data['relatedArticles'] = $normalizationHelper->denormalizeSequence($data['relatedArticles'], Article::class, $context + ['snippet' => true]);
 
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
-    }
-
-    private function denormalizeSnippet(array $article) : PromiseInterface
-    {
-        $id = $article['id'].'.'.$article['version'];
-
-        if (isset($this->found[$id])) {
-            return $this->found[$id];
-        }
-
-        $this->found[$id] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $article) {
-                    if (null === $article) {
-                        list($id, $version) = explode('.', $id);
-
-                        $this->found[$id] = $this->articlesClient->getArticleVersion(
-                            [
-                                'Accept' => [
-                                    new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
-                                    new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
-                                ],
-                            ],
-                            $id,
-                            $version
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $articles) use ($article) {
-                return $articles[$article['id']];
-            });
     }
 
     /**

@@ -13,7 +13,6 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -21,7 +20,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -29,19 +27,27 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $peopleClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(PeopleClient $peopleClient)
     {
-        $this->peopleClient = $peopleClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $person) : string {
+                return $person['id'];
+            },
+            function (string $id) use ($peopleClient) : PromiseInterface {
+                return $peopleClient->getPerson(
+                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : Person
     {
         if (!empty($context['snippet'])) {
-            $person = $this->denormalizeSnippet($data);
+            $person = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['competingInterests'] = $person
                 ->then(function (Result $person) {
@@ -101,37 +107,6 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             $data['profile'],
             $data['competingInterests']
         );
-    }
-
-    private function denormalizeSnippet(array $person) : PromiseInterface
-    {
-        if (isset($this->found[$person['id']])) {
-            return $this->found[$person['id']];
-        }
-
-        $this->found[$person['id']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $person) {
-                    if (null === $person) {
-                        $this->found[$id] = $this->peopleClient->getPerson(
-                            ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
-                            $id
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $people) use ($person) {
-                return $people[$person['id']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

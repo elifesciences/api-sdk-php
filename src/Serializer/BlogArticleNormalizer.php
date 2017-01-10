@@ -13,7 +13,6 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -21,26 +20,33 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 
 final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $blogClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(BlogClient $blogClient)
     {
-        $this->blogClient = $blogClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $article) : string {
+                return $article['id'];
+            },
+            function (string $id) use ($blogClient) : PromiseInterface {
+                return $blogClient->getArticle(
+                    ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
+                    $id
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : BlogArticle
     {
         if (!empty($context['snippet'])) {
-            $article = $this->denormalizeSnippet($data);
+            $article = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['content'] = new PromiseSequence($article
                 ->then(function (Result $article) {
@@ -70,37 +76,6 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $data['content'],
             $data['subjects']
         );
-    }
-
-    private function denormalizeSnippet(array $article) : PromiseInterface
-    {
-        if (isset($this->found[$article['id']])) {
-            return $this->found[$article['id']];
-        }
-
-        $this->found[$article['id']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $id => $article) {
-                    if (null === $article) {
-                        $this->found[$id] = $this->blogClient->getArticle(
-                            ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
-                            $id
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $articles) use ($article) {
-                return $articles[$article['id']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

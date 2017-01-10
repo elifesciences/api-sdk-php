@@ -136,27 +136,6 @@ final class ArticlesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_articles()
-    {
-        $this->mockArticleListCall(1, 1, 1, true, [], true);
-        $this->mockArticleListCall(1, 100, 1, true, [], true);
-
-        $this->articles->toArray();
-
-        $article = $this->articles->get('article1')->wait();
-
-        $this->assertInstanceOf(ArticleVersion::class, $article);
-        $this->assertSame('article1', $article->getId());
-
-        $this->mockArticleCall('article1', false, true, 1);
-
-        $this->assertInstanceOf(Section::class, $article->getContent()[0]);
-        $this->assertSame('Article article1 section title', $article->getContent()[0]->getTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_gets_an_article_history()
     {
         $this->mockArticleHistoryCall('article7', true);
@@ -182,19 +161,6 @@ final class ArticlesTest extends ApiTestCase
             $this->assertInstanceOf(Subject::class, $articleVersion->getSubjects()[0]);
             $this->assertSame('Subject 1 name', $articleVersion->getSubjects()[0]->getName());
         }
-    }
-
-    /**
-     * @test.
-     */
-    public function it_reuses_already_known_article_histories()
-    {
-        $this->mockArticleHistoryCall('article7', true);
-
-        $articleHistory1 = $this->articles->getHistory('article7')->wait();
-        $articleHistory2 = $this->articles->getHistory('article7')->wait();
-
-        $this->assertSame($articleHistory1, $articleHistory2);
     }
 
     /**

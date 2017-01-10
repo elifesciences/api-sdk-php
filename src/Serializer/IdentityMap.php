@@ -12,9 +12,13 @@ final class IdentityMap
 {
     private $contents = [];
 
-    public function reset($id) : self
+    public function reset($id = null) : self
     {
-        $this->contents[$id] = null;
+        if ($id) {
+            $this->contents[$id] = null;
+        } else {
+            $this->contents = [];
+        }
 
         return $this;
     }

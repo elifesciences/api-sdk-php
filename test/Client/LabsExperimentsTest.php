@@ -124,27 +124,6 @@ final class LabsExperimentsTest extends ApiTestCase
 
     /**
      * @test
-     */
-    public function it_reuses_already_known_labs_experiments()
-    {
-        $this->mockLabsExperimentListCall(1, 1, 1);
-        $this->mockLabsExperimentListCall(1, 100, 1);
-
-        $this->labsExperiments->toArray();
-
-        $labsExperiment = $this->labsExperiments->get(1)->wait();
-
-        $this->assertInstanceOf(LabsExperiment::class, $labsExperiment);
-        $this->assertSame(1, $labsExperiment->getNumber());
-
-        $this->mockLabsExperimentCall(1);
-
-        $this->assertInstanceOf(Paragraph::class, $labsExperiment->getContent()[0]);
-        $this->assertSame('Labs experiment 1 text', $labsExperiment->getContent()[0]->getText());
-    }
-
-    /**
-     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

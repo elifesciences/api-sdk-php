@@ -2,43 +2,34 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Subjects implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $subjects;
     private $descendingOrder = true;
     private $subjectsClient;
     private $denormalizer;
 
     public function __construct(SubjectsClient $subjectsClient, DenormalizerInterface $denormalizer)
     {
-        $this->subjects = new ArrayObject();
         $this->subjectsClient = $subjectsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->subjects[$id])) {
-            return $this->subjects[$id];
-        }
-
-        return $this->subjects[$id] = $this->subjectsClient
+        return $this->subjectsClient
             ->getSubject(
                 ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
                 $id
@@ -71,18 +62,9 @@ final class Subjects implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $subjects = [];
-
-                foreach ($result['items'] as $subject) {
-                    if (isset($this->subjects[$subject['id']])) {
-                        $subjects[] = $this->subjects[$subject['id']]->wait();
-                    } else {
-                        $subjects[] = $subject = $this->denormalizer->denormalize($subject, Subject::class);
-                        $this->subjects[$subject->getId()] = promise_for($subject);
-                    }
-                }
-
-                return new ArraySequence($subjects);
+                return array_map(function (array $subject) {
+                    return $this->denormalizer->denormalize($subject, Subject::class);
+                }, $result['items']);
             })
         );
     }

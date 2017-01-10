@@ -125,22 +125,6 @@ final class AnnualReportsTest extends ApiTestCase
 
     /**
      * @test
-     */
-    public function it_reuses_already_known_annual_reports()
-    {
-        $this->mockAnnualReportListCall(1, 1, 10);
-        $this->mockAnnualReportListCall(1, 100, 10);
-
-        $this->annualReports->toArray();
-
-        $annualReport = $this->annualReports->get(2012)->wait();
-
-        $this->assertInstanceOf(AnnualReport::class, $annualReport);
-        $this->assertSame(2012, $annualReport->getYear());
-    }
-
-    /**
-     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

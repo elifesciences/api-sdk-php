@@ -135,27 +135,6 @@ final class CollectionsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_reuses_already_known_collections()
-    {
-        $this->mockCollectionListCall(1, 1, 1);
-        $this->mockCollectionListCall(1, 100, 1);
-
-        $this->collections->toArray();
-
-        $collection = $this->collections->get(1)->wait();
-
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertSame('1', $collection->getId());
-
-        $this->mockCollectionCall(1);
-
-        $this->assertInstanceOf(BlogArticle::class, $collection->getContent()[0]);
-        $this->assertSame('Media coverage: Slime can see', $collection->getContent()[0]->getTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_filtered_by_subject()
     {
         $this->mockCollectionListCall(1, 1, 5, true, ['subject']);

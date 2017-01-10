@@ -2,43 +2,34 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Interview;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Interviews implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $interviews;
     private $descendingOrder = true;
     private $interviewsClient;
     private $denormalizer;
 
     public function __construct(InterviewsClient $interviewsClient, DenormalizerInterface $denormalizer)
     {
-        $this->interviews = new ArrayObject();
         $this->interviewsClient = $interviewsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        if (isset($this->interviews[$id])) {
-            return $this->interviews[$id];
-        }
-
-        return $this->interviews[$id] = $this->interviewsClient
+        return $this->interviewsClient
             ->getInterview(
                 ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
                 $id
@@ -71,19 +62,9 @@ final class Interviews implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $interviews = [];
-
-                foreach ($result['items'] as $interview) {
-                    if (isset($this->interviews[$interview['id']])) {
-                        $interviews[] = $this->interviews[$interview['id']]->wait();
-                    } else {
-                        $interviews[] = $interview = $this->denormalizer->denormalize($interview, Interview::class,
-                            null, ['snippet' => true]);
-                        $this->interviews[$interview->getId()] = promise_for($interview);
-                    }
-                }
-
-                return new ArraySequence($interviews);
+                return array_map(function (array $interview) {
+                    return $this->denormalizer->denormalize($interview, Interview::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

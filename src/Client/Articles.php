@@ -2,11 +2,9 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleHistory;
@@ -14,16 +12,12 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class Articles implements Iterator, Sequence
 {
     use Client;
 
     private $count;
-    private $articles;
-    private $articleVersions;
-    private $articleHistories;
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $articlesClient;
@@ -31,8 +25,6 @@ final class Articles implements Iterator, Sequence
 
     public function __construct(ArticlesClient $articlesClient, DenormalizerInterface $denormalizer)
     {
-        $this->articles = new ArrayObject();
-        $this->articleVersions = new ArrayObject();
         $this->articlesClient = $articlesClient;
         $this->denormalizer = $denormalizer;
     }
@@ -53,11 +45,7 @@ final class Articles implements Iterator, Sequence
     public function get(string $id, int $version = null) : PromiseInterface
     {
         if (null === $version) {
-            if (isset($this->articles[$id])) {
-                return $this->articles[$id];
-            }
-
-            return $this->articles[$id] = $this->articlesClient
+            return $this->articlesClient
                 ->getArticleLatestVersion(
                     [
                         'Accept' => [
@@ -72,11 +60,7 @@ final class Articles implements Iterator, Sequence
                 });
         }
 
-        if (isset($this->articleVersions[$id][$version])) {
-            return $this->articles[$id][$version];
-        }
-
-        return $this->articles[$id][$version] = $this->articlesClient
+        return $this->articlesClient
             ->getArticleVersion(
                 [
                     'Accept' => [
@@ -94,11 +78,7 @@ final class Articles implements Iterator, Sequence
 
     public function getHistory(string $id) : PromiseInterface
     {
-        if (isset($this->articleHistories[$id])) {
-            return $this->articleHistories[$id];
-        }
-
-        return $this->articleHistories[$id] = $this->articlesClient
+        return $this->articlesClient
             ->getArticleHistory(
                 [
                     'Accept' => [new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1)],
@@ -134,25 +114,18 @@ final class Articles implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                $articles = [];
-
-                foreach ($result['items'] as $article) {
+                return array_map(function (array $article) {
                     // *** temporary hack for invalid articles
                     // we resolve them as null, and let the client applications
                     // skip them rather than exploding when encountering them
                     if (isset($article['-invalid'])) {
-                        $articles[] = null;
-                    // *** end of temporary hack
-                    } elseif (isset($this->articles[$article['id']])) {
-                        $articles[] = $this->articles[$article['id']]->wait();
-                    } else {
-                        $articles[] = $article = $this->denormalizer->denormalize($article, ArticleVersion::class, null,
-                            ['snippet' => true]);
-                        $this->articles[$article->getId()] = promise_for($article);
+                        return null;
                     }
-                }
 
-                return new ArraySequence($articles);
+                    // *** end of temporary hack
+
+                    return $this->denormalizer->denormalize($article, ArticleVersion::class, null, ['snippet' => true]);
+                }, $result['items']);
             })
         );
     }

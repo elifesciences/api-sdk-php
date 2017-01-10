@@ -15,7 +15,6 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Promise\CallbackPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -23,7 +22,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Promise\promise_for;
 
 final class PodcastEpisodeNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -31,19 +29,27 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $podcastClient;
-    private $found = [];
-    private $globalCallback;
+    private $snippetDenormalizer;
 
     public function __construct(PodcastClient $podcastClient)
     {
-        $this->podcastClient = $podcastClient;
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $episode) : int {
+                return $episode['number'];
+            },
+            function (int $number) use ($podcastClient) : PromiseInterface {
+                return $podcastClient->getEpisode(
+                    ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
+                    $number
+                );
+            }
+        );
     }
 
     public function denormalize($data, $class, $format = null, array $context = []) : PodcastEpisode
     {
         if (!empty($context['snippet'])) {
-            $podcastEpisode = $this->denormalizeSnippet($data);
+            $podcastEpisode = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['chapters'] = new PromiseSequence($podcastEpisode
                 ->then(function (Result $podcastEpisode) {
@@ -100,37 +106,6 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['subjects'],
             $data['chapters']
         );
-    }
-
-    private function denormalizeSnippet(array $episode) : PromiseInterface
-    {
-        if (isset($this->found[$episode['number']])) {
-            return $this->found[$episode['number']];
-        }
-
-        $this->found[$episode['number']] = null;
-
-        if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
-                foreach ($this->found as $number => $episode) {
-                    if (null === $episode) {
-                        $this->found[$number] = $this->podcastClient->getEpisode(
-                            ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
-                            $number
-                        );
-                    }
-                }
-
-                $this->globalCallback = null;
-
-                return all($this->found)->wait();
-            });
-        }
-
-        return $this->globalCallback
-            ->then(function (array $interviews) use ($episode) {
-                return $interviews[$episode['number']];
-            });
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

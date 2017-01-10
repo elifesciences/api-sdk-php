@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasId, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -115,6 +115,15 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     final public function getType(): string
     {
         return $this->type;
+    }
+
+    final public function getCiteAs()
+    {
+        if (null === $this->getPublishedDate()) {
+            return null;
+        }
+
+        return sprintf('eLife %s;%s:%s', $this->getPublishedDate()->format('Y'), $this->getVolume(), $this->getElocationId());
     }
 
     final public function getDoi(): string

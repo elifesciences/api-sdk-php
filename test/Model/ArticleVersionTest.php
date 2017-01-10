@@ -16,6 +16,7 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
+use eLife\ApiSdk\Model\HasCiteAs;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasSubjects;
@@ -89,6 +90,25 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertSame('research-article', $article->getType());
+    }
+
+    /**
+     * @test
+     */
+    final public function it_may_be_cited()
+    {
+        $with = $this->builder
+            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+            ->withVolume(5)
+            ->withElocationId('e14107')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublished(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasCiteAs::class, $with);
+        $this->assertSame('eLife 2016;5:e14107', $with->getCiteAs());
+        $this->assertNull($withOut->getCiteAs());
     }
 
     /**

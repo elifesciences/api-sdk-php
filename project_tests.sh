@@ -6,7 +6,7 @@ set -e
 if [ "$dependencies" = "lowest" ]; then
     composer1.0 update --prefer-lowest --no-interaction
     proofreader src/
-    proofreader --no-phpcpd test/
+    proofreader --no-phpcpd scripts/ test/
 else
     composer1.0 update --no-interaction
 fi

@@ -7,21 +7,21 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 final class SnippetDenormalizer
 {
-    private $id;
-    private $fetcher;
+    private $determineId;
+    private $fetchComplete;
     private $identityMap;
     private $globalCallback;
 
-    public function __construct(callable $id, callable $fetcher)
+    public function __construct(callable $determineId, callable $fetchComplete)
     {
-        $this->id = $id;
-        $this->fetcher = $fetcher;
+        $this->determineId = $determineId;
+        $this->fetchComplete = $fetchComplete;
         $this->identityMap = new IdentityMap();
     }
 
     public function denormalizeSnippet(array $item) : PromiseInterface
     {
-        $id = call_user_func($this->id, $item);
+        $id = call_user_func($this->determineId, $item);
 
         if ($this->identityMap->has($id)) {
             return $this->identityMap->get($id);
@@ -31,7 +31,7 @@ final class SnippetDenormalizer
 
         if (empty($this->globalCallback)) {
             $this->globalCallback = new CallbackPromise(function () {
-                $this->identityMap->fillMissingWith($this->fetcher);
+                $this->identityMap->fillMissingWith($this->fetchComplete);
 
                 $this->globalCallback = null;
 

@@ -14,21 +14,17 @@ trait CanBeSliced
 
     abstract public function slice(int $offset, int $length = null) : Sequence;
 
-    final private function getPage(int $page) : array
+    final private function getPage(int $page) : Sequence
     {
-        if (empty($this->pages)) {
-            for ($i = 0; $i < $this->count(); ++$i) {
-                if (0 === $i % $this->pageBatch) {
-                    $this->pages[count($this->pages) + 1] = $this->slice($i, $this->pageBatch);
-                }
-            }
+        if (empty($this->pages[$page])) {
+            $this->pages[$page] = $this->slice($this->pageBatch * ($page - 1), $this->pageBatch);
         }
 
         if (false === isset($this->pages[$page])) {
             throw new LogicException('Could not find page '.$page);
         }
 
-        return iterator_to_array($this->pages[$page]);
+        return $this->pages[$page];
     }
 
     final private function resetPages()

@@ -55,6 +55,24 @@ final class ArticlesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_does_not_make_unnecessary_network_requests()
+    {
+        // 3000 in full list.
+        $this->mockArticleListCall(1, 1, 3000);
+        $this->mockArticleListCall(1, 100, 3000);
+        // Only grab first 50
+        foreach ($this->articles as $i => $article) {
+            if ($i > 50) {
+                break;
+            }
+            $this->assertInstanceOf(ArticleVersion::class, $article);
+            $this->assertSame('article'.$i, $article->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_counted()
     {
         $this->mockArticleListCall(1, 1, 10);

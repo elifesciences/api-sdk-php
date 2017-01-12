@@ -34,19 +34,22 @@ $sdk = new eLife\ApiSdk\ApiSdk($client);
 
 // TEST.
 $articles = $sdk->articles();
-$count = 0;
+$articlesCount = 0;
 $invalidArticles = 0;
+$articleIds = [];
 foreach ($articles as $a) {
     if ($a === null) {
-        continue;
         $invalidArticles++;
+        continue;
     }
     //echo "Article id: {$a->getId()}", PHP_EOL;
     //$a->getCopyright();
     //echo "Article copyright loaded", PHP_EOL;
-    ++$count;
-    //echo "Count: $count", PHP_EOL;
+    ++$articlesCount;
+    $articleIds[] = $a->getId();
+    //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
-echo "Valid articles (served): $count", PHP_EOL;
+echo "Valid articles (served): $articlesCount", PHP_EOL;
+echo "\$articleIds: ", count($articleIds), PHP_EOL;

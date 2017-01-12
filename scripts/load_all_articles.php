@@ -39,12 +39,12 @@ $invalidArticles = 0;
 $articleIds = [];
 foreach ($articles as $a) {
     if ($a === null) {
-        $invalidArticles++;
+        ++$invalidArticles;
         continue;
     }
-    //echo "Article id: {$a->getId()}", PHP_EOL;
+    echo "Article id: {$a->getId()}", PHP_EOL;
     //$a->getCopyright();
-    //echo "Article copyright loaded", PHP_EOL;
+    //echo 'Article copyright loaded', PHP_EOL;
     ++$articlesCount;
     $articleIds[] = $a->getId();
     //echo "Count: $articlesCount", PHP_EOL;
@@ -52,4 +52,4 @@ foreach ($articles as $a) {
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
 echo "Valid articles (served): $articlesCount", PHP_EOL;
-echo "\$articleIds: ", count($articleIds), PHP_EOL;
+echo '$articleIds: ', count($articleIds), PHP_EOL;

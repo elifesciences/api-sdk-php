@@ -9,6 +9,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Footnote;
 use PHPUnit_Framework_TestCase;
 
 final class TableTest extends PHPUnit_Framework_TestCase
@@ -97,13 +98,13 @@ final class TableTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_a_footer()
+    public function it_may_have_footnotes()
     {
-        $with = new Table(null, null, null, null, new EmptySequence(), [], $footer = [new Paragraph('foo')], []);
+        $with = new Table(null, null, null, null, new EmptySequence(), [], $footnotes = [new Footnote(null, null, new ArraySequence([new Paragraph('foo')]))], []);
         $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
 
-        $this->assertEquals($footer, $with->getFooter());
-        $this->assertEmpty($withOut->getFooter());
+        $this->assertEquals($footnotes, $with->getFootnotes());
+        $this->assertEmpty($withOut->getFootnotes());
     }
 
     /**

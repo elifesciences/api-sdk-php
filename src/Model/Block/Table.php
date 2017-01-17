@@ -18,7 +18,7 @@ final class Table implements Block, Asset
     private $title;
     private $caption;
     private $tables;
-    private $footer;
+    private $footnotes;
     private $sourceData;
 
     /**
@@ -31,7 +31,7 @@ final class Table implements Block, Asset
         string $title = null,
         Sequence $caption,
         array $tables,
-        array $footer = [],
+        array $footnotes = [],
         array $sourceData = []
     ) {
         $this->doi = $doi;
@@ -40,7 +40,7 @@ final class Table implements Block, Asset
         $this->title = $title;
         $this->caption = $caption;
         $this->tables = $tables;
-        $this->footer = $footer;
+        $this->footnotes = $footnotes;
         $this->sourceData = $sourceData;
     }
 
@@ -84,7 +84,7 @@ final class Table implements Block, Asset
         return $this->caption;
     }
 
-    public function getTables(): array
+    public function getTables() : array
     {
         return $this->tables;
     }
@@ -92,15 +92,15 @@ final class Table implements Block, Asset
     /**
      * @return Block[]
      */
-    public function getFooter() : array
+    public function getFootnotes() : array
     {
-        return $this->footer;
+        return $this->footnotes;
     }
 
     /**
      * @return File[]
      */
-    public function getSourceData(): array
+    public function getSourceData() : array
     {
         return $this->sourceData;
     }

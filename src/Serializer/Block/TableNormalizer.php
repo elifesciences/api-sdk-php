@@ -6,6 +6,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Footnote;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -23,9 +24,15 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
         return new Table($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null,
             $data['title'] ?? null, new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])), $data['tables'], array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['footer'] ?? []), array_map(function (array $file) {
+            }, $data['caption'] ?? [])), $data['tables'], array_map(function (array $footnote) {
+                return new Footnote(
+                    $footnote['id'] ?? null,
+                    $footnote['label'] ?? null,
+                    new ArraySequence(array_map(function (array $block) {
+                        return $this->denormalizer->denormalize($block, Block::class);
+                    }, $footnote['text']))
+                );
+            }, $data['footnotes'] ?? []), array_map(function (array $file) {
                 return $this->denormalizer->denormalize($file, File::class);
             }, $data['sourceData'] ?? []));
     }
@@ -70,10 +77,24 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             })->toArray();
         }
 
-        if (count($object->getFooter())) {
-            $data['footer'] = array_map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            }, $object->getFooter());
+        if (count($object->getFootnotes())) {
+            $data['footnotes'] = array_map(function (Footnote $footnote) {
+                $data = [
+                    'text' => $footnote->getText()->map(function (Block $block) {
+                        return $this->normalizer->normalize($block);
+                    })->toArray(),
+                ];
+
+                if ($footnote->getId()) {
+                    $data['id'] = $footnote->getId();
+                }
+
+                if ($footnote->getLabel()) {
+                    $data['label'] = $footnote->getLabel();
+                }
+
+                return $data;
+            }, $object->getFootnotes());
         }
 
         if ($object->getSourceData()) {

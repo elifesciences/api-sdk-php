@@ -8,6 +8,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -77,7 +78,7 @@ final class TableNormalizerTest extends TestCase
         return [
             'complete' => [
                 new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), ['<table></table>'],
-                    [new Paragraph('footer')], [
+                    [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))], [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),
@@ -94,10 +95,24 @@ final class TableNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'footer' => [
+                    'footnotes' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'footer',
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 1',
+                                ],
+                            ],
+                            'id' => 'fn1',
+                            'label' => '#',
+                        ],
+                        [
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 2',
+                                ],
+                            ],
                         ],
                     ],
                     'sourceData' => [
@@ -182,10 +197,24 @@ final class TableNormalizerTest extends TestCase
                         ],
                     ],
                     'tables' => ['<table></table>'],
-                    'footer' => [
+                    'footnotes' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'footer',
+                            'id' => 'fn1',
+                            'label' => '#',
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 1',
+                                ],
+                            ],
+                        ],
+                        [
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 2',
+                                ],
+                            ],
                         ],
                     ],
                     'sourceData' => [
@@ -207,7 +236,7 @@ final class TableNormalizerTest extends TestCase
                     ],
                 ],
                 new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('caption')]), ['<table></table>'],
-                    [new Paragraph('footer')], [
+                    [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))], [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
                     ]),

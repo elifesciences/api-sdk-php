@@ -116,7 +116,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['authors'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
-                    return $article['authors'];
+                    return $article['authors'] ?? [];
                 }));
 
             $data['copyright'] = $complete
@@ -155,7 +155,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
 
-            $data['authors'] = new ArraySequence($data['authors']);
+            $data['authors'] = new ArraySequence($data['authors'] ?? []);
 
             $data['copyright'] = promise_for($data['copyright']);
 
@@ -267,7 +267,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'version' => $object->getVersion(),
             'type' => $object->getType(),
             'doi' => $object->getDoi(),
-            'authorLine' => $object->getAuthorLine(),
             'title' => $object->getTitle(),
             'volume' => $object->getVolume(),
             'elocationId' => $object->getElocationId(),
@@ -285,6 +284,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
         if ($object->getTitlePrefix()) {
             $data['titlePrefix'] = $object->getTitlePrefix();
+        }
+
+        if ($object->getAuthorLine()) {
+            $data['authorLine'] = $object->getAuthorLine();
         }
 
         if ($object->getPdf()) {
@@ -313,9 +316,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 $data['copyright']['holder'] = $object->getCopyright()->getHolder();
             }
 
-            $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            })->toArray();
+            if ($object->getAuthors()->notEmpty()) {
+                $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
+                    return $this->normalizer->normalize($author, $format, $context);
+                })->toArray();
+            }
 
             if ($object->getReviewers()->notEmpty()) {
                 $data['reviewers'] = $object->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {

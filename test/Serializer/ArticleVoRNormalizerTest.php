@@ -159,7 +159,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
@@ -167,6 +166,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'versionDate' => '2015-09-10T00:00:00Z',
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
+                    'authorLine' => 'Lee R Berger et al',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
@@ -202,13 +202,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'version' => 1,
                             'type' => 'research-article',
                             'doi' => '10.7554/eLife.09560',
-                            'authorLine' => 'Lee R Berger et al',
                             'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                             'volume' => 4,
                             'elocationId' => 'e09560',
                             'published' => '2015-09-10T00:00:00Z',
                             'versionDate' => '2015-09-10T00:00:00Z',
                             'statusDate' => '2015-09-10T00:00:00Z',
+                            'authorLine' => 'Lee R Berger et al',
                             'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
                             'subjects' => [
                                 0 => [
@@ -465,6 +465,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withAuthorLine(null)
+                    ->withSequenceOfAuthors()
                     ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
@@ -494,22 +496,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
                     'copyright' => [
                         'license' => 'license',
                         'statement' => 'statement',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'Author',
-                                'index' => 'Author',
-                            ],
-                        ],
                     ],
                     'status' => 'vor',
                     'body' => [
@@ -549,7 +541,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
@@ -557,6 +548,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'versionDate' => '2015-09-10T00:00:00Z',
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
+                    'authorLine' => 'Lee R Berger et al',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
@@ -590,6 +582,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withAuthorLine(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
                     ->withPromiseOfAbstract(null)
@@ -618,7 +611,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',

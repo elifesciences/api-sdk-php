@@ -47,7 +47,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasId, HasS
         int $version,
         string $type,
         string $doi,
-        string $authorLine,
+        string $authorLine = null,
         string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published = null,
@@ -131,7 +131,10 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasId, HasS
         return $this->doi;
     }
 
-    final public function getAuthorLine(): string
+    /**
+     * @return string|null
+     */
+    final public function getAuthorLine()
     {
         return $this->authorLine;
     }

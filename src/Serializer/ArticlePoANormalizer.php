@@ -22,7 +22,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['version'],
             $data['type'],
             $data['doi'],
-            $data['authorLine'],
+            $data['authorLine'] ?? null,
             $data['titlePrefix'] ?? null,
             $data['title'],
             $data['published'],

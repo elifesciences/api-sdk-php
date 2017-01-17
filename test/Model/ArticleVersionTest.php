@@ -127,13 +127,17 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_has_an_author_line()
+    final public function it_may_have_an_author_line()
     {
-        $article = $this->builder
+        $with = $this->builder
             ->withAuthorLine('Yongjian Huang et al')
             ->__invoke();
+        $withOut = $this->builder
+            ->withAuthorLine(null)
+            ->__invoke();
 
-        $this->assertSame('Yongjian Huang et al', $article->getAuthorLine());
+        $this->assertSame('Yongjian Huang et al', $with->getAuthorLine());
+        $this->assertNull($withOut->getAuthorLine());
     }
 
     /**
@@ -350,13 +354,17 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_has_authors()
+    final public function it_may_have_authors()
     {
-        $article = $this->builder
+        $with = $this->builder
             ->withAuthors($authors = new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]))
             ->__invoke();
+        $withOut = $this->builder
+            ->withAuthors(new ArraySequence([]))
+            ->__invoke();
 
-        $this->assertEquals($authors, $article->getAuthors());
+        $this->assertEquals($authors, $with->getAuthors());
+        $this->assertEmpty($withOut->getAuthors());
     }
 
     /**

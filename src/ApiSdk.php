@@ -59,9 +59,7 @@ use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use GuzzleHttp\Promise\PromiseInterface;
 use PackageVersions\Versions;
-use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 

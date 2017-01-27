@@ -12,6 +12,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SearchClient;
@@ -511,6 +512,78 @@ abstract class ApiTestCase extends TestCase
                 json_encode([
                     'total' => $total,
                     'items' => $articles,
+                ])
+            )
+        );
+    }
+
+    final protected function mockMetricCitationsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/citations',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
+                json_encode([
+                    [
+                        'service' => 'Service',
+                        'uri' => 'http://www.example.com/',
+                        'citations' => (int) $id,
+                    ],
+                ])
+            )
+        );
+    }
+
+    final protected function mockMetricDownloadsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/downloads?by=month&page=1&per-page=20&order=desc',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                json_encode([
+                    'totalPeriods' => 1,
+                    'totalValue' => (int) $id,
+                    'periods' => [
+                        [
+                            'period' => '2016-01-01',
+                            'value' => (int) $id,
+                        ],
+                    ],
+                ])
+            )
+        );
+    }
+
+    final protected function mockMetricPageViewsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/page-views?by=month&page=1&per-page=20&order=desc',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                json_encode([
+                    'totalPeriods' => 1,
+                    'totalValue' => (int) $id,
+                    'periods' => [
+                        [
+                            'period' => '2016-01-01',
+                            'value' => (int) $id,
+                        ],
+                    ],
                 ])
             )
         );

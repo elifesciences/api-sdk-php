@@ -12,6 +12,7 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Search;
@@ -151,6 +152,18 @@ final class ApiSdkTest extends ApiTestCase
         foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
             $this->apiSdk->getSerializer()->normalize($mediumArticle);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_metrics()
+    {
+        $this->assertInstanceOf(Metrics::class, $this->apiSdk->metrics());
+
+        $this->mockMetricPageViewsCall('article', '09560');
+
+        $this->apiSdk->metrics()->totalPageViews('article', '09560')->wait();
     }
 
     /**

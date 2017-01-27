@@ -11,6 +11,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SearchClient;
@@ -26,6 +27,7 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\Search;
@@ -75,6 +77,7 @@ final class ApiSdk
     private $eventsClient;
     private $interviewsClient;
     private $labsClient;
+    private $metricsClient;
     private $peopleClient;
     private $podcastClient;
     private $collectionsClient;
@@ -89,6 +92,7 @@ final class ApiSdk
     private $interviews;
     private $labsExperiments;
     private $mediumArticles;
+    private $metrics;
     private $people;
     private $podcastEpisodes;
     private $collections;
@@ -116,6 +120,7 @@ final class ApiSdk
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
+        $this->metricsClient = new MetricsClient($this->httpClient);
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
@@ -254,6 +259,15 @@ final class ApiSdk
         }
 
         return $this->mediumArticles;
+    }
+
+    public function metrics() : Metrics
+    {
+        if (empty($this->metrics)) {
+            $this->metrics = new Metrics($this->metricsClient);
+        }
+
+        return $this->metrics;
     }
 
     public function people() : People

@@ -17,6 +17,7 @@ final class GroupAuthor extends Author
         string $name,
         Sequence $people,
         array $groups = [],
+        array $additionalInformation = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,
@@ -25,7 +26,7 @@ final class GroupAuthor extends Author
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) {
-        parent::__construct($affiliations, $competingInterests, $contribution, $emailAddresses,
+        parent::__construct($additionalInformation, $affiliations, $competingInterests, $contribution, $emailAddresses,
             $equalContributionGroups, $phoneNumbers, $postalAddresses);
 
         $this->name = $name;

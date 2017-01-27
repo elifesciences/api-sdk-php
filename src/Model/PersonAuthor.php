@@ -13,6 +13,7 @@ final class PersonAuthor extends Author
     public function __construct(
         PersonDetails $person,
         bool $deceased = false,
+        array $additionalInformation = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,
@@ -21,7 +22,7 @@ final class PersonAuthor extends Author
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) {
-        parent::__construct($affiliations, $competingInterests, $contribution, $emailAddresses,
+        parent::__construct($additionalInformation, $affiliations, $competingInterests, $contribution, $emailAddresses,
             $equalContributionGroups, $phoneNumbers, $postalAddresses);
 
         $this->person = $person;

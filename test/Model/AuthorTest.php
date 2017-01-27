@@ -24,9 +24,21 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    final public function it_may_have_additional_information()
+    {
+        $with = $this->createAuthor($additionalInformation = ['foo']);
+        $withOut = $this->createAuthor();
+
+        $this->assertEquals($additionalInformation, $with->getAdditionalInformation());
+        $this->assertEmpty($withOut->getAdditionalInformation());
+    }
+
+    /**
+     * @test
+     */
     final public function it_may_have_affiliations()
     {
-        $with = $this->createAuthor($affiliations = [new Place(null, null, ['affiliation'])]);
+        $with = $this->createAuthor([], $affiliations = [new Place(null, null, ['affiliation'])]);
         $withOut = $this->createAuthor();
 
         $this->assertEquals($affiliations, $with->getAffiliations());
@@ -38,7 +50,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_a_competing_interests_statement()
     {
-        $with = $this->createAuthor([], 'competing interests');
+        $with = $this->createAuthor([], [], 'competing interests');
         $withOut = $this->createAuthor();
 
         $this->assertSame('competing interests', $with->getCompetingInterests());
@@ -50,7 +62,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_a_contribution()
     {
-        $with = $this->createAuthor([], null, 'contribution');
+        $with = $this->createAuthor([], [], null, 'contribution');
         $withOut = $this->createAuthor();
 
         $this->assertSame('contribution', $with->getContribution());
@@ -62,7 +74,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_email_addresses()
     {
-        $with = $this->createAuthor([], null, null, ['foo@example.com']);
+        $with = $this->createAuthor([], [], null, null, ['foo@example.com']);
         $withOut = $this->createAuthor();
 
         $this->assertSame(['foo@example.com'], $with->getEmailAddresses());
@@ -74,7 +86,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_equal_contribution_groups()
     {
-        $with = $this->createAuthor([], null, null, [], [1, 2]);
+        $with = $this->createAuthor([], [], null, null, [], [1, 2]);
         $withOut = $this->createAuthor();
 
         $this->assertSame([1, 2], $with->getEqualContributionGroups());
@@ -86,7 +98,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_phone_numbers()
     {
-        $with = $this->createAuthor([], null, null, [], [], ['+447700900415']);
+        $with = $this->createAuthor([], [], null, null, [], [], ['+447700900415']);
         $withOut = $this->createAuthor();
 
         $this->assertSame(['+447700900415'], $with->getPhoneNumbers());
@@ -98,7 +110,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_postal_addresses()
     {
-        $with = $this->createAuthor([], null, null, [], [], [], $postalAddresses = [Builder::dummy(Address::class)]);
+        $with = $this->createAuthor([], [], null, null, [], [], [], $postalAddresses = [Builder::dummy(Address::class)]);
         $withOut = $this->createAuthor();
 
         $this->assertEquals($postalAddresses, $with->getPostalAddresses());
@@ -106,6 +118,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
     }
 
     abstract protected function createAuthor(
+        array $additionalInformation = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,

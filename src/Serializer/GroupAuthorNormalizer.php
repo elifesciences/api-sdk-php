@@ -30,6 +30,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
                 return $this->denormalizer->denormalize($person, PersonAuthor::class, $format, $context);
             }, $data['people'] ?? [])),
             $data['groups'] ?? [],
+            $data['additionalInformation'] ?? [],
             $data['affiliations'],
             $data['competingInterests'] ?? null,
             $data['contribution'] ?? null,

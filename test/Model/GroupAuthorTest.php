@@ -49,6 +49,7 @@ final class GroupAuthorTest extends AuthorTest
     }
 
     protected function createAuthor(
+        array $additionalInformation = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,
@@ -57,7 +58,7 @@ final class GroupAuthorTest extends AuthorTest
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) : Author {
-        return new GroupAuthor('name', new EmptySequence(), [], $affiliations,
+        return new GroupAuthor('name', new EmptySequence(), [], $additionalInformation, $affiliations,
             $competingInterests, $contribution, $emailAddresses, $equalContributionGroups, $phoneNumbers,
             $postalAddresses);
     }

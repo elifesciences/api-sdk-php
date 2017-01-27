@@ -86,16 +86,19 @@ final class GroupAuthorNormalizerTest extends TestCase
             'complete' => [
                 new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                        ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [$somewhere]),
                 [
+                    'additionalInformation' => [
+                        'additional information',
+                    ],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -118,6 +121,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                     'name' => 'group',
                     'people' => [
                         [
+                            'additionalInformation' => ['additional information'],
                             'affiliations' => [
                                 [
                                     'name' => ['affiliation'],
@@ -213,6 +217,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                 [
                     'type' => 'group',
                     'name' => 'group',
+                    'additionalInformation' => ['additional information'],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -233,6 +238,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                     ],
                     'people' => [
                         [
+                            'additionalInformation' => ['additional information'],
                             'affiliations' => [
                                 [
                                     'name' => ['affiliation'],
@@ -274,13 +280,13 @@ final class GroupAuthorNormalizerTest extends TestCase
                 ],
                 new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                        ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
                         $somewhere,

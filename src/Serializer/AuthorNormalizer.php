@@ -37,6 +37,10 @@ abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInte
     {
         $data = [];
 
+        if (count($object->getAdditionalInformation())) {
+            $data['additionalInformation'] = $object->getAdditionalInformation();
+        }
+
         if (count($object->getAffiliations())) {
             $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {
                 return $this->normalizer->normalize($place, $format, $context);

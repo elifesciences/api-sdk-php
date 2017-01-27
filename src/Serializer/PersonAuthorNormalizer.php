@@ -18,6 +18,7 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
         return new PersonAuthor(
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
             $data['deceased'] ?? false,
+            $data['additionalInformation'] ?? [],
             $data['affiliations'],
             $data['competingInterests'] ?? null,
             $data['contribution'] ?? null,

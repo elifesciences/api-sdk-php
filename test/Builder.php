@@ -240,6 +240,7 @@ final class Builder
                         'volume' => 4,
                         'elocationId' => 'e09560',
                         'pdf' => null,
+                        'figuresPdf' => null,
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]))),

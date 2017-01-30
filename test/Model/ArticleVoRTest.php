@@ -32,6 +32,22 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
+    public function it_may_have_a_figures_pdf()
+    {
+        $with = $this->builder
+            ->withFiguresPdf('http://www.example.com/article14107.pdf')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withFiguresPdf(null)
+            ->__invoke();
+
+        $this->assertSame('http://www.example.com/article14107.pdf', $with->getFiguresPdf());
+        $this->assertNull($withOut->getFiguresPdf());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder

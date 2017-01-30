@@ -133,6 +133,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
                     ->withPdf('http://www.example.com/')
+                    ->withFiguresPdf('http://www.example.com/figures')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -328,6 +329,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [
@@ -523,6 +525,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
                     ->withPdf('http://www.example.com/')
+                    ->withFiguresPdf('http://www.example.com/figures')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -555,6 +558,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                     'researchOrganisms' => ['research organism'],
                     'status' => 'vor',
+                    'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [

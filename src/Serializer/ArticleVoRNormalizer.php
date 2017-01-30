@@ -206,6 +206,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,
+            $data['figuresPdf'] ?? null,
             $data['subjects'],
             $data['researchOrganisms'] ?? [],
             $data['abstract'],
@@ -254,6 +255,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : array {
         $data['status'] = 'vor';
+
+        if ($article->getFiguresPdf()) {
+            $data['figuresPdf'] = $article->getFiguresPdf();
+        }
 
         if ($article->getImpactStatement()) {
             $data['impactStatement'] = $article->getImpactStatement();

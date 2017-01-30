@@ -8,6 +8,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, HasImpactStatement, HasReferences, HasThumbnail
 {
+    private $figuresPdf;
     private $impactStatement;
     private $banner;
     private $thumbnail;
@@ -40,6 +41,7 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         int $volume,
         string $elocationId,
         string $pdf = null,
+        string $figuresPdf = null,
         Sequence $subjects,
         array $researchOrganisms,
         PromiseInterface $abstract,
@@ -70,6 +72,7 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
             $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $relatedArticles,
             $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
 
+        $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
@@ -83,6 +86,14 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFiguresPdf()
+    {
+        return $this->figuresPdf;
     }
 
     /**

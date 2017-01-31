@@ -107,7 +107,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             'id' => $object->getId(),
             'title' => $object->getTitle(),
             'starts' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
-            'ends' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
+            'ends' => $object->getEnds()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {

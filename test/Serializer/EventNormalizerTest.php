@@ -121,8 +121,8 @@ final class EventNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $starts = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $ends = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $starts = new DateTimeImmutable('2017-01-01T14:00:00Z', new DateTimeZone('Z'));
+        $ends = new DateTimeImmutable('2017-01-01T16:00:00Z', new DateTimeZone('Z'));
         $timezone = new DateTimeZone('Europe/London');
         $venue = new Place(null, null, ['venue']);
 

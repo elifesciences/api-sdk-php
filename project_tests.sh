@@ -10,4 +10,4 @@ if [ "$dependencies" = "lowest" ]; then
 else
     composer1.0 update --no-interaction
 fi
-vendor/bin/phpunit --log-junit="build/${dependencies}-phpunit.xml"
+vendor/bin/phpunit -dmemory_limit=2G --log-junit="build/${dependencies}-phpunit.xml"

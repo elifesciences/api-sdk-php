@@ -12,7 +12,7 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
-final class CommunityClientTest extends ApiTestCase
+final class CommunityTest extends ApiTestCase
 {
     /** @var Community */
     private $community;

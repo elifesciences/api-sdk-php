@@ -329,17 +329,22 @@ abstract class ApiTestCase extends TestCase
         $availableModels = [
             'blog-article' => 'createBlogArticleJson',
             'collection' => 'createCollectionJson',
-            // TODO: add all
+            'event' => 'createEventJson',
+            'interview' => 'createInterviewJson',
+            'research-article' => 'createArticleVoRJson',
+            'replication-study' => 'createArticlePoAJson',
+            // for simplicity, avoiding contents without an id
+            //'labs-experiment' => ['createLabsExperimentJson', 'int'],
+            //'podcast-episode' => ['createPodcastEpisodeJson', 'int'],
         ];
         $blogArticles = array_map(function (int $id) use ($availableModels) {
             $modelNames = array_keys($availableModels);
             $zeroBasedId = $id - 1;
             $modelName = $modelNames[$zeroBasedId % count($availableModels)];
             $model = $availableModels[$modelName];
-
             return array_merge(
                 ['type' => $modelName],
-                $this->$model('model-'.$id, true)
+                $this->{$model}('model-'.$id, true)
             );
         }, $this->generateIdList($page, $perPage, $total));
 
@@ -1349,10 +1354,16 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    private function createEventJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createEventJson($number, bool $isSnippet = false, bool $complete = false) : array
     {
+        if (is_int($number)) {
+            $id = 'event'.$number;
+        } else {
+            $id = $number;
+        }
+
         $event = [
-            'id' => 'event'.$number,
+            'id' => $id,
             'title' => 'Event '.$number.' title',
             'impactStatement' => 'Event '.$number.' impact statement',
             'starts' => '2000-01-01T00:00:00Z',

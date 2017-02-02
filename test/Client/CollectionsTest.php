@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class CollectionsTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Collections */
     private $collections;
 

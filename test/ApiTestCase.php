@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
@@ -314,6 +315,51 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
                 json_encode($this->createBlogArticleJson($id, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockCommunityListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
+        $availableModels = [
+            'blog-article' => 'createBlogArticleJson',
+            'collection' => 'createCollectionJson',
+            // TODO: add all
+        ];
+        $blogArticles = array_map(function (int $id) use ($availableModels) {
+            $modelNames = array_keys($availableModels);
+            $zeroBasedId = $id - 1;
+            $modelName = $modelNames[$zeroBasedId % count($availableModels)];
+            $model = $availableModels[$modelName];
+
+            return array_merge(
+                ['type' => $modelName],
+                $this->$model('model-'.$id, true)
+            );
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/community?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $blogArticles,
+                ])
             )
         );
     }

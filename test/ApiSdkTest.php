@@ -7,6 +7,7 @@ use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
@@ -86,6 +87,22 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockCollectionCall('1');
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->collections()->get('1')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_community()
+    {
+        $this->assertInstanceOf(Community::class, $this->apiSdk->community());
+
+        $this->mockCommunityListCall(1, 1, 1);
+        $this->mockBlogArticleCall('model-1', true);
+
+        $this->assertInternalType(
+            'array',
+            $this->apiSdk->getSerializer()->normalize($this->apiSdk->community()[0])
+        );
     }
 
     /**

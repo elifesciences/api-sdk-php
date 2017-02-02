@@ -342,6 +342,7 @@ abstract class ApiTestCase extends TestCase
             $zeroBasedId = $id - 1;
             $modelName = $modelNames[$zeroBasedId % count($availableModels)];
             $model = $availableModels[$modelName];
+
             return array_merge(
                 ['type' => $modelName],
                 $this->{$model}('model-'.$id, true)

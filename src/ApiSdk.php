@@ -6,6 +6,7 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
@@ -22,6 +23,7 @@ use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Interviews;
@@ -73,6 +75,8 @@ final class ApiSdk
     private $httpClient;
     private $articlesClient;
     private $blogClient;
+    private $collectionsClient;
+    private $communityClient;
     private $coversClient;
     private $eventsClient;
     private $interviewsClient;
@@ -80,13 +84,13 @@ final class ApiSdk
     private $metricsClient;
     private $peopleClient;
     private $podcastClient;
-    private $collectionsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
     private $annualReports;
     private $articles;
     private $blogArticles;
+    private $community;
     private $covers;
     private $events;
     private $interviews;
@@ -116,6 +120,7 @@ final class ApiSdk
         $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->collectionsClient = new CollectionsClient($this->httpClient);
+        $this->communityClient = new CommunityClient($this->httpClient);
         $this->coversClient = new CoversClient($this->httpClient);
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
@@ -214,6 +219,15 @@ final class ApiSdk
         }
 
         return $this->blogArticles;
+    }
+
+    public function community() : Community
+    {
+        if (empty($this->community)) {
+            $this->community = new Community($this->communityClient, $this->serializer);
+        }
+
+        return $this->community;
     }
 
     public function covers() : Covers

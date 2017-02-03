@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
@@ -13,6 +14,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class CoversTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Covers */
     private $covers;
 
@@ -91,7 +94,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame('Cover 1 title', $this->covers[0]->getTitle());
 
         $this->mockNotFound(
-            'covers?page=6&per-page=1&order=desc',
+            'covers?page=6&per-page=1&sort=date&order=desc',
             ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
         );
 
@@ -111,6 +114,46 @@ final class CoversTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_filtered_by_start_date()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, 'date', new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, 'date', new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->covers->startDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
+            $this->assertInstanceOf(Cover::class, $cover);
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_end_date()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, 'date', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, 'date', null, new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->covers->endDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
+            $this->assertInstanceOf(Cover::class, $cover);
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering()
+    {
+        $this->mockCoverListCall(1, 1, 10);
+        $this->covers->count();
+
+        $this->mockCoverListCall(1, 1, 4, true, 'date', new DateTimeImmutable('2017-01-02'));
+        $this->assertSame(4, $this->covers->startDate(new DateTimeImmutable('2017-01-02'))->count());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -123,38 +166,6 @@ final class CoversTest extends ApiTestCase
             $this->assertInstanceOf(Cover::class, $cover);
             $this->assertSame('Cover '.($expected[$i]).' title', $cover->getTitle());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -208,6 +219,19 @@ final class CoversTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->covers->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_sorted_by_page_views()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, 'page-views');
+        $this->mockCoverListCall(1, 100, 10, true, 'page-views');
+
+        foreach ($this->covers->sortBy('page-views') as $i => $cover) {
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
     }
 
     /**

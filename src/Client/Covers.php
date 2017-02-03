@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -17,7 +18,10 @@ final class Covers implements Iterator, Sequence
     use Client;
 
     private $count;
+    private $sort = 'date';
     private $descendingOrder = true;
+    private $startDate;
+    private $endDate;
     private $coversClient;
     private $denormalizer;
 
@@ -25,6 +29,40 @@ final class Covers implements Iterator, Sequence
     {
         $this->coversClient = $coversClient;
         $this->denormalizer = $denormalizer;
+    }
+
+    /**
+     * @param string $sort 'date' or 'page-views'
+     */
+    public function sortBy(string $sort) : self
+    {
+        $clone = clone $this;
+
+        $clone->sort = $sort;
+
+        return $clone;
+    }
+
+    public function startDate(DateTimeImmutable $startDate = null) : self
+    {
+        $clone = clone $this;
+
+        $clone->startDate = $startDate;
+
+        $clone->invalidateDataIfDifferent('startDate', $this);
+
+        return $clone;
+    }
+
+    public function endDate(DateTimeImmutable $endDate = null) : self
+    {
+        $clone = clone $this;
+
+        $clone->endDate = $endDate;
+
+        $clone->invalidateDataIfDifferent('endDate', $this);
+
+        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -42,7 +80,10 @@ final class Covers implements Iterator, Sequence
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->descendingOrder
+                $this->sort,
+                $this->descendingOrder,
+                $this->startDate,
+                $this->endDate
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -79,5 +120,12 @@ final class Covers implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
+    }
+
+    private function invalidateDataIfDifferent(string $field, self $another)
+    {
+        if ($this->$field != $another->$field) {
+            $this->count = null;
+        }
     }
 }

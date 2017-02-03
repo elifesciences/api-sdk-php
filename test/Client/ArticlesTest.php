@@ -18,6 +18,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class ArticlesTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Articles */
     private $articles;
 
@@ -222,38 +224,6 @@ final class ArticlesTest extends ApiTestCase
             $this->assertInstanceOf(ArticleVersion::class, $article);
             $this->assertSame('article'.($expected[$i]), $article->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**

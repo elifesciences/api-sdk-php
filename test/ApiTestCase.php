@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
@@ -370,16 +371,25 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockCoverListCall(int $page, int $perPage, int $total, $descendingOrder = true)
-    {
+    final protected function mockCoverListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
+    ) {
         $covers = array_map(function (int $id) {
             return $this->createCoverJson($id, $this->createArticleVoRJson($id));
         }, $this->generateIdList($page, $perPage, $total));
 
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(
@@ -808,7 +818,9 @@ abstract class ApiTestCase extends TestCase
         $descendingOrder = true,
         array $subjects = [],
         array $types = [],
-        $sort = 'relevance'
+        $sort = 'relevance',
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
     ) {
         $results = array_map(function (int $id) {
             return $this->createSearchResultJson($id);
@@ -822,10 +834,13 @@ abstract class ApiTestCase extends TestCase
             return '&type[]='.$type;
         }, $types));
 
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
             ),
             new Response(

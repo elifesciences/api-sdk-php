@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
@@ -109,6 +110,46 @@ final class CoversTest extends ApiTestCase
         $this->expectException(BadMethodCallException::class);
 
         $this->covers[0] = 'foo';
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_start_date()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->covers->startDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
+            $this->assertInstanceOf(Cover::class, $cover);
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_end_date()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, null, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, null, new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->covers->endDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
+            $this->assertInstanceOf(Cover::class, $cover);
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering()
+    {
+        $this->mockCoverListCall(1, 1, 10);
+        $this->covers->count();
+
+        $this->mockCoverListCall(1, 1, 4, true, new DateTimeImmutable('2017-01-02'));
+        $this->assertSame(4, $this->covers->startDate(new DateTimeImmutable('2017-01-02'))->count());
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
@@ -136,6 +137,28 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forType('blog-article')));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_start_date()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'relevance', new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', new DateTimeImmutable('2017-01-02'));
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_end_date()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'relevance', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', null, new DateTimeImmutable('2017-01-02'));
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
     }
 
     /**
@@ -326,9 +349,9 @@ class SearchTest extends ApiTestCase
         }
     }
 
-    private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
+    private function mockCountCall(int $count, ...$options)
     {
-        $this->mockSearchCall(1, 1, $count, $query, $descendingOrder, $subjects, $types, $sort);
+        $this->mockSearchCall(1, 1, $count, ...$options);
     }
 
     private function mockFirstPageCall($total, ...$options)

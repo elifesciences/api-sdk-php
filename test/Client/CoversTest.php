@@ -94,7 +94,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame('Cover 1 title', $this->covers[0]->getTitle());
 
         $this->mockNotFound(
-            'covers?page=6&per-page=1&order=desc',
+            'covers?page=6&per-page=1&sort=date&order=desc',
             ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
         );
 
@@ -117,8 +117,8 @@ final class CoversTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_start_date()
     {
-        $this->mockCoverListCall(1, 1, 10, true, new DateTimeImmutable('2017-01-02'));
-        $this->mockCoverListCall(1, 100, 10, true, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 1, 10, true, 'date', new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, 'date', new DateTimeImmutable('2017-01-02'));
 
         foreach ($this->covers->startDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
             $this->assertInstanceOf(Cover::class, $cover);
@@ -131,8 +131,8 @@ final class CoversTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_end_date()
     {
-        $this->mockCoverListCall(1, 1, 10, true, null, new DateTimeImmutable('2017-01-02'));
-        $this->mockCoverListCall(1, 100, 10, true, null, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 1, 10, true, 'date', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 100, 10, true, 'date', null, new DateTimeImmutable('2017-01-02'));
 
         foreach ($this->covers->endDate(new DateTimeImmutable('2017-01-02')) as $i => $cover) {
             $this->assertInstanceOf(Cover::class, $cover);
@@ -148,7 +148,7 @@ final class CoversTest extends ApiTestCase
         $this->mockCoverListCall(1, 1, 10);
         $this->covers->count();
 
-        $this->mockCoverListCall(1, 1, 4, true, new DateTimeImmutable('2017-01-02'));
+        $this->mockCoverListCall(1, 1, 4, true, 'date', new DateTimeImmutable('2017-01-02'));
         $this->assertSame(4, $this->covers->startDate(new DateTimeImmutable('2017-01-02'))->count());
     }
 
@@ -219,6 +219,19 @@ final class CoversTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->covers->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_sorted_by_page_views()
+    {
+        $this->mockCoverListCall(1, 1, 10, true, 'page-views');
+        $this->mockCoverListCall(1, 100, 10, true, 'page-views');
+
+        foreach ($this->covers->sortBy('page-views') as $i => $cover) {
+            $this->assertSame("Cover $i title", $cover->getTitle());
+        }
     }
 
     /**

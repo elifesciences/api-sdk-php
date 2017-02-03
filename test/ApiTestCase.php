@@ -375,7 +375,8 @@ abstract class ApiTestCase extends TestCase
         int $page,
         int $perPage,
         int $total,
-        $descendingOrder = true,
+        bool $descendingOrder = true,
+        string $sort = 'date',
         DateTimeImmutable $startDate = null,
         DateTimeImmutable $endDate = null
     ) {
@@ -389,7 +390,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$startsQuery.$endsQuery,
+                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(

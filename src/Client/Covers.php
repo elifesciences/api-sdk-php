@@ -18,6 +18,7 @@ final class Covers implements Iterator, Sequence
     use Client;
 
     private $count;
+    private $sort = 'date';
     private $descendingOrder = true;
     private $startDate;
     private $endDate;
@@ -28,6 +29,18 @@ final class Covers implements Iterator, Sequence
     {
         $this->coversClient = $coversClient;
         $this->denormalizer = $denormalizer;
+    }
+
+    /**
+     * @param string $sort 'date' or 'page-views'
+     */
+    public function sortBy(string $sort) : self
+    {
+        $clone = clone $this;
+
+        $clone->sort = $sort;
+
+        return $clone;
     }
 
     public function startDate(DateTimeImmutable $startDate = null) : self
@@ -67,6 +80,7 @@ final class Covers implements Iterator, Sequence
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
+                $this->sort,
                 $this->descendingOrder,
                 $this->startDate,
                 $this->endDate

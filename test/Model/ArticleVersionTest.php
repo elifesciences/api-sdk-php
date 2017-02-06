@@ -11,7 +11,6 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
-use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
@@ -365,20 +364,6 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($authors, $with->getAuthors());
         $this->assertEmpty($withOut->getAuthors());
-    }
-
-    /**
-     * @test
-     */
-    final public function it_may_have_related_articles()
-    {
-        $relatedArticles = new ArraySequence([Builder::dummy(ExternalArticle::class)]);
-
-        $article = $this->builder
-            ->withRelatedArticles($relatedArticles)
-            ->__invoke();
-
-        $this->assertEquals($relatedArticles, $article->getRelatedArticles());
     }
 
     /**

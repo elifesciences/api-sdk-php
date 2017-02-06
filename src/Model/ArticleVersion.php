@@ -32,7 +32,6 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
     private $copyright;
     private $authors;
     private $reviewers;
-    private $relatedArticles;
     private $funding;
     private $generatedDataSets;
     private $usedDataSets;
@@ -63,7 +62,6 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         PromiseInterface $copyright,
         Sequence $authors,
         Sequence $reviewers,
-        Sequence $relatedArticles,
         PromiseInterface $funding,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
@@ -90,7 +88,6 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         $this->copyright = $copyright;
         $this->authors = $authors;
         $this->reviewers = $reviewers;
-        $this->relatedArticles = $relatedArticles;
         $this->funding = $funding;
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
@@ -249,14 +246,6 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
     final public function getReviewers(): Sequence
     {
         return $this->reviewers;
-    }
-
-    /**
-     * @return Sequence|Article[]
-     */
-    final public function getRelatedArticles(): Sequence
-    {
-        return $this->relatedArticles;
     }
 
     /**

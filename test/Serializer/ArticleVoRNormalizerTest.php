@@ -13,10 +13,8 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
-use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -143,15 +141,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
-                    ->withSequenceOfRelatedArticles(
-                        Builder::for(ArticleVoR::class)->sample('homo-naledi'),
-                        Builder::for(ExternalArticle::class)
-                            ->withArticleTitle('External related article title')
-                            ->withJournal(new Place(null, null, ['Journal']))
-                            ->withAuthorLine('Author line')
-                            ->withUri('http://www.example.com/')
-                            ->__invoke()
-                    )
                     ->__invoke(),
                 [],
                 [
@@ -194,55 +183,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'index' => 'Reviewer',
                             ],
                             'role' => 'Role',
-                        ],
-                    ],
-                    'relatedArticles' => [
-                        [
-                            'id' => '09560',
-                            'stage' => 'published',
-                            'version' => 1,
-                            'type' => 'research-article',
-                            'doi' => '10.7554/eLife.09560',
-                            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
-                            'volume' => 4,
-                            'elocationId' => 'e09560',
-                            'published' => '2015-09-10T00:00:00Z',
-                            'versionDate' => '2015-09-10T00:00:00Z',
-                            'statusDate' => '2015-09-10T00:00:00Z',
-                            'authorLine' => 'Lee R Berger et al',
-                            'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
-                            'subjects' => [
-                                0 => [
-                                    'id' => 'genomics-evolutionary-biology',
-                                    'name' => 'Genomics and Evolutionary Biology',
-                                ],
-                            ],
-                            'status' => 'vor',
-                            'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                            'image' => [
-                                'thumbnail' => [
-                                    'alt' => '',
-                                    'sizes' => [
-                                        '16:9' => [
-                                            250 => 'https://placehold.it/250x141',
-                                            500 => 'https://placehold.it/500x281',
-                                        ],
-                                        '1:1' => [
-                                            70 => 'https://placehold.it/70x70',
-                                            140 => 'https://placehold.it/140x140',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        [
-                            'articleTitle' => 'External related article title',
-                            'journal' => [
-                                'name' => ['Journal'],
-                            ],
-                            'authorLine' => 'Author line',
-                            'uri' => 'http://www.example.com/',
-                            'type' => 'external-article',
                         ],
                     ],
                     'issue' => 1,
@@ -489,7 +429,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 [],
                 [
@@ -606,7 +545,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 ['snippet' => true],
                 [

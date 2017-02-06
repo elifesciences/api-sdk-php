@@ -9,9 +9,7 @@ use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
-use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -133,15 +131,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ->__invoke(),
                     ]))
                     ->withResearchOrganisms(['research organism'])
-                    ->withSequenceOfRelatedArticles(
-                        Builder::for(ArticlePoA::class)->sample('growth-factor'),
-                        Builder::for(ExternalArticle::class)
-                            ->withArticleTitle('External related article title')
-                            ->withJournal(new Place(null, null, ['Journal']))
-                            ->withAuthorLine('Author line')
-                            ->withUri('http://www.example.com/')
-                            ->__invoke()
-                    )
                     ->__invoke(),
                 [],
                 [
@@ -184,32 +173,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                                 'index' => 'Reviewer',
                             ],
                             'role' => 'Role',
-                        ],
-                    ],
-                    'relatedArticles' => [
-                        [
-                            'id' => '14107',
-                            'stage' => 'published',
-                            'version' => 1,
-                            'type' => 'research-article',
-                            'doi' => '10.7554/eLife.14107',
-                            'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                            'volume' => 5,
-                            'elocationId' => 'e14107',
-                            'published' => '2016-03-28T00:00:00Z',
-                            'versionDate' => '2016-03-28T00:00:00Z',
-                            'statusDate' => '2016-03-28T00:00:00Z',
-                            'authorLine' => 'Yongjian Huang et al',
-                            'status' => 'poa',
-                        ],
-                        [
-                            'articleTitle' => 'External related article title',
-                            'journal' => [
-                                'name' => ['Journal'],
-                            ],
-                            'authorLine' => 'Author line',
-                            'uri' => 'http://www.example.com/',
-                            'type' => 'external-article',
                         ],
                     ],
                     'issue' => 1,
@@ -314,7 +277,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
-                    ->withSequenceOfRelatedArticles()
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()
@@ -384,7 +346,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfAbstract(null)
-                    ->withSequenceOfRelatedArticles()
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()

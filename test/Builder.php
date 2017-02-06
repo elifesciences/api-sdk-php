@@ -207,7 +207,6 @@ final class Builder
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
-                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                         'funding' => promise_for(new Funding(
                             new ArraySequence([
                                 new FundingAward(
@@ -303,7 +302,6 @@ final class Builder
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
-                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                     ];
                 },
             ];

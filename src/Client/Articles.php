@@ -7,6 +7,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -88,6 +89,22 @@ final class Articles implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), ArticleHistory::class);
             });
+    }
+
+    public function getRelatedArticles(string $id) : Sequence
+    {
+        return new PromiseSequence($this->articlesClient
+            ->getRelatedArticles(
+                [
+                    'Accept' => [new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+                ],
+                $id
+            )
+            ->then(function (Result $result) {
+                return array_map(function (array $article) {
+                    return $this->denormalizer->denormalize($article, Article::class, null, ['snippet' => true]);
+                }, $result->toArray());
+            }));
     }
 
     public function slice(int $offset, int $length = null) : Sequence

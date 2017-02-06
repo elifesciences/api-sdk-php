@@ -194,6 +194,34 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockRelatedArticlesCall($numberOrId, bool $complete = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "article{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+
+        $response = new Response(
+            200,
+            ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            json_encode($this->createRelatedArticlesJson($id, $complete))
+        );
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/articles/'.$id.'/related',
+                [
+                    'Accept' => [
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                    ],
+                ]
+            ),
+            $response
+        );
+    }
+
     final protected function mockArticleCall($numberOrId, bool $complete = false, bool $vor = false, int $version = null)
     {
         if (is_integer($numberOrId)) {
@@ -989,6 +1017,15 @@ abstract class ApiTestCase extends TestCase
         return $articleHistory;
     }
 
+    private function createRelatedArticlesJson(string $id, bool $complete = false) : array
+    {
+        return [
+            $this->createArticlePoAJson($id.'related1', true, $complete, 1),
+            $this->createArticleVoRJson($id.'related1', true, $complete, 2),
+            $this->createExternalArticleJson($complete),
+        ];
+    }
+
     private function createArticlePoAJson(string $id, bool $isSnippet = false, bool $complete = false, int $version = 1) : array
     {
         $article = [
@@ -1039,17 +1076,6 @@ abstract class ApiTestCase extends TestCase
                         'type' => 'paragraph',
                         'text' => 'Article '.$id.' abstract text',
                     ],
-                ],
-            ],
-            'relatedArticles' => [
-                [
-                    'type' => 'external-article',
-                    'articleTitle' => 'Related article title',
-                    'journal' => [
-                        'name' => ['Journal'],
-                    ],
-                    'authorLine' => 'Author line',
-                    'uri' => 'http://www.example.com/',
                 ],
             ],
             'funding' => [
@@ -1139,7 +1165,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['researchOrganisms']);
             unset($article['reviewers']);
             unset($article['abstract']);
-            unset($article['relatedArticles']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -1151,7 +1176,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['authors']);
             unset($article['reviewers']);
             unset($article['abstract']);
-            unset($article['relatedArticles']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -1326,6 +1350,21 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $article;
+    }
+
+    private function createExternalArticleJson(string $id) : array
+    {
+        return [
+            'type' => 'external-article',
+            'articleTitle' => "External article $id title",
+            'journal' => [
+                'name' => [
+                    "External article $id journal",
+                ],
+            ],
+            'authorLine' => 'Author et all',
+            'uri' => "https://doi.org/10.1016/external.$id",
+        ];
     }
 
     private function createBlogArticleJson(string $id, bool $isSnippet = false, bool $complete = false) : array

@@ -230,8 +230,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['funding'],
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse'],
-            $data['relatedArticles']
+            $data['authorResponse']
         );
     }
 

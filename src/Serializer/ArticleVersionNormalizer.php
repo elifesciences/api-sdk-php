@@ -99,8 +99,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
     final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion
     {
-        $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
-
         if (!empty($context['snippet'])) {
             $complete = $this->snippetDenormalizer->denormalizeSnippet($data);
 
@@ -139,11 +137,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                     return $article['issue'] ?? null;
                 });
 
-            $data['relatedArticles'] = new PromiseSequence($complete
-                ->then(function (Result $article) {
-                    return $article['relatedArticles'] ?? [];
-                }));
-
             $data['reviewers'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
                     return $article['reviewers'] ?? [];
@@ -164,8 +157,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['funding'] = promise_for($data['funding'] ?? null);
 
             $data['issue'] = promise_for($data['issue'] ?? null);
-
-            $data['relatedArticles'] = new ArraySequence($data['relatedArticles'] ?? []);
 
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
         }
@@ -249,8 +240,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
         $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
 
-        $data['relatedArticles'] = $normalizationHelper->denormalizeSequence($data['relatedArticles'], Article::class, $context + ['snippet' => true]);
-
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
     }
 
@@ -326,11 +315,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 $data['reviewers'] = $object->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {
                     return $this->normalizer->normalize($reviewer, $format, $context);
                 })->toArray();
-            }
-
-            $typeContext = array_merge($context, ['type' => true]);
-            if ($object->getRelatedArticles()->notEmpty()) {
-                $data['relatedArticles'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedArticles(), $typeContext);
             }
 
             if ($object->getIssue()) {

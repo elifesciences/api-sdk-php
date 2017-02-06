@@ -8,6 +8,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -162,6 +163,22 @@ final class ArticlesTest extends ApiTestCase
 
             $this->assertInstanceOf(Subject::class, $articleVersion->getSubjects()[0]);
             $this->assertSame('Subject 1 name', $articleVersion->getSubjects()[0]->getName());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_get_related_articles()
+    {
+        $this->mockRelatedArticlesCall('article7', true);
+
+        $relatedArticles = $this->articles->getRelatedArticles('article7');
+
+        $this->assertInstanceOf(Sequence::class, $relatedArticles);
+        $this->assertCount(3, $relatedArticles);
+        foreach ($relatedArticles as $relatedArticle) {
+            $this->assertInstanceOf(Article::class, $relatedArticle);
         }
     }
 

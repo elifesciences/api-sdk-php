@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Promise;
 
-use Exception;
 use GuzzleHttp\Promise\CancellationException;
 use GuzzleHttp\Promise\PromiseInterface;
 use LogicException;
@@ -10,6 +9,7 @@ use RuntimeException;
 use function GuzzleHttp\Promise\exception_for;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
+use Throwable;
 
 /**
  * @internal
@@ -23,7 +23,7 @@ final class CallbackPromise implements PromiseInterface
     public function __construct(callable $callback)
     {
         $this->callback = $callback;
-        $this->callbackOnRejected = function (Exception $e) {
+        $this->callbackOnRejected = function (Throwable $e) {
             throw $e;
         };
     }
@@ -50,10 +50,10 @@ final class CallbackPromise implements PromiseInterface
         }
 
         if ($onRejected) {
-            $clone->callbackOnRejected = function (Exception $e) use ($onRejected) {
+            $clone->callbackOnRejected = function (Throwable $e) use ($onRejected) {
                 try {
                     return call_user_func($this->callbackOnRejected, $e);
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     return call_user_func($onRejected, $e);
                 }
             };
@@ -69,7 +69,7 @@ final class CallbackPromise implements PromiseInterface
 
     public function getState()
     {
-        if ($this->result instanceof Exception) {
+        if ($this->result instanceof Throwable) {
             return PromiseInterface::REJECTED;
         } elseif (!$this->callback) {
             return PromiseInterface::FULFILLED;
@@ -105,7 +105,7 @@ final class CallbackPromise implements PromiseInterface
             return null;
         }
 
-        if ($this->result instanceof Exception) {
+        if ($this->result instanceof Throwable) {
             throw $this->result;
         }
 
@@ -120,10 +120,10 @@ final class CallbackPromise implements PromiseInterface
 
         try {
             $this->result = call_user_func($this->callback);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             try {
                 $this->result = call_user_func($this->callbackOnRejected, $e);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $this->result = $e;
             }
         }

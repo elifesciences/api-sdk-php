@@ -6,10 +6,10 @@ use GuzzleHttp\Promise\CancellationException;
 use GuzzleHttp\Promise\PromiseInterface;
 use LogicException;
 use RuntimeException;
+use Throwable;
 use function GuzzleHttp\Promise\exception_for;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use Throwable;
 
 /**
  * @internal

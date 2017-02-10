@@ -279,6 +279,7 @@ final class Builder
                                     )),
                                 ],
                                 false,
+                                'authors',
                                 'book title',
                                 new Place(null, null, ['publisher'])
                             ),

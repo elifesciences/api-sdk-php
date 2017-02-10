@@ -29,6 +29,7 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
             }, $data['authors']),
             $data['authorsEtAl'] ?? false,
+            $data['authorsType'] ?? 'authors',
             $data['bookTitle'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
             $data['volume'] ?? null,
@@ -69,6 +70,10 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
 
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();
+        }
+
+        if ('authors' !== $object->getAuthorsType()) {
+            $data['authorsType'] = $object->getAuthorsType();
         }
 
         if ($object->getVolume()) {

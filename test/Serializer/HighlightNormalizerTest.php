@@ -164,104 +164,28 @@ final class HighlightNormalizerTest extends ApiTestCase
                     $test->mockInterviewCall('1');
                 },
             ],
-            /*'minimum' => [
-                new Highlight(1, 'title', $date, null, promise_for($banner), $thumbnail,
-                    new ArraySequence([new Paragraph('text')])),
+            'minimum' => [
+                new Highlight('title', null, null, Builder::dummy(Interview::class)),
                 [],
                 [
-                    'number' => 1,
                     'title' => 'title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
-                    'image' => [
-                        'thumbnail' => [
-                            'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                    'item' => [
+                        'id' => '1',
+                        'interviewee' => [
+                            'name' => [
+                                'preferred' => 'Ramanath Hegde',
+                                'index' => 'Hegde, Ramanath',
                             ],
                         ],
-                        'banner' => [
-                            'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
-                            ],
-                        ],
-                    ],
-                    'content' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'text',
-                        ],
+                        'title' => 'Controlling traffic',
+                        'published' => $date->format(ApiSdk::DATE_FORMAT),
+                        'type' => 'interview',
                     ],
                 ],
-            ],
-            'complete snippet' => [
-                new Highlight(1, 'Highlight 1 title', $date, 'Highlight 1 impact statement',
-                    promise_for($banner), $thumbnail, new ArraySequence([new Paragraph('Highlight 1 text')])),
-                ['snippet' => true, 'type' => true],
-                [
-                    'number' => 1,
-                    'title' => 'Highlight 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
-                    'image' => [
-                        'thumbnail' => [
-                            'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
-                            ],
-                        ],
-                    ],
-                    'impactStatement' => 'Highlight 1 impact statement',
-                    'type' => 'labs-experiment',
-                ],
-                function (ApiTestCase $test) {
-                    $test->mockHighlightCall(1, true);
+                function ($test) {
+                    $test->mockInterviewCall('1');
                 },
             ],
-            'minimum snippet' => [
-                new Highlight(1, 'Highlight 1 title', $date, null, promise_for($banner), $thumbnail,
-                    new ArraySequence([new Paragraph('Highlight 1 text')])),
-                ['snippet' => true],
-                [
-                    'number' => 1,
-                    'title' => 'Highlight 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
-                    'image' => [
-                        'thumbnail' => [
-                            'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                function (ApiTestCase $test) {
-                    $test->mockHighlightCall(1);
-                },
-            ],*/
         ];
     }
 }

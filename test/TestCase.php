@@ -40,6 +40,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             try {
                 $this->assertItemsAreEqual($expected->{$method}(), $actual->{$method}(), $methodDetail);
             } catch (RejectionException $e) {
+                var_dump($e->getMessage());
                 throw new RuntimeException("$methodDetail caused a Promise rejection", -1, $e);
             }
         }

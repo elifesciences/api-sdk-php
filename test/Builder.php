@@ -136,7 +136,7 @@ final class Builder
                         'title' => 'Controlling traffic',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'impactStatement' => null,
-                        'content' => $this->rejectSequence(),
+                        'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },
                 Reviewer::class => function () {

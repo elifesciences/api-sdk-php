@@ -9,6 +9,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
@@ -26,6 +27,7 @@ use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
+use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
@@ -49,6 +51,7 @@ use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
+use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
@@ -58,6 +61,7 @@ use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
@@ -79,6 +83,7 @@ final class ApiSdk
     private $communityClient;
     private $coversClient;
     private $eventsClient;
+    private $highlightsClient;
     private $interviewsClient;
     private $labsClient;
     private $metricsClient;
@@ -93,6 +98,7 @@ final class ApiSdk
     private $community;
     private $covers;
     private $events;
+    private $highlights;
     private $interviews;
     private $labsExperiments;
     private $mediumArticles;
@@ -123,6 +129,7 @@ final class ApiSdk
         $this->communityClient = new CommunityClient($this->httpClient);
         $this->coversClient = new CoversClient($this->httpClient);
         $this->eventsClient = new EventsClient($this->httpClient);
+        $this->highlightsClient = new HighlightsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
         $this->metricsClient = new MetricsClient($this->httpClient);
@@ -146,6 +153,7 @@ final class ApiSdk
             new ExternalArticleNormalizer(),
             new FileNormalizer(),
             new GroupAuthorNormalizer(),
+            new HighlightNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
             new LabsExperimentNormalizer($this->labsClient),
@@ -155,6 +163,7 @@ final class ApiSdk
             new PersonDetailsNormalizer(),
             new PersonNormalizer($this->peopleClient),
             new PlaceNormalizer(),
+            new PodcastEpisodeChapterModelNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
@@ -246,6 +255,15 @@ final class ApiSdk
         }
 
         return $this->events;
+    }
+
+    public function highlights() : Highlights
+    {
+        if (empty($this->highlights)) {
+            $this->highlights = new Highlights($this->highlightsClient, $this->serializer);
+        }
+
+        return $this->highlights;
     }
 
     public function interviews() : Interviews

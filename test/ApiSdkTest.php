@@ -10,6 +10,7 @@ use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
+use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\LabsExperiments;
 use eLife\ApiSdk\Client\MediumArticles;
@@ -130,6 +131,18 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockEventCall(7, true);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->events()->get('event7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_highlights()
+    {
+        $this->assertInstanceOf(Highlights::class, $this->apiSdk->highlights());
+
+        $this->mockHighlightsCall('foo', 10);
+
+        $this->apiSdk->highlights()->get('foo')->toArray();
     }
 
     /**

@@ -11,6 +11,7 @@ use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
@@ -495,6 +496,26 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
                 json_encode($this->createEventJson($number, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockHighlightsCall(string $id, int $total, bool $complete = false)
+    {
+        $highlights = array_map(function (int $id) use ($complete) {
+            return $this->createHighlightJson($id, ['type' => 'interview'] + $this->createInterviewJson($id, true, $complete), $complete);
+        }, $this->generateIdList(1, $total, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                "http://api.elifesciences.org/highlights/$id",
+                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHTS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHTS, 1)],
+                json_encode($highlights)
             )
         );
     }
@@ -1442,6 +1463,35 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $event;
+    }
+
+    private function createHighlightJson(int $number, array $item, bool $complete = false) : array
+    {
+        $highlight = [
+            'title' => 'Highlight '.$number.' title',
+            'authorLine' => 'Author et al',
+            'image' => [
+                'alt' => '',
+                'sizes' => [
+                    '16:9' => [
+                        '250' => 'https://placehold.it/250x141',
+                        '500' => 'https://placehold.it/500x281',
+                    ],
+                    '1:1' => [
+                        '70' => 'https://placehold.it/70x70',
+                        '140' => 'https://placehold.it/140x140',
+                    ],
+                ],
+            ],
+            'item' => $item,
+        ];
+
+        if (!$complete) {
+            unset($highlight['authorLine']);
+            unset($highlight['image']);
+        }
+
+        return $highlight;
     }
 
     private function createInterviewJson(string $id, bool $isSnippet = false, bool $complete = false) : array

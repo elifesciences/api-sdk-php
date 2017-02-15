@@ -100,6 +100,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['title'],
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['image']['banner'],
             $data['image']['thumbnail'],
             $data['sources'],
@@ -138,6 +139,10 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
 
         if (!empty($context['type'])) {
             $data['type'] = 'podcast-episode';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

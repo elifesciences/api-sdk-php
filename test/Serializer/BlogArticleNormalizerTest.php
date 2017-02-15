@@ -57,7 +57,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -127,7 +127,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $date = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = new Image('',
             [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
         $thumbnail = new Image('', [
@@ -145,13 +146,14 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new BlogArticle('id', 'title', $date, 'impact statement', new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', new ArraySequence([new Paragraph('text')]),
                     new ArraySequence([$subject])),
                 [],
                 [
                     'id' => 'id',
                     'title' => 'title',
                     'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updatedDate->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'content' => [
                         [
@@ -165,7 +167,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new BlogArticle('id', 'title', $date, null, new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, null, null, new ArraySequence([new Paragraph('text')]),
                     new EmptySequence()),
                 [],
                 [
@@ -181,13 +183,14 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, 'Blog article 1 impact statement',
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, $updatedDate, 'Blog article 1 impact statement',
                     new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'blog-article-1',
                     'title' => 'Blog article 1 title',
                     'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updatedDate->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Blog article 1 impact statement',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1 name'],
@@ -199,7 +202,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null,
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null, null,
                     new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new EmptySequence()),
                 ['snippet' => true],
                 [

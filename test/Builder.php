@@ -72,6 +72,7 @@ final class Builder
                         'id' => '359325',
                         'title' => 'Media coverage: Slime can see',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'impactStatement' => null,
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
@@ -86,6 +87,7 @@ final class Builder
                         'subTitle' => promise_for(null),
                         'impactStatement' => null,
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updatedDate' => null,
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'subjects' => new EmptySequence(),
@@ -135,6 +137,7 @@ final class Builder
                         ),
                         'title' => 'Controlling traffic',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'impactStatement' => null,
                         'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
@@ -172,6 +175,7 @@ final class Builder
                         'title' => 'September 2013',
                         'impactStatement' => null,
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'banner' => rejection_for('No banner'),
                         'thumbnail' => new Image('thumbnail', [900 => 'https://placehold.it/900x450']),
                         'sources' => [

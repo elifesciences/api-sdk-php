@@ -29,7 +29,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -43,7 +43,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_number()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -57,7 +57,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -71,12 +71,12 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new PodcastEpisode(1, 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $with = new PodcastEpisode(1, 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
-        $withOut = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $withOut = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -92,7 +92,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -104,9 +104,29 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_an_updated_date()
+    {
+        $with = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')),
+            rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
+            [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
+            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+        $withOut = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
+            [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
+            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+
+        $this->assertEquals($updated, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_banner()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])), $image,
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -121,7 +141,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_thumbnail()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), $image = new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -136,7 +156,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_sources()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             $sources = [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -151,7 +171,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')], $subjects,
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
@@ -186,7 +206,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_chapters()
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),

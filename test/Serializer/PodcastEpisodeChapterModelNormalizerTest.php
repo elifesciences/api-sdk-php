@@ -138,7 +138,7 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
         return [
             [
                 new PodcastEpisodeChapterModel(
-                    new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                    new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date, null,
                         promise_for($banner), $thumbnail,
                         [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                         new EmptySequence(), new ArraySequence([
@@ -178,10 +178,10 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
                         'impactStatement' => 'Podcast episode 1 impact statement',
                     ],
                     'chapter' => [
-                            'number' => 1,
-                            'title' => 'Chapter title',
-                            'time' => 0,
-                        ],
+                        'number' => 1,
+                        'title' => 'Chapter title',
+                        'time' => 0,
+                    ],
                 ],
                 function ($test) {
                     $test->mockPodcastEpisodeCall(1);

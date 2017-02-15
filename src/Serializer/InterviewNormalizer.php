@@ -81,6 +81,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             ),
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['content']
         );
@@ -108,6 +109,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
 
         if (!empty($context['type'])) {
             $data['type'] = 'interview';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

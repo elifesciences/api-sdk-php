@@ -12,6 +12,8 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
     private $id;
     private $title;
     private $impactStatement;
+    private $publishedDate;
+    private $updatedDate;
     private $starts;
     private $ends;
     private $timeZone;
@@ -25,6 +27,8 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         string $id,
         string $title,
         string $impactStatement = null,
+        DateTimeImmutable $publishedDate,
+        DateTimeImmutable $updatedDate = null,
         DateTimeImmutable $starts,
         DateTimeImmutable $ends,
         DateTimeZone $timeZone = null,
@@ -34,6 +38,8 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         $this->id = $id;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
+        $this->publishedDate = $publishedDate;
+        $this->updatedDate = $updatedDate;
         $this->starts = $starts;
         $this->ends = $ends;
         $this->timeZone = $timeZone;
@@ -41,12 +47,12 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         $this->venue = $venue;
     }
 
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -59,12 +65,25 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         return $this->impactStatement;
     }
 
-    public function getStarts(): DateTimeImmutable
+    public function getPublishedDate() : DateTimeImmutable
+    {
+        return $this->publishedDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    public function getStarts() : DateTimeImmutable
     {
         return $this->starts;
     }
 
-    public function getEnds(): DateTimeImmutable
+    public function getEnds() : DateTimeImmutable
     {
         return $this->ends;
     }
@@ -77,7 +96,7 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         return $this->timeZone;
     }
 
-    public function getContent(): Sequence
+    public function getContent() : Sequence
     {
         return $this->content;
     }

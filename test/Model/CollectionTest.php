@@ -113,6 +113,22 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_an_updated_date()
+    {
+        $with = $this->builder
+            ->withUpdatedDate($updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withUpdatedDate(null)
+            ->__invoke();
+
+        $this->assertEquals($updatedDate, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_banner()
     {
         $collection = $this->builder

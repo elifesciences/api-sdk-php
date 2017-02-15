@@ -93,7 +93,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['title'],
             $data['subTitle'],
             $data['impactStatement'] ?? null,
-            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             promise_for($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
             $data['subjects'],
@@ -119,7 +120,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();
         }
-        $data['updated'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        }
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         if (!$object->getSubjects()->isEmpty()) {

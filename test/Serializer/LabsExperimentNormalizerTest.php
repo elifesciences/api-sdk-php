@@ -56,7 +56,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'),
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No banner'),
             $thumbnail, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
@@ -123,7 +123,8 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = new Image('',
             [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
         $thumbnail = new Image('', [
@@ -139,13 +140,14 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new LabsExperiment(1, 'title', $date, 'impact statement', promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'title', $published, $updated, 'impact statement', promise_for($banner), $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
                     'title' => 'title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -180,13 +182,13 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsExperiment(1, 'title', $date, null, promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'title', $published, null, null, promise_for($banner), $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'number' => 1,
                     'title' => 'title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -220,13 +222,14 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $date, 'Labs experiment 1 impact statement',
+                new LabsExperiment(1, 'Labs experiment 1 title', $published, $updated, 'Labs experiment 1 impact statement',
                     promise_for($banner), $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -250,13 +253,13 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $date, null, promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'Labs experiment 1 title', $published, null, null, promise_for($banner), $thumbnail,
                     new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
                     'title' => 'Labs experiment 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

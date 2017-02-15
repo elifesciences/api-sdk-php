@@ -11,6 +11,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement
     private $interviewee;
     private $title;
     private $published;
+    private $updated;
     private $impactStatement;
     private $content;
 
@@ -22,6 +23,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement
         Interviewee $interviewee,
         string $title,
         DateTimeImmutable $published,
+        DateTimeImmutable $updated = null,
         string $impactStatement = null,
         Sequence $content
     ) {
@@ -29,6 +31,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement
         $this->interviewee = $interviewee;
         $this->title = $title;
         $this->published = $published;
+        $this->updated = $updated;
         $this->impactStatement = $impactStatement;
         $this->content = $content;
     }
@@ -64,6 +67,14 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement
     public function getPublishedDate() : DateTimeImmutable
     {
         return $this->published;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updated;
     }
 
     /**

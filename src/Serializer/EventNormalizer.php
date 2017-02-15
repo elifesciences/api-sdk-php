@@ -82,6 +82,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['id'],
             $data['title'],
             $data['impactStatement'] ?? null,
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['starts']),
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['ends']),
             !empty($data['timezone']) ? new DateTimeZone($data['timezone']) : null,
@@ -106,12 +108,17 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
+            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
             'starts' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
             'ends' => $object->getEnds()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {
             $data['type'] = 'event';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

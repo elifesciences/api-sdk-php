@@ -88,7 +88,7 @@ class SearchTest extends ApiTestCase
         $this->assertInstanceOf(Model::class, $this->search[0]);
 
         $this->mockNotFound(
-            'search?for=&page=6&per-page=1&sort=relevance&order=desc',
+            'search?for=&page=6&per-page=1&sort=relevance&order=desc&use-date=default',
             ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
         );
 
@@ -142,10 +142,21 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_use_published_dates()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'date', 'published');
+        $this->mockFirstPageCall(5, '', true, [], [], 'date', 'published');
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->sortBy('date')->useDate('published')));
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_start_date()
     {
-        $this->mockCountCall(5, '', true, [], [], 'relevance', new DateTimeImmutable('2017-01-02'));
-        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', new DateTimeImmutable('2017-01-02'));
+        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
     }
@@ -155,8 +166,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_end_date()
     {
-        $this->mockCountCall(5, '', true, [], [], 'relevance', null, new DateTimeImmutable('2017-01-02'));
-        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
     }

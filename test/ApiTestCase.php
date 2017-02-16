@@ -406,6 +406,7 @@ abstract class ApiTestCase extends TestCase
         int $total,
         bool $descendingOrder = true,
         string $sort = 'date',
+        string $useDate = 'default',
         DateTimeImmutable $startDate = null,
         DateTimeImmutable $endDate = null
     ) {
@@ -419,7 +420,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$startsQuery.$endsQuery,
+                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(
@@ -869,6 +870,7 @@ abstract class ApiTestCase extends TestCase
         array $subjects = [],
         array $types = [],
         $sort = 'relevance',
+        $useDate = 'default',
         DateTimeImmutable $startDate = null,
         DateTimeImmutable $endDate = null
     ) {
@@ -890,7 +892,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.$startsQuery.$endsQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
             ),
             new Response(

@@ -29,6 +29,7 @@ final class Search implements Iterator, Sequence
     private $subjectsQuery = [];
     private $typesQuery = [];
     private $sort = 'relevance';
+    private $useDate = 'default';
     private $startDate;
     private $endDate;
 
@@ -83,6 +84,15 @@ final class Search implements Iterator, Sequence
         $clone->typesQuery = array_unique(array_merge($this->typesQuery, $type));
 
         $clone->invalidateDataIfDifferent('typesQuery', $this);
+
+        return $clone;
+    }
+
+    public function useDate(string $useDate) : self
+    {
+        $clone = clone $this;
+
+        $clone->useDate = $useDate;
 
         return $clone;
     }
@@ -143,6 +153,7 @@ final class Search implements Iterator, Sequence
                 $this->descendingOrder,
                 $this->subjectsQuery,
                 $this->typesQuery,
+                $this->useDate,
                 $this->startDate,
                 $this->endDate
             )

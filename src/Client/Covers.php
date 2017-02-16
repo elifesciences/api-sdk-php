@@ -20,6 +20,7 @@ final class Covers implements Iterator, Sequence
     private $count;
     private $sort = 'date';
     private $descendingOrder = true;
+    private $useDate = 'default';
     private $startDate;
     private $endDate;
     private $coversClient;
@@ -39,6 +40,15 @@ final class Covers implements Iterator, Sequence
         $clone = clone $this;
 
         $clone->sort = $sort;
+
+        return $clone;
+    }
+
+    public function useDate(string $useDate) : self
+    {
+        $clone = clone $this;
+
+        $clone->useDate = $useDate;
 
         return $clone;
     }
@@ -82,6 +92,7 @@ final class Covers implements Iterator, Sequence
                 $length,
                 $this->sort,
                 $this->descendingOrder,
+                $this->useDate,
                 $this->startDate,
                 $this->endDate
             )

@@ -18,6 +18,7 @@ use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -809,6 +810,55 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
                 json_encode($this->createPodcastEpisodeJson($number, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockPressPackagesListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true
+    ) {
+        $pressPackages = array_map(function (int $id) {
+            return $this->createPressPackageJson("press-package-$id", true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/press-packages?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $pressPackages,
+                ])
+            )
+        );
+    }
+
+    final protected function mockPressPackageCall($numberOrId, bool $complete = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "press-package-{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                "http://api.elifesciences.org/press-packages/$id",
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)],
+                json_encode($this->createPressPackageJson($id, false, $complete))
             )
         );
     }
@@ -1745,6 +1795,67 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $podcastEpisode;
+    }
+
+    final private function createPressPackageJson(string $id, bool $isSnippet = false, bool $isComplete = false) : array
+    {
+        $package = [
+            'id' => $id,
+            'title' => "Press package $id name",
+            'impactStatement' => "Press package $id impact statement",
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => "Press package $id text",
+                ],
+            ],
+            'relatedContent' => [
+                [
+                    'id' => '14107',
+                    'stage' => 'preview',
+                    'version' => 1,
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.14107',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                    'status' => 'poa',
+                ],
+            ],
+            'mediaContacts' => [
+                [
+                    'name' => [
+                        'preferred' => 'preferred',
+                        'index' => 'index',
+                    ],
+                ],
+            ],
+            'about' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => "Press package $id about",
+                ],
+            ],
+        ];
+
+        if (!$isComplete) {
+            unset($package['impactStatement']);
+            unset($package['updated']);
+            unset($package['mediaContacts']);
+            unset($package['about']);
+        }
+
+        if ($isSnippet) {
+            unset($package['impactStatement']);
+            unset($package['content']);
+            unset($package['relatedContent']);
+            unset($package['mediaContacts']);
+            unset($package['about']);
+        }
+
+        return $package;
     }
 
     private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array

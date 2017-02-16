@@ -37,6 +37,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
@@ -186,6 +187,20 @@ final class Builder
                         ],
                         'subjects' => new EmptySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
+                    ];
+                },
+                PressPackage::class => function () {
+                    return [
+                        'id' => '1',
+                        'title' => 'Press package title',
+                        'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
+                        'impactStatement' => null,
+                        'subjects' => new EmptySequence(),
+                        'content' => new ArraySequence([new Paragraph('Press package 1 text')]),
+                        'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
+                        'mediaContacts' => new EmptySequence(),
+                        'about' => new EmptySequence(),
                     ];
                 },
                 ArticlePoA::class => $articlePoA = function () {

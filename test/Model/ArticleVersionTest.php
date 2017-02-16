@@ -18,6 +18,7 @@ use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\HasCiteAs;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -199,6 +200,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->withPublished(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasPublishedDate::class, $with);
         $this->assertEquals($date, $with->getPublishedDate());
         $this->assertNull($withOut->getPublishedDate());
     }

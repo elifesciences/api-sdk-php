@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishedDate, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -94,22 +94,22 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         $this->additionalFiles = $additionalFiles;
     }
 
-    final public function getId(): string
+    final public function getId() : string
     {
         return $this->id;
     }
 
-    final public function getStage(): string
+    final public function getStage() : string
     {
         return $this->stage;
     }
 
-    final public function getVersion(): int
+    final public function getVersion() : int
     {
         return $this->version;
     }
 
-    final public function getType(): string
+    final public function getType() : string
     {
         return $this->type;
     }
@@ -123,7 +123,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         return sprintf('eLife %s;%s:%s', $this->getPublishedDate()->format('Y'), $this->getVolume(), $this->getElocationId());
     }
 
-    final public function getDoi(): string
+    final public function getDoi() : string
     {
         return $this->doi;
     }
@@ -144,7 +144,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         return $this->titlePrefix;
     }
 
-    final public function getTitle(): string
+    final public function getTitle() : string
     {
         return $this->title;
     }
@@ -183,12 +183,12 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         return $this->statusDate;
     }
 
-    final public function getVolume(): int
+    final public function getVolume() : int
     {
         return $this->volume;
     }
 
-    final public function getElocationId(): string
+    final public function getElocationId() : string
     {
         return $this->elocationId;
     }
@@ -212,7 +212,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
     /**
      * @return string[]
      */
-    final public function getResearchOrganisms(): array
+    final public function getResearchOrganisms() : array
     {
         return $this->researchOrganisms;
     }
@@ -233,17 +233,17 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasSubjects
         return $this->issue->wait();
     }
 
-    final public function getCopyright(): Copyright
+    final public function getCopyright() : Copyright
     {
         return $this->copyright->wait();
     }
 
-    final public function getAuthors(): Sequence
+    final public function getAuthors() : Sequence
     {
         return $this->authors;
     }
 
-    final public function getReviewers(): Sequence
+    final public function getReviewers() : Sequence
     {
         return $this->reviewers;
     }

@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement, HasSubjects
+final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
 {
     private $id;
     private $title;

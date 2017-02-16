@@ -10,7 +10,9 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsExperiment;
 use eLife\ApiSdk\Model\Model;
@@ -88,6 +90,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasPublishedDate::class, $labsExperiment);
         $this->assertEquals($date, $labsExperiment->getPublishedDate());
     }
 
@@ -105,6 +108,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updated, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 
-final class MediumArticle implements Model, HasImpactStatement, HasThumbnail
+final class MediumArticle implements Model, HasImpactStatement, HasPublishedDate, HasThumbnail
 {
     private $uri;
     private $title;
@@ -47,7 +47,7 @@ final class MediumArticle implements Model, HasImpactStatement, HasThumbnail
         return $this->impactStatement;
     }
 
-    public function getPublishedDate(): DateTimeImmutable
+    public function getPublishedDate() : DateTimeImmutable
     {
         return $this->published;
     }

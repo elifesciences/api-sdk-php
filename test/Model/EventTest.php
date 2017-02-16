@@ -11,6 +11,8 @@ use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
@@ -82,6 +84,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
+        $this->assertInstanceOf(HasPublishedDate::class, $event);
         $this->assertEquals($published, $event->getPublishedDate());
     }
 
@@ -97,6 +100,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')),
             rejection_for('Event venue should not be unwrapped'));
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updated, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

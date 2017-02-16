@@ -12,8 +12,10 @@ use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -107,6 +109,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withPublishedDate($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
             ->__invoke();
 
+        $this->assertInstanceOf(HasPublishedDate::class, $collection);
         $this->assertEquals($publishedDate, $collection->getPublishedDate());
     }
 
@@ -122,6 +125,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withUpdatedDate(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updatedDate, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

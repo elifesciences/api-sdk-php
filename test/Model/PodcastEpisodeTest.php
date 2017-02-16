@@ -10,8 +10,10 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
@@ -98,6 +100,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasPublishedDate::class, $podcastEpisode);
         $this->assertEquals($published, $podcastEpisode->getPublishedDate());
     }
 
@@ -117,6 +120,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updated, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

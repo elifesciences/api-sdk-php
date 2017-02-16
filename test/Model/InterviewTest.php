@@ -10,6 +10,8 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -114,6 +116,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasPublishedDate::class, $interview);
         $this->assertEquals($date, $interview->getPublishedDate());
     }
 
@@ -132,6 +135,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($date, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

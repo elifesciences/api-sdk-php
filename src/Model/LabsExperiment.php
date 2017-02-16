@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactStatement, HasThumbnail
+final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $number;
     private $title;

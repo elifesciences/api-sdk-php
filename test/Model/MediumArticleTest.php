@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
@@ -65,6 +66,7 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
         $mediumArticle = new MediumArticle('http://www.example.com/', 'title', null, $date = new DateTimeImmutable('now', new DateTimeZone('Z')),
             null);
 
+        $this->assertInstanceOf(HasPublishedDate::class, $mediumArticle);
         $this->assertEquals($date, $mediumArticle->getPublishedDate());
     }
 

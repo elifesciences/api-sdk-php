@@ -13,7 +13,9 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
@@ -90,6 +92,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasPublishedDate::class, $blogArticle);
         $this->assertEquals($date, $blogArticle->getPublishedDate());
     }
 
@@ -107,6 +110,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($date, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
     }

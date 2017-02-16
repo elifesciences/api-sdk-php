@@ -7,7 +7,7 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Event implements Model, HasContent, HasId, HasImpactStatement
+final class Event implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $title;

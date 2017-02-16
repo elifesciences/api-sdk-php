@@ -17,6 +17,7 @@ use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
+use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
@@ -219,6 +220,18 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockPodcastEpisodeCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->podcastEpisodes()->get(1)->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_press_packages()
+    {
+        $this->assertInstanceOf(PressPackages::class, $this->apiSdk->pressPackages());
+
+        $this->mockPressPackageCall(7);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->pressPackages()->get('press-package-7')->wait());
     }
 
     /**

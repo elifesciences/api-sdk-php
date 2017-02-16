@@ -9,5 +9,5 @@ interface HasUpdatedDate
     /**
      * @return DateTimeImmutable|null
      */
-    public function getPublishedDate();
+    public function getUpdatedDate();
 }

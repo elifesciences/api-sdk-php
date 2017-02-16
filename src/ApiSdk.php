@@ -16,6 +16,7 @@ use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -34,6 +35,7 @@ use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
+use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -55,6 +57,7 @@ use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
+use eLife\ApiSdk\Serializer\MediaContactNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
@@ -63,6 +66,7 @@ use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
+use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
@@ -89,6 +93,7 @@ final class ApiSdk
     private $metricsClient;
     private $peopleClient;
     private $podcastClient;
+    private $pressPackagesClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -105,6 +110,7 @@ final class ApiSdk
     private $metrics;
     private $people;
     private $podcastEpisodes;
+    private $pressPackages;
     private $collections;
     private $search;
     private $subjects;
@@ -135,6 +141,7 @@ final class ApiSdk
         $this->metricsClient = new MetricsClient($this->httpClient);
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
+        $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
@@ -157,6 +164,7 @@ final class ApiSdk
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
             new LabsExperimentNormalizer($this->labsClient),
+            new MediaContactNormalizer(),
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
@@ -165,6 +173,7 @@ final class ApiSdk
             new PlaceNormalizer(),
             new PodcastEpisodeChapterModelNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
+            new PressPackageNormalizer($this->pressPackagesClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
@@ -318,6 +327,15 @@ final class ApiSdk
         }
 
         return $this->podcastEpisodes;
+    }
+
+    public function pressPackages() : PressPackages
+    {
+        if (empty($this->pressPackages)) {
+            $this->pressPackages = new PressPackages($this->pressPackagesClient, $this->serializer);
+        }
+
+        return $this->pressPackages;
     }
 
     public function collections() : Collections

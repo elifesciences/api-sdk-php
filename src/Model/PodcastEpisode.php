@@ -12,6 +12,7 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasS
     private $title;
     private $impactStatement;
     private $published;
+    private $updated;
     private $banner;
     private $thumbnail;
     private $sources;
@@ -26,6 +27,7 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasS
         string $title,
         string $impactStatement = null,
         DateTimeImmutable $published,
+        DateTimeImmutable $updated = null,
         PromiseInterface $banner,
         Image $thumbnail,
         array $sources,
@@ -36,6 +38,7 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasS
         $this->title = $title;
         $this->impactStatement = $impactStatement;
         $this->published = $published;
+        $this->updated = $updated;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->sources = $sources;
@@ -66,6 +69,14 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasS
         return $this->published;
     }
 
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updated;
+    }
+
     public function getBanner() : Image
     {
         return $this->banner->wait();
@@ -79,7 +90,7 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasS
     /**
      * @return PodcastEpisodeSource[]
      */
-    public function getSources(): array
+    public function getSources() : array
     {
         return $this->sources;
     }

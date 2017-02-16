@@ -1402,6 +1402,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
+            $blogArticle['updated'] = '2000-01-01T00:00:00Z';
             $blogArticle['impactStatement'] = 'Blog article '.$id.' impact statement';
             $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
@@ -1442,6 +1443,7 @@ abstract class ApiTestCase extends TestCase
             'id' => $id,
             'title' => 'Event '.$number.' title',
             'impactStatement' => 'Event '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00Z',
             'starts' => '2000-01-01T00:00:00Z',
             'ends' => '2100-01-01T00:00:00Z',
             'content' => [
@@ -1453,6 +1455,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
+            $event['updated'] = '2000-01-01T00:00:00Z';
             $event['timezone'] = 'Europe/London';
             $event['venue'] = ['name' => ['venue']];
         }
@@ -1514,6 +1517,7 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Interview '.$id.' title',
             'impactStatement' => 'Interview '.$id.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -1528,6 +1532,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if (!$complete) {
+            unset($interview['updated']);
             unset($interview['impactStatement']);
             unset($interview['interviewee']['cv']);
         }
@@ -1542,6 +1547,7 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Labs experiment '.$number.' title',
             'impactStatement' => 'Labs experiment '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-01T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1580,6 +1586,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if (!$complete) {
+            unset($labsExperiment['updated']);
             unset($labsExperiment['impactStatement']);
         }
 
@@ -1679,6 +1686,7 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Podcast episode '.$number.' title',
             'impactStatement' => 'Podcast episode '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1723,6 +1731,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
+            unset($podcastEpisode['updated']);
             unset($podcastEpisode['subjects']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
             unset($podcastEpisode['chapters'][0]['content']);
@@ -1743,7 +1752,8 @@ abstract class ApiTestCase extends TestCase
             'title' => ucfirst($id),
             'subTitle' => ucfirst($id).' subtitle',
             'impactStatement' => ucfirst($id).' impact statement',
-            'updated' => '2000-01-01T00:00:00Z',
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -1860,6 +1870,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($collection['impactStatement']);
+            unset($collection['updated']);
             unset($collection['selectedCurator']['etAl']);
             unset($collection['subTitle']);
             unset($collection['relatedContent']);

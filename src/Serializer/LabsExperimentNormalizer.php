@@ -80,6 +80,7 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
             $data['number'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['image']['banner'],
             $data['image']['thumbnail'],
@@ -111,6 +112,10 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
 
         if (!empty($context['type'])) {
             $data['type'] = 'labs-experiment';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

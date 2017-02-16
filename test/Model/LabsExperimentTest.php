@@ -25,7 +25,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -38,7 +38,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_number()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -51,7 +51,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -64,11 +64,11 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
+        $with = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
-        $withOut = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $withOut = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -83,7 +83,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -94,9 +94,27 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_an_updated_date()
+    {
+        $with = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
+            rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
+        );
+        $withOut = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']),
+            new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
+        );
+
+        $this->assertEquals($updated, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_banner()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])),
             $image, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -110,7 +128,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_thumbnail()
     {
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), $image = new Image('', [900 => 'https://placehold.it/900x450']),
             new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
@@ -126,7 +144,7 @@ final class LabsExperimentTest extends PHPUnit_Framework_TestCase
     {
         $content = [new Block\Paragraph('foo')];
 
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             rejection_for('No banner'), new Image('', [900 => 'https://placehold.it/900x450']), new ArraySequence($content)
         );
 

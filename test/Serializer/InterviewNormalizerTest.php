@@ -59,7 +59,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -126,12 +126,15 @@ final class InterviewNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
+        $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
+
         return [
             'complete' => [
                 $interview = new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $date = new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement', new ArraySequence([new Paragraph('text')])
+                    $published, $updated, 'impact statement', new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [
@@ -150,7 +153,8 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'content' => [
                         [
@@ -163,7 +167,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum' => [
                 new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'title', $date, null, new ArraySequence([new Paragraph('text')])),
+                    'title', $published, null, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -174,7 +178,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -186,7 +190,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
-                        new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $date,
+                        new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $published, $updated,
                     'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true, 'type' => true],
@@ -200,7 +204,8 @@ final class InterviewNormalizerTest extends ApiTestCase
                         'orcid' => '0000-0002-1825-0097',
                     ],
                     'title' => 'Interview 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Interview 1 impact statement',
                     'type' => 'interview',
                 ],
@@ -211,7 +216,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'Interview 1 title', $date, null, new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 title', $published, null, null, new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [
@@ -223,7 +228,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'title' => 'Interview 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
                     $test->mockInterviewCall('interview1');

@@ -13,6 +13,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     private $subTitle;
     private $impactStatement;
     private $publishedDate;
+    private $updatedDate;
     private $banner;
     private $thumbnail;
     private $subjects;
@@ -32,6 +33,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         PromiseInterface $subTitle,
         string $impactStatement = null,
         DateTimeImmutable $publishedDate,
+        DateTimeImmutable $updatedDate = null,
         PromiseInterface $banner,
         Image $thumbnail,
         Sequence $subjects,
@@ -47,6 +49,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         $this->subTitle = $subTitle;
         $this->impactStatement = $impactStatement;
         $this->publishedDate = $publishedDate;
+        $this->updatedDate = $updatedDate;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->subjects = $subjects;
@@ -87,6 +90,14 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     public function getPublishedDate() : DateTimeImmutable
     {
         return $this->publishedDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
     }
 
     public function getBanner() : Image

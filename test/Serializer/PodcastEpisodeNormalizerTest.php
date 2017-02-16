@@ -61,7 +61,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), rejection_for('No banner'),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'),
             new Image('', [900 => 'https://placehold.it/900x450']),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
@@ -135,7 +135,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = new Image('',
             [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
         $thumbnail = new Image('', [
@@ -151,7 +152,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new EmptySequence(), new ArraySequence([
@@ -174,7 +175,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -236,7 +238,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'id' => 'tropical-disease',
                                     'type' => 'collection',
                                     'title' => 'Tropical disease',
-                                    'updated' => '2000-01-01T00:00:00Z',
+                                    'published' => '2000-01-01T00:00:00Z',
                                     'image' => [
                                         'thumbnail' => [
                                             'alt' => '',
@@ -280,7 +282,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     1,
                     'Podcast episode 1 title',
                     null,
-                    $date,
+                    $published,
+                    null,
                     promise_for($banner),
                     $thumbnail,
                     [
@@ -303,7 +306,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -344,7 +347,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new EmptySequence(), new ArraySequence([
@@ -357,7 +360,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
                     'impactStatement' => 'Podcast episode 1 impact statement',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
@@ -386,7 +390,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new EmptySequence(), new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
@@ -395,7 +399,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

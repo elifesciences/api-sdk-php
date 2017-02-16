@@ -11,6 +11,7 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
     private $number;
     private $title;
     private $published;
+    private $updated;
     private $impactStatement;
     private $banner;
     private $thumbnail;
@@ -23,6 +24,7 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
         int $number,
         string $title,
         DateTimeImmutable $published,
+        DateTimeImmutable $updated = null,
         string $impactStatement = null,
         PromiseInterface $banner,
         Image $thumbnail,
@@ -31,6 +33,7 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
         $this->number = $number;
         $this->title = $title;
         $this->published = $published;
+        $this->updated = $updated;
         $this->impactStatement = $impactStatement;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
@@ -58,6 +61,14 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
     public function getPublishedDate() : DateTimeImmutable
     {
         return $this->published;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updated;
     }
 
     public function getBanner() : Image

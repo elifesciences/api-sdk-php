@@ -9,12 +9,12 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
@@ -30,7 +30,7 @@ final class PersonAuthorNormalizerTest extends TestCase
     {
         $this->normalizer = new PersonAuthorNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new AddressNormalizer(),
             new PersonDetailsNormalizer(),

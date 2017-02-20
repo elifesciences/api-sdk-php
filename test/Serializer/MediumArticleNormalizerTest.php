@@ -10,9 +10,9 @@ use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\TestCase;
 
 final class MediumArticleNormalizerTest extends TestCase
@@ -27,7 +27,7 @@ final class MediumArticleNormalizerTest extends TestCase
     {
         $this->normalizer = new MediumArticleNormalizer();
 
-        new Serializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer()]);
     }
 
     /**

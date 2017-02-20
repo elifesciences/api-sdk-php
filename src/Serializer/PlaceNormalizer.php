@@ -5,11 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class PlaceNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface

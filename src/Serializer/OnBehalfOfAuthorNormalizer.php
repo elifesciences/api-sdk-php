@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class OnBehalfOfAuthorNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) :OnBehalfOfAuthor
+    public function denormalize($data, $class, $format = null, array $context = []) : OnBehalfOfAuthor
     {
         return new OnBehalfOfAuthor($data['onBehalfOf']);
     }

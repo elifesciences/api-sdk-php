@@ -7,9 +7,9 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\TestCase;
 
 final class AnnualReportNormalizerTest extends TestCase
@@ -24,7 +24,7 @@ final class AnnualReportNormalizerTest extends TestCase
     {
         $this->normalizer = new AnnualReportNormalizer();
 
-        new Serializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer()]);
     }
 
     /**

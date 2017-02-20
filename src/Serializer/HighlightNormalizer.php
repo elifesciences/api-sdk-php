@@ -5,11 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class HighlightNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface

@@ -15,11 +15,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 

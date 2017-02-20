@@ -9,10 +9,10 @@ use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\Block\BoxNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ final class BoxNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new BoxNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new ParagraphNormalizer(),
         ]);

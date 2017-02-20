@@ -7,10 +7,10 @@ use eLife\ApiSdk\Model\Block\Listing;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\Block\ListingNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new ListingNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new ParagraphNormalizer(),
         ]);

@@ -10,7 +10,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class MediumArticlesTest extends ApiTestCase
@@ -27,7 +27,7 @@ final class MediumArticlesTest extends ApiTestCase
     {
         $this->mediumArticles = new MediumArticles(
             new MediumClient($this->getHttpClient()),
-            new Serializer([new MediumArticleNormalizer(), new ImageNormalizer()])
+            new NormalizerAwareSerializer([new MediumArticleNormalizer(), new ImageNormalizer()])
         );
     }
 

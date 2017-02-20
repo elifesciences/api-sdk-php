@@ -6,10 +6,10 @@ use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
@@ -25,7 +25,7 @@ final class PlaceNormalizerTest extends TestCase
     {
         $this->normalizer = new PlaceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new AddressNormalizer(),
         ]);

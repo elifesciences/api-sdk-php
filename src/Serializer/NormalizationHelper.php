@@ -43,7 +43,10 @@ final class NormalizationHelper
     {
         $selectors = explode('.', $fieldPath);
 
-        return $resultPromise->then(function (Result $entity) use (/*array*/ $selectors, $default) {
+        return $resultPromise->then(function (Result $entity) use (/*array*/
+            $selectors,
+            $default
+        ) {
             $result = $entity->toArray();
             foreach ($selectors as $selector) {
                 if (array_key_exists($selector, $result)) {

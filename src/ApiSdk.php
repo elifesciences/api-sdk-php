@@ -59,6 +59,7 @@ use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediaContactNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
@@ -145,7 +146,7 @@ final class ApiSdk
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
-        $this->serializer = new Serializer([
+        $this->serializer = new NormalizerAwareSerializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
             new AppendixNormalizer(),

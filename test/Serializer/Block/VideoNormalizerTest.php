@@ -13,9 +13,9 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\TestCase;
 
 final class VideoNormalizerTest extends TestCase
@@ -30,7 +30,7 @@ final class VideoNormalizerTest extends TestCase
     {
         $this->normalizer = new VideoNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new FileNormalizer(),
             new ParagraphNormalizer(),

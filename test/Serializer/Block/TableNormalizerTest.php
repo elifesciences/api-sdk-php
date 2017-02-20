@@ -12,9 +12,9 @@ use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\TestCase;
 
 final class TableNormalizerTest extends TestCase
@@ -29,7 +29,7 @@ final class TableNormalizerTest extends TestCase
     {
         $this->normalizer = new TableNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new FileNormalizer(),
             new ParagraphNormalizer(),

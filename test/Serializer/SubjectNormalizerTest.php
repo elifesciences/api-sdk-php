@@ -7,10 +7,10 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\ApiTestCase;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -26,7 +26,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
 
-        new Serializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer()]);
     }
 
     /**

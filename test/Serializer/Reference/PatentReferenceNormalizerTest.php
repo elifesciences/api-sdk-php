@@ -7,13 +7,13 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PatentReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new PatentReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),

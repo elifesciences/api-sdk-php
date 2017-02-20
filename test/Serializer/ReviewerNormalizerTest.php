@@ -5,13 +5,13 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 
 final class ReviewerNormalizerTest extends PHPUnit_Framework_TestCase
@@ -26,7 +26,7 @@ final class ReviewerNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new ReviewerNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PlaceNormalizer(),

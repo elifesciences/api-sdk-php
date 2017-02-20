@@ -10,7 +10,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class AnnualReportsTest extends ApiTestCase
@@ -27,7 +27,7 @@ final class AnnualReportsTest extends ApiTestCase
     {
         $this->annualReports = new AnnualReports(
             new AnnualReportsClient($this->getHttpClient()),
-            new Serializer([new AnnualReportNormalizer(), new ImageNormalizer()])
+            new NormalizerAwareSerializer([new AnnualReportNormalizer(), new ImageNormalizer()])
         );
     }
 

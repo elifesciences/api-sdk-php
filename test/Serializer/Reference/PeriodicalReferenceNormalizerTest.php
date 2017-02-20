@@ -10,6 +10,7 @@ use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
@@ -18,7 +19,6 @@ use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -32,7 +32,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new PeriodicalReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),

@@ -7,11 +7,11 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
 use eLife\ApiSdk\Model\File;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class VideoNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface

@@ -7,13 +7,13 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ThesisReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ThesisReferenceNormalizer;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new ThesisReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PlaceNormalizer(),

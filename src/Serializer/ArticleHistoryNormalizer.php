@@ -5,11 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Date;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ArticleHistoryNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface

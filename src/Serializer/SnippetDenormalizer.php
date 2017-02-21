@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Promise\CallbackPromise;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class SnippetDenormalizer
@@ -30,16 +30,16 @@ final class SnippetDenormalizer
         $this->identityMap->reset($id);
 
         if (empty($this->globalCallback)) {
-            $this->globalCallback = new CallbackPromise(function () {
+            $this->globalCallback = new Promise(function () {
                 $this->identityMap->fillMissingWith($this->fetchComplete);
-
-                $this->globalCallback = null;
 
                 $settled = $this->identityMap->waitForAll();
 
                 $this->identityMap->reset();
 
-                return $settled;
+                $this->globalCallback->resolve($settled);
+
+                $this->globalCallback = null;
             });
         }
 

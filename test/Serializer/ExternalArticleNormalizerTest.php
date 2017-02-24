@@ -5,7 +5,6 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;

@@ -7,7 +7,6 @@ use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;

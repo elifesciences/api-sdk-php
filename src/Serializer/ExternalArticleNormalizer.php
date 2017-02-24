@@ -4,7 +4,6 @@ namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

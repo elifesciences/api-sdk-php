@@ -5,7 +5,6 @@ namespace eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasDoi;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 
 final class JournalReference implements Reference, HasDoi

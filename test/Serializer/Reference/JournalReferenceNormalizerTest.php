@@ -5,7 +5,6 @@ namespace test\eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;

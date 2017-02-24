@@ -4,7 +4,6 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
-use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 

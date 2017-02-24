@@ -31,7 +31,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
             }, $data['authors']),
             $data['authorsEtAl'] ?? false,
             $data['articleTitle'],
-            $this->denormalizer->denormalize($data['journal'], Place::class, $format, $context),
+            $data['journal'],
             $this->denormalizer->denormalize($data['pages'], ReferencePages::class, $format, $context),
             $data['volume'] ?? null,
             $data['doi'] ?? null,
@@ -60,7 +60,7 @@ final class JournalReferenceNormalizer implements NormalizerInterface, Denormali
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),
             'articleTitle' => $object->getArticleTitle(),
-            'journal' => $this->normalizer->normalize($object->getJournal(), $format, $context),
+            'journal' => $object->getJournal(),
             'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
 

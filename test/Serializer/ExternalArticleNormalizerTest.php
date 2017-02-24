@@ -121,16 +121,14 @@ final class ExternalArticleNormalizerTest extends TestCase
             [
                 Builder::for(ExternalArticle::class)
                     ->withArticleTitle('article title')
-                    ->withJournal($journal = new Place(null, null, ['journal']))
+                    ->withJournal('journal')
                     ->withAuthorLine('author line')
                     ->withUri('http://www.example.com/')
                     ->__invoke(),
                 [],
                 [
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'authorLine' => 'author line',
                     'uri' => 'http://www.example.com/',
                 ],

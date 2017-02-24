@@ -30,7 +30,7 @@ final class PeriodicalReference implements Reference
         array $authors,
         bool $authorsEtAl,
         string $articleTitle,
-        Place $periodical,
+        string $periodical,
         ReferencePages $pages,
         string $volume = null,
         string $uri = null
@@ -80,7 +80,7 @@ final class PeriodicalReference implements Reference
         return $this->articleTitle;
     }
 
-    public function getPeriodical() : Place
+    public function getPeriodical() : string
     {
         return $this->periodical;
     }

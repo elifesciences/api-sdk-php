@@ -17,7 +17,7 @@ final class ExternalArticleNormalizer implements NormalizerInterface, Denormaliz
     {
         return new ExternalArticle(
             $data['articleTitle'],
-            $this->denormalizer->denormalize($data['journal'], Place::class, $format, $context),
+            $data['journal'],
             $data['authorLine'],
             $data['uri']
         );
@@ -42,7 +42,7 @@ final class ExternalArticleNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'articleTitle' => $object->getTitle(),
-            'journal' => $this->normalizer->normalize($object->getJournal(), $format, $context),
+            'journal' => $object->getJournal(),
             'authorLine' => $object->getAuthorLine(),
             'uri' => $object->getUri(),
         ];

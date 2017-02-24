@@ -22,7 +22,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -34,7 +34,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -47,7 +47,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -59,10 +59,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new JournalReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
         $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -75,7 +75,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -87,10 +87,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
         $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -103,7 +103,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertSame('article title', $reference->getArticleTitle());
     }
@@ -115,9 +115,9 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            $journal = new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
-        $this->assertEquals($journal, $reference->getJournal());
+        $this->assertSame('journal', $reference->getJournal());
     }
 
     /**
@@ -127,7 +127,7 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), $pages = new StringReferencePage('pages'));
+            'journal', $pages = new StringReferencePage('pages'));
 
         $this->assertEquals($pages, $reference->getPages());
     }
@@ -139,10 +139,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'), 'volume');
+            'journal', new StringReferencePage('pages'), 'volume');
         $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertSame('volume', $with->getVolume());
         $this->assertNull($withOut->getVolume());
@@ -155,10 +155,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'), null, '10.1000/182');
+            'journal', new StringReferencePage('pages'), null, '10.1000/182');
         $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -172,10 +172,10 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'), null, null, 18183754);
+            'journal', new StringReferencePage('pages'), null, null, 18183754);
         $withOut = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('pages'));
+            'journal', new StringReferencePage('pages'));
 
         $this->assertSame(18183754, $with->getPmid());
         $this->assertNull($withOut->getPmid());

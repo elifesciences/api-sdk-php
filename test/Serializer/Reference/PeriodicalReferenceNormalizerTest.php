@@ -62,7 +62,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new PeriodicalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['periodical']), new StringReferencePage('pages'));
+            'periodical', new StringReferencePage('pages'));
 
         return [
             'periodical reference' => [$reference, null, true],
@@ -86,7 +86,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new PeriodicalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'periodical', new ReferencePageRange('first', 'last', 'range'), 'volume',
                     'http://www.example.com/'),
                 [
                     'type' => 'periodical',
@@ -102,9 +102,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'periodical' => [
-                        'name' => ['periodical'],
-                    ],
+                    'periodical' => 'periodical',
                     'pages' => [
                         'first' => 'first',
                         'last' => 'last',
@@ -119,7 +117,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new PeriodicalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['periodical']), new StringReferencePage('pages')),
+                    'periodical', new StringReferencePage('pages')),
                 [
                     'type' => 'periodical',
                     'id' => 'id',
@@ -134,9 +132,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'periodical' => [
-                        'name' => ['periodical'],
-                    ],
+                    'periodical' => 'periodical',
                     'pages' => 'pages',
                 ],
             ],
@@ -199,9 +195,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'authorsEtAl' => true,
                     'articleTitle' => 'article title',
-                    'periodical' => [
-                        'name' => ['periodical'],
-                    ],
+                    'periodical' => 'periodical',
                     'pages' => [
                         'first' => 'first',
                         'last' => 'last',
@@ -212,7 +206,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new PeriodicalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['periodical']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'periodical', new ReferencePageRange('first', 'last', 'range'), 'volume',
                     'http://www.example.com/'),
             ],
             'minimum' => [
@@ -230,14 +224,12 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'periodical' => [
-                        'name' => ['periodical'],
-                    ],
+                    'periodical' => 'periodical',
                     'pages' => 'pages',
                 ],
                 new PeriodicalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['periodical']), new StringReferencePage('pages')),
+                    'periodical', new StringReferencePage('pages')),
             ],
         ];
     }

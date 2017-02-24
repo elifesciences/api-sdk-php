@@ -76,10 +76,10 @@ final class ExternalArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_journal()
     {
         $article = Builder::for(ExternalArticle::class)
-            ->withJournal($journal = new Place(null, null, ['foo']))
+            ->withJournal('foo')
             ->__invoke();
 
-        $this->assertEquals($journal, $article->getJournal());
+        $this->assertSame('foo', $article->getJournal());
     }
 
     /**

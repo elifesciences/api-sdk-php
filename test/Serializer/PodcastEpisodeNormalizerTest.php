@@ -232,6 +232,14 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                         ['id' => 'subject1', 'name' => 'Subject 1'],
                                     ],
                                     'researchOrganisms' => ['research organism'],
+                                    'abstract' => [
+                                        'content' => [
+                                            [
+                                                'type' => 'paragraph',
+                                                'text' => 'Article 14107 abstract text',
+                                            ],
+                                        ],
+                                    ],
                                     'status' => 'poa',
                                 ],
                                 [

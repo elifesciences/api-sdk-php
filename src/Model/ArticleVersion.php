@@ -57,7 +57,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
         string $pdf = null,
         Sequence $subjects,
         array $researchOrganisms,
-        PromiseInterface $abstract,
+        ArticleSection $abstract = null,
         PromiseInterface $issue,
         PromiseInterface $copyright,
         Sequence $authors,
@@ -222,7 +222,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
      */
     final public function getAbstract()
     {
-        return $this->abstract->wait();
+        return $this->abstract;
     }
 
     /**

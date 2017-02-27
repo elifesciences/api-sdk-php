@@ -1247,7 +1247,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['copyright']);
             unset($article['authors']);
             unset($article['reviewers']);
-            unset($article['abstract']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -1948,6 +1947,14 @@ abstract class ApiTestCase extends TestCase
                     'statusDate' => '2016-03-28T00:00:00Z',
                     'volume' => 5,
                     'elocationId' => 'e14107',
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'podcastEpisodes' => [

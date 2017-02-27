@@ -152,6 +152,14 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -176,14 +184,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ],
                     ],
                     'issue' => 1,
-                    'abstract' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Article 14107 abstract text',
-                            ],
-                        ],
-                    ],
                     'funding' => [
                         'awards' => [
                             [
@@ -276,7 +276,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()
@@ -330,6 +330,14 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
                     'status' => 'poa',
                 ],
                 function (ApiTestCase $test) {
@@ -345,7 +353,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withAuthorLine(null)
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()

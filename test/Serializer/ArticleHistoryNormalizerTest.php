@@ -132,6 +132,14 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                             'versionDate' => '2016-03-28T00:00:00Z',
                             'statusDate' => '2016-03-28T00:00:00Z',
                             'authorLine' => 'Yongjian Huang et al',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                             'status' => 'poa',
                         ],
                     ],
@@ -165,6 +173,14 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                             'versionDate' => '2016-03-28T00:00:00Z',
                             'statusDate' => '2016-03-28T00:00:00Z',
                             'authorLine' => 'Yongjian Huang et al',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                             'status' => 'poa',
                         ],
                     ],

@@ -209,7 +209,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['figuresPdf'] ?? null,
             $data['subjects'],
             $data['researchOrganisms'] ?? [],
-            $data['abstract'],
+            $data['abstract'] ?? null,
             $data['issue'],
             $data['copyright'],
             $data['authors'],

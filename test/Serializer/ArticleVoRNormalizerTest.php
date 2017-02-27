@@ -137,7 +137,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
@@ -162,6 +162,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 abstract text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560abstract',
+                    ],
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -186,15 +195,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'issue' => 1,
-                    'abstract' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Article 09560 abstract text',
-                            ],
-                        ],
-                        'doi' => '10.7554/eLife.09560abstract',
-                    ],
                     'funding' => [
                         'awards' => [
                             [
@@ -412,7 +412,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
                     ->withPromiseOfBanner(null)
@@ -470,7 +470,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
@@ -496,6 +496,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 abstract text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560abstract',
+                    ],
                     'status' => 'vor',
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
@@ -528,7 +537,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAuthorLine(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
                     ->withPromiseOfBanner(null)

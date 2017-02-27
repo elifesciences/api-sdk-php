@@ -314,10 +314,10 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_an_abstract()
     {
         $with = $this->builder
-            ->withPromiseOfAbstract($abstract = new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])))
+            ->withAbstract($abstract = new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])))
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfAbstract(null)
+            ->withAbstract(null)
             ->__invoke();
 
         $this->assertEquals($abstract, $with->getAbstract());

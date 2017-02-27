@@ -33,7 +33,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['pdf'] ?? null,
             $data['subjects'],
             $data['researchOrganisms'] ?? [],
-            $data['abstract'],
+            $data['abstract'] ?? null,
             $data['issue'],
             $data['copyright'],
             $data['authors'],

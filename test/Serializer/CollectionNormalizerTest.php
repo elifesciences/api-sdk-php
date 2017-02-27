@@ -258,6 +258,15 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 ],
                             ],
                             'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 09560 abstract text',
+                                    ],
+                                ],
+                                'doi' => '10.7554/eLife.09560abstract',
+                            ],
                             'image' => [
                                 'thumbnail' => [
                                     'alt' => '',
@@ -316,6 +325,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'published' => '2016-03-28T00:00:00Z',
                             'versionDate' => '2016-03-28T00:00:00Z',
                             'statusDate' => '2016-03-28T00:00:00Z',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'podcastEpisodes' => [
@@ -440,6 +457,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'statusDate' => '2016-03-28T00:00:00Z',
                             'volume' => 5,
                             'elocationId' => 'e14107',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],

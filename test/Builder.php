@@ -221,7 +221,7 @@ final class Builder
                         'pdf' => null,
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
-                        'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
+                        'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])),
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
@@ -261,7 +261,7 @@ final class Builder
                         'figuresPdf' => null,
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
-                        'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]))),
+                        'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
@@ -407,7 +407,7 @@ final class Builder
                             ->withResearchOrganisms([
                                 'Article 1 research organism',
                             ])
-                            ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
+                            ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
                     },
                 ],
                 ArticleVoR::class => [
@@ -428,7 +428,7 @@ final class Builder
                             ->withSubjects(new ArraySequence([
                                 self::for(Subject::class)->sample('genomics-evolutionary-biology'),
                             ]))
-                            ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                            ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))

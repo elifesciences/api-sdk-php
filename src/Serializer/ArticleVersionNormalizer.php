@@ -98,11 +98,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         if (!empty($context['snippet'])) {
             $complete = $this->snippetDenormalizer->denormalizeSnippet($data);
 
-            $data['abstract'] = $complete
-                ->then(function (Result $article) {
-                    return $article['abstract'] ?? null;
-                });
-
             $data['additionalFiles'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
                     return $article['additionalFiles'] ?? [];
@@ -140,8 +135,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         } else {
             $complete = null;
 
-            $data['abstract'] = promise_for($data['abstract'] ?? null);
-
             $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
 
             $data['authors'] = new ArraySequence($data['authors'] ?? []);
@@ -157,19 +150,14 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
         }
 
-        $data['abstract'] = $data['abstract']
-            ->then(function ($abstract) use ($format, $context) {
-                if (empty($abstract)) {
-                    return null;
-                }
-
-                return new ArticleSection(
-                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $abstract['content'])),
-                    $abstract['doi'] ?? null
-                );
-            });
+        if (!empty($data['abstract'])) {
+            $data['abstract'] = new ArticleSection(
+                new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                }, $data['abstract']['content'])),
+                $data['abstract']['doi'] ?? null
+            );
+        }
 
         $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
             return $this->denormalizer->denormalize($file, File::class, $format, $context);
@@ -291,6 +279,21 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['researchOrganisms'] = $object->getResearchOrganisms();
         }
 
+        if ($object->getAbstract()) {
+            $data['abstract'] = [
+                'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
+                    $format,
+                    $context
+                ) {
+                    return $this->normalizer->normalize($block, $format, $context);
+                })->toArray(),
+            ];
+
+            if ($object->getAbstract()->getDoi()) {
+                $data['abstract']['doi'] = $object->getAbstract()->getDoi();
+            }
+        }
+
         if (empty($context['snippet'])) {
             $data['copyright'] = [
                 'license' => $object->getCopyright()->getLicense(),
@@ -315,21 +318,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getIssue()) {
                 $data['issue'] = $object->getIssue();
-            }
-
-            if ($object->getAbstract()) {
-                $data['abstract'] = [
-                    'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
-                        $format,
-                        $context
-                    ) {
-                        return $this->normalizer->normalize($block, $format, $context);
-                    })->toArray(),
-                ];
-
-                if ($object->getAbstract()->getDoi()) {
-                    $data['abstract']['doi'] = $object->getAbstract()->getDoi();
-                }
             }
 
             if ($object->getFunding()) {

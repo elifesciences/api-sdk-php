@@ -19,6 +19,7 @@ use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -907,6 +908,35 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                 json_encode($this->createCollectionJson($id, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockRecommendationsCall(
+        string $type,
+        $id,
+        int $page = 1,
+        int $perPage = 100,
+        int $total = 100,
+        $descendingOrder = true
+    ) {
+        $recommendations = array_map(function (int $id) {
+            return $this->createArticlePoAJson('article'.$id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $recommendations,
+                ])
             )
         );
     }

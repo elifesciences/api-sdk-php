@@ -17,6 +17,7 @@ use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -36,6 +37,7 @@ use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
+use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -95,6 +97,7 @@ final class ApiSdk
     private $peopleClient;
     private $podcastClient;
     private $pressPackagesClient;
+    private $recommendationsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -113,6 +116,7 @@ final class ApiSdk
     private $podcastEpisodes;
     private $pressPackages;
     private $collections;
+    private $recommendations;
     private $search;
     private $subjects;
 
@@ -143,6 +147,7 @@ final class ApiSdk
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
+        $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
@@ -346,6 +351,15 @@ final class ApiSdk
         }
 
         return $this->collections;
+    }
+
+    public function recommendations() : Recommendations
+    {
+        if (empty($this->recommendations)) {
+            $this->recommendations = new Recommendations($this->recommendationsClient, $this->serializer);
+        }
+
+        return $this->recommendations;
     }
 
     public function subjects() : Subjects

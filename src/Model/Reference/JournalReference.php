@@ -5,7 +5,6 @@ namespace eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasDoi;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 
 final class JournalReference implements Reference, HasDoi
@@ -32,7 +31,7 @@ final class JournalReference implements Reference, HasDoi
         array $authors,
         bool $authorsEtAl,
         string $articleTitle,
-        Place $journal,
+        string $journal,
         ReferencePages $pages,
         string $volume = null,
         string $doi = null,
@@ -84,7 +83,7 @@ final class JournalReference implements Reference, HasDoi
         return $this->articleTitle;
     }
 
-    public function getJournal() : Place
+    public function getJournal() : string
     {
         return $this->journal;
     }

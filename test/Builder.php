@@ -118,7 +118,7 @@ final class Builder
                 ExternalArticle::class => function () {
                     return [
                         'articleTitle' => 'External article title',
-                        'journal' => new Place(null, null, ['Another journal']),
+                        'journal' => 'Another journal',
                         'authorLine' => 'Author et al',
                         'uri' => 'http://www.example.com/',
                     ];

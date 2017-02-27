@@ -4,7 +4,6 @@ namespace eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 
 final class PeriodicalReference implements Reference
@@ -30,7 +29,7 @@ final class PeriodicalReference implements Reference
         array $authors,
         bool $authorsEtAl,
         string $articleTitle,
-        Place $periodical,
+        string $periodical,
         ReferencePages $pages,
         string $volume = null,
         string $uri = null
@@ -80,7 +79,7 @@ final class PeriodicalReference implements Reference
         return $this->articleTitle;
     }
 
-    public function getPeriodical() : Place
+    public function getPeriodical() : string
     {
         return $this->periodical;
     }

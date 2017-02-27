@@ -1429,11 +1429,7 @@ abstract class ApiTestCase extends TestCase
         return [
             'type' => 'external-article',
             'articleTitle' => "External article $id title",
-            'journal' => [
-                'name' => [
-                    "External article $id journal",
-                ],
-            ],
+            'journal' => "External article $id journal",
             'authorLine' => 'Author et all',
             'uri' => "https://doi.org/10.1016/external.$id",
         ];

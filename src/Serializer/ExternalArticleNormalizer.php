@@ -4,7 +4,6 @@ namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,7 +16,7 @@ final class ExternalArticleNormalizer implements NormalizerInterface, Denormaliz
     {
         return new ExternalArticle(
             $data['articleTitle'],
-            $this->denormalizer->denormalize($data['journal'], Place::class, $format, $context),
+            $data['journal'],
             $data['authorLine'],
             $data['uri']
         );
@@ -42,7 +41,7 @@ final class ExternalArticleNormalizer implements NormalizerInterface, Denormaliz
     {
         $data = [
             'articleTitle' => $object->getTitle(),
-            'journal' => $this->normalizer->normalize($object->getJournal(), $format, $context),
+            'journal' => $object->getJournal(),
             'authorLine' => $object->getAuthorLine(),
             'uri' => $object->getUri(),
         ];

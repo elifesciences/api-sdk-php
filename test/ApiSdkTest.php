@@ -18,6 +18,7 @@ use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
+use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
@@ -232,6 +233,19 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockPressPackageCall(7);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->pressPackages()->get('press-package-7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_recommendations()
+    {
+        $this->assertInstanceOf(Recommendations::class, $this->apiSdk->recommendations());
+
+        $this->mockRecommendationsCall('article', '12345', 1, 1, 10);
+        $this->mockRecommendationsCall('article', '12345', 1, 100, 10);
+
+        $this->assertCount(10, $this->apiSdk->recommendations()->list('article', '12345')->toArray());
     }
 
     /**

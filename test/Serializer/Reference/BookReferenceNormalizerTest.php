@@ -86,7 +86,6 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'book title', new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
                 [
-                    'type' => 'book',
                     'id' => 'id',
                     'date' => '2000-01-01',
                     'bookTitle' => 'book title',
@@ -119,6 +118,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'doi' => '10.1000/182',
                     'pmid' => 18183754,
                     'isbn' => '978-3-16-148410-0',
+                    'type' => 'book',
                 ],
             ],
             'minimum' => [
@@ -126,7 +126,6 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
                     new Place(null, null, ['publisher'])),
                 [
-                    'type' => 'book',
                     'id' => 'id',
                     'date' => '2000',
                     'bookTitle' => 'book title',
@@ -142,6 +141,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                             ],
                         ],
                     ],
+                    'type' => 'book',
                 ],
             ],
         ];

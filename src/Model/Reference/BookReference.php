@@ -15,7 +15,8 @@ final class BookReference implements Reference, HasDoi
     private $discriminator;
     private $authors;
     private $authorsEtAl;
-    private $authorsType;
+    private $editors;
+    private $editorsEtAl;
     private $bookTitle;
     private $publisher;
     private $volume;
@@ -33,7 +34,8 @@ final class BookReference implements Reference, HasDoi
         string $discriminator = null,
         array $authors,
         bool $authorsEtAl,
-        string $authorsType,
+        array $editors,
+        bool $editorsEtAl,
         string $bookTitle,
         Place $publisher,
         string $volume = null,
@@ -47,7 +49,8 @@ final class BookReference implements Reference, HasDoi
         $this->discriminator = $discriminator;
         $this->authors = $authors;
         $this->authorsEtAl = $authorsEtAl;
-        $this->authorsType = $authorsType;
+        $this->editors = $editors;
+        $this->editorsEtAl = $editorsEtAl;
         $this->bookTitle = $bookTitle;
         $this->publisher = $publisher;
         $this->volume = $volume;
@@ -85,9 +88,17 @@ final class BookReference implements Reference, HasDoi
         return $this->authorsEtAl;
     }
 
-    public function getAuthorsType() : string
+    /**
+     * @return AuthorEntry[]
+     */
+    public function getEditors() : array
     {
-        return $this->authorsType;
+        return $this->editors;
+    }
+
+    public function editorsEtAl() : bool
+    {
+        return $this->editorsEtAl;
     }
 
     public function getBookTitle(): string

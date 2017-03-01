@@ -27,9 +27,12 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
             $data['discriminator'] ?? null,
             array_map(function (array $author) {
                 return $this->denormalizer->denormalize($author, AuthorEntry::class);
-            }, $data['authors']),
+            }, $data['authors'] ?? []),
             $data['authorsEtAl'] ?? false,
-            $data['authorsType'] ?? 'authors',
+            array_map(function (array $editor) {
+                return $this->denormalizer->denormalize($editor, AuthorEntry::class);
+            }, $data['editors'] ?? []),
+            $data['editorsEtAl'] ?? false,
             $data['bookTitle'],
             $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
             $data['volume'] ?? null,
@@ -57,9 +60,6 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
             'type' => 'book',
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
-            'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            }, $object->getAuthors()),
             'bookTitle' => $object->getBookTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
         ];
@@ -68,12 +68,24 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
             $data['discriminator'] = $object->getDiscriminator();
         }
 
+        if ($object->getAuthors()) {
+            $data['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {
+                return $this->normalizer->normalize($author, $format, $context);
+            }, $object->getAuthors());
+        }
+
         if ($object->authorsEtAl()) {
             $data['authorsEtAl'] = $object->authorsEtAl();
         }
 
-        if ('authors' !== $object->getAuthorsType()) {
-            $data['authorsType'] = $object->getAuthorsType();
+        if ($object->getEditors()) {
+            $data['editors'] = array_map(function (AuthorEntry $editor) use ($format, $context) {
+                return $this->normalizer->normalize($editor, $format, $context);
+            }, $object->getEditors());
+        }
+
+        if ($object->editorsEtAl()) {
+            $data['editorsEtAl'] = $object->editorsEtAl();
         }
 
         if ($object->getVolume()) {

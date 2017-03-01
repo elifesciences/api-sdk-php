@@ -181,7 +181,8 @@ final class ArticleVoRTest extends ArticleVersionTest
                     )),
                 ],
                 false,
-                'authors',
+                [],
+                false,
                 'book title',
                 new Place(null, null, ['publisher'])
             ),

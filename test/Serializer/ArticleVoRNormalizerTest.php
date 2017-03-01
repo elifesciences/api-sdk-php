@@ -340,9 +340,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                     'references' => [
                         [
-                            'type' => 'book',
                             'id' => 'ref1',
                             'date' => '2000',
+                            'bookTitle' => 'book title',
+                            'publisher' => [
+                                'name' => ['publisher'],
+                            ],
                             'authors' => [
                                 [
                                     'type' => 'person',
@@ -352,10 +355,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                     ],
                                 ],
                             ],
-                            'bookTitle' => 'book title',
-                            'publisher' => [
-                                'name' => ['publisher'],
-                            ],
+                            'type' => 'book',
                         ],
                     ],
                     'acknowledgements' => [

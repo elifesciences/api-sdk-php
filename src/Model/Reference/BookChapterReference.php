@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Model\Reference;
 
-use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\Place;
@@ -10,22 +9,13 @@ use eLife\ApiSdk\Model\Reference;
 
 final class BookChapterReference implements Reference, HasDoi
 {
+    use ContainsBook;
+
     private $id;
     private $date;
     private $discriminator;
-    private $authors;
-    private $authorsEtAl;
-    private $editors;
-    private $editorsEtAl;
     private $chapterTitle;
-    private $bookTitle;
-    private $publisher;
     private $pages;
-    private $volume;
-    private $edition;
-    private $doi;
-    private $pmid;
-    private $isbn;
 
     /**
      * @internal
@@ -81,89 +71,13 @@ final class BookChapterReference implements Reference, HasDoi
         return $this->discriminator;
     }
 
-    /**
-     * @return AuthorEntry[]
-     */
-    public function getAuthors() : array
-    {
-        return $this->authors;
-    }
-
-    public function authorsEtAl(): bool
-    {
-        return $this->authorsEtAl;
-    }
-
-    /**
-     * @return AuthorEntry[]
-     */
-    public function getEditors() : array
-    {
-        return $this->editors;
-    }
-
-    public function editorsEtAl(): bool
-    {
-        return $this->editorsEtAl;
-    }
-
     public function getChapterTitle() : string
     {
         return $this->chapterTitle;
     }
 
-    public function getBookTitle(): string
-    {
-        return $this->bookTitle;
-    }
-
-    public function getPublisher() : Place
-    {
-        return $this->publisher;
-    }
-
     public function getPages() : ReferencePages
     {
         return $this->pages;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getVolume()
-    {
-        return $this->volume;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getEdition()
-    {
-        return $this->edition;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDoi()
-    {
-        return $this->doi;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getPmid()
-    {
-        return $this->pmid;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIsbn()
-    {
-        return $this->isbn;
     }
 }

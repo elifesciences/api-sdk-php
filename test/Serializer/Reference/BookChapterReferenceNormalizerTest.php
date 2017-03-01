@@ -93,9 +93,13 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     new ReferencePageRange('first', 'last', 'range'), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
                 [
-                    'type' => 'book-chapter',
                     'id' => 'id',
                     'date' => '2000-01-01',
+                    'bookTitle' => 'book title',
+                    'publisher' => [
+                        'name' => ['publisher'],
+                    ],
+                    'discriminator' => 'a',
                     'authors' => [
                         [
                             'type' => 'person',
@@ -105,6 +109,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                             ],
                         ],
                     ],
+                    'authorsEtAl' => true,
                     'editors' => [
                         [
                             'type' => 'person',
@@ -114,24 +119,19 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                             ],
                         ],
                     ],
-                    'chapterTitle' => 'chapter title',
-                    'bookTitle' => 'book title',
-                    'publisher' => [
-                        'name' => ['publisher'],
-                    ],
-                    'pages' => [
-                        'first' => 'first',
-                        'last' => 'last',
-                        'range' => 'range',
-                    ],
-                    'discriminator' => 'a',
-                    'authorsEtAl' => true,
                     'editorsEtAl' => true,
                     'volume' => 'volume',
                     'edition' => 'edition',
                     'doi' => '10.1000/182',
                     'pmid' => 18183754,
                     'isbn' => '978-3-16-148410-0',
+                    'type' => 'book-chapter',
+                    'chapterTitle' => 'chapter title',
+                    'pages' => [
+                        'first' => 'first',
+                        'last' => 'last',
+                        'range' => 'range',
+                    ],
                 ],
             ],
             'minimum' => [
@@ -141,9 +141,12 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     'chapter title', 'book title', new Place(null, null, ['publisher']),
                     new StringReferencePage('pages')),
                 [
-                    'type' => 'book-chapter',
                     'id' => 'id',
                     'date' => '2000',
+                    'bookTitle' => 'book title',
+                    'publisher' => [
+                        'name' => ['publisher'],
+                    ],
                     'authors' => [
                         [
                             'type' => 'person',
@@ -162,11 +165,8 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                             ],
                         ],
                     ],
+                    'type' => 'book-chapter',
                     'chapterTitle' => 'chapter title',
-                    'bookTitle' => 'book title',
-                    'publisher' => [
-                        'name' => ['publisher'],
-                    ],
                     'pages' => 'pages',
                 ],
             ],

@@ -56,6 +56,11 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasP
         return $this->title;
     }
 
+    public function getFullTitle() : string
+    {
+        return "Episode $this->number: $this->title";
+    }
+
     /**
      * @return string|null
      */

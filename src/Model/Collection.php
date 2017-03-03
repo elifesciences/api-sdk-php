@@ -79,6 +79,11 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         return $this->subTitle->wait();
     }
 
+    public function getFullTitle() : string
+    {
+        return implode(': ', array_filter([$this->title, $this->getSubTitle()]));
+    }
+
     /**
      * @return string|null
      */

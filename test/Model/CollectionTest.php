@@ -73,14 +73,18 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_sub_title()
     {
         $with = $this->builder
+            ->withTitle('Tropical disease')
             ->withPromiseOfSubTitle('Tropical disease subtitle')
             ->__invoke();
         $without = $this->builder
+            ->withTitle('Tropical disease')
             ->withPromiseOfSubTitle(null)
             ->__invoke();
 
         $this->assertSame('Tropical disease subtitle', $with->getSubTitle());
+        $this->assertSame('Tropical disease: Tropical disease subtitle', $with->getFullTitle());
         $this->assertNull($without->getSubTitle());
+        $this->assertSame('Tropical disease', $without->getFullTitle());
     }
 
     /**

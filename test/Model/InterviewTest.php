@@ -79,6 +79,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertSame('An interview with preferred name', $interview->getSubTitle());
+        $this->assertSame('title: An interview with preferred name', $interview->getFullTitle());
     }
 
     /**

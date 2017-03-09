@@ -45,7 +45,11 @@ final class SnippetDenormalizer
 
         return $this->globalCallback
             ->then(function (array $items) use ($id) {
-                return $items[$id];
+                $retrieved = $items[$id];
+                if (!$retrieved) {
+                    throw new \RuntimeException("Null value from globalCallback: " . $id);
+                }
+                return $retrieved;
             });
     }
 }

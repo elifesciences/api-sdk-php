@@ -37,6 +37,16 @@ final class SnippetDenormalizer
 
                 $this->identityMap->reset();
 
+                var_dump(
+                    "Resolving globalCallback with "
+                    .count($settled)
+                    ." values of which "
+                    .count(array_filter(
+                        $settled,
+                        function($v) { return !$v; }
+                    ))
+                    ." are null"
+                );
                 $this->globalCallback->resolve($settled);
 
                 $this->globalCallback = null;

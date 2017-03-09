@@ -45,7 +45,7 @@ foreach ($articles as $a) {
     echo "Article id: {$a->getId()}", PHP_EOL;
     try {
         if ($a instanceof eLife\ApiSdk\Model\ArticleVoR) {
-            echo "References: ", count($a->getReferences()), PHP_EOL;
+            echo 'References: ', count($a->getReferences()), PHP_EOL;
         }
     } catch (Exception $e) {
         var_dump($e->getMessage());

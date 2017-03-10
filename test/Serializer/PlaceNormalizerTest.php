@@ -3,7 +3,6 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Address;
-use eLife\ApiSdk\Model\Coordinates;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
@@ -50,7 +49,7 @@ final class PlaceNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $place = new Place('123', null, ['foo']);
+        $place = new Place(['foo']);
 
         return [
             'place' => [$place, null, true],
@@ -107,18 +106,12 @@ final class PlaceNormalizerTest extends TestCase
     public function normalizeProvider() : array
     {
         $address = Builder::for(Address::class)->sample('simple');
-        $coordinates = new Coordinates(123.45, 54.321);
 
         return [
             'complete' => [
-                new Place('id', $coordinates, ['place'], $address),
+                new Place(['place'], $address),
                 [
                     'name' => ['place'],
-                    'id' => 'id',
-                    'coordinates' => [
-                        'latitude' => 123.45,
-                        'longitude' => 54.321,
-                    ],
                     'address' => [
                         'formatted' => ['address'],
                         'components' => [
@@ -132,7 +125,7 @@ final class PlaceNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                $place = new Place(null, null, ['place']),
+                $place = new Place(['place']),
                 [
                     'name' => ['place'],
                 ],

@@ -21,7 +21,7 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -33,7 +33,7 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -46,7 +46,7 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -58,10 +58,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -74,10 +74,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new BookReference('id', new Date(2000), null,
             [], false, [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($authors, $with->getAuthors());
         $this->assertEmpty($withOut->getAuthors());
@@ -90,10 +90,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -106,10 +106,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [], false, $editors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($editors, $with->getEditors());
         $this->assertEmpty($withOut->getEditors());
@@ -122,10 +122,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [], false, [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new BookReference('id', new Date(2000), null,
             [], false, [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertTrue($with->editorsEtAl());
         $this->assertFalse($withOut->editorsEtAl());
@@ -138,7 +138,7 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('book title', $reference->getBookTitle());
     }
@@ -150,7 +150,7 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            $publisher = new Place(null, null, ['publisher']));
+            $publisher = new Place(['publisher']));
 
         $this->assertEquals($publisher, $reference->getPublisher());
     }
@@ -162,10 +162,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']), 'volume');
+            new Place(['publisher']), 'volume');
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('volume', $with->getVolume());
         $this->assertNull($withOut->getVolume());
@@ -178,10 +178,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']), null, 'edition');
+            new Place(['publisher']), null, 'edition');
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('edition', $with->getEdition());
         $this->assertNull($withOut->getEdition());
@@ -194,10 +194,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']), null, null, '10.1000/182');
+            new Place(['publisher']), null, null, '10.1000/182');
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -211,10 +211,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']), null, null, null, 18183754);
+            new Place(['publisher']), null, null, null, 18183754);
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame(18183754, $with->getPmid());
         $this->assertNull($withOut->getPmid());
@@ -227,10 +227,10 @@ final class BookReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']), null, null, null, null, '978-3-16-148410-0');
+            new Place(['publisher']), null, null, null, null, '978-3-16-148410-0');
         $withOut = new BookReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('978-3-16-148410-0', $with->getIsbn());
         $this->assertNull($withOut->getIsbn());

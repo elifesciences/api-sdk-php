@@ -207,7 +207,7 @@ final class DataReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
-            'source', null, $assigningAuthority = new Place(null, null, ['assigning authority']),
+            'source', null, $assigningAuthority = new Place(['assigning authority']),
             '10.1000/182');
         $withOut = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',

@@ -230,7 +230,7 @@ final class Builder
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
-                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                    new Funder(new Place(['Funder']), '10.13039/501100001659'),
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),
@@ -301,7 +301,7 @@ final class Builder
                                 [],
                                 false,
                                 'book title',
-                                new Place(null, null, ['publisher'])
+                                new Place(['publisher'])
                             ),
                         ]),
                         'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
@@ -313,7 +313,7 @@ final class Builder
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
-                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                    new Funder(new Place(['Funder']), '10.13039/501100001659'),
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),

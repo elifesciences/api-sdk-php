@@ -24,7 +24,7 @@ final class MediaContactTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_affiliations()
     {
-        $with = new MediaContact(new PersonDetails('Person', 'Person'), $affiliations = [new Place(null, null, ['Somewhere'])]);
+        $with = new MediaContact(new PersonDetails('Person', 'Person'), $affiliations = [new Place(['Somewhere'])]);
         $withOut = new MediaContact(new PersonDetails('Person', 'Person'));
 
         $this->assertEquals($affiliations, $with->getAffiliations());

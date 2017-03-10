@@ -38,7 +38,7 @@ abstract class AuthorTest extends PHPUnit_Framework_TestCase
      */
     final public function it_may_have_affiliations()
     {
-        $with = $this->createAuthor([], $affiliations = [new Place(null, null, ['affiliation'])]);
+        $with = $this->createAuthor([], $affiliations = [new Place(['affiliation'])]);
         $withOut = $this->createAuthor();
 
         $this->assertEquals($affiliations, $with->getAffiliations());

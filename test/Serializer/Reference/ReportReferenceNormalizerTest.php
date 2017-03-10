@@ -58,7 +58,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         return [
             'report reference' => [$reference, null, true],
@@ -82,7 +82,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new ReportReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
+                    new Place(['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
                 [
                     'type' => 'report',
@@ -112,7 +112,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new ReportReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
                 [
                     'type' => 'report',
                     'id' => 'id',
@@ -201,7 +201,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ReportReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
+                    new Place(['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
             ],
             'minimum' => [
@@ -225,7 +225,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ReportReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
             ],
         ];
     }

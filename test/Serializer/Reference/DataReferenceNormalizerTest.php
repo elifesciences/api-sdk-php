@@ -85,7 +85,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
                     'title',
-                    'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
+                    'source', 'id', new Place(['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
                 [
                     'type' => 'data',
@@ -249,7 +249,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
                     'title',
-                    'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
+                    'source', 'id', new Place(['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
             ],
             'minimum' => [

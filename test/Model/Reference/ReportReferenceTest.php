@@ -21,7 +21,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -33,7 +33,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -46,7 +46,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -58,10 +58,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -74,7 +74,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -86,10 +86,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -102,7 +102,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('title', $reference->getTitle());
     }
@@ -114,7 +114,7 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            $report = new Place(null, null, ['publisher']));
+            $report = new Place(['publisher']));
 
         $this->assertEquals($report, $reference->getPublisher());
     }
@@ -126,10 +126,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), '10.1000/182');
+            new Place(['publisher']), '10.1000/182');
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -143,10 +143,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), null, 18183754);
+            new Place(['publisher']), null, 18183754);
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame(18183754, $with->getPmid());
         $this->assertNull($withOut->getPmid());
@@ -159,10 +159,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), null, null, '978-3-16-148410-0');
+            new Place(['publisher']), null, null, '978-3-16-148410-0');
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('978-3-16-148410-0', $with->getIsbn());
         $this->assertNull($withOut->getIsbn());
@@ -175,10 +175,10 @@ final class ReportReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), null, null, null, 'http://www.example.com/');
+            new Place(['publisher']), null, null, null, 'http://www.example.com/');
         $withOut = new ReportReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
         $this->assertNull($withOut->getUri());

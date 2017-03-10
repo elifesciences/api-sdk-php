@@ -112,7 +112,7 @@ final class MediaContactNormalizerTest extends ApiTestCase
     {
         return [
             'complete' => [
-                new MediaContact(new PersonDetails('preferred', 'index', '0000-0002-1825-0097'), [new Place(null, null, ['Somewhere'])], ['foo@example'], ['+447700900415']),
+                new MediaContact(new PersonDetails('preferred', 'index', '0000-0002-1825-0097'), [new Place(['Somewhere'])], ['foo@example'], ['+447700900415']),
                 [],
                 [
                     'name' => [

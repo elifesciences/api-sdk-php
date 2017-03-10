@@ -58,7 +58,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new BookReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         return [
             'book reference' => [$reference, null, true],
@@ -83,7 +83,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 new BookReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], true,
-                    'book title', new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
+                    'book title', new Place(['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
                 [
                     'id' => 'id',
@@ -124,7 +124,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new BookReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
                 [
                     'id' => 'id',
                     'date' => '2000',
@@ -225,7 +225,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 new BookReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], true,
-                    'book title', new Place(null, null, ['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
+                    'book title', new Place(['publisher']), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
             ],
             'minimum' => [
@@ -249,7 +249,7 @@ final class BookReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new BookReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'book title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
             ],
         ];
     }

@@ -13,11 +13,9 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class EventNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -50,29 +48,13 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
                 ->then(function (Result $event) {
                     return $event['content'];
                 }));
-
-            $data['venue'] = $event
-                ->then(function (Result $event) {
-                    return $event['venue'] ?? null;
-                });
         } else {
-            $data['content'] = new ArraySequence($data['content']);
-
-            $data['venue'] = promise_for($data['venue'] ?? null);
+            $data['content'] = new ArraySequence($data['content'] ?? []);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
-
-        $data['venue'] = $data['venue']
-            ->then(function (array $venue = null) use ($format, $context) {
-                if (null === $venue) {
-                    return null;
-                }
-
-                return $this->denormalizer->denormalize($venue, Place::class, $format, $context);
-            });
 
         return new Event(
             $data['id'],
@@ -83,8 +65,8 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['starts']),
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['ends']),
             !empty($data['timezone']) ? new DateTimeZone($data['timezone']) : null,
-            $data['content'],
-            $data['venue']
+            $data['uri'] ?? null,
+            $data['content']
         );
     }
 
@@ -125,14 +107,14 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['timezone'] = $object->getTimeZone()->getName();
         }
 
-        if (empty($context['snippet'])) {
+        if ($object->getUri()) {
+            $data['uri'] = $object->getUri();
+        }
+
+        if (empty($context['snippet']) && $object->getContent()->notEmpty()) {
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
-
-            if ($venue = $object->getVenue()) {
-                $data['venue'] = $this->normalizer->normalize($venue, $format, $context);
-            }
         }
 
         return $data;

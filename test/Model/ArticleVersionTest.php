@@ -378,7 +378,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
                 new ArraySequence([
                     new FundingAward(
                         'award',
-                        new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                        new Funder(new Place(['Funder']), '10.13039/501100001659'),
                         'awardId',
                         new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                     ),

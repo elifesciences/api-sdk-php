@@ -16,7 +16,10 @@ final class IdentityMap
     public function reset($id = null) : self
     {
         if ($this->locked) {
+            $e = new \RuntimeException();
+            var_dump($e->getTraceAsString());
             die("Cannot reset contents while fillMissingWith() is operating");
+            exit(1);
         }
         if ($id) {
             $this->contents[$id] = null;

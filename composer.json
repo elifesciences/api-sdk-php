@@ -19,7 +19,8 @@
         "elife/api-client": "^1.0@dev",
         "guzzlehttp/promises": "^1.0",
         "ocramius/package-versions": "^1.1",
-        "symfony/serializer": "^2.8.2 || ^3.0.2"
+        "symfony/serializer": "^2.8.2 || ^3.0.2",
+        "giorgiosironi/eris": "^0.8.0"
     },
     "require-dev": {
         "elife/api": "dev-master",

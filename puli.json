@@ -15,8 +15,7 @@
         },
         "doctrine/instantiator": {
             "install-path": "vendor/doctrine/instantiator",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "elife/api": {
             "install-path": "vendor/elife/api",
@@ -31,6 +30,10 @@
             "install-path": "vendor/elife/api-validator",
             "installer": "composer",
             "env": "dev"
+        },
+        "giorgiosironi/eris": {
+            "install-path": "vendor/giorgiosironi/eris",
+            "installer": "composer"
         },
         "guzzlehttp/guzzle": {
             "install-path": "vendor/guzzlehttp/guzzle",
@@ -52,8 +55,7 @@
         },
         "myclabs/deep-copy": {
             "install-path": "vendor/myclabs/deep-copy",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "ocramius/package-versions": {
             "install-path": "vendor/ocramius/package-versions",
@@ -66,58 +68,47 @@
         },
         "phpdocumentor/reflection-common": {
             "install-path": "vendor/phpdocumentor/reflection-common",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpdocumentor/reflection-docblock": {
             "install-path": "vendor/phpdocumentor/reflection-docblock",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpdocumentor/type-resolver": {
             "install-path": "vendor/phpdocumentor/type-resolver",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpspec/prophecy": {
             "install-path": "vendor/phpspec/prophecy",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/php-code-coverage": {
             "install-path": "vendor/phpunit/php-code-coverage",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/php-file-iterator": {
             "install-path": "vendor/phpunit/php-file-iterator",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/php-text-template": {
             "install-path": "vendor/phpunit/php-text-template",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/php-timer": {
             "install-path": "vendor/phpunit/php-timer",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/php-token-stream": {
             "install-path": "vendor/phpunit/php-token-stream",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/phpunit": {
             "install-path": "vendor/phpunit/phpunit",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "phpunit/phpunit-mock-objects": {
             "install-path": "vendor/phpunit/phpunit-mock-objects",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "psr/http-message": {
             "install-path": "vendor/psr/http-message",
@@ -155,53 +146,43 @@
         },
         "sebastian/code-unit-reverse-lookup": {
             "install-path": "vendor/sebastian/code-unit-reverse-lookup",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/comparator": {
             "install-path": "vendor/sebastian/comparator",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/diff": {
             "install-path": "vendor/sebastian/diff",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/environment": {
             "install-path": "vendor/sebastian/environment",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/exporter": {
             "install-path": "vendor/sebastian/exporter",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/global-state": {
             "install-path": "vendor/sebastian/global-state",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/object-enumerator": {
             "install-path": "vendor/sebastian/object-enumerator",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/recursion-context": {
             "install-path": "vendor/sebastian/recursion-context",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/resource-operations": {
             "install-path": "vendor/sebastian/resource-operations",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "sebastian/version": {
             "install-path": "vendor/sebastian/version",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "seld/jsonlint": {
             "install-path": "vendor/seld/jsonlint",
@@ -224,13 +205,11 @@
         },
         "symfony/yaml": {
             "install-path": "vendor/symfony/yaml",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "webmozart/assert": {
             "install-path": "vendor/webmozart/assert",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "webmozart/expression": {
             "install-path": "vendor/webmozart/expression",

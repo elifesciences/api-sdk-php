@@ -23,6 +23,7 @@ final class SnippetDenormalizer
     {
         $id = call_user_func($this->determineId, $item);
 
+        echo "denormalize $id", PHP_EOL;
         if ($this->identityMap->has($id)) {
             return $this->identityMap->get($id);
         }

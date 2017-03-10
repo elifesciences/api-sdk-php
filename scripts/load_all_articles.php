@@ -2,6 +2,8 @@
 
 
 include __DIR__.'/../vendor/autoload.php';
+$offset = $argv[1] ?? 0;
+$limit = $argv[2] ?? null;
 
 // Guzzle logging.
 $handler = GuzzleHttp\HandlerStack::create();
@@ -35,7 +37,7 @@ $articles = $sdk->articles();
 $articlesCount = 0;
 $invalidArticles = 0;
 $articleIds = [];
-foreach ($articles as $a) {
+foreach ($articles->slice($offset, $limit) as $a) {
     if ($a === null) {
         ++$invalidArticles;
         continue;

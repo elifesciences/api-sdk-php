@@ -487,7 +487,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockEventCall(int $number, bool $complete = false)
+    final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
     {
         $this->storage->save(
             new Request(
@@ -498,7 +498,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
-                json_encode($this->createEventJson($number, false, $complete))
+                json_encode($this->createEventJson($number, false, $complete, $external))
             )
         );
     }
@@ -1508,7 +1508,7 @@ abstract class ApiTestCase extends TestCase
         ];
     }
 
-    private function createEventJson($number, bool $isSnippet = false, bool $complete = false) : array
+    private function createEventJson($number, bool $isSnippet = false, bool $complete = false, bool $external = false) : array
     {
         if (is_int($number)) {
             $id = 'event'.$number;
@@ -1534,12 +1534,15 @@ abstract class ApiTestCase extends TestCase
         if ($complete) {
             $event['updated'] = '2000-01-01T00:00:00Z';
             $event['timezone'] = 'Europe/London';
-            $event['venue'] = ['name' => ['venue']];
+        }
+
+        if ($external) {
+            unset($event['content']);
+            $event['uri'] = 'http://www.example.com/';
         }
 
         if ($isSnippet) {
             unset($event['content']);
-            unset($event['venue']);
         }
 
         return $event;

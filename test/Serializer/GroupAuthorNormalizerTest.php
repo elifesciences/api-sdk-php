@@ -86,13 +86,13 @@ final class GroupAuthorNormalizerTest extends TestCase
             'complete' => [
                 new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                        ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [$somewhere]),
                 [
@@ -280,13 +280,13 @@ final class GroupAuthorNormalizerTest extends TestCase
                 ],
                 new GroupAuthor('group', new ArraySequence([
                     new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                        ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    ['additional information'], [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
                         $somewhere,

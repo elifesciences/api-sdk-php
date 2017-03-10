@@ -55,7 +55,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', Date::fromString('2000'), null,
             new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
 
         return [
             'thesis reference' => [$reference, null, true],
@@ -79,7 +79,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new ThesisReference('id', Date::fromString('2000-01-01'), 'a',
                     new PersonDetails('preferred name', 'index name'),
-                    'title', new Place(null, null, ['publisher']), '10.1000/182', 'http://www.example.com/'),
+                    'title', new Place(['publisher']), '10.1000/182', 'http://www.example.com/'),
                 [
                     'type' => 'thesis',
                     'id' => 'id',
@@ -102,7 +102,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new ThesisReference('id', Date::fromString('2000'), null,
                     new PersonDetails('preferred name', 'index name'),
-                    'title', new Place(null, null, ['publisher'])),
+                    'title', new Place(['publisher'])),
                 [
                     'type' => 'thesis',
                     'id' => 'id',
@@ -182,7 +182,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ThesisReference('id', Date::fromString('2000-01-01'), 'a',
                     new PersonDetails('preferred name', 'index name'),
-                    'title', new Place(null, null, ['publisher']), '10.1000/182', 'http://www.example.com/'),
+                    'title', new Place(['publisher']), '10.1000/182', 'http://www.example.com/'),
             ],
             'minimum' => [
                 [
@@ -202,7 +202,7 @@ final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ThesisReference('id', Date::fromString('2000'), null,
                     new PersonDetails('preferred name', 'index name'),
-                    'title', new Place(null, null, ['publisher'])),
+                    'title', new Place(['publisher'])),
             ],
         ];
     }

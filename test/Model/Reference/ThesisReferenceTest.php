@@ -20,7 +20,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
             'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -32,7 +32,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', new Date(2000), null,
             new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -45,7 +45,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', $date = new Date(2000), null,
             new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -57,10 +57,10 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ThesisReference('id', new Date(2000), 'a',
             new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
         $withOut = new ThesisReference('id', new Date(2000), null,
             new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -73,7 +73,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', new Date(2000), null,
             $author = new PersonDetails('preferred name', 'index name'),
-            'title', new Place(null, null, ['publisher']));
+            'title', new Place(['publisher']));
 
         $this->assertEquals($author, $reference->getAuthor());
     }
@@ -85,7 +85,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
             'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('title', $reference->getTitle());
     }
@@ -97,7 +97,7 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
             'title',
-            $publisher = new Place(null, null, ['publisher']));
+            $publisher = new Place(['publisher']));
 
         $this->assertEquals($publisher, $reference->getPublisher());
     }
@@ -108,10 +108,10 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_doi()
     {
         $with = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'), 'title',
-            new Place(null, null, ['publisher']), '10.1000/182');
+            new Place(['publisher']), '10.1000/182');
         $withOut = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
             'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -124,10 +124,10 @@ final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_uri()
     {
         $with = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'), 'title',
-            new Place(null, null, ['publisher']), null, 'http://www.example.com/');
+            new Place(['publisher']), null, 'http://www.example.com/');
         $withOut = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
             'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
         $this->assertNull($withOut->getUri());

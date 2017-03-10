@@ -111,7 +111,7 @@ final class ReviewerNormalizerTest extends PHPUnit_Framework_TestCase
                 Builder::for(Reviewer::class)
                     ->withPerson(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'))
                     ->withRole('role')
-                    ->withAffiliations([new Place(null, null, ['affiliation'])])
+                    ->withAffiliations([new Place(['affiliation'])])
                     ->__invoke(),
                 [
                     'name' => [

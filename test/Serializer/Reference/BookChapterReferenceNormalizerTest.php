@@ -63,7 +63,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
         $reference = new BookChapterReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], false,
             [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], false, 'chapter title',
-            'book title', new Place(null, null, ['publisher']), new StringReferencePage('pages'));
+            'book title', new Place(['publisher']), new StringReferencePage('pages'));
 
         return [
             'book chapter reference' => [$reference, null, true],
@@ -89,7 +89,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], true,
                     'chapter title',
-                    'book title', new Place(null, null, ['publisher']),
+                    'book title', new Place(['publisher']),
                     new ReferencePageRange('first', 'last', 'range'), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
                 [
@@ -138,7 +138,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                 new BookChapterReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], false,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], false,
-                    'chapter title', 'book title', new Place(null, null, ['publisher']),
+                    'chapter title', 'book title', new Place(['publisher']),
                     new StringReferencePage('pages')),
                 [
                     'id' => 'id',
@@ -258,7 +258,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], true,
                     'chapter title',
-                    'book title', new Place(null, null, ['publisher']),
+                    'book title', new Place(['publisher']),
                     new ReferencePageRange('first', 'last', 'range'), 'volume', 'edition', '10.1000/182', 18183754,
                     '978-3-16-148410-0'),
             ],
@@ -295,7 +295,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
                 new BookChapterReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], false,
                     [new PersonAuthor(new PersonDetails('editor preferred name', 'editor index name'))], false,
-                    'chapter title', 'book title', new Place(null, null, ['publisher']),
+                    'chapter title', 'book title', new Place(['publisher']),
                     new StringReferencePage('pages')),
             ],
         ];

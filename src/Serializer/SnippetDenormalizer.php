@@ -23,6 +23,7 @@ final class SnippetDenormalizer
     {
         $id = call_user_func($this->determineId, $item);
 
+        echo "denormalize $id", PHP_EOL;
         if ($this->identityMap->has($id)) {
             return $this->identityMap->get($id);
         }
@@ -37,6 +38,16 @@ final class SnippetDenormalizer
 
                 $this->identityMap->reset();
 
+                var_dump(
+                    "Resolving globalCallback with "
+                    .count($settled)
+                    ." values of which "
+                    .count(array_filter(
+                        $settled,
+                        function($v) { return !$v; }
+                    ))
+                    ." are null"
+                );
                 $this->globalCallback->resolve($settled);
 
                 $this->globalCallback = null;
@@ -45,7 +56,12 @@ final class SnippetDenormalizer
 
         return $this->globalCallback
             ->then(function (array $items) use ($id) {
-                return $items[$id];
+                $retrieved = $items[$id];
+                if (!$retrieved) {
+                    throw new \RuntimeException('Null value from globalCallback: '.$id);
+                }
+
+                return $retrieved;
             });
     }
 }

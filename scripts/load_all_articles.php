@@ -28,7 +28,7 @@ $guzzle = new GuzzleHttp\Client([
 // Api SDK.
 $client = new eLife\ApiClient\HttpClient\BatchingHttpClient(
     new eLife\ApiClient\HttpClient\Guzzle6HttpClient($guzzle),
-    100
+    20
 );
 $sdk = new eLife\ApiSdk\ApiSdk($client);
 
@@ -49,6 +49,12 @@ foreach ($articles as $a) {
     $articleIds[] = $a->getId();
     //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
+}
+foreach ($articleIds as $id) {
+    $article = $articles->get($id);
+    if ($article instanceof eLife\ApiSdk\Model\ArticleVoR) {
+        echo 'References: ', count($article->getReferences()), PHP_EOL;
+    }
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
 echo "Valid articles (served): $articlesCount", PHP_EOL;

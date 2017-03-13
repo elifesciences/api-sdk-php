@@ -50,15 +50,15 @@ foreach ($articles as $a) {
     //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
+$versionsCount = 0;
 foreach ($articleIds as $id) {
-    $article = $articles->get($id)->wait();
-    echo get_class($article), PHP_EOL;
-    if ($article instanceof eLife\ApiSdk\Model\ArticleVoR) {
-        echo 'References: ', count($article->getReferences()), PHP_EOL;
-    } else {
-        echo "$id is POA", PHP_EOL;
+    $versions = $articles->getHistory($id)->wait();
+    foreach ($versions as $article) {
+        $versionsCount++;
+        echo 'Authors: ', count($article->getAuthors()), PHP_EOL;
     }
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
 echo "Valid articles (served): $articlesCount", PHP_EOL;
+echo "Valid versions (served): $versionsCount", PHP_EOL;
 echo '$articleIds: ', count($articleIds), PHP_EOL;

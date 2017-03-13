@@ -18,6 +18,8 @@ final class Video implements Block, Asset
     private $image;
     private $width;
     private $height;
+    private $autoplay;
+    private $loop;
     private $sourceData;
 
     /**
@@ -33,6 +35,8 @@ final class Video implements Block, Asset
         string $image = null,
         int $width,
         int $height,
+        bool $autoplay = false,
+        bool $loop = false,
         array $sourceData = []
     ) {
         $this->doi = $doi;
@@ -44,6 +48,8 @@ final class Video implements Block, Asset
         $this->image = $image;
         $this->width = $width;
         $this->height = $height;
+        $this->autoplay = $autoplay;
+        $this->loop = $loop;
         $this->sourceData = $sourceData;
     }
 
@@ -111,6 +117,16 @@ final class Video implements Block, Asset
     public function getHeight(): int
     {
         return $this->height;
+    }
+
+    public function isAutoplay() : bool
+    {
+        return $this->autoplay;
+    }
+
+    public function isLoop() : bool
+    {
+        return $this->loop;
     }
 
     /**

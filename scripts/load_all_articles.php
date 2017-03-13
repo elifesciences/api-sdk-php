@@ -54,7 +54,7 @@ $versionsCount = 0;
 foreach ($articleIds as $id) {
     $versions = $articles->getHistory($id)->wait();
     foreach ($versions as $article) {
-        $versionsCount++;
+        ++$versionsCount;
         echo 'Authors: ', count($article->getAuthors()), PHP_EOL;
     }
 }

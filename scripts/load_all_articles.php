@@ -51,9 +51,12 @@ foreach ($articles as $a) {
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
 foreach ($articleIds as $id) {
-    $article = $articles->get($id);
+    $article = $articles->get($id)->wait();
+    echo get_class($article), PHP_EOL;
     if ($article instanceof eLife\ApiSdk\Model\ArticleVoR) {
         echo 'References: ', count($article->getReferences()), PHP_EOL;
+    } else {
+        echo "$id is POA", PHP_EOL;
     }
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;

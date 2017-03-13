@@ -50,15 +50,26 @@ foreach ($articles as $a) {
     //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
+$versionsByArticle = [];
 $versionsCount = 0;
 foreach ($articleIds as $id) {
     $history = $articles->getHistory($id)->wait();
     foreach ($history->getVersions() as $article) {
+        $versionsByArticle[$id][] = $article->getVersion();
         ++$versionsCount;
-        echo 'Authors: ', count($article->getAuthors()), PHP_EOL;
+    }
+}
+$totalVersions = 0;
+foreach ($versionsByArticle as $id => $versions) {
+    foreach ($versions as $version) {
+        $article = $articles->get($id, $version);
+        echo "Authors ({$id}v{$version}: ", count($article->getAuthors()), PHP_EOL;
+        ++$totalVersions;
     }
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
 echo "Valid articles (served): $articlesCount", PHP_EOL;
 echo "Valid versions (served): $versionsCount", PHP_EOL;
 echo '$articleIds: ', count($articleIds), PHP_EOL;
+echo '$versions (indexed by article): ', count($versionsByArticle), PHP_EOL;
+echo "Total versions (served): $totalVersions", PHP_EOL;

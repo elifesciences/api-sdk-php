@@ -27,6 +27,7 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             }, $data['caption'] ?? [])), array_map(function (array $source) {
                 return new VideoSource($source['mediaType'], $source['uri']);
             }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height'],
+            $data['autoplay'] ?? false, $data['loop'] ?? false,
             array_map(function (array $file) {
                 return $this->denormalizer->denormalize($file, File::class);
             }, $data['sourceData'] ?? []));
@@ -81,6 +82,14 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
 
         if ($object->getImage()) {
             $data['image'] = $object->getImage();
+        }
+
+        if ($object->isAutoplay()) {
+            $data['autoplay'] = $object->isAutoplay();
+        }
+
+        if ($object->isLoop()) {
+            $data['loop'] = $object->isLoop();
         }
 
         if ($object->getSourceData()) {

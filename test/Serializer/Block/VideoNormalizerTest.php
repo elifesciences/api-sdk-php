@@ -81,7 +81,7 @@ final class VideoNormalizerTest extends TestCase
             'complete' => [
                 new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100,
+                    'http://www.example.com/image.jpeg', 200, 100, true, true,
                     [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
@@ -107,6 +107,8 @@ final class VideoNormalizerTest extends TestCase
                         ],
                     ],
                     'image' => 'http://www.example.com/image.jpeg',
+                    'autoplay' => true,
+                    'loop' => true,
                     'sourceData' => [
                         [
                             'mediaType' => 'text/plain',
@@ -205,6 +207,8 @@ final class VideoNormalizerTest extends TestCase
                     'image' => 'http://www.example.com/image.jpeg',
                     'width' => 200,
                     'height' => 100,
+                    'autoplay' => true,
+                    'loop' => true,
                     'sourceData' => [
                         [
                             'mediaType' => 'text/plain',
@@ -225,7 +229,7 @@ final class VideoNormalizerTest extends TestCase
                 ],
                 new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100,
+                    'http://www.example.com/image.jpeg', 200, 100, true, true,
                     [
                         new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
                             'text/plain', 'http://www.example.com/data.txt', 'data.txt'),

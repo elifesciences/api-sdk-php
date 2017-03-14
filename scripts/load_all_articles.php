@@ -63,7 +63,7 @@ $totalVersions = 0;
 foreach ($versionsByArticle as $id => $versions) {
     foreach ($versions as $version) {
         $article = $articles->get($id, $version)->wait();
-        echo "Authors ({$id}v{$version}: ", count($article->getAuthors()), PHP_EOL;
+        echo "Authors ({$id}v{$version}): ", count($article->getAuthors()), PHP_EOL;
         ++$totalVersions;
     }
 }

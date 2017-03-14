@@ -141,11 +141,33 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_be_autoplayed()
+    {
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, true);
+
+        $this->assertTrue($video->isAutoplay());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_be_looped()
+    {
+        $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
+        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, false, true);
+
+        $this->assertTrue($video->isLoop());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_source_data()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $sourceData = [new File(null, null, null, null, new EmptySequence(), 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
-        $with = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, $sourceData);
+        $with = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, false, false, $sourceData);
         $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 
         $this->assertEquals($sourceData, $with->getSourceData());

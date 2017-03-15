@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk;
 
+use ComposerLocator;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
@@ -26,18 +27,16 @@ use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
-use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use JsonSchema\Validator;
 use LogicException;
-use Webmozart\Json\JsonDecoder;
 
 abstract class ApiTestCase extends TestCase
 {
-    use PuliAwareTestCase;
-
     /** @var InMemoryStorageAdapter */
     private $storage;
 
@@ -57,8 +56,8 @@ abstract class ApiTestCase extends TestCase
         if (null === $this->httpClient) {
             $storage = new InMemoryStorageAdapter();
             $validator = new JsonMessageValidator(
-                new PuliSchemaFinder(self::$puli),
-                new JsonDecoder()
+                new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
+                new Validator()
             );
 
             $this->storage = new ValidatingStorageAdapter($storage, $validator);

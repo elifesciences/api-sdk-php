@@ -22,8 +22,8 @@
         "symfony/serializer": "^2.8.2 || ^3.0.2"
     },
     "require-dev": {
-        "elife/api": "dev-puli",
-        "elife/api-validator": "dev-puli",
+        "elife/api": "dev-master",
+        "elife/api-validator": "^1.0@dev",
         "guzzlehttp/guzzle": "^6.0",
         "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
         "mindplay/composer-locator": "^2.1.1",
@@ -34,15 +34,5 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/api-raml.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/api-validator-php.git"
-        }
-    ]
+    }
 }

@@ -101,4 +101,16 @@ final class AddressTest extends PHPUnit_Framework_TestCase
         $this->assertSame('foo', $with->getPostalCode());
         $this->assertNull($withOut->getPostalCode());
     }
+
+    /**
+     * @test
+     */
+    public function it_casts_to_a_string()
+    {
+        $address = Builder::for(Address::class)
+            ->withFormatted($sequence = new ArraySequence(['foo', 'bar']))
+            ->__invoke();
+
+        $this->assertSame('foo, bar', $address->toString());
+    }
 }

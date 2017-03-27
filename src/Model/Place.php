@@ -33,12 +33,6 @@ final class Place implements CastsToString
 
     public function toString() : string
     {
-        $string = implode(', ', $this->getName());
-
-        if ($this->getAddress()) {
-            $string .= ', '.implode(', ', $this->getAddress()->getFormatted()->toArray());
-        }
-
-        return $string;
+        return implode(', ', array_merge($this->getName(), $this->getAddress() ? [$this->getAddress()->toString()] : []));
     }
 }

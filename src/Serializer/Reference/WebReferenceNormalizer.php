@@ -30,7 +30,8 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
             $data['authorsEtAl'] ?? false,
             $data['title'],
             $data['uri'],
-            $data['website'] ?? null
+            $data['website'] ?? null,
+            !empty($data['accessed']) ? Date::fromString($data['accessed']) : null
         );
     }
 
@@ -68,6 +69,10 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
 
         if ($object->getWebsite()) {
             $data['website'] = $object->getWebsite();
+        }
+
+        if ($object->getAccessed()) {
+            $data['accessed'] = $object->getAccessed()->toString();
         }
 
         return $data;

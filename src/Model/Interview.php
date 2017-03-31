@@ -51,16 +51,6 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
         return $this->title;
     }
 
-    public function getSubTitle() : String
-    {
-        return 'An interview with '.$this->interviewee->getPerson()->getPreferredName();
-    }
-
-    public function getFullTitle() : string
-    {
-        return implode(': ', array_filter([$this->title, $this->getSubTitle()]));
-    }
-
     /**
      * @return string|null
      */

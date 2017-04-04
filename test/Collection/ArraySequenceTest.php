@@ -155,6 +155,20 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_also_provides_the_index_when_filtering_with_a_callback()
+    {
+        $collection = new ArraySequence([5, 9, 100]);
+
+        $filter = function (int $value, int $index) {
+            return $index > 0;
+        };
+
+        $this->assertSame([9, 100], $collection->filter($filter)->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_reduced()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);

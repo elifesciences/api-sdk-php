@@ -52,7 +52,7 @@ final class ArraySequence implements IteratorAggregate, Sequence
             return new self(array_filter($this->array));
         }
 
-        return new self(array_filter($this->array, $callback));
+        return new self(array_filter($this->array, $callback, ARRAY_FILTER_USE_BOTH));
     }
 
     public function reduce(callable $callback, $initial = null)

@@ -8,7 +8,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
@@ -122,18 +121,8 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable('2000-01-01', new DateTimeZone('Z'));
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             [
@@ -157,15 +146,15 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
                         'image' => [
                             'thumbnail' => [
                                 'alt' => '',
-                                'sizes' => [
-                                    '16:9' => [
-                                        250 => 'https://placehold.it/250x141',
-                                        500 => 'https://placehold.it/500x281',
-                                    ],
-                                    '1:1' => [
-                                        70 => 'https://placehold.it/70x70',
-                                        140 => 'https://placehold.it/140x140',
-                                    ],
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                'source' => [
+                                    'mediaType' => 'image/jpeg',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                    'filename' => 'thumbnail.jpg',
+                                ],
+                                'size' => [
+                                    'width' => 140,
+                                    'height' => 140,
                                 ],
                             ],
                         ],

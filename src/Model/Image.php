@@ -2,22 +2,28 @@
 
 namespace eLife\ApiSdk\Model;
 
-use OutOfBoundsException;
-
 final class Image
 {
     private $altText;
-    private $sizes;
+    private $uri;
+    private $source;
+    private $width;
+    private $height;
+    private $focalPointX;
+    private $focalPointY;
 
     /**
      * @internal
-     *
-     * @param ImageSize[] $sizes
      */
-    public function __construct(string $altText, array $sizes)
+    public function __construct(string $altText, string $uri, File $source, int $width, int $height, int $focalPointX, int $focalPointY)
     {
         $this->altText = $altText;
-        $this->sizes = $sizes;
+        $this->uri = $uri;
+        $this->source = $source;
+        $this->width = $width;
+        $this->height = $height;
+        $this->focalPointX = $focalPointX;
+        $this->focalPointY = $focalPointY;
     }
 
     public function getAltText() : string
@@ -25,22 +31,33 @@ final class Image
         return $this->altText;
     }
 
-    /**
-     * @return ImageSize[]
-     */
-    public function getSizes() : array
+    public function getUri() : string
     {
-        return $this->sizes;
+        return $this->uri;
     }
 
-    public function getSize(string $ratio) : ImageSize
+    public function getSource() : File
     {
-        foreach ($this->sizes as $size) {
-            if ($ratio === $size->getRatio()) {
-                return $size;
-            }
-        }
+        return $this->source;
+    }
 
-        throw new OutOfBoundsException('No images with the size '.$ratio.' available');
+    public function getWidth() : int
+    {
+        return $this->width;
+    }
+
+    public function getHeight() : int
+    {
+        return $this->height;
+    }
+
+    public function getFocalPointX() : int
+    {
+        return $this->focalPointX;
+    }
+
+    public function getFocalPointY() : int
+    {
+        return $this->focalPointY;
     }
 }

@@ -8,7 +8,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -116,16 +115,7 @@ final class HighlightNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $image = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $image = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
@@ -136,15 +126,15 @@ final class HighlightNormalizerTest extends ApiTestCase
                     'authorLine' => 'Author et al',
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
                         ],
                     ],
                     'item' => [

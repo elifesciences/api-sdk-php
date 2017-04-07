@@ -4,12 +4,14 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -32,6 +34,7 @@ final class VideoNormalizerTest extends TestCase
 
         new NormalizerAwareSerializer([
             $this->normalizer,
+            new AssetFileNormalizer(),
             new FileNormalizer(),
             new ParagraphNormalizer(),
         ]);
@@ -83,8 +86,8 @@ final class VideoNormalizerTest extends TestCase
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
                     'http://www.example.com/image.jpeg', 200, 100, true, true,
                     [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
+                            new File('text/plain', 'http://www.example.com/data.txt', 'data.txt')),
                     ]),
                 [
                     'type' => 'video',
@@ -231,8 +234,8 @@ final class VideoNormalizerTest extends TestCase
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
                     'http://www.example.com/image.jpeg', 200, 100, true, true,
                     [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
+                            new File('text/plain', 'http://www.example.com/data.txt', 'data.txt')),
                     ]),
             ],
             'minimum' => [

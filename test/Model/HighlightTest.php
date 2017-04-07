@@ -5,7 +5,6 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -38,7 +37,7 @@ final class HighlightTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_image()
     {
-        $image = new Image('', [new ImageSize('16:9', [250 => 'https://placehold.it/250x141', 500 => 'https://placehold.it/500x281']), new ImageSize('1:1', ['70' => 'https://placehold.it/70x70', '140' => 'https://placehold.it/140x140'])]);
+        $image = Builder::for(Image::class)->sample('thumbnail');
 
         $with = new Highlight('title', null, $image, Builder::dummy(ArticleVoR::class));
         $withOut = new Highlight('title', null, null, Builder::dummy(ArticleVoR::class));

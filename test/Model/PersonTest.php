@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -78,7 +79,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_thumbnail()
     {
         $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor',
-            $image = new Image('', [900 => 'https://placehold.it/900x450']),
+            $image = Builder::for(Image::class)->sample('thumbnail'),
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));

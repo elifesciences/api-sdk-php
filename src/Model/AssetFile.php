@@ -1,23 +1,17 @@
 <?php
 
-namespace eLife\ApiSdk\Model\Block;
+namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Asset;
-use eLife\ApiSdk\Model\AssetFile;
-use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Image;
 
-final class ImageFile implements Asset
+final class AssetFile implements Asset
 {
     private $doi;
     private $id;
     private $label;
     private $title;
     private $caption;
-    private $image;
-    private $attribution;
-    private $sourceData;
+    private $file;
 
     /**
      * @internal
@@ -28,18 +22,14 @@ final class ImageFile implements Asset
         string $label = null,
         string $title = null,
         Sequence $caption,
-        Image $image,
-        array $attribution = [],
-        array $sourceData = []
+        File $file
     ) {
         $this->doi = $doi;
         $this->id = $id;
         $this->label = $label;
         $this->title = $title;
         $this->caption = $caption;
-        $this->image = $image;
-        $this->attribution = $attribution;
-        $this->sourceData = $sourceData;
+        $this->file = $file;
     }
 
     /**
@@ -82,24 +72,8 @@ final class ImageFile implements Asset
         return $this->caption;
     }
 
-    public function getImage() : Image
+    public function getFile() : File
     {
-        return $this->image;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getAttribution() : array
-    {
-        return $this->attribution;
-    }
-
-    /**
-     * @return AssetFile[]
-     */
-    public function getSourceData() : array
-    {
-        return $this->sourceData;
+        return $this->file;
     }
 }

@@ -14,12 +14,12 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
@@ -160,7 +160,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         }
 
         $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
-            return $this->denormalizer->denormalize($file, File::class, $format, $context);
+            return $this->denormalizer->denormalize($file, AssetFile::class, $format, $context);
         });
 
         $data['authors'] = $data['authors']->map(function (array $author) use ($format, $context) {
@@ -364,7 +364,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getAdditionalFiles()->notEmpty()) {
                 $data['additionalFiles'] = $object->getAdditionalFiles()
-                    ->map(function (File $file) use ($format, $context) {
+                    ->map(function (AssetFile $file) use ($format, $context) {
                         return $this->normalizer->normalize($file, $format, $context);
                     })->toArray();
             }

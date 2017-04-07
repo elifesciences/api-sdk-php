@@ -140,9 +140,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $collection = $this->builder
-            ->withPromiseOfBanner(
-                $image = new Image('', [900 => 'https://placehold.it/900x450'])
-            )
+            ->withPromiseOfBanner($image = Builder::for(Image::class)->sample('banner'))
             ->__invoke();
 
         $this->assertInstanceOf(HasBanner::class, $collection);
@@ -155,9 +153,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
-            ->withThumbnail(
-                $image = new Image('', [70 => 'https://placehold.it/70x140'])
-            )
+            ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
 
         $this->assertInstanceOf(HasThumbnail::class, $collection);

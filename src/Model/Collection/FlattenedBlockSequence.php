@@ -22,16 +22,9 @@ final class FlattenedBlockSequence implements IteratorAggregate, Sequence
 
     public function __construct(Sequence $sequence)
     {
-        $blockFinder = function (array $array, Block $block) use (&$blockFinder) {
-            $array[] = $block;
-            if ($block instanceof HasContent) {
-                $array = $block->getContent()->reduce($blockFinder, $array);
-            }
-
-            return $array;
-        };
-
-        $this->sequence = new ArraySequence($sequence->reduce($blockFinder, []));
+        $this->sequence = new ArraySequence($sequence->reduce(function (array $array, Block $item) {
+            return $this->flatten($array, $item);
+        }, []));
     }
 
     public function getIterator() : Traversable
@@ -87,5 +80,18 @@ final class FlattenedBlockSequence implements IteratorAggregate, Sequence
     public function offsetGet($offset)
     {
         return $this->sequence->offsetGet($offset);
+    }
+
+    private function flatten(array $array, Block $block) : array
+    {
+        $array[] = $block;
+
+        if ($block instanceof HasContent) {
+            $array = $block->getContent()->reduce(function (array $array, Block $item) {
+                return $this->flatten($array, $item);
+            }, $array);
+        }
+
+        return $array;
     }
 }

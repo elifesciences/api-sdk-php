@@ -52,18 +52,24 @@ foreach ($articles as $a) {
 }
 $versionsByArticle = [];
 $versionsCount = 0;
+$histories = [];
 foreach ($articleIds as $id) {
-    $history = $articles->getHistory($id)->wait();
-    foreach ($history->getVersions() as $article) {
-        $versionsByArticle[$id][] = $article->getVersion();
+    $histories[$id] = $articles->getHistory($id);
+}
+    
+foreach ($histories as $id => $history) {
+    foreach ($history->wait()->getVersions() as $article) {
+        $versionNumber = $article->getVersion();
+        $versionsByArticle[$id][$versionNumber] = $articles->get($id, $versionNumber);
         ++$versionsCount;
     }
 }
+
 $totalVersions = 0;
 foreach ($versionsByArticle as $id => $versions) {
-    foreach ($versions as $version) {
-        $article = $articles->get($id, $version)->wait();
-        echo "Authors ({$id}v{$version}): ", count($article->getAuthors()), PHP_EOL;
+    foreach ($versions as $versionNumber => $version) {
+        $article = $version->wait();
+        echo "Authors ({$id}v{$versionNumber}): ", count($article->getAuthors()), PHP_EOL;
         ++$totalVersions;
     }
 }

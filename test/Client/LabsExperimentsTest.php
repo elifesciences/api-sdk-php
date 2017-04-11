@@ -126,6 +126,71 @@ final class LabsExperimentsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 5);
+        $this->mockLabsExperimentListCall(1, 100, 5);
+
+        $values = $this->labsExperiments->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Labs experiment 1 title', 'Labs experiment 2 title', 'Labs experiment 3 title', 'Labs experiment 4 title', 'Labs experiment 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 5);
+        $this->mockLabsExperimentListCall(1, 100, 5);
+
+        $values = $this->labsExperiments->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['Labs experiment 1 title', 'Labs experiment 2 title', 'Labs experiment 3 title', 'Labs experiment 4 title', 'Labs experiment 5 title', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 5);
+        $this->mockLabsExperimentListCall(1, 100, 5);
+
+        $values = $this->labsExperiments->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['Labs experiment 1 title', 'Labs experiment 2 title', 'Labs experiment 4 title', 'Labs experiment 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 5);
+        $this->mockLabsExperimentListCall(1, 100, 5);
+
+        $values = $this->labsExperiments->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Labs experiment 1 title', 'Labs experiment 2 title', 2, 'Labs experiment 3 title', 'Labs experiment 4 title', 'Labs experiment 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockLabsExperimentListCall(1, 1, 5);
+        $this->mockLabsExperimentListCall(1, 100, 5);
+
+        $values = $this->labsExperiments->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Labs experiment 1 title', 'Labs experiment 2 title', 2, 'Labs experiment 4 title', 'Labs experiment 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

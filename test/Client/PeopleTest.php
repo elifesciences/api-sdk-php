@@ -225,6 +225,71 @@ final class PeopleTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'person1', 'person2', 'person3', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 'person3', 'person4', 'person5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 2, 'person3', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 2, 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

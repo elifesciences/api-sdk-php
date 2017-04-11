@@ -114,6 +114,71 @@ final class MediumArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Medium article 1 title', 'Medium article 2 title', 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 2, 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 2, 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

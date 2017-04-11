@@ -229,6 +229,71 @@ final class ArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'article1', 'article2', 'article3', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 'article3', 'article4', 'article5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 2, 'article3', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 2, 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

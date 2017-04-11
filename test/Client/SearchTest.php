@@ -222,6 +222,71 @@ class SearchTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->prepend('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->append('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->insert(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->set(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

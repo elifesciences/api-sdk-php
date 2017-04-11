@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Asset;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
@@ -166,7 +167,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
     public function it_may_have_source_data()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $sourceData = [new File(null, null, null, null, new EmptySequence(), 'text/csv', 'http://www.example.com/data.csv', 'data.csv')];
+        $sourceData = [new AssetFile(null, null, null, null, new EmptySequence(), new File('text/csv', 'http://www.example.com/data.csv', 'data.csv'))];
         $with = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100, false, false, $sourceData);
         $withOut = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
 

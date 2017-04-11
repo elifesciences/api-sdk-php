@@ -274,24 +274,28 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                     ],
@@ -511,15 +515,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],

@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
@@ -424,7 +425,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_additional_files()
     {
         $article = $this->builder
-            ->withAdditionalFiles($files = new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
+            ->withAdditionalFiles($files = new ArraySequence([new AssetFile(null, null, null, null, new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]))
             ->__invoke();
 
         $this->assertEquals($files, $article->getAdditionalFiles());

@@ -273,7 +273,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
     }
 
     /**
-     * @return Sequence|File[]
+     * @return Sequence|AssetFile[]
      */
     public function getAdditionalFiles() : Sequence
     {

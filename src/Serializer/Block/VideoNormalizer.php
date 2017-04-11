@@ -3,10 +3,10 @@
 namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
 use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
 use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
@@ -29,7 +29,7 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height'],
             $data['autoplay'] ?? false, $data['loop'] ?? false,
             array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, File::class);
+                return $this->denormalizer->denormalize($file, AssetFile::class);
             }, $data['sourceData'] ?? []));
     }
 
@@ -93,7 +93,7 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
         }
 
         if ($object->getSourceData()) {
-            $data['sourceData'] = array_map(function (File $file) {
+            $data['sourceData'] = array_map(function (AssetFile $file) {
                 return $this->normalizer->normalize($file);
             }, $object->getSourceData());
         }

@@ -12,7 +12,6 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
@@ -61,8 +60,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'),
-            new Image('', [900 => 'https://placehold.it/900x450']),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
@@ -137,18 +135,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
@@ -180,24 +168,28 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                     ],
@@ -250,15 +242,15 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'image' => [
                                         'thumbnail' => [
                                             'alt' => '',
-                                            'sizes' => [
-                                                '16:9' => [
-                                                    250 => 'https://placehold.it/250x141',
-                                                    500 => 'https://placehold.it/500x281',
-                                                ],
-                                                '1:1' => [
-                                                    70 => 'https://placehold.it/70x70',
-                                                    140 => 'https://placehold.it/140x140',
-                                                ],
+                                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                            'source' => [
+                                                'mediaType' => 'image/jpeg',
+                                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                                'filename' => 'thumbnail.jpg',
+                                            ],
+                                            'size' => [
+                                                'width' => 140,
+                                                'height' => 140,
                                             ],
                                         ],
                                     ],
@@ -318,24 +310,28 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                     ],
@@ -373,15 +369,15 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -411,15 +407,15 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],

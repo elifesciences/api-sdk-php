@@ -1083,16 +1083,16 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Annual report '.$year.' title',
             'impactStatement' => 'Annual report '.$year.' impact statement',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
@@ -1298,25 +1298,29 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Article '.$id.' impact statement',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1495,12 +1499,16 @@ abstract class ApiTestCase extends TestCase
         return [
             'title' => 'Cover '.$number.' title',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                    'filename' => 'banner.jpg',
+                ],
+                'size' => [
+                    'width' => 1800,
+                    'height' => 900,
                 ],
             ],
             'item' => $item,
@@ -1553,16 +1561,16 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Highlight '.$number.' title',
             'authorLine' => 'Author et al',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
             'item' => $item,
@@ -1629,25 +1637,29 @@ abstract class ApiTestCase extends TestCase
             'updated' => '2000-01-01T00:00:00Z',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1680,16 +1692,16 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Subject '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
@@ -1727,16 +1739,16 @@ abstract class ApiTestCase extends TestCase
             ],
             'competingInterests' => $id.' competing interests',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
@@ -1768,25 +1780,29 @@ abstract class ApiTestCase extends TestCase
             'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1896,25 +1912,29 @@ abstract class ApiTestCase extends TestCase
             'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1992,16 +2012,16 @@ abstract class ApiTestCase extends TestCase
                     'published' => '2016-05-27T13:19:42Z',
                     'image' => [
                         'thumbnail' => [
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    '250' => 'https://placehold.it/250x141',
-                                    '500' => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    '70' => 'https://placehold.it/70x70',
-                                    '140' => 'https://placehold.it/140x140',
-                                ],
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -2067,25 +2087,29 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Subject '.$id.' impact statement',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],

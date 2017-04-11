@@ -2,10 +2,10 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
-use OutOfBoundsException;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class ImageTest extends PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,9 @@ final class ImageTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_alt_text()
     {
-        $image = new Image('foo', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)
+            ->withAltText('foo')
+            ->__invoke();
 
         $this->assertSame('foo', $image->getAltText());
     }
@@ -22,32 +24,56 @@ final class ImageTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_sizes()
+    public function it_has_a_uri()
     {
-        $image = new Image('foo', $sizes = [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)
+            ->withUri('http://www.example.com/example.jpg')
+            ->__invoke();
 
-        $this->assertEquals($sizes, $image->getSizes());
+        $this->assertSame('http://www.example.com/example.jpg', $image->getUri());
     }
 
     /**
      * @test
      */
-    public function it_may_have_an_image_of_a_ratio()
+    public function it_has_a_source()
     {
-        $image = new Image('foo', [$size = new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)
+            ->withSource($source = new File(
+                'image/jpeg',
+                'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                'example.jpg'
+            ))
+            ->__invoke();
 
-        $this->assertEquals($size, $image->getSize('2:1'));
+        $this->assertEquals($source, $image->getSource());
     }
 
     /**
      * @test
      */
-    public function it_may_not_have_an_image_of_a_ratio()
+    public function it_has_a_width_and_height()
     {
-        $image = new Image('foo', $sizes = [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)
+            ->withWidth(100)
+            ->withHeight(200)
+            ->__invoke();
 
-        $this->expectException(OutOfBoundsException::class);
+        $this->assertSame(100, $image->getWidth());
+        $this->assertSame(200, $image->getHeight());
+    }
 
-        $image->getSize('1:1');
+    /**
+     * @test
+     */
+    public function it_has_a_focal_point()
+    {
+        $image = Builder::for(Image::class)
+            ->withFocalPointX(25)
+            ->withFocalPointY(75)
+            ->__invoke();
+
+        $this->assertSame(25, $image->getFocalPointX());
+        $this->assertSame(75, $image->getFocalPointY());
     }
 }

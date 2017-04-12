@@ -56,7 +56,7 @@ $histories = [];
 foreach ($articleIds as $id) {
     $histories[$id] = $articles->getHistory($id);
 }
-    
+
 foreach ($histories as $id => $history) {
     foreach ($history->wait()->getVersions() as $article) {
         $versionNumber = $article->getVersion();

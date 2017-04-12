@@ -6,7 +6,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Image as ImageModel;
 
 final class ImageFile implements Asset
 {
@@ -28,7 +28,7 @@ final class ImageFile implements Asset
         string $label = null,
         string $title = null,
         Sequence $caption,
-        Image $image,
+        ImageModel $image,
         array $attribution = [],
         array $sourceData = []
     ) {
@@ -82,7 +82,7 @@ final class ImageFile implements Asset
         return $this->caption;
     }
 
-    public function getImage() : Image
+    public function getImage() : ImageModel
     {
         return $this->image;
     }

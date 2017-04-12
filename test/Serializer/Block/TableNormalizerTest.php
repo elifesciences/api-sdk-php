@@ -4,11 +4,13 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Footnote;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -31,6 +33,7 @@ final class TableNormalizerTest extends TestCase
 
         new NormalizerAwareSerializer([
             $this->normalizer,
+            new AssetFileNormalizer(),
             new FileNormalizer(),
             new ParagraphNormalizer(),
         ]);
@@ -79,8 +82,8 @@ final class TableNormalizerTest extends TestCase
             'complete' => [
                 new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), ['<table></table>'],
                     [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
+                            new File('text/plain', 'http://www.example.com/data.txt', 'data.txt')),
                     ]),
                 [
                     'type' => 'table',
@@ -237,8 +240,8 @@ final class TableNormalizerTest extends TestCase
                 ],
                 new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('caption')]), ['<table></table>'],
                     [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
+                            new File('text/plain', 'http://www.example.com/data.txt', 'data.txt')),
                     ]),
             ],
             'minimum' => [

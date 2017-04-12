@@ -10,6 +10,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -70,7 +71,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
-            promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])),
+            promise_for($image = Builder::for(Image::class)->sample('thumbnail')),
             rejection_for('No thumbnail'));
 
         $this->assertInstanceOf(HasBanner::class, $subject);
@@ -83,7 +84,7 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
-            rejection_for('No banner'), promise_for($image = new Image('', [900 => 'https://placehold.it/900x450'])));
+            rejection_for('No banner'), promise_for($image = Builder::for(Image::class)->sample('thumbnail')));
 
         $this->assertInstanceOf(HasThumbnail::class, $subject);
         $this->assertEquals($image, $subject->getThumbnail());

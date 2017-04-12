@@ -3,9 +3,9 @@
 namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
 use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
@@ -33,7 +33,7 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
                     }, $footnote['text']))
                 );
             }, $data['footnotes'] ?? []), array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, File::class);
+                return $this->denormalizer->denormalize($file, AssetFile::class);
             }, $data['sourceData'] ?? []));
     }
 
@@ -98,7 +98,7 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
         }
 
         if ($object->getSourceData()) {
-            $data['sourceData'] = array_map(function (File $file) {
+            $data['sourceData'] = array_map(function (AssetFile $file) {
                 return $this->normalizer->normalize($file);
             }, $object->getSourceData());
         }

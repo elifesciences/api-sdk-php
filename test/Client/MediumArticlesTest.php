@@ -8,6 +8,8 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
@@ -27,7 +29,7 @@ final class MediumArticlesTest extends ApiTestCase
     {
         $this->mediumArticles = new MediumArticles(
             new MediumClient($this->getHttpClient()),
-            new NormalizerAwareSerializer([new MediumArticleNormalizer(), new ImageNormalizer()])
+            new NormalizerAwareSerializer([new MediumArticleNormalizer(), new ImageNormalizer(), new AssetFileNormalizer(), new FileNormalizer()])
         );
     }
 

@@ -9,7 +9,6 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
@@ -18,6 +17,7 @@ use eLife\ApiSdk\Serializer\PersonNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -125,18 +125,8 @@ final class PersonNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
@@ -158,15 +148,15 @@ final class PersonNormalizerTest extends ApiTestCase
                     'type' => 'senior-editor',
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
                         ],
                     ],
                     'research' => [
@@ -215,15 +205,15 @@ final class PersonNormalizerTest extends ApiTestCase
                     'type' => 'senior-editor',
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
                         ],
                     ],
                 ],

@@ -2,10 +2,10 @@
 
 namespace eLife\ApiSdk\Collection;
 
-use ArrayIterator;
 use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\ImmutableArrayAccess;
+use EmptyIterator;
 use IteratorAggregate;
 use Traversable;
 
@@ -16,7 +16,7 @@ final class EmptySequence implements IteratorAggregate, Sequence
 
     public function getIterator() : Traversable
     {
-        return new ArrayIterator([]);
+        return new EmptyIterator();
     }
 
     public function count() : int

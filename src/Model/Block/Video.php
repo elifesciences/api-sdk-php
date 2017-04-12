@@ -4,8 +4,9 @@ namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Asset;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Image;
 
 final class Video implements Block, Asset
 {
@@ -15,7 +16,7 @@ final class Video implements Block, Asset
     private $title;
     private $caption;
     private $sources;
-    private $image;
+    private $placeholder;
     private $width;
     private $height;
     private $autoplay;
@@ -32,7 +33,7 @@ final class Video implements Block, Asset
         string $title = null,
         Sequence $caption,
         array $sources,
-        string $image = null,
+        Image $placeholder = null,
         int $width,
         int $height,
         bool $autoplay = false,
@@ -45,7 +46,7 @@ final class Video implements Block, Asset
         $this->title = $title;
         $this->caption = $caption;
         $this->sources = $sources;
-        $this->image = $image;
+        $this->placeholder = $placeholder;
         $this->width = $width;
         $this->height = $height;
         $this->autoplay = $autoplay;
@@ -96,25 +97,25 @@ final class Video implements Block, Asset
     /**
      * @return VideoSource[]
      */
-    public function getSources(): array
+    public function getSources() : array
     {
         return $this->sources;
     }
 
     /**
-     * @return string|null
+     * @return Image|null
      */
-    public function getImage()
+    public function getPlaceholder()
     {
-        return $this->image;
+        return $this->placeholder;
     }
 
-    public function getWidth(): int
+    public function getWidth() : int
     {
         return $this->width;
     }
 
-    public function getHeight(): int
+    public function getHeight() : int
     {
         return $this->height;
     }
@@ -130,9 +131,9 @@ final class Video implements Block, Asset
     }
 
     /**
-     * @return File[]
+     * @return AssetFile[]
      */
-    public function getSourceData(): array
+    public function getSourceData() : array
     {
         return $this->sourceData;
     }

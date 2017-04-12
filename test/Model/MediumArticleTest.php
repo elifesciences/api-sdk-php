@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class MediumArticleTest extends PHPUnit_Framework_TestCase
 {
@@ -75,7 +76,7 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_thumbnail()
     {
-        $image = new Image('', [900 => 'https://placehold.it/900x450']);
+        $image = Builder::for(Image::class)->sample('thumbnail');
         $with = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $image);
         $withOut = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null);
 

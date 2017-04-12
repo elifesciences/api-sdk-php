@@ -226,6 +226,14 @@ final class AnnualReportsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->annualReports, $this->annualReports->flatten());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted()
     {
         $this->mockAnnualReportListCall(1, 1, 5);

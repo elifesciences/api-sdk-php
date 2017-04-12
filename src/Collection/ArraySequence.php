@@ -60,6 +60,19 @@ final class ArraySequence implements IteratorAggregate, Sequence
         return array_reduce($this->array, $callback, $initial);
     }
 
+    public function flatten() : Sequence
+    {
+        return new self($this->reduce(function (array $array, $item) {
+            if ($item instanceof Sequence) {
+                $array = array_merge($array, $item->flatten()->toArray());
+            } else {
+                $array[] = $item;
+            }
+
+            return $array;
+        }, []));
+    }
+
     public function sort(callable $callback = null) : Sequence
     {
         $clone = clone $this;

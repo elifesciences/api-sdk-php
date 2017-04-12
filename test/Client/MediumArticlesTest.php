@@ -182,6 +182,14 @@ final class MediumArticlesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->mediumArticles, $this->mediumArticles->flatten());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted()
     {
         $this->mockMediumArticleListCall(1, 1, 5);

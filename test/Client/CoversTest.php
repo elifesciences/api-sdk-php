@@ -238,6 +238,14 @@ final class CoversTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->covers, $this->covers->flatten());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted_by_page_views()
     {
         $this->mockCoverListCall(1, 1, 10, true, 'page-views');

@@ -49,6 +49,11 @@ final class EmptySequence implements IteratorAggregate, Sequence
         return $initial;
     }
 
+    public function flatten() : Sequence
+    {
+        return $this;
+    }
+
     public function sort(callable $callback = null) : Sequence
     {
         return $this;

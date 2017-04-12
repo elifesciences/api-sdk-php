@@ -18,6 +18,8 @@ interface Sequence extends Collection, ArrayAccess
 
     public function reduce(callable $callback, $initial = null);
 
+    public function flatten() : Sequence;
+
     public function sort(callable $callback = null) : Sequence;
 
     public function reverse() : Sequence;

@@ -46,6 +46,7 @@ use eLife\ApiSdk\Serializer\AppendixNormalizer;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
@@ -158,6 +159,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new AssetFileNormalizer(),
             new BlogArticleNormalizer($this->blogClient),
             new CollectionNormalizer($this->collectionsClient),
             new CoverNormalizer(),

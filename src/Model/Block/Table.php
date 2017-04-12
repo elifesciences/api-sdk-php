@@ -4,8 +4,8 @@ namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Asset;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\File;
 
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
@@ -98,7 +98,7 @@ final class Table implements Block, Asset
     }
 
     /**
-     * @return File[]
+     * @return AssetFile[]
      */
     public function getSourceData() : array
     {

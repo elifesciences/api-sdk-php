@@ -15,7 +15,6 @@ use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasReferences;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -68,7 +67,7 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_a_banner()
     {
         $with = $this->builder
-            ->withPromiseOfBanner($banner = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]))
+            ->withPromiseOfBanner($banner = Builder::for(Image::class)->sample('banner'))
             ->__invoke();
         $withOut = $this->builder
             ->withPromiseOfBanner(null)
@@ -85,7 +84,7 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_a_thumbnail()
     {
         $with = $this->builder
-            ->withThumbnail($thumbnail = new Image('', [new ImageSize('16:9', [250 => 'https://placehold.it/250x141', 500 => 'https://placehold.it/500x281']), new ImageSize('1:1', ['70' => 'https://placehold.it/70x70', '140' => 'https://placehold.it/140x140'])]))
+            ->withThumbnail($thumbnail = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
         $withOut = $this->builder
             ->withThumbnail(null)

@@ -4,14 +4,15 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 
 final class SubjectNormalizerTest extends ApiTestCase
@@ -26,7 +27,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
 
-        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
     }
 
     /**
@@ -48,18 +49,8 @@ final class SubjectNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $subject = new Subject('id', 'name', promise_for(null), promise_for($banner), promise_for($thumbnail));
 
         return [
@@ -124,18 +115,8 @@ final class SubjectNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
@@ -148,24 +129,28 @@ final class SubjectNormalizerTest extends ApiTestCase
                     'image' => [
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -182,24 +167,28 @@ final class SubjectNormalizerTest extends ApiTestCase
                     'image' => [
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],

@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -26,7 +27,6 @@ use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
@@ -125,8 +125,17 @@ final class Builder
                 },
                 Image::class => function () {
                     return [
-                        'altText' => 'Image alt text',
-                        'sizes' => [],
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'altText' => '',
+                        'source' => new File(
+                            'image/jpeg',
+                            'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'example.jpg'
+                        ),
+                        'width' => 1000,
+                        'height' => 500,
+                        'focalPointX' => 50,
+                        'focalPointY' => 50,
                     ];
                 },
                 Interview::class => function () {
@@ -178,7 +187,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'banner' => rejection_for('No banner'),
-                        'thumbnail' => new Image('thumbnail', [900 => 'https://placehold.it/900x450']),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
@@ -239,7 +248,7 @@ final class Builder
                         )),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
-                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -304,7 +313,7 @@ final class Builder
                                 new Place(['publisher'])
                             ),
                         ]),
-                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
@@ -353,22 +362,10 @@ final class Builder
                 ],
                 Image::class => [
                     'banner' => function () {
-                        return new Image(
-                            '',
-                            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]
-                        );
+                        return new Image('', 'https://iiif.elifesciences.org/banner.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
                     },
                     'thumbnail' => function () {
-                        return new Image('', [
-                            new ImageSize('16:9', [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ]),
-                            new ImageSize('1:1', [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
-                            ]),
-                        ]);
+                        return new Image('', 'https://iiif.elifesciences.org/thumbnail.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg', 'thumbnail.jpg'), 140, 140, 50, 50);
                     },
                 ],
                 ArticlePoA::class => [

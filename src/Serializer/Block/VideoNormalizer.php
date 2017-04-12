@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
 use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
 use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
@@ -21,12 +22,14 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function denormalize($data, $class, $format = null, array $context = []) : Video
     {
+        $data['placeholder'] = !empty($data['placeholder']) ? $this->denormalizer->denormalize($data['placeholder'], Image::class) : null;
+
         return new Video($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'] ?? null,
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['caption'] ?? [])), array_map(function (array $source) {
                 return new VideoSource($source['mediaType'], $source['uri']);
-            }, $data['sources']), $data['image'] ?? null, $data['width'], $data['height'],
+            }, $data['sources']), $data['placeholder'], $data['width'], $data['height'],
             $data['autoplay'] ?? false, $data['loop'] ?? false,
             array_map(function (array $file) {
                 return $this->denormalizer->denormalize($file, AssetFile::class);
@@ -80,8 +83,8 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             })->toArray();
         }
 
-        if ($object->getImage()) {
-            $data['image'] = $object->getImage();
+        if ($object->getPlaceholder()) {
+            $data['placeholder'] = $this->normalizer->normalize($object->getPlaceholder());
         }
 
         if ($object->isAutoplay()) {

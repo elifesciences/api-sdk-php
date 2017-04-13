@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__.'/bootstrap.php';
 
 // TEST.
@@ -6,7 +7,7 @@ $articles = $sdk->articles();
 $articlesCount = 0;
 $invalidArticles = 0;
 $articleIds = [];
-echo "ARTICLE IDS", PHP_EOL;
+echo 'ARTICLE IDS', PHP_EOL;
 foreach ($articles as $a) {
     if ($a === null) {
         ++$invalidArticles;
@@ -20,7 +21,7 @@ foreach ($articles as $a) {
     //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
-echo "ARTICLE VERSION NUMBERS", PHP_EOL;
+echo 'ARTICLE VERSION NUMBERS', PHP_EOL;
 $versionsByArticle = [];
 $versionsCount = 0;
 $histories = [];
@@ -28,7 +29,7 @@ foreach ($articleIds as $id) {
     $histories[$id] = $articles->getHistory($id);
 }
 
-echo "ARTICLE VERSIONS", PHP_EOL;
+echo 'ARTICLE VERSIONS', PHP_EOL;
 foreach ($histories as $id => $history) {
     foreach ($history->wait()->getVersions() as $article) {
         $versionNumber = $article->getVersion();

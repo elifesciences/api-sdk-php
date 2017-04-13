@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__.'/bootstrap.php';
 
 // TEST.
@@ -26,4 +27,3 @@ foreach ($histories as $id => $history) {
         echo "$id,$versionNumber", PHP_EOL;
     }
 }
-

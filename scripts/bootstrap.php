@@ -1,4 +1,5 @@
 <?php
+
 include __DIR__.'/../vendor/autoload.php';
 
 // Guzzle logging.
@@ -31,4 +32,3 @@ $client = new eLife\ApiClient\HttpClient\BatchingHttpClient(
     10
 );
 $sdk = new eLife\ApiSdk\ApiSdk($client);
-

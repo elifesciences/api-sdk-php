@@ -168,6 +168,71 @@ final class CoversTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockCoverListCall(1, 1, 5);
+        $this->mockCoverListCall(1, 100, 5);
+
+        $values = $this->covers->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Cover 1 title', 'Cover 2 title', 'Cover 3 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockCoverListCall(1, 1, 5);
+        $this->mockCoverListCall(1, 100, 5);
+
+        $values = $this->covers->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['Cover 1 title', 'Cover 2 title', 'Cover 3 title', 'Cover 4 title', 'Cover 5 title', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockCoverListCall(1, 1, 5);
+        $this->mockCoverListCall(1, 100, 5);
+
+        $values = $this->covers->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['Cover 1 title', 'Cover 2 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockCoverListCall(1, 1, 5);
+        $this->mockCoverListCall(1, 100, 5);
+
+        $values = $this->covers->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Cover 1 title', 'Cover 2 title', 2, 'Cover 3 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockCoverListCall(1, 1, 5);
+        $this->mockCoverListCall(1, 100, 5);
+
+        $values = $this->covers->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Cover 1 title', 'Cover 2 title', 2, 'Cover 4 title', 'Cover 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

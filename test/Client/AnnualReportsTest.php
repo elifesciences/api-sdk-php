@@ -129,6 +129,71 @@ final class AnnualReportsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockAnnualReportListCall(1, 1, 5);
+        $this->mockAnnualReportListCall(1, 100, 5);
+
+        $values = $this->annualReports->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 2012, 2013, 2014, 2015, 2016], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockAnnualReportListCall(1, 1, 5);
+        $this->mockAnnualReportListCall(1, 100, 5);
+
+        $values = $this->annualReports->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([2012, 2013, 2014, 2015, 2016, 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockAnnualReportListCall(1, 1, 5);
+        $this->mockAnnualReportListCall(1, 100, 5);
+
+        $values = $this->annualReports->drop(2)->map($this->tidyValue());
+
+        $this->assertSame([2012, 2013, 2015, 2016], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockAnnualReportListCall(1, 1, 5);
+        $this->mockAnnualReportListCall(1, 100, 5);
+
+        $values = $this->annualReports->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame([2012, 2013, 2, 2014, 2015, 2016], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockAnnualReportListCall(1, 1, 5);
+        $this->mockAnnualReportListCall(1, 100, 5);
+
+        $values = $this->annualReports->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame([2012, 2013, 2, 2015, 2016], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

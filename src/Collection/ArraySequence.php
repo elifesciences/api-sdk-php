@@ -36,6 +36,53 @@ final class ArraySequence implements IteratorAggregate, Sequence
         return $this->array;
     }
 
+    public function prepend(...$values) : Sequence
+    {
+        return new self(array_merge($values, $this->array));
+    }
+
+    public function append(...$values) : Sequence
+    {
+        return new self(array_merge($this->array, $values));
+    }
+
+    public function drop(int ...$indexes) : Sequence
+    {
+        $indexes = array_unique(array_map(function (int $index) {
+            if ($index < 0) {
+                $index = count($this->array) + $index;
+            }
+
+            return $index;
+        }, $indexes));
+
+        return $this->filter(function ($value, int $index) use ($indexes) {
+            return !in_array($index, $indexes, true);
+        });
+    }
+
+    public function insert(int $index, ...$values) : Sequence
+    {
+        $clone = clone $this;
+
+        array_splice($clone->array, $index, 0, $values);
+
+        return $clone;
+    }
+
+    public function set(int $index, $value) : Sequence
+    {
+        $collection = $this->drop($index);
+
+        if (-1 === $index) {
+            return $collection->append($value);
+        } elseif ($index < 0) {
+            ++$index;
+        }
+
+        return $collection->insert($index, $value);
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         return new self(array_slice($this->array, $offset, $length));

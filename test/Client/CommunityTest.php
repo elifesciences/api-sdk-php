@@ -155,6 +155,71 @@ final class CommunityTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockCommunityListCall(1, 1, 5);
+        $this->mockCommunityListCall(1, 100, 5);
+
+        $values = $this->community->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'model-1', 'model-2', 'model-3', 'model-4', 'model-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockCommunityListCall(1, 1, 5);
+        $this->mockCommunityListCall(1, 100, 5);
+
+        $values = $this->community->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['model-1', 'model-2', 'model-3', 'model-4', 'model-5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockCommunityListCall(1, 1, 5);
+        $this->mockCommunityListCall(1, 100, 5);
+
+        $values = $this->community->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['model-1', 'model-2', 'model-4', 'model-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockCommunityListCall(1, 1, 5);
+        $this->mockCommunityListCall(1, 100, 5);
+
+        $values = $this->community->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['model-1', 'model-2', 2, 'model-3', 'model-4', 'model-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockCommunityListCall(1, 1, 5);
+        $this->mockCommunityListCall(1, 100, 5);
+
+        $values = $this->community->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['model-1', 'model-2', 2, 'model-4', 'model-5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

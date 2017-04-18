@@ -180,6 +180,71 @@ final class BlogArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

@@ -6,7 +6,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Image as ImageModel;
 
 final class Video implements Block, Asset
 {
@@ -33,7 +33,7 @@ final class Video implements Block, Asset
         string $title = null,
         Sequence $caption,
         array $sources,
-        Image $placeholder = null,
+        ImageModel $placeholder = null,
         int $width,
         int $height,
         bool $autoplay = false,
@@ -103,7 +103,7 @@ final class Video implements Block, Asset
     }
 
     /**
-     * @return Image|null
+     * @return ImageModel|null
      */
     public function getPlaceholder()
     {

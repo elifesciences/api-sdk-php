@@ -180,6 +180,71 @@ final class PodcastEpisodesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 2, 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 2, 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

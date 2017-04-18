@@ -29,6 +29,31 @@ final class EmptySequence implements IteratorAggregate, Sequence
         return [];
     }
 
+    public function prepend(...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function append(...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function drop(int ...$indexes) : Sequence
+    {
+        return $this;
+    }
+
+    public function insert(int $index, ...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function set(int $index, $value) : Sequence
+    {
+        return new ArraySequence([$value]);
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         return $this;

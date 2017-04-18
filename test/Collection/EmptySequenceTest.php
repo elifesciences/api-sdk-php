@@ -79,6 +79,68 @@ final class EmptySequenceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $collection = new EmptySequence();
+
+        $collection = $collection->prepend(0, 1);
+
+        $this->assertNotInstanceOf(EmptySequence::class, $collection);
+        $this->assertSame([0, 1], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $collection = new EmptySequence();
+
+        $collection = $collection->append(0, 1);
+
+        $this->assertNotInstanceOf(EmptySequence::class, $collection);
+        $this->assertSame([0, 1], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_not_have_values_dropped()
+    {
+        $collection = new EmptySequence();
+
+        $this->assertEquals($collection, $collection->drop(1, 3));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $collection = new EmptySequence();
+
+        $collection = $collection->insert(2, 'foo', 'bar');
+
+        $this->assertNotInstanceOf(EmptySequence::class, $collection);
+        $this->assertSame(['foo', 'bar'], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $collection = new EmptySequence();
+
+        $collection = $collection->set(2, 'foo');
+
+        $this->assertNotInstanceOf(EmptySequence::class, $collection);
+        $this->assertSame(['foo'], $collection->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null)

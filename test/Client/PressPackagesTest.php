@@ -126,6 +126,71 @@ final class PressPackagesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockPressPackagesListCall(1, 1, 5);
+        $this->mockPressPackagesListCall(1, 100, 5);
+
+        $values = $this->pressPackages->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'press-package-1', 'press-package-2', 'press-package-3', 'press-package-4', 'press-package-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockPressPackagesListCall(1, 1, 5);
+        $this->mockPressPackagesListCall(1, 100, 5);
+
+        $values = $this->pressPackages->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['press-package-1', 'press-package-2', 'press-package-3', 'press-package-4', 'press-package-5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockPressPackagesListCall(1, 1, 5);
+        $this->mockPressPackagesListCall(1, 100, 5);
+
+        $values = $this->pressPackages->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['press-package-1', 'press-package-2', 'press-package-4', 'press-package-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockPressPackagesListCall(1, 1, 5);
+        $this->mockPressPackagesListCall(1, 100, 5);
+
+        $values = $this->pressPackages->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['press-package-1', 'press-package-2', 2, 'press-package-3', 'press-package-4', 'press-package-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockPressPackagesListCall(1, 1, 5);
+        $this->mockPressPackagesListCall(1, 100, 5);
+
+        $values = $this->pressPackages->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['press-package-1', 'press-package-2', 2, 'press-package-4', 'press-package-5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)

@@ -9,6 +9,31 @@ use GuzzleHttp\Promise\Promise;
 
 trait ArrayFromIterator
 {
+    final public function prepend(...$values) : Sequence
+    {
+        return $this->all()->prepend(...$values);
+    }
+
+    final public function append(...$values) : Sequence
+    {
+        return $this->all()->append(...$values);
+    }
+
+    final public function drop(int ...$indexes) : Sequence
+    {
+        return $this->all()->drop(...$indexes);
+    }
+
+    final public function insert(int $index, ...$values) : Sequence
+    {
+        return $this->all()->insert($index, ...$values);
+    }
+
+    final public function set(int $index, $value) : Sequence
+    {
+        return $this->all()->set($index, $value);
+    }
+
     final public function map(callable $callback) : Sequence
     {
         return $this->all()->map($callback);

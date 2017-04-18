@@ -124,6 +124,15 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         return $this->wait()->reduce($callback, $initial);
     }
 
+    public function flatten() : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) {
+                return $collection->flatten();
+            })
+        );
+    }
+
     public function sort(callable $callback = null) : Sequence
     {
         return new self(

@@ -278,6 +278,16 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_flattened()
+    {
+        $collection = new ArraySequence([1, new ArraySequence([2, new ArraySequence([3, 4]), 5]), 6]);
+
+        $this->assertSame([1, 2, 3, 4, 5, 6], $collection->flatten()->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted()
     {
         $collection = new ArraySequence([5, 4, 3, 2, 1]);

@@ -311,6 +311,14 @@ final class PodcastEpisodesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->podcastEpisodes, $this->podcastEpisodes->flatten());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted()
     {
         $this->mockPodcastEpisodeListCall(1, 1, 5);

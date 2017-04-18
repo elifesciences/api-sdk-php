@@ -225,6 +225,16 @@ final class EmptySequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_flattened()
+    {
+        $collection = new EmptySequence();
+
+        $this->assertEquals($collection, $collection->flatten());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted_with_a_callback()
     {
         $collection = new EmptySequence();

@@ -247,6 +247,16 @@ final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_flattened()
+    {
+        $collection = new PromiseSequence(promise_for([1, new ArraySequence([2]), 3, 4, 5]));
+
+        $this->assertSame([1, 2, 3, 4, 5], $collection->flatten()->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_sorted()
     {
         $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));

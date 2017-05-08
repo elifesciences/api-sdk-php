@@ -6,8 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -57,7 +59,7 @@ final class CollectionNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $collection = Builder::for(Collection::class)->__invoke();
+        $collection = Builder::for (Collection::class)->__invoke();
 
         return [
             'collection' => [$collection, null, true],
@@ -126,7 +128,7 @@ final class CollectionNormalizerTest extends ApiTestCase
     {
         return [
             'complete' => [
-                Builder::for(Collection::class)
+                Builder::for (Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPromiseOfSubTitle('A selection of papers')
@@ -134,35 +136,38 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
-                        Builder::for(Subject::class)
+                        Builder::for (Subject::class)
                             ->sample('epidemiology-global-health'),
-                        Builder::for(Subject::class)
+                        Builder::for (Subject::class)
                             ->sample('microbiology-infectious-disease'),
                     ]))
                     ->withSelectedCurator(
-                        $selectedCurator = Builder::for(Person::class)
+                        $selectedCurator = Builder::for (Person::class)
                             ->sample('pjha')
                     )
                     ->withSelectedCuratorEtAl(true)
                     ->withCurators(new ArraySequence([
-                        Builder::for(Person::class)
+                        Builder::for (Person::class)
                             ->sample('bcooper'),
                         $selectedCurator,
                     ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
+                    ]))
                     ->withContent(new ArraySequence([
-                        Builder::for(ArticleVoR::class)
+                        Builder::for (ArticleVoR::class)
                             ->sample('homo-naledi'),
-                        Builder::for(BlogArticle::class)
+                        Builder::for (BlogArticle::class)
                             ->sample('slime'),
-                        Builder::for(Interview::class)
+                        Builder::for (Interview::class)
                             ->sample('controlling-traffic'),
                     ]))
                     ->withRelatedContent(new ArraySequence([
-                        Builder::for(ArticlePoa::class)
+                        Builder::for (ArticlePoa::class)
                             ->sample('growth-factor'),
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
-                        Builder::for(PodcastEpisode::class)
+                        Builder::for (PodcastEpisode::class)
                             ->sample('29'),
                     ]))
                     ->__invoke(),
@@ -237,6 +242,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
                             ],
+                        ],
+                    ],
+                    'summary' => [
+                        0 => [
+                            'type' => 'paragraph',
+                            'text' => 'summary',
                         ],
                     ],
                     'content' => [
@@ -383,19 +394,20 @@ final class CollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum' => [
-                Builder::for(Collection::class)
+                Builder::for (Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSelectedCurator(
-                        $selectedCurator = Builder::for(Person::class)
+                        $selectedCurator = Builder::for (Person::class)
                             ->sample('pjha', ['snippet' => false])
                     )
                     ->withCurators(new ArraySequence([
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
-                        Builder::for(ArticlePoA::class)
+                        Builder::for (ArticlePoA::class)
                             ->sample('growth-factor'),
                     ]))
                     ->__invoke(),
@@ -482,7 +494,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'complete snippet' => [
-                Builder::for(Collection::class)
+                Builder::for (Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPromiseOfSubTitle('1 subtitle')
@@ -490,32 +502,35 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
-                        Builder::for(Subject::class)
+                        Builder::for (Subject::class)
                             ->sample('epidemiology-global-health'),
-                        Builder::for(Subject::class)
+                        Builder::for (Subject::class)
                             ->sample('microbiology-infectious-disease'),
                     ]))
                     ->withSelectedCurator(
-                        $selectedCurator = Builder::for(Person::class)
+                        $selectedCurator = Builder::for (Person::class)
                             ->sample('pjha')
                     )
                     ->withSelectedCuratorEtAl(true)
                     ->withCurators(new ArraySequence([
-                        Builder::for(Person::class)
+                        Builder::for (Person::class)
                             ->sample('bcooper', ['snippet' => false]),
-                        Builder::for(Person::class)
+                        Builder::for (Person::class)
                             ->sample('pjha', ['snippet' => false]),
                     ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
+                    ]))
                     ->withContent(new ArraySequence([
-                        $blogArticle = Builder::for(BlogArticle::class)
+                        $blogArticle = Builder::for (BlogArticle::class)
                             ->sample('slime'),
                     ]))
                     ->withRelatedContent(new ArraySequence([
-                        Builder::for(ArticlePoa::class)
+                        Builder::for (ArticlePoa::class)
                             ->sample('growth-factor'),
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
-                        Builder::for(PodcastEpisode::class)
+                        Builder::for (PodcastEpisode::class)
                             ->sample('29'),
                     ]))
                     ->__invoke(),
@@ -575,21 +590,22 @@ final class CollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                Builder::for(Collection::class)
+                Builder::for (Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withSelectedCurator(
-                        $selectedCurator = Builder::for(Person::class)
+                        $selectedCurator = Builder::for (Person::class)
                             ->sample('pjha', ['snippet' => false])
                     )
                     ->withCurators(new ArraySequence([
-                        $bcooper = Builder::for(Person::class)
+                        $bcooper = Builder::for (Person::class)
                             ->sample('bcooper', ['snippet' => false]),
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
-                        $blogArticle = Builder::for(BlogArticle::class)
+                        $blogArticle = Builder::for (BlogArticle::class)
                             ->sample('slime'),
                     ]))
                     ->__invoke(),

@@ -20,6 +20,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     private $selectedCurator;
     private $selectedCuratorEtAl;
     private $curators;
+    private $summary;
     private $content;
     private $relatedContent;
     private $podcastEpisodes;
@@ -40,6 +41,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         Person $selectedCurator,
         bool $selectedCuratorEtAl,
         Sequence $curators,
+        Sequence $summary,
         Sequence $content,
         Sequence $relatedContent,
         Sequence $podcastEpisodes
@@ -56,6 +58,7 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         $this->selectedCurator = $selectedCurator;
         $this->selectedCuratorEtAl = $selectedCuratorEtAl;
         $this->curators = $curators;
+        $this->summary = $summary;
         $this->content = $content;
         $this->relatedContent = $relatedContent;
         $this->podcastEpisodes = $podcastEpisodes;
@@ -139,6 +142,14 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     public function getCurators() : Sequence
     {
         return $this->curators;
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getSummary() : Sequence
+    {
+        return $this->summary;
     }
 
     /**

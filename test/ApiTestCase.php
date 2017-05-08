@@ -1965,6 +1965,12 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'summary' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'summary',
+                ],
+            ],
             'content' => [
                 [
                     'type' => 'blog-article',
@@ -2041,6 +2047,7 @@ abstract class ApiTestCase extends TestCase
             unset($collection['updated']);
             unset($collection['selectedCurator']['etAl']);
             unset($collection['subTitle']);
+            unset($collection['summary']);
             unset($collection['relatedContent']);
             unset($collection['podcastEpisodes']);
             unset($collection['subjects']);
@@ -2050,6 +2057,7 @@ abstract class ApiTestCase extends TestCase
             unset($collection['image']['banner']);
             unset($collection['subTitle']);
             unset($collection['curators']);
+            unset($collection['summary']);
             unset($collection['content']);
             unset($collection['relatedContent']);
             unset($collection['podcastEpisodes']);

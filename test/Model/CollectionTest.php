@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\HasBanner;
@@ -30,7 +31,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->builder = Builder::for(Collection::class);
+        $this->builder = Builder::for (Collection::class);
     }
 
     /**
@@ -140,7 +141,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $collection = $this->builder
-            ->withPromiseOfBanner($image = Builder::for(Image::class)->sample('banner'))
+            ->withPromiseOfBanner($image = Builder::for (Image::class)->sample('banner'))
             ->__invoke();
 
         $this->assertInstanceOf(HasBanner::class, $collection);
@@ -153,7 +154,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
-            ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
+            ->withThumbnail($image = Builder::for (Image::class)->sample('thumbnail'))
             ->__invoke();
 
         $this->assertInstanceOf(HasThumbnail::class, $collection);
@@ -177,10 +178,10 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function subjectsProvider() : array
     {
         $subjects = [
-            Builder::for(Subject::class)
+            Builder::for (Subject::class)
                 ->withId('subject1')
                 ->__invoke(),
-            Builder::for(Subject::class)
+            Builder::for (Subject::class)
                 ->withId('subject2')
                 ->__invoke(),
         ];
@@ -221,6 +222,20 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertEquals($curators, $collection->getCurators());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_summary()
+    {
+        $collection = $this->builder
+            ->withSummary($summary = new ArraySequence([
+                new Paragraph('summary'),
+            ]))
+            ->__invoke();
+
+        $this->assertEquals($summary, $collection->getSummary());
     }
 
     /**

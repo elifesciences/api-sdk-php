@@ -31,7 +31,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->builder = Builder::for (Collection::class);
+        $this->builder = Builder::for(Collection::class);
     }
 
     /**
@@ -141,7 +141,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $collection = $this->builder
-            ->withPromiseOfBanner($image = Builder::for (Image::class)->sample('banner'))
+            ->withPromiseOfBanner($image = Builder::for(Image::class)->sample('banner'))
             ->__invoke();
 
         $this->assertInstanceOf(HasBanner::class, $collection);
@@ -154,7 +154,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
-            ->withThumbnail($image = Builder::for (Image::class)->sample('thumbnail'))
+            ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
 
         $this->assertInstanceOf(HasThumbnail::class, $collection);
@@ -178,10 +178,10 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function subjectsProvider() : array
     {
         $subjects = [
-            Builder::for (Subject::class)
+            Builder::for(Subject::class)
                 ->withId('subject1')
                 ->__invoke(),
-            Builder::for (Subject::class)
+            Builder::for(Subject::class)
                 ->withId('subject2')
                 ->__invoke(),
         ];

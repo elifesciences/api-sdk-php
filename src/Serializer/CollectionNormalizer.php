@@ -8,6 +8,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
@@ -51,6 +52,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['subTitle'] = $normalizationHelper->selectField($collection, 'subTitle');
             $data['image']['banner'] = $normalizationHelper->selectField($collection, 'image.banner');
             $data['curators'] = new PromiseSequence($normalizationHelper->selectField($collection, 'curators'));
+            $data['summary'] = new PromiseSequence($normalizationHelper->selectField($collection, 'summary'));
             $data['content'] = new PromiseSequence($normalizationHelper->selectField($collection, 'content'));
             $data['relatedContent'] = new PromiseSequence($normalizationHelper->selectField($collection, 'relatedContent', []));
             $data['podcastEpisodes'] = new PromiseSequence($normalizationHelper->selectField($collection, 'podcastEpisodes'));
@@ -58,6 +60,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['subTitle'] = promise_for($data['subTitle'] ?? null);
             $data['image']['banner'] = promise_for($data['image']['banner']);
             $data['curators'] = new ArraySequence($data['curators']);
+            $data['summary'] = new ArraySequence($data['summary'] ?? []);
             $data['content'] = new ArraySequence($data['content']);
             $data['relatedContent'] = new ArraySequence($data['relatedContent'] ?? []);
             $data['podcastEpisodes'] = new ArraySequence($data['podcastEpisodes'] ?? []);
@@ -71,6 +74,11 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         $data['subjects'] = $normalizationHelper->denormalizeArray($data['subjects'] ?? [], Subject::class, $context + ['snippet' => true]);
         $selectedCuratorEtAl = $data['selectedCurator']['etAl'] ?? false;
         $data['selectedCurator'] = $this->denormalizer->denormalize($data['selectedCurator'], Person::class, $format, $context + ['snippet' => true]);
+        $data['summary'] = $data['summary']->map(function (array $block) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
 
         $contentItemDenormalization = function ($eachContent) use ($format, $context) {
             return $this->denormalizer->denormalize(
@@ -97,12 +105,16 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['selectedCurator'],
             $selectedCuratorEtAl,
             $data['curators'],
+            $data['summary'],
             $data['content'],
             $data['relatedContent'],
             $data['podcastEpisodes']
         );
     }
 
+    /**
+     * @param Collection $object
+     */
     public function normalize($object, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
@@ -141,6 +153,12 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $typeContext = array_merge($context, ['type' => true]);
 
             $data['curators'] = $normalizationHelper->normalizeSequenceToSnippets($object->getCurators(), $context);
+
+            if ($object->getSummary()->notEmpty()) {
+                $data['summary'] = $object->getSummary()->map(function (Block $block) use ($format, $context) {
+                    return $this->normalizer->normalize($block, $format, $context);
+                })->toArray();
+            }
 
             $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($object->getContent(), $typeContext);
             if (!$object->getRelatedContent()->isEmpty()) {

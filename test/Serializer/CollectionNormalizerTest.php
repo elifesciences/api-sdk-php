@@ -6,8 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -149,6 +151,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('bcooper'),
                         $selectedCurator,
                     ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
+                    ]))
                     ->withContent(new ArraySequence([
                         Builder::for(ArticleVoR::class)
                             ->sample('homo-naledi'),
@@ -237,6 +242,12 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
                             ],
+                        ],
+                    ],
+                    'summary' => [
+                        0 => [
+                            'type' => 'paragraph',
+                            'text' => 'summary',
                         ],
                     ],
                     'content' => [
@@ -394,6 +405,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withCurators(new ArraySequence([
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
                         Builder::for(ArticlePoA::class)
                             ->sample('growth-factor'),
@@ -506,6 +518,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                         Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false]),
                     ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
+                    ]))
                     ->withContent(new ArraySequence([
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),
@@ -588,6 +603,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('bcooper', ['snippet' => false]),
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),

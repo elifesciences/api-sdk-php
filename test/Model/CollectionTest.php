@@ -7,6 +7,7 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\HasBanner;
@@ -221,6 +222,20 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertEquals($curators, $collection->getCurators());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_summary()
+    {
+        $collection = $this->builder
+            ->withSummary($summary = new ArraySequence([
+                new Paragraph('summary'),
+            ]))
+            ->__invoke();
+
+        $this->assertEquals($summary, $collection->getSummary());
     }
 
     /**

@@ -97,6 +97,9 @@ final class Builder
                         'curators' => new ArraySequence([
                             self::dummy(Person::class),
                         ]),
+                        'summary' => new ArraySequence([
+                            new Paragraph('collection tropical-disease summary'),
+                        ]),
                         'content' => new EmptySequence(),
                         'relatedContent' => new EmptySequence(),
                         'podcastEpisodes' => new EmptySequence(),
@@ -464,6 +467,7 @@ final class Builder
                                 Builder::for(Person::class)->sample('bcooper'),
                                 $pjha,
                             ]))
+                            ->withSummary(new EmptySequence())
                             ->withContent(new ArraySequence([
                                 Builder::for(BlogArticle::class)
                                     ->sample('slime'),

@@ -67,7 +67,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertSame('title', $podcastEpisode->getTitle());
-        $this->assertSame('Episode 1: title', $podcastEpisode->getFullTitle());
     }
 
     /**

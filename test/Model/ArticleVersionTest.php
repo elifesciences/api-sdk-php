@@ -425,7 +425,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_additional_files()
     {
         $article = $this->builder
-            ->withAdditionalFiles($files = new ArraySequence([new AssetFile(null, null, null, null, new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]))
+            ->withAdditionalFiles($files = new ArraySequence([new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]))
             ->__invoke();
 
         $this->assertEquals($files, $article->getAdditionalFiles());

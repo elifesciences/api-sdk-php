@@ -251,7 +251,7 @@ final class Builder
                         )),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
-                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -316,7 +316,7 @@ final class Builder
                                 new Place(['publisher'])
                             ),
                         ]),
-                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),

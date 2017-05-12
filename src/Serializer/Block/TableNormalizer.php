@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\Footnote;
@@ -21,10 +20,15 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function denormalize($data, $class, $format = null, array $context = []) : Table
     {
-        return new Table($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null,
-            $data['title'] ?? null, new ArraySequence(array_map(function (array $block) {
+        return new Table(
+            $data['id'] ?? null,
+            $data['title'] ?? null,
+            new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])), $data['tables'], array_map(function (array $footnote) {
+            }, $data['caption'] ?? [])),
+            new ArraySequence($data['attribution'] ?? []),
+            $data['tables'],
+            array_map(function (array $footnote) {
                 return new Footnote(
                     $footnote['id'] ?? null,
                     $footnote['label'] ?? null,
@@ -32,9 +36,8 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
                         return $this->denormalizer->denormalize($block, Block::class);
                     }, $footnote['text']))
                 );
-            }, $data['footnotes'] ?? []), array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, AssetFile::class);
-            }, $data['sourceData'] ?? []));
+            }, $data['footnotes'] ?? [])
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -55,16 +58,8 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             'tables' => $object->getTables(),
         ];
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
-        }
-
         if ($object->getId()) {
             $data['id'] = $object->getId();
-        }
-
-        if ($object->getLabel()) {
-            $data['label'] = $object->getLabel();
         }
 
         if ($object->getTitle()) {
@@ -75,6 +70,10 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
+        }
+
+        if ($object->getAttribution()->notEmpty()) {
+            $data['attribution'] = $object->getAttribution()->toArray();
         }
 
         if (count($object->getFootnotes())) {
@@ -95,12 +94,6 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
 
                 return $data;
             }, $object->getFootnotes());
-        }
-
-        if ($object->getSourceData()) {
-            $data['sourceData'] = array_map(function (AssetFile $file) {
-                return $this->normalizer->normalize($file);
-            }, $object->getSourceData());
         }
 
         return $data;

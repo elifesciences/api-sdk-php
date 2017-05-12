@@ -10,7 +10,6 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
 {
     private $id;
     private $title;
-    private $subTitle;
     private $impactStatement;
     private $publishedDate;
     private $updatedDate;
@@ -31,7 +30,6 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     public function __construct(
         string $id,
         string $title,
-        PromiseInterface $subTitle,
         string $impactStatement = null,
         DateTimeImmutable $publishedDate,
         DateTimeImmutable $updatedDate = null,
@@ -48,7 +46,6 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     ) {
         $this->id = $id;
         $this->title = $title;
-        $this->subTitle = $subTitle;
         $this->impactStatement = $impactStatement;
         $this->publishedDate = $publishedDate;
         $this->updatedDate = $updatedDate;
@@ -72,19 +69,6 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
     public function getTitle() : string
     {
         return $this->title;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSubTitle()
-    {
-        return $this->subTitle->wait();
-    }
-
-    public function getFullTitle() : string
-    {
-        return implode(': ', array_filter([$this->title, $this->getSubTitle()]));
     }
 
     /**

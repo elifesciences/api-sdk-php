@@ -131,7 +131,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPromiseOfSubTitle('A selection of papers')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
@@ -175,7 +174,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'subTitle' => 'A selection of papers',
                     'impactStatement' => 'eLife has published papers on many...',
                     'published' => '2015-09-16T11:19:26Z',
                     'updated' => '2015-09-17T11:19:26Z',
@@ -497,7 +495,6 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPromiseOfSubTitle('1 subtitle')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))

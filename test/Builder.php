@@ -85,7 +85,6 @@ final class Builder
                     return [
                         'id' => 'tropical-disease',
                         'title' => 'Tropical disease',
-                        'subTitle' => promise_for(null),
                         'impactStatement' => null,
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updatedDate' => null,

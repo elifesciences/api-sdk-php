@@ -1906,7 +1906,6 @@ abstract class ApiTestCase extends TestCase
         $collection = [
             'id' => $id,
             'title' => ucfirst($id),
-            'subTitle' => ucfirst($id).' subtitle',
             'impactStatement' => ucfirst($id).' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-02T00:00:00Z',
@@ -2046,7 +2045,6 @@ abstract class ApiTestCase extends TestCase
             unset($collection['impactStatement']);
             unset($collection['updated']);
             unset($collection['selectedCurator']['etAl']);
-            unset($collection['subTitle']);
             unset($collection['summary']);
             unset($collection['relatedContent']);
             unset($collection['podcastEpisodes']);
@@ -2055,7 +2053,6 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($collection['image']['banner']);
-            unset($collection['subTitle']);
             unset($collection['curators']);
             unset($collection['summary']);
             unset($collection['content']);

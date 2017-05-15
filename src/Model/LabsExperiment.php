@@ -4,16 +4,14 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
-use GuzzleHttp\Promise\PromiseInterface;
 
-final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class LabsExperiment implements Model, HasContent, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $number;
     private $title;
     private $published;
     private $updated;
     private $impactStatement;
-    private $banner;
     private $thumbnail;
     private $content;
 
@@ -26,7 +24,6 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
         DateTimeImmutable $published,
         DateTimeImmutable $updated = null,
         string $impactStatement = null,
-        PromiseInterface $banner,
         Image $thumbnail,
         Sequence $content
     ) {
@@ -35,7 +32,6 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
         $this->published = $published;
         $this->updated = $updated;
         $this->impactStatement = $impactStatement;
-        $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->content = $content;
     }
@@ -69,11 +65,6 @@ final class LabsExperiment implements Model, HasBanner, HasContent, HasImpactSta
     public function getUpdatedDate()
     {
         return $this->updated;
-    }
-
-    public function getBanner() : Image
-    {
-        return $this->banner->wait();
     }
 
     public function getThumbnail() : Image

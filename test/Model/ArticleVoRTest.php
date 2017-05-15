@@ -9,7 +9,6 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasReferences;
@@ -59,23 +58,6 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_banner()
-    {
-        $with = $this->builder
-            ->withPromiseOfBanner($banner = Builder::for(Image::class)->sample('banner'))
-            ->__invoke();
-        $withOut = $this->builder
-            ->withPromiseOfBanner(null)
-            ->__invoke();
-
-        $this->assertInstanceOf(HasBanner::class, $with);
-        $this->assertEquals($banner, $with->getBanner());
-        $this->assertNull($withOut->getBanner());
     }
 
     /**

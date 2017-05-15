@@ -15,11 +15,11 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ConferenceProceedingReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ConferenceProceedingReferenceNormalizerTest extends TestCase
 {
     /** @var ConferenceProceedingReferenceNormalizer */
     private $normalizer;
@@ -181,7 +181,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
      */
     public function it_denormalize_conference_proceeding_reference(array $json, ConferenceProceedingReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ConferenceProceedingReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ConferenceProceedingReference::class));
     }
 
     public function denormalizeProvider() : array

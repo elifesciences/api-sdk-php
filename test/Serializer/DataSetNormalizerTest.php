@@ -10,11 +10,11 @@ use eLife\ApiSdk\Serializer\DataSetNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class DataSetNormalizerTest extends PHPUnit_Framework_TestCase
+final class DataSetNormalizerTest extends TestCase
 {
     /** @var DataSetNormalizer */
     private $normalizer;
@@ -101,7 +101,7 @@ final class DataSetNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_data_sets(DataSet $expected, array $json)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, DataSet::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, DataSet::class));
     }
 
     public function normalizeProvider() : array

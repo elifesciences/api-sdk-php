@@ -16,11 +16,11 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\BookChapterReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class BookChapterReferenceNormalizerTest extends TestCase
 {
     /** @var BookChapterReferenceNormalizer */
     private $normalizer;
@@ -206,7 +206,7 @@ final class BookChapterReferenceNormalizerTest extends PHPUnit_Framework_TestCas
      */
     public function it_denormalize_book_chapter_references(array $json, BookChapterReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, BookChapterReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, BookChapterReference::class));
     }
 
     public function denormalizeProvider() : array

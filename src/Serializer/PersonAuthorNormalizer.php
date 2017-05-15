@@ -2,8 +2,10 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 
@@ -17,7 +19,11 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
     ) : Author {
         return new PersonAuthor(
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
+            new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+            }, $data['biography'] ?? [])),
             $data['deceased'] ?? false,
+            $data['role'] ?? null,
             $data['additionalInformation'] ?? [],
             $data['affiliations'],
             $data['competingInterests'] ?? null,
@@ -52,8 +58,18 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
             $data['orcid'] = $object->getOrcid();
         }
 
+        if ($object->getBiography()->notEmpty()) {
+            $data['biography'] = $object->getBiography()->map(function (Block $block) use ($format, $context) {
+                return $this->normalizer->normalize($block, $format, $context);
+            })->toArray();
+        }
+
         if ($object->isDeceased()) {
             $data['deceased'] = $object->isDeceased();
+        }
+
+        if ($object->getRole()) {
+            $data['role'] = $object->getRole();
         }
 
         return $data;

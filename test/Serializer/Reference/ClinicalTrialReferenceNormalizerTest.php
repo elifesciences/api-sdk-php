@@ -11,11 +11,11 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ClinicalTrialReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ClinicalTrialReferenceNormalizerTest extends TestCase
 {
     /** @var ClinicalTrialReferenceNormalizer */
     private $normalizer;
@@ -158,7 +158,7 @@ final class ClinicalTrialReferenceNormalizerTest extends PHPUnit_Framework_TestC
      */
     public function it_denormalize_clinical_trial_references(array $json, ClinicalTrialReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ClinicalTrialReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ClinicalTrialReference::class));
     }
 
     public function denormalizeProvider() : array

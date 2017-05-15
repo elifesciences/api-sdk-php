@@ -15,11 +15,11 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\JournalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class JournalReferenceNormalizerTest extends TestCase
 {
     /** @var JournalReferenceNormalizer */
     private $normalizer;
@@ -172,7 +172,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_journal_references(array $json, JournalReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, JournalReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, JournalReference::class));
     }
 
     public function denormalizeProvider() : array

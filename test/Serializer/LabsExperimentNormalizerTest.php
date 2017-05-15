@@ -17,7 +17,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class LabsExperimentNormalizerTest extends ApiTestCase
@@ -56,7 +55,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No banner'),
+        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             $thumbnail, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
         );
 
@@ -125,12 +124,11 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
-                new LabsExperiment(1, 'title', $published, $updated, 'impact statement', promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'title', $published, $updated, 'impact statement', $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -152,19 +150,6 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                                 'height' => 140,
                             ],
                         ],
-                        'banner' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
-                                'filename' => 'banner.jpg',
-                            ],
-                            'size' => [
-                                'width' => 1800,
-                                'height' => 900,
-                            ],
-                        ],
                     ],
                     'impactStatement' => 'impact statement',
                     'content' => [
@@ -176,7 +161,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsExperiment(1, 'title', $published, null, null, promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'title', $published, null, null, $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -197,19 +182,6 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                                 'height' => 140,
                             ],
                         ],
-                        'banner' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
-                                'filename' => 'banner.jpg',
-                            ],
-                            'size' => [
-                                'width' => 1800,
-                                'height' => 900,
-                            ],
-                        ],
                     ],
                     'content' => [
                         [
@@ -221,7 +193,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new LabsExperiment(1, 'Labs experiment 1 title', $published, $updated, 'Labs experiment 1 impact statement',
-                    promise_for($banner), $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
+                    $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'number' => 1,
@@ -251,7 +223,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $published, null, null, promise_for($banner), $thumbnail,
+                new LabsExperiment(1, 'Labs experiment 1 title', $published, null, null, $thumbnail,
                     new ArraySequence([new Paragraph('Labs experiment 1 text')])),
                 ['snippet' => true],
                 [

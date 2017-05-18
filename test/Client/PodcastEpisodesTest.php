@@ -128,51 +128,6 @@ final class PodcastEpisodesTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_can_be_filtered_by_subject()
-    {
-        $this->mockPodcastEpisodeListCall(1, 1, 5, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(1, 100, 5, true, ['subject']);
-
-        foreach ($this->podcastEpisodes->forSubject('subject') as $i => $podcastEpisode) {
-            $this->assertSame($i, $podcastEpisode->getNumber());
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function it_recounts_when_filtering_by_subject()
-    {
-        $this->mockPodcastEpisodeListCall(1, 1, 10);
-
-        $this->podcastEpisodes->count();
-
-        $this->mockPodcastEpisodeListCall(1, 1, 4, true, ['subject']);
-
-        $this->assertSame(4, $this->podcastEpisodes->forSubject('subject')->count());
-    }
-
-    /**
-     * @test
-     */
-    public function it_fetches_pages_again_when_filtering_by_subject()
-    {
-        $this->mockPodcastEpisodeListCall(1, 1, 200);
-        $this->mockPodcastEpisodeListCall(1, 100, 200);
-        $this->mockPodcastEpisodeListCall(2, 100, 200);
-
-        $this->podcastEpisodes->toArray();
-
-        $this->mockPodcastEpisodeListCall(1, 1, 200, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(1, 100, 200, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(2, 100, 200, true, ['subject']);
-
-        $this->podcastEpisodes->forSubject('subject')->toArray();
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_prepended()
     {
         $this->mockPodcastEpisodeListCall(1, 1, 5);

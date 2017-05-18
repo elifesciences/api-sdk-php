@@ -35,7 +35,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(Model::class, $podcastEpisode);
@@ -49,7 +48,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertSame(1, $podcastEpisode->getNumber());
@@ -63,7 +61,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertSame('title', $podcastEpisode->getTitle());
@@ -82,7 +79,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $withOut = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(HasImpactStatement::class, $with);
@@ -98,7 +94,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(HasPublishedDate::class, $podcastEpisode);
@@ -118,7 +113,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $withOut = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
@@ -135,7 +129,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             promise_for($image = Builder::for(Image::class)->sample('banner')),
             Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(HasBanner::class, $podcastEpisode);
@@ -150,7 +143,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), $image = Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(HasThumbnail::class, $podcastEpisode);
@@ -165,46 +157,9 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             $sources = [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertEquals($sources, $podcastEpisode->getSources());
-    }
-
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
-    public function it_may_have_subjects(Sequence $subjects = null, array $expected)
-    {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
-            [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')], $subjects,
-            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
-
-        $this->assertInstanceOf(HasSubjects::class, $podcastEpisode);
-        $this->assertEquals($expected, $podcastEpisode->getSubjects()->toArray());
-    }
-
-    public function subjectsProvider() : array
-    {
-        $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
-            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
-        ];
-
-        return [
-            'none' => [
-                new EmptySequence(),
-                [],
-            ],
-            'collection' => [
-                new ArraySequence($subjects),
-                $subjects,
-            ],
-        ];
     }
 
     /**
@@ -215,7 +170,6 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             $chapters = new ArraySequence([new PodcastEpisodeChapter(2, 'chapter', 0, null, new EmptySequence())]));
 
         $this->assertEquals($chapters, $podcastEpisode->getChapters());

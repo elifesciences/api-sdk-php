@@ -10,7 +10,6 @@ use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
-use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class PodcastEpisodesTest extends ApiTestCase

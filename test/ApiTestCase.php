@@ -1782,7 +1782,6 @@ abstract class ApiTestCase extends TestCase
                     'uri' => 'https://www.example.com/episode.mp3',
                 ],
             ],
-            'subjects' => [$this->createSubjectJson(1, true)],
             'chapters' => [
                 [
                     'number' => 1,
@@ -1797,7 +1796,6 @@ abstract class ApiTestCase extends TestCase
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
             unset($podcastEpisode['updated']);
-            unset($podcastEpisode['subjects']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
             unset($podcastEpisode['chapters'][0]['content']);
         }

@@ -196,7 +196,6 @@ final class Builder
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'subjects' => new EmptySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
                     ];
                 },

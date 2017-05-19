@@ -712,7 +712,7 @@ abstract class ApiTestCase extends TestCase
         string $type = null
     ) {
         $people = array_map(function (int $id) {
-            return $this->createPersonJson('person'.$id, true);
+            return $this->createPersonJson('person'.$id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {

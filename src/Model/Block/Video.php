@@ -3,63 +3,48 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Asset;
-use eLife\ApiSdk\Model\AssetFile;
+use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image as ImageModel;
 
-final class Video implements Block, Asset
+final class Video implements AssetBlock
 {
-    private $doi;
     private $id;
-    private $label;
     private $title;
     private $caption;
+    private $attribution;
     private $sources;
     private $placeholder;
     private $width;
     private $height;
     private $autoplay;
     private $loop;
-    private $sourceData;
 
     /**
      * @internal
      */
     public function __construct(
-        string $doi = null,
         string $id = null,
-        string $label = null,
         string $title = null,
         Sequence $caption,
+        Sequence $attribution,
         array $sources,
         ImageModel $placeholder = null,
         int $width,
         int $height,
         bool $autoplay = false,
-        bool $loop = false,
-        array $sourceData = []
+        bool $loop = false
     ) {
-        $this->doi = $doi;
         $this->id = $id;
-        $this->label = $label;
         $this->title = $title;
         $this->caption = $caption;
+        $this->attribution = $attribution;
         $this->sources = $sources;
         $this->placeholder = $placeholder;
         $this->width = $width;
         $this->height = $height;
         $this->autoplay = $autoplay;
         $this->loop = $loop;
-        $this->sourceData = $sourceData;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDoi()
-    {
-        return $this->doi;
     }
 
     /**
@@ -68,14 +53,6 @@ final class Video implements Block, Asset
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 
     /**
@@ -92,6 +69,14 @@ final class Video implements Block, Asset
     public function getCaption() : Sequence
     {
         return $this->caption;
+    }
+
+    /**
+     * @return Sequence|string[]
+     */
+    public function getAttribution() : Sequence
+    {
+        return $this->attribution;
     }
 
     /**
@@ -128,13 +113,5 @@ final class Video implements Block, Asset
     public function isLoop() : bool
     {
         return $this->loop;
-    }
-
-    /**
-     * @return AssetFile[]
-     */
-    public function getSourceData() : array
-    {
-        return $this->sourceData;
     }
 }

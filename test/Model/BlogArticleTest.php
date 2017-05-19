@@ -159,12 +159,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     {
         $content = [
             new Block\Paragraph('foo'),
-            new Block\Image(
-                new Block\ImageFile(null, null, null, null, new EmptySequence(), Builder::for(Image::class)->__invoke(), [], [])
-            ),
-            new Block\Image(
-                new Block\ImageFile('10.1000/182', 'foo', 'bar', 'baz', new ArraySequence([new Block\Paragraph('qux')]), Builder::for(Image::class)->__invoke(), ['corge'], ['grault'])
-            ),
+            new Block\Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(Image::class)->__invoke(), [], []),
             new Block\YouTube('foo', 300, 200),
         ];
 

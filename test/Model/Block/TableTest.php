@@ -4,12 +4,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Model\Asset;
-use eLife\ApiSdk\Model\AssetFile;
-use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Footnote;
 use PHPUnit_Framework_TestCase;
 
@@ -20,22 +17,9 @@ final class TableTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_block()
     {
-        $table = new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []);
+        $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
 
-        $this->assertInstanceOf(Block::class, $table);
-        $this->assertInstanceOf(Asset::class, $table);
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_doi()
-    {
-        $with = new Table('10.1000/182', null, null, null, new EmptySequence(), [], [], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
-
-        $this->assertSame('10.1000/182', $with->getDoi());
-        $this->assertNull($withOut->getDoi());
+        $this->assertInstanceOf(AssetBlock::class, $table);
     }
 
     /**
@@ -43,8 +27,8 @@ final class TableTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_id()
     {
-        $with = new Table(null, 'id', null, null, new EmptySequence(), [], [], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
+        $with = new Table('id', null, new EmptySequence(), new EmptySequence(), [], [], []);
+        $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
 
         $this->assertSame('id', $with->getId());
         $this->assertNull($withOut->getId());
@@ -53,22 +37,10 @@ final class TableTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_a_label()
-    {
-        $with = new Table(null, null, 'label', null, new EmptySequence(), [], [], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
-
-        $this->assertSame('label', $with->getLabel());
-        $this->assertNull($withOut->getLabel());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_a_title()
     {
-        $with = new Table(null, null, null, 'title', new EmptySequence(), [], [], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
+        $with = new Table(null, 'title', new EmptySequence(), new EmptySequence(), [], [], []);
+        $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
 
         $this->assertSame('title', $with->getTitle());
         $this->assertNull($withOut->getTitle());
@@ -79,8 +51,8 @@ final class TableTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_caption()
     {
-        $with = new Table(null, null, null, null, $caption = new ArraySequence([new Paragraph('foo')]), [], [], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
+        $with = new Table(null, null, $caption = new ArraySequence([new Paragraph('foo')]), new EmptySequence(), [], [], []);
+        $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
 
         $this->assertEquals($caption, $with->getCaption());
         $this->assertEmpty($withOut->getCaption());
@@ -89,9 +61,22 @@ final class TableTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_attribution()
+    {
+        $attribution = new ArraySequence(['attribution']);
+        $with = new Table(null, null, new EmptySequence(), $attribution, [], [], []);
+        $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
+
+        $this->assertEquals($attribution, $with->getAttribution());
+        $this->assertEmpty($withOut->getAttribution());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_tables()
     {
-        $table = new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []);
+        $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
 
         $this->assertSame(['<table></table>'], $table->getTables());
     }
@@ -101,23 +86,10 @@ final class TableTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_footnotes()
     {
-        $with = new Table(null, null, null, null, new EmptySequence(), [], $footnotes = [new Footnote(null, null, new ArraySequence([new Paragraph('foo')]))], []);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
+        $with = new Table(null, null, new EmptySequence(), new EmptySequence(), [], $footnotes = [new Footnote(null, null, new ArraySequence([new Paragraph('foo')]))], []);
+        $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
 
         $this->assertEquals($footnotes, $with->getFootnotes());
         $this->assertEmpty($withOut->getFootnotes());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_source_data()
-    {
-        $sourceData = [new AssetFile(null, null, null, null, new EmptySequence(), new File('text/csv', 'http://www.example.com/data.csv', 'data.csv'))];
-        $with = new Table(null, null, null, null, new EmptySequence(), [], [], $sourceData);
-        $withOut = new Table(null, null, null, null, new EmptySequence(), [], [], []);
-
-        $this->assertEquals($sourceData, $with->getSourceData());
-        $this->assertEmpty($withOut->getSourceData());
     }
 }

@@ -4,13 +4,8 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-interface Asset extends HasDoi, HasId
+interface Asset extends HasId
 {
-    /**
-     * @return string|null
-     */
-    public function getLabel();
-
     /**
      * @return string|null
      */
@@ -20,4 +15,9 @@ interface Asset extends HasDoi, HasId
      * @return Sequence|Block[]
      */
     public function getCaption() : Sequence;
+
+    /**
+     * @return Sequence|string[]
+     */
+    public function getAttribution() : Sequence;
 }

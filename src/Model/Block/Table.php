@@ -3,53 +3,38 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Asset;
-use eLife\ApiSdk\Model\AssetFile;
+use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block;
 
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table implements Block, Asset
+final class Table implements AssetBlock
 {
-    private $doi;
     private $id;
-    private $label;
     private $title;
     private $caption;
+    private $attribution;
     private $tables;
     private $footnotes;
-    private $sourceData;
 
     /**
      * @internal
      */
     public function __construct(
-        string $doi = null,
         string $id = null,
-        string $label = null,
         string $title = null,
         Sequence $caption,
+        Sequence $attribution,
         array $tables,
-        array $footnotes = [],
-        array $sourceData = []
+        array $footnotes = []
     ) {
-        $this->doi = $doi;
         $this->id = $id;
-        $this->label = $label;
         $this->title = $title;
         $this->caption = $caption;
+        $this->attribution = $attribution;
         $this->tables = $tables;
         $this->footnotes = $footnotes;
-        $this->sourceData = $sourceData;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDoi()
-    {
-        return $this->doi;
     }
 
     /**
@@ -58,14 +43,6 @@ final class Table implements Block, Asset
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 
     /**
@@ -84,6 +61,14 @@ final class Table implements Block, Asset
         return $this->caption;
     }
 
+    /**
+     * @return Sequence|string[]
+     */
+    public function getAttribution() : Sequence
+    {
+        return $this->attribution;
+    }
+
     public function getTables() : array
     {
         return $this->tables;
@@ -95,13 +80,5 @@ final class Table implements Block, Asset
     public function getFootnotes() : array
     {
         return $this->footnotes;
-    }
-
-    /**
-     * @return AssetFile[]
-     */
-    public function getSourceData() : array
-    {
-        return $this->sourceData;
     }
 }

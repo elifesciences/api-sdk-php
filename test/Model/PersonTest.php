@@ -25,7 +25,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
@@ -38,7 +38,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
@@ -52,7 +52,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_details()
     {
-        $person = new Person('id', $details = new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $person = new Person('id', $details = new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
@@ -65,7 +65,7 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_type()
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
@@ -76,14 +76,27 @@ final class PersonTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_type_label()
+    {
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
+            rejection_for('Research should not be unwrapped'),
+            new PromiseSequence(rejection_for('Profile should not be unwrapped')),
+            rejection_for('Competing interests should not be unwrapped'));
+
+        $this->assertSame('label', $person->getTypeLabel());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_a_thumbnail()
     {
-        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor',
+        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label',
             $image = Builder::for(Image::class)->sample('thumbnail'),
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
-        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
@@ -98,11 +111,11 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_research()
     {
-        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             promise_for($research = new PersonResearch(new EmptySequence(), ['focus'], [])),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
-        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             promise_for(null), new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
 
@@ -115,10 +128,10 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_profile()
     {
-        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'), $profile = new ArraySequence([new Paragraph('profile')]),
             rejection_for('Competing interests should not be unwrapped'));
-        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'), new EmptySequence(),
             rejection_for('Competing interests should not be unwrapped'));
 
@@ -131,10 +144,10 @@ final class PersonTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_competing_interests()
     {
-        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $with = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')), promise_for('competing interests'));
-        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
+        $withOut = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
             rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')), promise_for(null));
 

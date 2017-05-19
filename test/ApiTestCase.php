@@ -1681,7 +1681,10 @@ abstract class ApiTestCase extends TestCase
     {
         $person = [
             'id' => $id,
-            'type' => 'senior-editor',
+            'type' => [
+                'id' => 'senior-editor',
+                'label' => 'Senior Editor',
+            ],
             'name' => [
                 'preferred' => $id.' preferred',
                 'index' => $id.' index',
@@ -1907,7 +1910,10 @@ abstract class ApiTestCase extends TestCase
             ],
             'selectedCurator' => [
                 'id' => 'pjha',
-                'type' => 'senior-editor',
+                'type' => [
+                    'id' => 'senior-editor',
+                    'label' => 'Senior Editor',
+                ],
                 'name' => [
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
@@ -1917,7 +1923,10 @@ abstract class ApiTestCase extends TestCase
             'curators' => [
                 [
                     'id' => 'bcooper',
-                    'type' => 'reviewing-editor',
+                    'type' => [
+                        'id' => 'reviewing-editor',
+                        'label' => 'Reviewing Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Ben Cooper',
                         'index' => 'Cooper, Ben',
@@ -1925,7 +1934,10 @@ abstract class ApiTestCase extends TestCase
                 ],
                 [
                     'id' => 'pjha',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Prabhat Jha',
                         'index' => 'Jha, Prabhat',

@@ -97,7 +97,8 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         return new Person(
             $data['id'],
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
-            $data['type'],
+            $data['type']['id'],
+            $data['type']['label'],
             $data['image'] ?? null,
             $data['research'],
             $data['profile'],
@@ -118,7 +119,10 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         $data = $this->normalizer->normalize($object->getDetails(), $format, $context);
 
         $data['id'] = $object->getId();
-        $data['type'] = $object->getType();
+        $data['type'] = [
+            'id' => $object->getType(),
+            'label' => $object->getTypeLabel(),
+        ];
 
         if ($object->getThumbnail()) {
             $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);

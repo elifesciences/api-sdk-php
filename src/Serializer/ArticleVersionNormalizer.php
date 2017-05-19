@@ -373,7 +373,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return $this->normalizeArticle($object, $data, $format, $context);
     }
 
-    final protected function isArticleType(string $type)
+    final protected function isArticleType($type)
     {
         return in_array($type, [
             'correction',
@@ -388,7 +388,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'scientific-correspondence',
             'short-report',
             'tools-resources',
-        ]);
+        ], true);
     }
 
     abstract protected function denormalizeArticle(

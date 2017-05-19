@@ -217,7 +217,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -227,7 +230,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'curators' => [
                         0 => [
                             'id' => 'bcooper',
-                            'type' => 'reviewing-editor',
+                            'type' => [
+                                'id' => 'reviewing-editor',
+                                'label' => 'Reviewing Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Ben Cooper',
                                 'index' => 'Cooper, Ben',
@@ -235,7 +241,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                         1 => [
                             'id' => 'pjha',
-                            'type' => 'senior-editor',
+                            'type' => [
+                                'id' => 'senior-editor',
+                                'label' => 'Senior Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
@@ -444,7 +453,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -453,7 +465,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'curators' => [
                         0 => [
                             'id' => 'pjha',
-                            'type' => 'senior-editor',
+                            'type' => [
+                                'id' => 'senior-editor',
+                                'label' => 'Senior Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
@@ -565,7 +580,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -628,7 +646,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',

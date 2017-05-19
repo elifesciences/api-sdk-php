@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Listing;
 use eLife\ApiSdk\Model\Block\Paragraph;
@@ -49,7 +50,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $list = new Listing(false, ['foo']);
+        $list = new Listing(false, new ArraySequence(['foo']));
 
         return [
             'list' => [$list, null, true],
@@ -71,7 +72,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
     {
         return [
             'complete' => [
-                new Listing(Listing::PREFIX_NUMBER, ['string', [new Paragraph('paragraph')]]),
+                new Listing(Listing::PREFIX_NUMBER, new ArraySequence(['string', new ArraySequence([new Paragraph('paragraph')])])),
                 [
                     'type' => 'list',
                     'prefix' => 'number',
@@ -87,7 +88,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
             ],
             'minimum' => [
-                new Listing(Listing::PREFIX_NONE, [[new Paragraph('paragraph')]]),
+                new Listing(Listing::PREFIX_NONE, new ArraySequence([new ArraySequence([new Paragraph('paragraph')])])),
                 [
                     'type' => 'list',
                     'prefix' => 'none',
@@ -157,7 +158,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Listing(Listing::PREFIX_NUMBER, ['string', [new Paragraph('paragraph')]]),
+                new Listing(Listing::PREFIX_NUMBER, new ArraySequence(['string', new ArraySequence([new Paragraph('paragraph')])])),
             ],
             'minimum' => [
                 [
@@ -172,7 +173,7 @@ final class ListingNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                new Listing(Listing::PREFIX_NONE, [[new Paragraph('paragraph')]]),
+                new Listing(Listing::PREFIX_NONE, new ArraySequence([new ArraySequence([new Paragraph('paragraph')])])),
             ],
         ];
     }

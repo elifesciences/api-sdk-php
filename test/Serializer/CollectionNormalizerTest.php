@@ -222,12 +222,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
+                        'title' => 'Senior Editor',
                         'etAl' => true,
                     ],
                     'curators' => [
                         0 => [
                             'id' => 'bcooper',
                             'type' => 'reviewing-editor',
+                            'title' => 'Reviewing Editor',
                             'name' => [
                                 'preferred' => 'Ben Cooper',
                                 'index' => 'Cooper, Ben',
@@ -236,6 +238,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                         1 => [
                             'id' => 'pjha',
                             'type' => 'senior-editor',
+                            'title' => 'Senior Editor',
                             'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
@@ -449,6 +452,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
+                        'title' => 'Senior Editor',
                     ],
                     'curators' => [
                         0 => [
@@ -458,6 +462,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
                             ],
+                            'title' => 'Senior Editor',
                         ],
                     ],
                     'content' => $minimumContent = [
@@ -570,6 +575,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
+                        'title' => 'Senior Editor',
                         'etAl' => true,
                     ],
                     'type' => 'collection',
@@ -633,6 +639,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
                         ],
+                        'title' => 'Senior Editor',
                     ],
                 ],
                 function (ApiTestCase $test) {

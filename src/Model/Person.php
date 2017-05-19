@@ -10,6 +10,7 @@ final class Person implements Model, HasId, HasThumbnail
     private $id;
     private $details;
     private $type;
+    private $title;
     private $image;
     private $research;
     private $profile;
@@ -22,6 +23,7 @@ final class Person implements Model, HasId, HasThumbnail
         string $id,
         PersonDetails $details,
         string $type,
+        string $title,
         Image $image = null,
         PromiseInterface $research,
         Sequence $profile,
@@ -30,6 +32,7 @@ final class Person implements Model, HasId, HasThumbnail
         $this->id = $id;
         $this->details = $details;
         $this->type = $type;
+        $this->title = $title;
         $this->image = $image;
         $this->research = $research;
         $this->profile = $profile;
@@ -49,6 +52,11 @@ final class Person implements Model, HasId, HasThumbnail
     public function getType() : string
     {
         return $this->type;
+    }
+
+    public function getTitle() : string
+    {
+        return $this->title;
     }
 
     /**

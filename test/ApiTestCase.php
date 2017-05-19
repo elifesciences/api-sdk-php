@@ -1686,6 +1686,7 @@ abstract class ApiTestCase extends TestCase
                 'preferred' => $id.' preferred',
                 'index' => $id.' index',
             ],
+            'title' => 'Senior Editor',
             'orcid' => '0000-0002-1825-0097',
             'research' => [
                 'expertises' => [
@@ -1912,6 +1913,7 @@ abstract class ApiTestCase extends TestCase
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
                 ],
+                'title' => 'Senior Editor',
                 'etAl' => true,
             ],
             'curators' => [
@@ -1922,6 +1924,7 @@ abstract class ApiTestCase extends TestCase
                         'preferred' => 'Ben Cooper',
                         'index' => 'Cooper, Ben',
                     ],
+                    'title' => 'Reviewing Editor',
                 ],
                 [
                     'id' => 'pjha',
@@ -1930,6 +1933,7 @@ abstract class ApiTestCase extends TestCase
                         'preferred' => 'Prabhat Jha',
                         'index' => 'Jha, Prabhat',
                     ],
+                    'title' => 'Senior Editor',
                 ],
             ],
             'summary' => [

@@ -261,6 +261,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                             'index' => 'Jha, Prabhat',
                                         ],
                                         'type' => 'senior-editor',
+                                        'title' => 'Senior Editor',
                                     ],
                                 ],
                             ],

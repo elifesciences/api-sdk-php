@@ -175,6 +175,7 @@ final class Builder
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
                         'type' => 'senior-editor',
+                        'title' => 'Senior Editor',
                         'image' => null,
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
@@ -495,7 +496,8 @@ final class Builder
                             ->withDetails(new PersonDetails(
                                 'Ben Cooper',
                                 'Cooper, Ben'
-                            ));
+                            ))
+                            ->withTitle('Reviewing Editor');
 
                         if (!$context['snippet']) {
                             $person
@@ -513,7 +515,8 @@ final class Builder
                             ->withDetails(new PersonDetails(
                                 'Prabhat Jha',
                                 'Jha, Prabhat'
-                            ));
+                            ))
+                            ->withTitle('Senior Editor');
                         if (!$context['snippet']) {
                             $person
                                 ->withPromiseOfResearch('')

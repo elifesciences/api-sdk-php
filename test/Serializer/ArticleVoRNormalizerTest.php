@@ -285,19 +285,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'height' => 140,
                             ],
                         ],
-                        'banner' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
-                                'filename' => 'banner.jpg',
-                            ],
-                            'size' => [
-                                'width' => 1800,
-                                'height' => 900,
-                            ],
-                        ],
                     ],
                     'keywords' => ['Article 09560 keyword'],
                     'digest' => [
@@ -419,7 +406,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
-                    ->withPromiseOfBanner(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())
@@ -544,7 +530,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
-                    ->withPromiseOfBanner(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())

@@ -11,11 +11,11 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\UnknownReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class UnknownReferenceNormalizerTest extends TestCase
 {
     /** @var UnknownReferenceNormalizer */
     private $normalizer;
@@ -154,7 +154,7 @@ final class UnknownReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_unknown_references(array $json, UnknownReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, UnknownReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, UnknownReference::class));
     }
 
     public function denormalizeProvider() : array

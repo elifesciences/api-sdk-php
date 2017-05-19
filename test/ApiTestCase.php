@@ -712,7 +712,7 @@ abstract class ApiTestCase extends TestCase
         string $type = null
     ) {
         $people = array_map(function (int $id) {
-            return $this->createPersonJson('person'.$id, true);
+            return $this->createPersonJson('person'.$id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -999,10 +999,10 @@ abstract class ApiTestCase extends TestCase
                         'insight' => 0,
                         'research-advance' => 0,
                         'research-article' => 0,
-                        'research-exchange' => 0,
                         'retraction' => 0,
                         'registered-report' => 0,
                         'replication-study' => 0,
+                        'scientific-correspondence' => 0,
                         'short-report' => 0,
                         'tools-resources' => 0,
                         'blog-article' => 0,
@@ -1297,19 +1297,6 @@ abstract class ApiTestCase extends TestCase
         $article += [
             'impactStatement' => 'Article '.$id.' impact statement',
             'image' => [
-                'banner' => [
-                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
-                    'alt' => '',
-                    'source' => [
-                        'mediaType' => 'image/jpeg',
-                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
-                        'filename' => 'banner.jpg',
-                    ],
-                    'size' => [
-                        'width' => 1800,
-                        'height' => 900,
-                    ],
-                ],
                 'thumbnail' => [
                     'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
@@ -1439,9 +1426,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            if (isset($article['image'])) {
-                unset($article['image']['banner']);
-            }
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
@@ -1636,19 +1620,6 @@ abstract class ApiTestCase extends TestCase
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-01T00:00:00Z',
             'image' => [
-                'banner' => [
-                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
-                    'alt' => '',
-                    'source' => [
-                        'mediaType' => 'image/jpeg',
-                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
-                        'filename' => 'banner.jpg',
-                    ],
-                    'size' => [
-                        'width' => 1800,
-                        'height' => 900,
-                    ],
-                ],
                 'thumbnail' => [
                     'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
@@ -1673,7 +1644,6 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($labsExperiment['content']);
-            unset($labsExperiment['image']['banner']);
         }
 
         if (!$complete) {
@@ -1812,7 +1782,6 @@ abstract class ApiTestCase extends TestCase
                     'uri' => 'https://www.example.com/episode.mp3',
                 ],
             ],
-            'subjects' => [$this->createSubjectJson(1, true)],
             'chapters' => [
                 [
                     'number' => 1,
@@ -1827,7 +1796,6 @@ abstract class ApiTestCase extends TestCase
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
             unset($podcastEpisode['updated']);
-            unset($podcastEpisode['subjects']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
             unset($podcastEpisode['chapters'][0]['content']);
         }

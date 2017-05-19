@@ -143,7 +143,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
+                    new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement',
                             new ArraySequence([
                                 Builder::for(ArticlePoA::class)
@@ -292,7 +292,6 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'https://www.example.com/episode.mp3'
                         ),
                     ],
-                    new EmptySequence(),
                     new ArraySequence([
                         new PodcastEpisodeChapter(
                             1,
@@ -354,7 +353,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
+                    new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
                             Builder::for(ArticlePoA::class)->sample('1'),
                         ])),
@@ -396,7 +395,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
+                    new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
                     ])),
                 ['snippet' => true],

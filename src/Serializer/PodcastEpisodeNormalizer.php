@@ -14,7 +14,6 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
-use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -85,12 +84,6 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             return new PodcastEpisodeSource($source['mediaType'], $source['uri']);
         }, $data['sources']);
 
-        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
-            $context['snippet'] = true;
-
-            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
-        }, $data['subjects'] ?? []));
-
         return new PodcastEpisode(
             $data['number'],
             $data['title'],
@@ -100,7 +93,6 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['image']['banner'],
             $data['image']['thumbnail'],
             $data['sources'],
-            $data['subjects'],
             $data['chapters']
         );
     }
@@ -143,14 +135,6 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();
-        }
-
-        if ($object->getSubjects()->notEmpty()) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
-                $context['snippet'] = true;
-
-                return $this->normalizer->normalize($subject, $format, $context);
-            })->toArray();
         }
 
         if (empty($context['snippet'])) {

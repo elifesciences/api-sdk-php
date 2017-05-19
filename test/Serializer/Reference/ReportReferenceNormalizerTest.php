@@ -13,11 +13,11 @@ use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReportReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ReportReferenceNormalizerTest extends TestCase
 {
     /** @var ReportReferenceNormalizer */
     private $normalizer;
@@ -168,7 +168,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_report_references(array $json, ReportReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ReportReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ReportReference::class));
     }
 
     public function denormalizeProvider() : array

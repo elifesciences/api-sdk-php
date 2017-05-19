@@ -196,7 +196,6 @@ final class Builder
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'subjects' => new EmptySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
                     ];
                 },
@@ -278,7 +277,6 @@ final class Builder
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'keywords' => new ArraySequence(['Article 09560 keyword']),
                         'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),

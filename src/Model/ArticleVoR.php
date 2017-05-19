@@ -6,11 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, HasImpactStatement, HasReferences, HasThumbnail
+final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasThumbnail
 {
     private $figuresPdf;
     private $impactStatement;
-    private $banner;
     private $thumbnail;
     private $keywords;
     private $digest;
@@ -50,7 +49,6 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         Sequence $authors,
         Sequence $reviewers,
         string $impactStatement = null,
-        PromiseInterface $banner,
         Image $thumbnail = null,
         Sequence $keywords,
         PromiseInterface $digest,
@@ -73,7 +71,6 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
 
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
-        $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->keywords = $keywords;
         $this->digest = $digest;
@@ -101,14 +98,6 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
     public function getImpactStatement()
     {
         return $this->impactStatement;
-    }
-
-    /**
-     * @return Image|null
-     */
-    public function getBanner()
-    {
-        return $this->banner->wait();
     }
 
     /**

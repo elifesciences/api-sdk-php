@@ -15,11 +15,11 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PeriodicalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class PeriodicalReferenceNormalizerTest extends TestCase
 {
     /** @var PeriodicalReferenceNormalizer */
     private $normalizer;
@@ -171,7 +171,7 @@ final class PeriodicalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_periodical_references(array $json, PeriodicalReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, PeriodicalReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PeriodicalReference::class));
     }
 
     public function denormalizeProvider() : array

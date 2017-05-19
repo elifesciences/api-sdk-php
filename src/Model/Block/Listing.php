@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
 
 final class Listing implements Block
@@ -20,7 +21,7 @@ final class Listing implements Block
     /**
      * @internal
      */
-    public function __construct(string $prefix, array $items)
+    public function __construct(string $prefix, Sequence $items)
     {
         $this->prefix = $prefix;
         $this->items = $items;
@@ -31,7 +32,7 @@ final class Listing implements Block
         return $this->prefix;
     }
 
-    public function getItems() : array
+    public function getItems() : Sequence
     {
         return $this->items;
     }

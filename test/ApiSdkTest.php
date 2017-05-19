@@ -304,6 +304,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Box::class,
             Block\Button::class,
             Block\Code::class,
+            Block\Figure::class,
             Block\Image::class,
             Block\Listing::class,
             Block\MathML::class,

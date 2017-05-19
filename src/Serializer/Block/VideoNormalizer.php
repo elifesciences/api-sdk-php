@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
@@ -24,16 +23,21 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         $data['placeholder'] = !empty($data['placeholder']) ? $this->denormalizer->denormalize($data['placeholder'], Image::class) : null;
 
-        return new Video($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'] ?? null,
+        return new Video(
+            $data['id'] ?? null,
+            $data['title'] ?? null,
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])), array_map(function (array $source) {
+            }, $data['caption'] ?? [])),
+            new ArraySequence($data['attribution'] ?? []),
+            array_map(function (array $source) {
                 return new VideoSource($source['mediaType'], $source['uri']);
-            }, $data['sources']), $data['placeholder'], $data['width'], $data['height'],
-            $data['autoplay'] ?? false, $data['loop'] ?? false,
-            array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, AssetFile::class);
-            }, $data['sourceData'] ?? []));
+            }, $data['sources']), $data['placeholder'],
+            $data['width'],
+            $data['height'],
+            $data['autoplay'] ?? false,
+            $data['loop'] ?? false
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -61,16 +65,8 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             'height' => $object->getHeight(),
         ];
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
-        }
-
         if ($object->getId()) {
             $data['id'] = $object->getId();
-        }
-
-        if ($object->getLabel()) {
-            $data['label'] = $object->getLabel();
         }
 
         if ($object->getTitle()) {
@@ -83,6 +79,10 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
             })->toArray();
         }
 
+        if ($object->getAttribution()->notEmpty()) {
+            $data['attribution'] = $object->getAttribution()->toArray();
+        }
+
         if ($object->getPlaceholder()) {
             $data['placeholder'] = $this->normalizer->normalize($object->getPlaceholder());
         }
@@ -93,12 +93,6 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
 
         if ($object->isLoop()) {
             $data['loop'] = $object->isLoop();
-        }
-
-        if ($object->getSourceData()) {
-            $data['sourceData'] = array_map(function (AssetFile $file) {
-                return $this->normalizer->normalize($file);
-            }, $object->getSourceData());
         }
 
         return $data;

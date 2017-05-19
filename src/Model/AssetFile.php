@@ -11,6 +11,7 @@ final class AssetFile implements Asset
     private $label;
     private $title;
     private $caption;
+    private $attribution;
     private $file;
 
     /**
@@ -22,6 +23,7 @@ final class AssetFile implements Asset
         string $label = null,
         string $title = null,
         Sequence $caption,
+        Sequence $attribution,
         File $file
     ) {
         $this->doi = $doi;
@@ -29,6 +31,7 @@ final class AssetFile implements Asset
         $this->label = $label;
         $this->title = $title;
         $this->caption = $caption;
+        $this->attribution = $attribution;
         $this->file = $file;
     }
 
@@ -70,6 +73,14 @@ final class AssetFile implements Asset
     public function getCaption() : Sequence
     {
         return $this->caption;
+    }
+
+    /**
+     * @return Sequence|string[]
+     */
+    public function getAttribution() : Sequence
+    {
+        return $this->attribution;
     }
 
     public function getFile() : File

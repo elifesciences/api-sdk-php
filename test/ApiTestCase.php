@@ -1681,12 +1681,14 @@ abstract class ApiTestCase extends TestCase
     {
         $person = [
             'id' => $id,
-            'type' => 'senior-editor',
+            'type' => [
+                'id' => 'senior-editor',
+                'label' => 'Senior Editor',
+            ],
             'name' => [
                 'preferred' => $id.' preferred',
                 'index' => $id.' index',
             ],
-            'title' => 'Senior Editor',
             'orcid' => '0000-0002-1825-0097',
             'research' => [
                 'expertises' => [
@@ -1908,32 +1910,38 @@ abstract class ApiTestCase extends TestCase
             ],
             'selectedCurator' => [
                 'id' => 'pjha',
-                'type' => 'senior-editor',
+                'type' => [
+                    'id' => 'senior-editor',
+                    'label' => 'Senior Editor',
+                ],
                 'name' => [
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
                 ],
-                'title' => 'Senior Editor',
                 'etAl' => true,
             ],
             'curators' => [
                 [
                     'id' => 'bcooper',
-                    'type' => 'reviewing-editor',
+                    'type' => [
+                        'id' => 'reviewing-editor',
+                        'label' => 'Reviewing Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Ben Cooper',
                         'index' => 'Cooper, Ben',
                     ],
-                    'title' => 'Reviewing Editor',
                 ],
                 [
                     'id' => 'pjha',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Prabhat Jha',
                         'index' => 'Jha, Prabhat',
                     ],
-                    'title' => 'Senior Editor',
                 ],
             ],
             'summary' => [

@@ -175,7 +175,7 @@ final class Builder
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
                         'type' => 'senior-editor',
-                        'title' => 'Senior Editor',
+                        'typeLabel' => 'Senior Editor',
                         'image' => null,
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
@@ -493,11 +493,11 @@ final class Builder
                         $person = $builder
                             ->withId('bcooper')
                             ->withType('reviewing-editor')
+                            ->withTypeLabel('Reviewing Editor')
                             ->withDetails(new PersonDetails(
                                 'Ben Cooper',
                                 'Cooper, Ben'
-                            ))
-                            ->withTitle('Reviewing Editor');
+                            ));
 
                         if (!$context['snippet']) {
                             $person
@@ -512,11 +512,11 @@ final class Builder
                         $person = $builder
                             ->withId('pjha')
                             ->withType('senior-editor')
+                            ->withTypeLabel('Senior Editor')
                             ->withDetails(new PersonDetails(
                                 'Prabhat Jha',
                                 'Jha, Prabhat'
-                            ))
-                            ->withTitle('Senior Editor');
+                            ));
                         if (!$context['snippet']) {
                             $person
                                 ->withPromiseOfResearch('')

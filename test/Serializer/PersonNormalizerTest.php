@@ -145,8 +145,10 @@ final class PersonNormalizerTest extends ApiTestCase
                     ],
                     'orcid' => '0000-0002-1825-0097',
                     'id' => 'person1',
-                    'type' => 'senior-editor',
-                    'title' => 'Senior Editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -186,8 +188,10 @@ final class PersonNormalizerTest extends ApiTestCase
                         'index' => 'Person 1 index',
                     ],
                     'id' => 'person1',
-                    'type' => 'senior-editor',
-                    'title' => 'Senior Editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                 ],
             ],
             'complete snippet' => [
@@ -204,8 +208,10 @@ final class PersonNormalizerTest extends ApiTestCase
                     ],
                     'orcid' => '0000-0002-1825-0097',
                     'id' => 'person1',
-                    'type' => 'senior-editor',
-                    'title' => 'Senior Editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -234,8 +240,10 @@ final class PersonNormalizerTest extends ApiTestCase
                         'index' => 'Person 1 index',
                     ],
                     'id' => 'person1',
-                    'type' => 'senior-editor',
-                    'title' => 'Senior Editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                 ],
                 function (ApiTestCase $test) {
                     $test->mockPersonCall(1);

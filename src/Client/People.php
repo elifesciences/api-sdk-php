@@ -93,7 +93,7 @@ final class People implements Iterator, Sequence
             })
             ->then(function (Result $result) {
                 return array_map(function (array $person) {
-                    return $this->denormalizer->denormalize($person, Person::class, null, ['snippet' => true]);
+                    return $this->denormalizer->denormalize($person, Person::class);
                 }, $result['items']);
             })
         );

@@ -1789,6 +1789,7 @@ abstract class ApiTestCase extends TestCase
                 [
                     'number' => 1,
                     'title' => 'Chapter title',
+                    'longTitle' => 'Long chapter title',
                     'time' => 0,
                     'impactStatement' => 'Chapter impact statement',
                     'content' => [$this->createArticlePoAJson('1', true, $complete)],
@@ -1799,6 +1800,7 @@ abstract class ApiTestCase extends TestCase
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
             unset($podcastEpisode['updated']);
+            unset($podcastEpisode['chapters'][0]['longTitle']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
             unset($podcastEpisode['chapters'][0]['content']);
         }

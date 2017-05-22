@@ -144,7 +144,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement',
+                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
                             new ArraySequence([
                                 Builder::for(ArticlePoA::class)
                                     ->withTitlePrefix('title prefix')
@@ -204,6 +204,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'number' => 1,
                             'title' => 'Chapter title',
                             'time' => 0,
+                            'longTitle' => 'Long chapter title',
                             'content' => [
                                 [
                                     'id' => '14107',
@@ -299,6 +300,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                         new PodcastEpisodeChapter(
                             1,
                             'Chapter title',
+                            null,
                             0,
                             null,
                             new EmptySequence()),
@@ -357,7 +359,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
                             Builder::for(ArticlePoA::class)->sample('1'),
                         ])),
                     ])),
@@ -399,7 +401,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
+                        new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
                     ])),
                 ['snippet' => true],
                 [

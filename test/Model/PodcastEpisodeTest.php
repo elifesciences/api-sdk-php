@@ -167,7 +167,7 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
         $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            $chapters = new ArraySequence([new PodcastEpisodeChapter(2, 'chapter', 0, null, new EmptySequence())]));
+            $chapters = new ArraySequence([new PodcastEpisodeChapter(2, 'chapter', null, 0, null, new EmptySequence())]));
 
         $this->assertEquals($chapters, $podcastEpisode->getChapters());
     }

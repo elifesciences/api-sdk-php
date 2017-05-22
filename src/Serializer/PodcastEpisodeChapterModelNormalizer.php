@@ -22,7 +22,7 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
     {
         $data['episode'] = $this->denormalizer->denormalize($data['episode'], PodcastEpisode::class, $format, ['snippet' => true] + $context);
 
-        $data['chapter'] = new PodcastEpisodeChapter($data['chapter']['number'], $data['chapter']['title'], $data['chapter']['time'],
+        $data['chapter'] = new PodcastEpisodeChapter($data['chapter']['number'], $data['chapter']['title'], $data['chapter']['longTitle'] ?? null, $data['chapter']['time'],
             $data['chapter']['impactStatement'] ?? null,
             new PromiseSequence(
                 promise_for($data['episode']->getChapters())
@@ -61,6 +61,10 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
             'title' => $object->getChapter()->getTitle(),
             'time' => $object->getChapter()->getTime(),
         ];
+
+        if ($object->getChapter()->getLongTitle()) {
+            $chapter['longTitle'] = $object->getChapter()->getLongTitle();
+        }
 
         if ($object->getChapter()->getImpactStatement()) {
             $chapter['impactStatement'] = $object->getChapter()->getImpactStatement();

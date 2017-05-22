@@ -55,7 +55,7 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $model = new PodcastEpisodeChapterModel(Builder::dummy(PodcastEpisode::class), new PodcastEpisodeChapter(1, 'title', 0, null, new EmptySequence()));
+        $model = new PodcastEpisodeChapterModel(Builder::dummy(PodcastEpisode::class), new PodcastEpisodeChapter(1, 'title', null, 0, null, new EmptySequence()));
 
         return [
             'podcast episode chapter model' => [$model, null, true],
@@ -131,7 +131,7 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
                         promise_for($banner), $thumbnail,
                         [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                         new ArraySequence([
-                            $chapter = new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
+                            $chapter = new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
                         ])
                     ),
                     $chapter

@@ -542,7 +542,7 @@ final class Builder
                                 ),
                             ])
                             ->withChapters(new ArraySequence([
-                                new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                                new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
                                     self::for(ArticlePoA::class)->sample('1'),
                                 ])),
                             ]));

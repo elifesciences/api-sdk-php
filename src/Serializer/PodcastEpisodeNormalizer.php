@@ -63,7 +63,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
 
         $data['chapters'] = $data['chapters']
             ->map(function (array $chapter) use ($format, $context) {
-                return new PodcastEpisodeChapter($chapter['number'], $chapter['title'], $chapter['time'],
+                return new PodcastEpisodeChapter($chapter['number'], $chapter['title'], $chapter['longTitle'] ?? null, $chapter['time'],
                     $chapter['impactStatement'] ?? null,
                     new ArraySequence(array_map(function (array $item) use ($format, $context) {
                         $context['snippet'] = true;
@@ -152,6 +152,11 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     'title' => $chapter->getTitle(),
                     'time' => $chapter->getTime(),
                 ];
+
+                if ($chapter->getLongTitle()) {
+                    $data['longTitle'] = $chapter->getLongTitle();
+                }
+
                 if ($chapter->getContent()->notEmpty()) {
                     $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($chapter->getContent(), $typeContext);
                 }

@@ -12,7 +12,7 @@ use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
-use eLife\ApiSdk\Client\LabsExperiments;
+use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
@@ -162,13 +162,13 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_creates_labs_experiments()
+    public function it_creates_labs_posts()
     {
-        $this->assertInstanceOf(LabsExperiments::class, $this->apiSdk->labsExperiments());
+        $this->assertInstanceOf(LabsPosts::class, $this->apiSdk->labsPosts());
 
-        $this->mockLabsExperimentCall(1);
+        $this->mockLabsPostCall(1);
 
-        $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsExperiments()->get(1)->wait());
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsPosts()->get(1)->wait());
     }
 
     /**

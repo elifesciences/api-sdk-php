@@ -10,18 +10,18 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
+use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\rejection_for;
 
-final class LabsExperimentNormalizerTest extends ApiTestCase
+final class LabsPostNormalizerTest extends ApiTestCase
 {
-    /** @var LabsExperimentNormalizer */
+    /** @var LabsPostNormalizer */
     private $normalizer;
 
     /**
@@ -30,7 +30,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     protected function setUpNormalizer()
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->normalizer = new LabsExperimentNormalizer(new LabsClient($this->getHttpClient()));
+        $this->normalizer = new LabsPostNormalizer(new LabsClient($this->getHttpClient()));
         $this->normalizer->setNormalizer($apiSdk->getSerializer());
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
@@ -47,7 +47,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canNormalizeProvider
      */
-    public function it_can_normalize_labs_experiments($data, $format, bool $expected)
+    public function it_can_normalize_labs_posts($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
@@ -55,14 +55,14 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $labsExperiment = new LabsExperiment(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            $thumbnail, new PromiseSequence(rejection_for('Full Labs experiment should not be unwrapped'))
+        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            $thumbnail, new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
         return [
-            'Labs experiment' => [$labsExperiment, null, true],
-            'Labs experiment with format' => [$labsExperiment, 'foo', true],
-            'non-Labs experiment' => [$this, null, false],
+            'Labs post' => [$labsPost, null, true],
+            'Labs post with format' => [$labsPost, 'foo', true],
+            'non-Labs post' => [$this, null, false],
         ];
     }
 
@@ -70,9 +70,9 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalize_labs_experiments(LabsExperiment $labsExperiment, array $context, array $expected)
+    public function it_normalize_labs_posts(LabsPost $labsPost, array $context, array $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->normalize($labsExperiment, null, $context));
+        $this->assertEquals($expected, $this->normalizer->normalize($labsPost, null, $context));
     }
 
     /**
@@ -87,7 +87,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canDenormalizeProvider
      */
-    public function it_can_denormalize_labs_experiments($data, $format, array $context, bool $expected)
+    public function it_can_denormalize_labs_posts($data, $format, array $context, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
     }
@@ -95,9 +95,9 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
     public function canDenormalizeProvider() : array
     {
         return [
-            'Labs experiment' => [[], LabsExperiment::class, [], true],
-            'Labs experiment by type' => [['type' => 'labs-experiment'], Model::class, [], true],
-            'non-Labs experiment' => [[], get_class($this), [], false],
+            'Labs post' => [[], LabsPost::class, [], true],
+            'Labs post by type' => [['type' => 'labs-post'], Model::class, [], true],
+            'non-Labs post' => [[], get_class($this), [], false],
         ];
     }
 
@@ -105,8 +105,8 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalize_labs_experiments(
-        LabsExperiment $expected,
+    public function it_denormalize_labs_posts(
+        LabsPost $expected,
         array $context,
         array $json,
         callable $extra = null
@@ -115,7 +115,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
             call_user_func($extra, $this);
         }
 
-        $actual = $this->normalizer->denormalize($json, LabsExperiment::class, null, $context);
+        $actual = $this->normalizer->denormalize($json, LabsPost::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -128,7 +128,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new LabsExperiment(1, 'title', $published, $updated, 'impact statement', $thumbnail,
+                new LabsPost(1, 'title', $published, $updated, 'impact statement', $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -161,7 +161,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsExperiment(1, 'title', $published, null, null, $thumbnail,
+                new LabsPost(1, 'title', $published, null, null, $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -192,12 +192,12 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $published, $updated, 'Labs experiment 1 impact statement',
-                    $thumbnail, new ArraySequence([new Paragraph('Labs experiment 1 text')])),
+                new LabsPost(1, 'Labs post 1 title', $published, $updated, 'Labs post 1 impact statement',
+                    $thumbnail, new ArraySequence([new Paragraph('Labs post 1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'number' => 1,
-                    'title' => 'Labs experiment 1 title',
+                    'title' => 'Labs post 1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
@@ -215,20 +215,20 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'impactStatement' => 'Labs experiment 1 impact statement',
-                    'type' => 'labs-experiment',
+                    'impactStatement' => 'Labs post 1 impact statement',
+                    'type' => 'labs-post',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockLabsExperimentCall(1, true);
+                    $test->mockLabsPostCall(1, true);
                 },
             ],
             'minimum snippet' => [
-                new LabsExperiment(1, 'Labs experiment 1 title', $published, null, null, $thumbnail,
-                    new ArraySequence([new Paragraph('Labs experiment 1 text')])),
+                new LabsPost(1, 'Labs post 1 title', $published, null, null, $thumbnail,
+                    new ArraySequence([new Paragraph('Labs post 1 text')])),
                 ['snippet' => true],
                 [
                     'number' => 1,
-                    'title' => 'Labs experiment 1 title',
+                    'title' => 'Labs post 1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
@@ -247,7 +247,7 @@ final class LabsExperimentNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockLabsExperimentCall(1);
+                    $test->mockLabsPostCall(1);
                 },
             ],
         ];

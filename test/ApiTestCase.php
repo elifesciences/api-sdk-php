@@ -365,7 +365,7 @@ abstract class ApiTestCase extends TestCase
             'research-article' => 'createArticleVoRJson',
             'replication-study' => 'createArticlePoAJson',
             // for simplicity, avoiding contents without an id
-            //'labs-experiment' => ['createLabsExperimentJson', 'int'],
+            //'labs-post' => ['createLabsPostJson', 'int'],
             //'podcast-episode' => ['createPodcastEpisodeJson', 'int'],
         ];
         $blogArticles = array_map(function (int $id) use ($availableModels) {
@@ -569,41 +569,41 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockLabsExperimentListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    final protected function mockLabsPostListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
-        $labsExperiments = array_map(function (int $id) {
-            return $this->createLabsExperimentJson($id);
+        $labsPosts = array_map(function (int $id) {
+            return $this->createLabsPostJson($id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/labs-experiments?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)]
+                'http://api.elifesciences.org/labs-posts?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)],
+                ['Content-Type' => new MediaType(LabsClient::TYPE_POST_LIST, 1)],
                 json_encode([
                     'total' => $total,
-                    'items' => $labsExperiments,
+                    'items' => $labsPosts,
                 ])
             )
         );
     }
 
-    final protected function mockLabsExperimentCall(int $number, bool $complete = false)
+    final protected function mockLabsPostCall(int $number, bool $complete = false)
     {
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/labs-experiments/'.$number,
-                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)]
+                'http://api.elifesciences.org/labs-posts/'.$number,
+                ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
-                json_encode($this->createLabsExperimentJson($number, false, $complete))
+                ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 1)],
+                json_encode($this->createLabsPostJson($number, false, $complete))
             )
         );
     }
@@ -1008,7 +1008,7 @@ abstract class ApiTestCase extends TestCase
                         'blog-article' => 0,
                         'collection' => 0,
                         'interview' => 0,
-                        'labs-experiment' => 0,
+                        'labs-post' => 0,
                         'podcast-episode' => 0,
                     ],
                 ])
@@ -1611,12 +1611,12 @@ abstract class ApiTestCase extends TestCase
         return $interview;
     }
 
-    private function createLabsExperimentJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createLabsPostJson(int $number, bool $isSnippet = false, bool $complete = false) : array
     {
-        $labsExperiment = [
+        $labsPost = [
             'number' => $number,
-            'title' => 'Labs experiment '.$number.' title',
-            'impactStatement' => 'Labs experiment '.$number.' impact statement',
+            'title' => 'Labs post '.$number.' title',
+            'impactStatement' => 'Labs post '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-01T00:00:00Z',
             'image' => [
@@ -1637,21 +1637,21 @@ abstract class ApiTestCase extends TestCase
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Labs experiment '.$number.' text',
+                    'text' => 'Labs post '.$number.' text',
                 ],
             ],
         ];
 
         if ($isSnippet) {
-            unset($labsExperiment['content']);
+            unset($labsPost['content']);
         }
 
         if (!$complete) {
-            unset($labsExperiment['updated']);
-            unset($labsExperiment['impactStatement']);
+            unset($labsPost['updated']);
+            unset($labsPost['impactStatement']);
         }
 
-        return $labsExperiment;
+        return $labsPost;
     }
 
     final private function createMediumArticleJson(int $number)
@@ -2053,7 +2053,7 @@ abstract class ApiTestCase extends TestCase
             'createBlogArticleJson' => 'blog-article',
             'createCollectionJson' => 'collection',
             'createInterviewJson' => 'interview',
-            'createLabsExperimentJson' => 'labs-experiment',
+            'createLabsPostJson' => 'labs-post',
             'createPodcastEpisodeJson' => 'podcast-episode',
         ];
         $index = (((int) $id) - 1) % count($allowedModelFactories);

@@ -7,7 +7,7 @@ use eLife\ApiSdk\Collection\Sequence;
 
 final class LabsPost implements Model, HasContent, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
-    private $number;
+    private $id;
     private $title;
     private $published;
     private $updated;
@@ -19,7 +19,7 @@ final class LabsPost implements Model, HasContent, HasImpactStatement, HasPublis
      * @internal
      */
     public function __construct(
-        int $number,
+        string $id,
         string $title,
         DateTimeImmutable $published,
         DateTimeImmutable $updated = null,
@@ -27,7 +27,7 @@ final class LabsPost implements Model, HasContent, HasImpactStatement, HasPublis
         Image $thumbnail,
         Sequence $content
     ) {
-        $this->number = $number;
+        $this->id = $id;
         $this->title = $title;
         $this->published = $published;
         $this->updated = $updated;
@@ -36,9 +36,9 @@ final class LabsPost implements Model, HasContent, HasImpactStatement, HasPublis
         $this->content = $content;
     }
 
-    public function getNumber() : int
+    public function getId() : string
     {
-        return $this->number;
+        return $this->id;
     }
 
     public function getTitle() : string

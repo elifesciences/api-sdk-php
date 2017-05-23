@@ -26,7 +26,7 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -36,14 +36,14 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_number()
+    public function it_has_a_id()
     {
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'),
             new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
-        $this->assertSame(1, $labsPost->getNumber());
+        $this->assertSame('80000001', $labsPost->getId());
     }
 
     /**
@@ -51,7 +51,7 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -63,10 +63,10 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
+        $with = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
-        $withOut = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $withOut = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -80,7 +80,7 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $labsPost = new LabsPost(1, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -93,10 +93,10 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_updated_date()
     {
-        $with = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
+        $with = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
-        $withOut = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $withOut = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -110,7 +110,7 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_thumbnail()
     {
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             $image = Builder::for(Image::class)->sample('thumbnail'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -125,7 +125,7 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
     {
         $content = [new Block\Paragraph('foo')];
 
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             Builder::for(Image::class)->sample('thumbnail'), new ArraySequence($content)
         );
 

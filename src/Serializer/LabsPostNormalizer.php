@@ -27,13 +27,13 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
     public function __construct(LabsClient $labsClient)
     {
         $this->snippetDenormalizer = new SnippetDenormalizer(
-            function (array $event) : int {
-                return $event['number'];
+            function (array $event) : string {
+                return $event['id'];
             },
-            function (int $number) use ($labsClient) : PromiseInterface {
+            function (string $id) use ($labsClient) : PromiseInterface {
                 return $labsClient->getPost(
                     ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)],
-                    $number
+                    $id
                 );
             }
         );
@@ -60,7 +60,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
             $format, $context);
 
         return new LabsPost(
-            $data['number'],
+            $data['id'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
@@ -84,7 +84,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
-            'number' => $object->getNumber(),
+            'id' => $object->getId(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
             'image' => [

@@ -571,7 +571,7 @@ abstract class ApiTestCase extends TestCase
 
     final protected function mockLabsPostListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
-        $labsPosts = array_map(function (int $id) {
+        $labsPosts = array_map(function (string $id) {
             return $this->createLabsPostJson($id);
         }, $this->generateIdList($page, $perPage, $total));
 
@@ -592,18 +592,18 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockLabsPostCall(int $number, bool $complete = false)
+    final protected function mockLabsPostCall(string $id, bool $complete = false)
     {
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/labs-posts/'.$number,
+                'http://api.elifesciences.org/labs-posts/'.$id,
                 ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 1)],
-                json_encode($this->createLabsPostJson($number, false, $complete))
+                json_encode($this->createLabsPostJson($id, false, $complete))
             )
         );
     }
@@ -1611,12 +1611,12 @@ abstract class ApiTestCase extends TestCase
         return $interview;
     }
 
-    private function createLabsPostJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createLabsPostJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $labsPost = [
-            'number' => $number,
-            'title' => 'Labs post '.$number.' title',
-            'impactStatement' => 'Labs post '.$number.' impact statement',
+            'id' => $id,
+            'title' => 'Labs post '.$id.' title',
+            'impactStatement' => 'Labs post '.$id.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-01T00:00:00Z',
             'image' => [
@@ -1637,7 +1637,7 @@ abstract class ApiTestCase extends TestCase
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Labs post '.$number.' text',
+                    'text' => 'Labs post '.$id.' text',
                 ],
             ],
         ];

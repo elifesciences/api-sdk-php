@@ -55,7 +55,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $labsPost = new LabsPost(1, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             $thumbnail, new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
@@ -128,11 +128,11 @@ final class LabsPostNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new LabsPost(1, 'title', $published, $updated, 'impact statement', $thumbnail,
+                new LabsPost('80000001', 'title', $published, $updated, 'impact statement', $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
-                    'number' => 1,
+                    'id' => '80000001',
                     'title' => 'title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
@@ -161,11 +161,11 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsPost(1, 'title', $published, null, null, $thumbnail,
+                new LabsPost('80000001', 'title', $published, null, null, $thumbnail,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
-                    'number' => 1,
+                    'id' => '80000001',
                     'title' => 'title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
@@ -192,11 +192,11 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new LabsPost(1, 'Labs post 1 title', $published, $updated, 'Labs post 1 impact statement',
-                    $thumbnail, new ArraySequence([new Paragraph('Labs post 1 text')])),
+                new LabsPost('80000001', 'Labs post 1 title', $published, $updated, 'Labs post 1 impact statement',
+                    $thumbnail, new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true, 'type' => true],
                 [
-                    'number' => 1,
+                    'id' => '80000001',
                     'title' => 'Labs post 1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
@@ -219,15 +219,15 @@ final class LabsPostNormalizerTest extends ApiTestCase
                     'type' => 'labs-post',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockLabsPostCall(1, true);
+                    $test->mockLabsPostCall('80000001', true);
                 },
             ],
             'minimum snippet' => [
-                new LabsPost(1, 'Labs post 1 title', $published, null, null, $thumbnail,
-                    new ArraySequence([new Paragraph('Labs post 1 text')])),
+                new LabsPost('80000001', 'Labs post 1 title', $published, null, null, $thumbnail,
+                    new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true],
                 [
-                    'number' => 1,
+                    'id' => '80000001',
                     'title' => 'Labs post 1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
@@ -247,7 +247,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockLabsPostCall(1);
+                    $test->mockLabsPostCall('80000001');
                 },
             ],
         ];

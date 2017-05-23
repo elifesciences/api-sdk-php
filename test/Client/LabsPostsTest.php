@@ -46,7 +46,7 @@ final class LabsPostsTest extends ApiTestCase
 
         foreach ($this->labsPosts as $i => $labsPost) {
             $this->assertInstanceOf(LabsPost::class, $labsPost);
-            $this->assertSame($i, $labsPost->getNumber());
+            $this->assertSame((string) $i, $labsPost->getId());
         }
     }
 
@@ -75,7 +75,7 @@ final class LabsPostsTest extends ApiTestCase
 
         foreach ($array as $i => $labsPost) {
             $this->assertInstanceOf(LabsPost::class, $labsPost);
-            $this->assertSame($i + 1, $labsPost->getNumber());
+            $this->assertSame((string) ($i + 1), $labsPost->getId());
         }
     }
 
@@ -87,7 +87,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 1, 1);
 
         $this->assertTrue(isset($this->labsPosts[0]));
-        $this->assertSame(1, $this->labsPosts[0]->getNumber());
+        $this->assertSame('1', $this->labsPosts[0]->getId());
 
         $this->mockNotFound(
             'labs-posts?page=6&per-page=1&order=desc',
@@ -118,7 +118,7 @@ final class LabsPostsTest extends ApiTestCase
         $labsPost = $this->labsPosts->get(7)->wait();
 
         $this->assertInstanceOf(LabsPost::class, $labsPost);
-        $this->assertSame(7, $labsPost->getNumber());
+        $this->assertSame('7', $labsPost->getId());
 
         $this->assertInstanceOf(Paragraph::class, $labsPost->getContent()[0]);
         $this->assertSame('Labs post 7 text', $labsPost->getContent()[0]->getText());
@@ -201,7 +201,7 @@ final class LabsPostsTest extends ApiTestCase
 
         foreach ($this->labsPosts->slice($offset, $length) as $i => $labsPost) {
             $this->assertInstanceOf(LabsPost::class, $labsPost);
-            $this->assertSame($expected[$i], $labsPost->getNumber());
+            $this->assertSame((string) $expected[$i], $labsPost->getId());
         }
     }
 
@@ -215,10 +215,10 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 100, 3);
 
         $map = function (LabsPost $labsPost) {
-            return $labsPost->getNumber();
+            return $labsPost->getId();
         };
 
-        $this->assertSame([1, 2, 3], $this->labsPosts->map($map)->toArray());
+        $this->assertSame(['1', '2', '3'], $this->labsPosts->map($map)->toArray());
     }
 
     /**
@@ -230,11 +230,11 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 100, 5);
 
         $filter = function (LabsPost $labsPost) {
-            return substr($labsPost->getNumber(), -1) > 3;
+            return substr($labsPost->getId(), -1) > 3;
         };
 
         foreach ($this->labsPosts->filter($filter) as $i => $labsPost) {
-            $this->assertSame($i + 4, $labsPost->getNumber());
+            $this->assertSame((string) ($i + 4), $labsPost->getId());
         }
     }
 
@@ -247,7 +247,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 100, 5);
 
         $reduce = function (int $carry = null, LabsPost $labsPost) {
-            return $carry + $labsPost->getNumber();
+            return $carry + $labsPost->getId();
         };
 
         $this->assertSame(115, $this->labsPosts->reduce($reduce, 100));
@@ -270,11 +270,11 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 100, 5);
 
         $sort = function (LabsPost $a, LabsPost $b) {
-            return substr($b->getNumber(), -1) <=> substr($a->getNumber(), -1);
+            return substr($b->getId(), -1) <=> substr($a->getId(), -1);
         };
 
         foreach ($this->labsPosts->sort($sort) as $i => $labsPost) {
-            $this->assertSame(5 - $i, $labsPost->getNumber());
+            $this->assertSame((string) (5 - $i), $labsPost->getId());
         }
     }
 
@@ -287,7 +287,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->mockLabsPostListCall(1, 100, 5, false);
 
         foreach ($this->labsPosts->reverse() as $i => $labsPost) {
-            $this->assertSame($i, $labsPost->getNumber());
+            $this->assertSame((string) $i, $labsPost->getId());
         }
     }
 

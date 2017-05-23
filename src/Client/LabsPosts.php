@@ -27,12 +27,12 @@ final class LabsPosts implements Iterator, Sequence
         $this->denormalizer = $denormalizer;
     }
 
-    public function get(int $number) : PromiseInterface
+    public function get(string $id) : PromiseInterface
     {
         return $this->labsClient
             ->getPost(
                 ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)],
-                $number
+                $id
             )
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), LabsPost::class);

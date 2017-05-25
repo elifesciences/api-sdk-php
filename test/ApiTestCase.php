@@ -1693,6 +1693,11 @@ abstract class ApiTestCase extends TestCase
                 'index' => $id.' index',
             ],
             'orcid' => '0000-0002-1825-0097',
+            'affiliations' => [
+                [
+                    'name' => ['affiliation'],
+                ],
+            ],
             'research' => [
                 'expertises' => [
                     [
@@ -1731,6 +1736,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($person['orcid']);
+            unset($person['affiliations']);
             unset($person['research']);
             unset($person['profile']);
             unset($person['competingInterests']);

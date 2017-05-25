@@ -142,7 +142,8 @@ final class ApiSdkTest extends ApiTestCase
     {
         $this->assertInstanceOf(Highlights::class, $this->apiSdk->highlights());
 
-        $this->mockHighlightsCall('foo', 10);
+        $this->mockHighlightsCall('foo', 1, 1, 1);
+        $this->mockHighlightsCall('foo', 1, 100, 1);
 
         $this->apiSdk->highlights()->get('foo')->toArray();
     }

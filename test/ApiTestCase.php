@@ -1546,7 +1546,6 @@ abstract class ApiTestCase extends TestCase
     {
         $highlight = [
             'title' => 'Highlight '.$number.' title',
-            'authorLine' => 'Author et al',
             'image' => [
                 'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
@@ -1564,7 +1563,6 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if (!$complete) {
-            unset($highlight['authorLine']);
             unset($highlight['image']);
         }
 

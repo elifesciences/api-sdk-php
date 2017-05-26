@@ -15,21 +15,9 @@ final class HighlightTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $highlight = new Highlight('title', null, null, Builder::dummy(ArticleVoR::class));
+        $highlight = new Highlight('title', null, Builder::dummy(ArticleVoR::class));
 
         $this->assertSame('title', $highlight->getTitle());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_an_author_line()
-    {
-        $with = new Highlight('title', 'author', null, Builder::dummy(ArticleVoR::class));
-        $withOut = new Highlight('title', null, null, Builder::dummy(ArticleVoR::class));
-
-        $this->assertSame('author', $with->getAuthorLine());
-        $this->assertNull($withOut->getAuthorLine());
     }
 
     /**
@@ -39,8 +27,8 @@ final class HighlightTest extends PHPUnit_Framework_TestCase
     {
         $image = Builder::for(Image::class)->sample('thumbnail');
 
-        $with = new Highlight('title', null, $image, Builder::dummy(ArticleVoR::class));
-        $withOut = new Highlight('title', null, null, Builder::dummy(ArticleVoR::class));
+        $with = new Highlight('title', $image, Builder::dummy(ArticleVoR::class));
+        $withOut = new Highlight('title', null, Builder::dummy(ArticleVoR::class));
 
         $this->assertEquals($image, $with->getThumbnail());
         $this->assertNull($withOut->getThumbnail());
@@ -51,7 +39,7 @@ final class HighlightTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_item()
     {
-        $highlight = new Highlight('title', null, null, $item = Builder::dummy(ArticleVoR::class));
+        $highlight = new Highlight('title', null, $item = Builder::dummy(ArticleVoR::class));
 
         $this->assertSame($item, $highlight->getItem());
     }

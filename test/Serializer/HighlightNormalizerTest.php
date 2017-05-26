@@ -50,7 +50,7 @@ final class HighlightNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $highlight = new Highlight('title', null, null, Builder::dummy(ArticleVoR::class));
+        $highlight = new Highlight('title', null, Builder::dummy(ArticleVoR::class));
 
         return [
             'Highlight' => [$highlight, null, true],
@@ -119,11 +119,10 @@ final class HighlightNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new Highlight('title', 'Author et al', $image, Builder::dummy(Interview::class)),
+                new Highlight('title', $image, Builder::dummy(Interview::class)),
                 [],
                 [
                     'title' => 'title',
-                    'authorLine' => 'Author et al',
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -155,7 +154,7 @@ final class HighlightNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum' => [
-                new Highlight('title', null, null, Builder::dummy(Interview::class)),
+                new Highlight('title', null, Builder::dummy(Interview::class)),
                 [],
                 [
                     'title' => 'title',

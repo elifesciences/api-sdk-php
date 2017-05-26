@@ -23,7 +23,6 @@ final class HighlightNormalizer implements NormalizerInterface, DenormalizerInte
 
         return new Highlight(
             $data['title'],
-            $data['authorLine'] ?? null,
             $data['image'] ?? null,
             $data['item']
         );
@@ -45,10 +44,6 @@ final class HighlightNormalizer implements NormalizerInterface, DenormalizerInte
             'title' => $object->getTitle(),
             'item' => $normalizationHelper->normalizeToSnippet($object->getItem(), ['type' => true] + $context),
         ];
-
-        if ($object->getAuthorLine()) {
-            $data['authorLine'] = $object->getAuthorLine();
-        }
 
         if ($object->getThumbnail()) {
             $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);

@@ -502,22 +502,25 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockHighlightsCall(string $id, int $total, bool $complete = false)
+    final protected function mockHighlightsCall(string $id, int $page, int $perPage, int $total, $descendingOrder = true, bool $complete = false)
     {
         $highlights = array_map(function (int $id) use ($complete) {
             return $this->createHighlightJson($id, ['type' => 'interview'] + $this->createInterviewJson($id, true, $complete), $complete);
-        }, $this->generateIdList(1, $total, $total));
+        }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
             new Request(
                 'GET',
-                "http://api.elifesciences.org/highlights/$id",
-                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHTS, 1)]
+                "http://api.elifesciences.org/highlights/$id?page=$page&per-page=$perPage&order=".($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHTS, 1)],
-                json_encode($highlights)
+                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $highlights,
+                ])
             )
         );
     }
@@ -1543,7 +1546,6 @@ abstract class ApiTestCase extends TestCase
     {
         $highlight = [
             'title' => 'Highlight '.$number.' title',
-            'authorLine' => 'Author et al',
             'image' => [
                 'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
@@ -1561,7 +1563,6 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if (!$complete) {
-            unset($highlight['authorLine']);
             unset($highlight['image']);
         }
 
@@ -1690,6 +1691,11 @@ abstract class ApiTestCase extends TestCase
                 'index' => $id.' index',
             ],
             'orcid' => '0000-0002-1825-0097',
+            'affiliations' => [
+                [
+                    'name' => ['affiliation'],
+                ],
+            ],
             'research' => [
                 'expertises' => [
                     [
@@ -1728,6 +1734,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($person['orcid']);
+            unset($person['affiliations']);
             unset($person['research']);
             unset($person['profile']);
             unset($person['competingInterests']);

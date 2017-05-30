@@ -177,6 +177,7 @@ final class Builder
                         'type' => 'senior-editor',
                         'typeLabel' => 'Senior Editor',
                         'image' => null,
+                        'affiliations' => new EmptySequence(),
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
                         'competingInterests' => promise_for(null),

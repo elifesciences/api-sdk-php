@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -57,7 +58,7 @@ final class PersonNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'title', null,
-            rejection_for('Research should not be unwrapped'),
+            new PromiseSequence(rejection_for('Affiliations should not be unwrapped')), rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
 
@@ -134,7 +135,7 @@ final class PersonNormalizerTest extends ApiTestCase
             'complete' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
                     'senior-editor', 'Senior Editor', $thumbnail,
-                    promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
+                    new ArraySequence([new Place(['affiliation'])]), promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('Person 1 profile text')]),
                     promise_for('Person 1 competing interests')),
                 [],
@@ -162,6 +163,11 @@ final class PersonNormalizerTest extends ApiTestCase
                             'height' => 140,
                         ],
                     ],
+                    'affiliations' => [
+                        [
+                            'name' => ['affiliation'],
+                        ],
+                    ],
                     'research' => [
                         'expertises' => [
                             ['id' => 'subject1', 'name' => 'Subject 1 name'],
@@ -180,7 +186,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    'Senior Editor', null, promise_for(null), new EmptySequence(), promise_for(null)),
+                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
                 [],
                 [
                     'name' => [
@@ -197,6 +203,7 @@ final class PersonNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
                     'senior-editor', 'Senior Editor', $thumbnail,
+                    new ArraySequence([new Place(['affiliation'])]),
                     promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('person1 profile text')]),
                     promise_for('person1 competing interests')),
@@ -232,7 +239,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    'Senior Editor', null, promise_for(null), new EmptySequence(), promise_for(null)),
+                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
                 ['snippet' => true],
                 [
                     'name' => [

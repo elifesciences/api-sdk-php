@@ -134,7 +134,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $values = $this->labsPosts->prepend(0, 1)->map($this->tidyValue());
 
-        $this->assertSame([0, 1, 'Labs post 1 title', 'Labs post 2 title', 'Labs post 3 title', 'Labs post 4 title', 'Labs post 5 title'], $values->toArray());
+        $this->assertSame([0, 1, '1', '2', '3', '4', '5'], $values->toArray());
     }
 
     /**
@@ -147,7 +147,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $values = $this->labsPosts->append(0, 1)->map($this->tidyValue());
 
-        $this->assertSame(['Labs post 1 title', 'Labs post 2 title', 'Labs post 3 title', 'Labs post 4 title', 'Labs post 5 title', 0, 1], $values->toArray());
+        $this->assertSame(['1', '2', '3', '4', '5', 0, 1], $values->toArray());
     }
 
     /**
@@ -160,7 +160,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $values = $this->labsPosts->drop(2)->map($this->tidyValue());
 
-        $this->assertSame(['Labs post 1 title', 'Labs post 2 title', 'Labs post 4 title', 'Labs post 5 title'], $values->toArray());
+        $this->assertSame(['1', '2', '4', '5'], $values->toArray());
     }
 
     /**
@@ -173,7 +173,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $values = $this->labsPosts->insert(2, 2)->map($this->tidyValue());
 
-        $this->assertSame(['Labs post 1 title', 'Labs post 2 title', 2, 'Labs post 3 title', 'Labs post 4 title', 'Labs post 5 title'], $values->toArray());
+        $this->assertSame(['1', '2', 2, '3', '4', '5'], $values->toArray());
     }
 
     /**
@@ -186,7 +186,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $values = $this->labsPosts->set(2, 2)->map($this->tidyValue());
 
-        $this->assertSame(['Labs post 1 title', 'Labs post 2 title', 2, 'Labs post 4 title', 'Labs post 5 title'], $values->toArray());
+        $this->assertSame(['1', '2', 2, '4', '5'], $values->toArray());
     }
 
     /**

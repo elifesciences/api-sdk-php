@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class LabsPost implements Model, HasContent, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class LabsPost implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $id;
     private $title;

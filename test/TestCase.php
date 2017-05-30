@@ -8,7 +8,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\HasId;
-use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -93,7 +93,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                 return $value->getYear();
             } elseif ($value instanceof Cover) {
                 return $value->getTitle();
-            } elseif ($value instanceof LabsExperiment) {
+            } elseif ($value instanceof LabsPost) {
                 return $value->getTitle();
             } elseif ($value instanceof MediumArticle) {
                 return $value->getTitle();

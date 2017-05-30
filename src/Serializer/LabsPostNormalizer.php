@@ -11,13 +11,13 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class LabsExperimentNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
+final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -27,26 +27,26 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
     public function __construct(LabsClient $labsClient)
     {
         $this->snippetDenormalizer = new SnippetDenormalizer(
-            function (array $event) : int {
-                return $event['number'];
+            function (array $event) : string {
+                return $event['id'];
             },
-            function (int $number) use ($labsClient) : PromiseInterface {
-                return $labsClient->getExperiment(
-                    ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
-                    $number
+            function (string $id) use ($labsClient) : PromiseInterface {
+                return $labsClient->getPost(
+                    ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)],
+                    $id
                 );
             }
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : LabsExperiment
+    public function denormalize($data, $class, $format = null, array $context = []) : LabsPost
     {
         if (!empty($context['snippet'])) {
-            $experiment = $this->snippetDenormalizer->denormalizeSnippet($data);
+            $post = $this->snippetDenormalizer->denormalizeSnippet($data);
 
-            $data['content'] = new PromiseSequence($experiment
-                ->then(function (Result $experiment) {
-                    return $experiment['content'];
+            $data['content'] = new PromiseSequence($post
+                ->then(function (Result $post) {
+                    return $post['content'];
                 }));
         } else {
             $data['content'] = new ArraySequence($data['content']);
@@ -59,8 +59,8 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
             $format, $context);
 
-        return new LabsExperiment(
-            $data['number'],
+        return new LabsPost(
+            $data['id'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
@@ -73,18 +73,18 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
         return
-            LabsExperiment::class === $type
+            LabsPost::class === $type
             ||
-            Model::class === $type && 'labs-experiment' === ($data['type'] ?? 'unknown');
+            Model::class === $type && 'labs-post' === ($data['type'] ?? 'unknown');
     }
 
     /**
-     * @param LabsExperiment $object
+     * @param LabsPost $object
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
-            'number' => $object->getNumber(),
+            'id' => $object->getId(),
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
             'image' => [
@@ -93,7 +93,7 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'labs-experiment';
+            $data['type'] = 'labs-post';
         }
 
         if ($object->getUpdatedDate()) {
@@ -115,6 +115,6 @@ final class LabsExperimentNormalizer implements NormalizerInterface, Denormalize
 
     public function supportsNormalization($data, $format = null) : bool
     {
-        return $data instanceof LabsExperiment;
+        return $data instanceof LabsPost;
     }
 }

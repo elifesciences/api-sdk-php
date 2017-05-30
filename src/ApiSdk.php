@@ -31,7 +31,7 @@ use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
-use eLife\ApiSdk\Client\LabsExperiments;
+use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
@@ -59,7 +59,7 @@ use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
-use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
+use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\ApiSdk\Serializer\MediaContactNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
@@ -110,7 +110,7 @@ final class ApiSdk
     private $events;
     private $highlights;
     private $interviews;
-    private $labsExperiments;
+    private $labsPosts;
     private $mediumArticles;
     private $metrics;
     private $people;
@@ -171,7 +171,7 @@ final class ApiSdk
             new HighlightNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
-            new LabsExperimentNormalizer($this->labsClient),
+            new LabsPostNormalizer($this->labsClient),
             new MediaContactNormalizer(),
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
@@ -294,13 +294,13 @@ final class ApiSdk
         return $this->interviews;
     }
 
-    public function labsExperiments() : LabsExperiments
+    public function labsPosts() : LabsPosts
     {
-        if (empty($this->labsExperiments)) {
-            $this->labsExperiments = new LabsExperiments($this->labsClient, $this->serializer);
+        if (empty($this->labsPosts)) {
+            $this->labsPosts = new LabsPosts($this->labsClient, $this->serializer);
         }
 
-        return $this->labsExperiments;
+        return $this->labsPosts;
     }
 
     public function mediumArticles() : MediumArticles

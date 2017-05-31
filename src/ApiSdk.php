@@ -188,6 +188,7 @@ final class ApiSdk
             new Block\BoxNormalizer(),
             new Block\ButtonNormalizer(),
             new Block\CodeNormalizer(),
+            new Block\ExcerptNormalizer(),
             new Block\FigureNormalizer(),
             new Block\ImageNormalizer(),
             new Block\ListingNormalizer(),

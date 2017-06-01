@@ -8,6 +8,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -18,6 +19,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class ArticlesTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Articles */
     private $articles;
 
@@ -166,6 +169,22 @@ final class ArticlesTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_get_related_articles()
+    {
+        $this->mockRelatedArticlesCall('article7', true);
+
+        $relatedArticles = $this->articles->getRelatedArticles('article7');
+
+        $this->assertInstanceOf(Sequence::class, $relatedArticles);
+        $this->assertCount(3, $relatedArticles);
+        foreach ($relatedArticles as $relatedArticle) {
+            $this->assertInstanceOf(Article::class, $relatedArticle);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_subject()
     {
         $this->mockArticleListCall(1, 1, 5, true, ['subject']);
@@ -210,6 +229,71 @@ final class ArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'article1', 'article2', 'article3', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 'article3', 'article4', 'article5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 2, 'article3', 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockArticleListCall(1, 1, 5);
+        $this->mockArticleListCall(1, 100, 5);
+
+        $values = $this->articles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['article1', 'article2', 2, 'article4', 'article5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -222,38 +306,6 @@ final class ArticlesTest extends ApiTestCase
             $this->assertInstanceOf(ArticleVersion::class, $article);
             $this->assertSame('article'.($expected[$i]), $article->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -302,6 +354,14 @@ final class ArticlesTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->articles->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->articles, $this->articles->flatten());
     }
 
     /**

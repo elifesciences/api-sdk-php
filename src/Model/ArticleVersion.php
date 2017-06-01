@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishedDate, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -32,7 +32,6 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     private $copyright;
     private $authors;
     private $reviewers;
-    private $relatedArticles;
     private $funding;
     private $generatedDataSets;
     private $usedDataSets;
@@ -47,7 +46,7 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         int $version,
         string $type,
         string $doi,
-        string $authorLine,
+        string $authorLine = null,
         string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published = null,
@@ -58,12 +57,11 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         string $pdf = null,
         Sequence $subjects,
         array $researchOrganisms,
-        PromiseInterface $abstract,
+        ArticleSection $abstract = null,
         PromiseInterface $issue,
         PromiseInterface $copyright,
         Sequence $authors,
         Sequence $reviewers,
-        Sequence $relatedArticles,
         PromiseInterface $funding,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
@@ -90,39 +88,50 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         $this->copyright = $copyright;
         $this->authors = $authors;
         $this->reviewers = $reviewers;
-        $this->relatedArticles = $relatedArticles;
         $this->funding = $funding;
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
         $this->additionalFiles = $additionalFiles;
     }
 
-    final public function getId(): string
+    final public function getId() : string
     {
         return $this->id;
     }
 
-    final public function getStage(): string
+    final public function getStage() : string
     {
         return $this->stage;
     }
 
-    final public function getVersion(): int
+    final public function getVersion() : int
     {
         return $this->version;
     }
 
-    final public function getType(): string
+    final public function getType() : string
     {
         return $this->type;
     }
 
-    final public function getDoi(): string
+    final public function getCiteAs()
+    {
+        if (null === $this->getPublishedDate()) {
+            return null;
+        }
+
+        return sprintf('eLife %s;%s:%s', $this->getPublishedDate()->format('Y'), $this->getVolume(), $this->getElocationId());
+    }
+
+    final public function getDoi() : string
     {
         return $this->doi;
     }
 
-    final public function getAuthorLine(): string
+    /**
+     * @return string|null
+     */
+    final public function getAuthorLine()
     {
         return $this->authorLine;
     }
@@ -135,7 +144,7 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         return $this->titlePrefix;
     }
 
-    final public function getTitle(): string
+    final public function getTitle() : string
     {
         return $this->title;
     }
@@ -174,12 +183,12 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         return $this->statusDate;
     }
 
-    final public function getVolume(): int
+    final public function getVolume() : int
     {
         return $this->volume;
     }
 
-    final public function getElocationId(): string
+    final public function getElocationId() : string
     {
         return $this->elocationId;
     }
@@ -203,7 +212,7 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     /**
      * @return string[]
      */
-    final public function getResearchOrganisms(): array
+    final public function getResearchOrganisms() : array
     {
         return $this->researchOrganisms;
     }
@@ -213,7 +222,7 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
      */
     final public function getAbstract()
     {
-        return $this->abstract->wait();
+        return $this->abstract;
     }
 
     /**
@@ -224,27 +233,19 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
         return $this->issue->wait();
     }
 
-    final public function getCopyright(): Copyright
+    final public function getCopyright() : Copyright
     {
         return $this->copyright->wait();
     }
 
-    final public function getAuthors(): Sequence
+    final public function getAuthors() : Sequence
     {
         return $this->authors;
     }
 
-    final public function getReviewers(): Sequence
+    final public function getReviewers() : Sequence
     {
         return $this->reviewers;
-    }
-
-    /**
-     * @return Sequence|Article[]
-     */
-    final public function getRelatedArticles(): Sequence
-    {
-        return $this->relatedArticles;
     }
 
     /**
@@ -272,7 +273,7 @@ abstract class ArticleVersion implements Article, HasDoi, HasId, HasSubjects
     }
 
     /**
-     * @return Sequence|File[]
+     * @return Sequence|AssetFile[]
      */
     public function getAdditionalFiles() : Sequence
     {

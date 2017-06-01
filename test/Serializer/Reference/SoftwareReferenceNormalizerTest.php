@@ -8,16 +8,16 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\SoftwareReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\SoftwareReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class SoftwareReferenceNormalizerTest extends TestCase
 {
     /** @var SoftwareReferenceNormalizer */
     private $normalizer;
@@ -29,7 +29,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new SoftwareReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -58,7 +58,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         return [
             'software reference' => [$reference, null, true],
@@ -82,7 +82,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new SoftwareReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '1.0', 'http://www.example.com/'),
+                    new Place(['publisher']), '1.0', 'http://www.example.com/'),
                 [
                     'type' => 'software',
                     'id' => 'id',
@@ -109,7 +109,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new SoftwareReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
                 [
                     'type' => 'software',
                     'id' => 'id',
@@ -165,7 +165,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_software_references(array $json, SoftwareReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, SoftwareReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, SoftwareReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -196,7 +196,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new SoftwareReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '1.0', 'http://www.example.com/'),
+                    new Place(['publisher']), '1.0', 'http://www.example.com/'),
             ],
             'minimum' => [
                 [
@@ -219,7 +219,7 @@ final class SoftwareReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new SoftwareReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
             ],
         ];
     }

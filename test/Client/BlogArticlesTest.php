@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class BlogArticlesTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var BlogArticles */
     private $blogArticles;
 
@@ -178,6 +180,71 @@ final class BlogArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockBlogArticleListCall(1, 1, 5);
+        $this->mockBlogArticleListCall(1, 100, 5);
+
+        $values = $this->blogArticles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-4', 'blog-article-5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -190,38 +257,6 @@ final class BlogArticlesTest extends ApiTestCase
             $this->assertInstanceOf(BlogArticle::class, $blogArticle);
             $this->assertSame('blog-article-'.($expected[$i]), $blogArticle->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -270,6 +305,14 @@ final class BlogArticlesTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->blogArticles->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->blogArticles, $this->blogArticles->flatten());
     }
 
     /**

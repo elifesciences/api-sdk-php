@@ -7,7 +7,6 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Serializer\CoverNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -49,7 +48,7 @@ final class CoverNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)->sample('banner');
         $cover = new Cover('title', $image, Builder::dummy(ArticleVoR::class));
 
         return [
@@ -110,7 +109,7 @@ final class CoverNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
+        $image = Builder::for(Image::class)->sample('banner');
 
         return [
             [
@@ -119,11 +118,15 @@ final class CoverNormalizerTest extends ApiTestCase
                     'title' => 'title',
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '2:1' => [
-                                900 => 'https://placehold.it/900x450',
-                                1800 => 'https://placehold.it/1800x900',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                            'filename' => 'banner.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1800,
+                            'height' => 900,
                         ],
                     ],
                     'item' => [
@@ -132,13 +135,21 @@ final class CoverNormalizerTest extends ApiTestCase
                         'version' => 1,
                         'type' => 'research-article',
                         'doi' => '10.7554/eLife.14107',
-                        'authorLine' => 'Yongjian Huang et al',
                         'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
                         'volume' => 5,
                         'elocationId' => 'e14107',
                         'published' => '2016-03-28T00:00:00Z',
                         'versionDate' => '2016-03-28T00:00:00Z',
                         'statusDate' => '2016-03-28T00:00:00Z',
+                        'authorLine' => 'Yongjian Huang et al',
+                        'abstract' => [
+                            'content' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'Article 14107 abstract text',
+                                ],
+                            ],
+                        ],
                         'status' => 'poa',
                     ],
                 ],

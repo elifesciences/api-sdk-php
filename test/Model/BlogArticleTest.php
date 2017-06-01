@@ -13,10 +13,14 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class BlogArticleTest extends PHPUnit_Framework_TestCase
@@ -26,7 +30,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -39,7 +43,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -53,7 +57,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -66,11 +70,11 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
+        $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
-        $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -85,12 +89,32 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $blogArticle = new BlogArticle('id', 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasPublishedDate::class, $blogArticle);
         $this->assertEquals($date, $blogArticle->getPublishedDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_updated_date()
+    {
+        $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+        );
+        $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+        );
+
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
+        $this->assertEquals($date, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
     }
 
     /**
@@ -99,7 +123,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
         );
 
@@ -135,17 +159,11 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     {
         $content = [
             new Block\Paragraph('foo'),
-            new Block\Image(
-                new Block\ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
-            ),
-            new Block\Image(
-                new Block\ImageFile('10.1000/182', 'foo', 'bar', 'baz', new ArraySequence([new Block\Paragraph('qux')]), 'quxx',
-                    'http://www.example.com/image.jpg', ['corge'], ['grault'])
-            ),
+            new Block\Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(Image::class)->__invoke(), [], []),
             new Block\YouTube('foo', 300, 200),
         ];
 
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new ArraySequence($content),
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, new ArraySequence($content),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 

@@ -14,13 +14,8 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
-use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -68,7 +63,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
 
         $data['chapters'] = $data['chapters']
             ->map(function (array $chapter) use ($format, $context) {
-                return new PodcastEpisodeChapter($chapter['number'], $chapter['title'], $chapter['time'],
+                return new PodcastEpisodeChapter($chapter['number'], $chapter['title'], $chapter['longTitle'] ?? null, $chapter['time'],
                     $chapter['impactStatement'] ?? null,
                     new ArraySequence(array_map(function (array $item) use ($format, $context) {
                         $context['snippet'] = true;
@@ -89,21 +84,15 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             return new PodcastEpisodeSource($source['mediaType'], $source['uri']);
         }, $data['sources']);
 
-        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
-            $context['snippet'] = true;
-
-            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
-        }, $data['subjects'] ?? []));
-
         return new PodcastEpisode(
             $data['number'],
             $data['title'],
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['image']['banner'],
             $data['image']['thumbnail'],
             $data['sources'],
-            $data['subjects'],
             $data['chapters']
         );
     }
@@ -140,16 +129,12 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             $data['type'] = 'podcast-episode';
         }
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getSubjects()->notEmpty()) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
-                $context['snippet'] = true;
-
-                return $this->normalizer->normalize($subject, $format, $context);
-            })->toArray();
+        if ($object->getImpactStatement()) {
+            $data['impactStatement'] = $object->getImpactStatement();
         }
 
         if (empty($context['snippet'])) {
@@ -167,6 +152,11 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     'title' => $chapter->getTitle(),
                     'time' => $chapter->getTime(),
                 ];
+
+                if ($chapter->getLongTitle()) {
+                    $data['longTitle'] = $chapter->getLongTitle();
+                }
+
                 if ($chapter->getContent()->notEmpty()) {
                     $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($chapter->getContent(), $typeContext);
                 }

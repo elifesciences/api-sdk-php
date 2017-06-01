@@ -6,11 +6,11 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\WebReference;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -30,7 +30,8 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
             $data['authorsEtAl'] ?? false,
             $data['title'],
             $data['uri'],
-            $data['website'] ?? null
+            $data['website'] ?? null,
+            !empty($data['accessed']) ? Date::fromString($data['accessed']) : null
         );
     }
 
@@ -68,6 +69,10 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
 
         if ($object->getWebsite()) {
             $data['website'] = $object->getWebsite();
+        }
+
+        if ($object->getAccessed()) {
+            $data['accessed'] = $object->getAccessed()->toString();
         }
 
         return $data;

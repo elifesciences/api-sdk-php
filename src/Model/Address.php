@@ -79,4 +79,9 @@ final class Address
     {
         return $this->postalCode;
     }
+
+    public function toString() : string
+    {
+        return implode(', ', $this->formatted->toArray());
+    }
 }

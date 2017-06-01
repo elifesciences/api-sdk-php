@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class PeopleTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var People */
     private $people;
 
@@ -223,6 +225,71 @@ final class PeopleTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'person1', 'person2', 'person3', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 'person3', 'person4', 'person5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 2, 'person3', 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockPersonListCall(1, 1, 5);
+        $this->mockPersonListCall(1, 100, 5);
+
+        $values = $this->people->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['person1', 'person2', 2, 'person4', 'person5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -235,38 +302,6 @@ final class PeopleTest extends ApiTestCase
             $this->assertInstanceOf(Person::class, $person);
             $this->assertSame('person'.($expected[$i]), $person->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -315,6 +350,14 @@ final class PeopleTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->people->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->people, $this->people->flatten());
     }
 
     /**

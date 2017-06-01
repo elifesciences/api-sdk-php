@@ -20,7 +20,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -32,7 +32,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -45,7 +45,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -57,10 +57,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new SoftwareReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -73,7 +73,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -85,10 +85,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
         $withOut = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -101,7 +101,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('title', $reference->getTitle());
     }
@@ -113,7 +113,7 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            $software = new Place(null, null, ['publisher']));
+            $software = new Place(['publisher']));
 
         $this->assertEquals($software, $reference->getPublisher());
     }
@@ -125,10 +125,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), '1.0');
+            new Place(['publisher']), '1.0');
         $withOut = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('1.0', $with->getVersion());
         $this->assertNull($withOut->getVersion());
@@ -141,10 +141,10 @@ final class SoftwareReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']), null, 'http://www.example.com/');
+            new Place(['publisher']), null, 'http://www.example.com/');
         $withOut = new SoftwareReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
         $this->assertNull($withOut->getUri());

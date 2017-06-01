@@ -2,39 +2,17 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Place implements CastsToString, HasId
+final class Place implements CastsToString
 {
-    private $id;
-    private $coordinates;
     private $name;
     private $address;
 
     public function __construct(
-        string $id = null,
-        Coordinates $coordinates = null,
         array $name,
         Address $address = null
     ) {
-        $this->id = $id;
-        $this->coordinates = $coordinates;
         $this->name = $name;
         $this->address = $address;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Coordinates|null
-     */
-    public function getCoordinates()
-    {
-        return $this->coordinates;
     }
 
     /**
@@ -55,12 +33,6 @@ final class Place implements CastsToString, HasId
 
     public function toString() : string
     {
-        $string = implode(', ', $this->getName());
-
-        if ($this->getAddress()) {
-            $string .= ', '.implode(', ', $this->getAddress()->getFormatted()->toArray());
-        }
-
-        return $string;
+        return implode(', ', array_merge($this->getName(), $this->getAddress() ? [$this->getAddress()->toString()] : []));
     }
 }

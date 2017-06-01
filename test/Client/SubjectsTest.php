@@ -13,6 +13,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class SubjectsTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Subjects */
     private $subjects;
 
@@ -120,6 +122,71 @@ final class SubjectsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockSubjectListCall(1, 1, 5);
+        $this->mockSubjectListCall(1, 100, 5);
+
+        $values = $this->subjects->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'subject1', 'subject2', 'subject3', 'subject4', 'subject5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockSubjectListCall(1, 1, 5);
+        $this->mockSubjectListCall(1, 100, 5);
+
+        $values = $this->subjects->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['subject1', 'subject2', 'subject3', 'subject4', 'subject5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockSubjectListCall(1, 1, 5);
+        $this->mockSubjectListCall(1, 100, 5);
+
+        $values = $this->subjects->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['subject1', 'subject2', 'subject4', 'subject5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockSubjectListCall(1, 1, 5);
+        $this->mockSubjectListCall(1, 100, 5);
+
+        $values = $this->subjects->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['subject1', 'subject2', 2, 'subject3', 'subject4', 'subject5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockSubjectListCall(1, 1, 5);
+        $this->mockSubjectListCall(1, 100, 5);
+
+        $values = $this->subjects->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['subject1', 'subject2', 2, 'subject4', 'subject5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -132,38 +199,6 @@ final class SubjectsTest extends ApiTestCase
             $this->assertInstanceOf(Subject::class, $subject);
             $this->assertSame('subject'.($expected[$i]), $subject->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -212,6 +247,14 @@ final class SubjectsTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->subjects->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->subjects, $this->subjects->flatten());
     }
 
     /**

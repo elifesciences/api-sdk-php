@@ -10,7 +10,9 @@ final class Person implements Model, HasId, HasThumbnail
     private $id;
     private $details;
     private $type;
+    private $typeLabel;
     private $image;
+    private $affilitations;
     private $research;
     private $profile;
     private $competingInterests;
@@ -22,7 +24,9 @@ final class Person implements Model, HasId, HasThumbnail
         string $id,
         PersonDetails $details,
         string $type,
+        string $typeLabel,
         Image $image = null,
+        Sequence $affiliations,
         PromiseInterface $research,
         Sequence $profile,
         PromiseInterface $competingInterests
@@ -30,7 +34,9 @@ final class Person implements Model, HasId, HasThumbnail
         $this->id = $id;
         $this->details = $details;
         $this->type = $type;
+        $this->typeLabel = $typeLabel;
         $this->image = $image;
+        $this->affilitations = $affiliations;
         $this->research = $research;
         $this->profile = $profile;
         $this->competingInterests = $competingInterests;
@@ -51,12 +57,25 @@ final class Person implements Model, HasId, HasThumbnail
         return $this->type;
     }
 
+    public function getTypeLabel() : string
+    {
+        return $this->typeLabel;
+    }
+
     /**
      * @return Image|null
      */
     public function getThumbnail()
     {
         return $this->image;
+    }
+
+    /**
+     * @return Sequence|Place[]
+     */
+    public function getAffiliations() : Sequence
+    {
+        return $this->affilitations;
     }
 
     /**

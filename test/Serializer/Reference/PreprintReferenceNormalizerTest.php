@@ -7,16 +7,16 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PreprintReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class PreprintReferenceNormalizerTest extends TestCase
 {
     /** @var PreprintReferenceNormalizer */
     private $normalizer;
@@ -28,7 +28,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new PreprintReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -160,7 +160,7 @@ final class PreprintReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_preprint_references(array $json, PreprintReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, PreprintReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PreprintReference::class));
     }
 
     public function denormalizeProvider() : array

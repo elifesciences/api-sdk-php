@@ -14,12 +14,12 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
@@ -27,11 +27,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -79,10 +75,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             case 'insight':
             case 'research-advance':
             case 'research-article':
-            case 'research-exchange':
             case 'retraction':
             case 'registered-report':
             case 'replication-study':
+            case 'scientific-correspondence':
             case 'short-report':
             case 'tools-resources':
                 if ('poa' === $status) {
@@ -99,15 +95,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
     final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion
     {
-        $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
-
         if (!empty($context['snippet'])) {
             $complete = $this->snippetDenormalizer->denormalizeSnippet($data);
-
-            $data['abstract'] = $complete
-                ->then(function (Result $article) {
-                    return $article['abstract'] ?? null;
-                });
 
             $data['additionalFiles'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
@@ -116,7 +105,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['authors'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
-                    return $article['authors'];
+                    return $article['authors'] ?? [];
                 }));
 
             $data['copyright'] = $complete
@@ -139,11 +128,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                     return $article['issue'] ?? null;
                 });
 
-            $data['relatedArticles'] = new PromiseSequence($complete
-                ->then(function (Result $article) {
-                    return $article['relatedArticles'] ?? [];
-                }));
-
             $data['reviewers'] = new PromiseSequence($complete
                 ->then(function (Result $article) {
                     return $article['reviewers'] ?? [];
@@ -151,11 +135,9 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         } else {
             $complete = null;
 
-            $data['abstract'] = promise_for($data['abstract'] ?? null);
-
             $data['additionalFiles'] = new ArraySequence($data['additionalFiles'] ?? []);
 
-            $data['authors'] = new ArraySequence($data['authors']);
+            $data['authors'] = new ArraySequence($data['authors'] ?? []);
 
             $data['copyright'] = promise_for($data['copyright']);
 
@@ -165,27 +147,20 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['issue'] = promise_for($data['issue'] ?? null);
 
-            $data['relatedArticles'] = new ArraySequence($data['relatedArticles'] ?? []);
-
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
         }
 
-        $data['abstract'] = $data['abstract']
-            ->then(function ($abstract) use ($format, $context) {
-                if (empty($abstract)) {
-                    return null;
-                }
-
-                return new ArticleSection(
-                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $abstract['content'])),
-                    $abstract['doi'] ?? null
-                );
-            });
+        if (!empty($data['abstract'])) {
+            $data['abstract'] = new ArticleSection(
+                new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                }, $data['abstract']['content'])),
+                $data['abstract']['doi'] ?? null
+            );
+        }
 
         $data['additionalFiles'] = $data['additionalFiles']->map(function (array $file) use ($format, $context) {
-            return $this->denormalizer->denormalize($file, File::class, $format, $context);
+            return $this->denormalizer->denormalize($file, AssetFile::class, $format, $context);
         });
 
         $data['authors'] = $data['authors']->map(function (array $author) use ($format, $context) {
@@ -249,8 +224,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
         $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
 
-        $data['relatedArticles'] = $normalizationHelper->denormalizeSequence($data['relatedArticles'], Article::class, $context + ['snippet' => true]);
-
         return $this->denormalizeArticle($data, $complete, $class, $format, $context);
     }
 
@@ -267,7 +240,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'version' => $object->getVersion(),
             'type' => $object->getType(),
             'doi' => $object->getDoi(),
-            'authorLine' => $object->getAuthorLine(),
             'title' => $object->getTitle(),
             'volume' => $object->getVolume(),
             'elocationId' => $object->getElocationId(),
@@ -287,6 +259,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['titlePrefix'] = $object->getTitlePrefix();
         }
 
+        if ($object->getAuthorLine()) {
+            $data['authorLine'] = $object->getAuthorLine();
+        }
+
         if ($object->getPdf()) {
             $data['pdf'] = $object->getPdf();
         }
@@ -303,6 +279,21 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['researchOrganisms'] = $object->getResearchOrganisms();
         }
 
+        if ($object->getAbstract()) {
+            $data['abstract'] = [
+                'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
+                    $format,
+                    $context
+                ) {
+                    return $this->normalizer->normalize($block, $format, $context);
+                })->toArray(),
+            ];
+
+            if ($object->getAbstract()->getDoi()) {
+                $data['abstract']['doi'] = $object->getAbstract()->getDoi();
+            }
+        }
+
         if (empty($context['snippet'])) {
             $data['copyright'] = [
                 'license' => $object->getCopyright()->getLicense(),
@@ -313,9 +304,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 $data['copyright']['holder'] = $object->getCopyright()->getHolder();
             }
 
-            $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            })->toArray();
+            if ($object->getAuthors()->notEmpty()) {
+                $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
+                    return $this->normalizer->normalize($author, $format, $context);
+                })->toArray();
+            }
 
             if ($object->getReviewers()->notEmpty()) {
                 $data['reviewers'] = $object->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {
@@ -323,28 +316,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 })->toArray();
             }
 
-            $typeContext = array_merge($context, ['type' => true]);
-            if ($object->getRelatedArticles()->notEmpty()) {
-                $data['relatedArticles'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedArticles(), $typeContext);
-            }
-
             if ($object->getIssue()) {
                 $data['issue'] = $object->getIssue();
-            }
-
-            if ($object->getAbstract()) {
-                $data['abstract'] = [
-                    'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
-                        $format,
-                        $context
-                    ) {
-                        return $this->normalizer->normalize($block, $format, $context);
-                    })->toArray(),
-                ];
-
-                if ($object->getAbstract()->getDoi()) {
-                    $data['abstract']['doi'] = $object->getAbstract()->getDoi();
-                }
             }
 
             if ($object->getFunding()) {
@@ -391,7 +364,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getAdditionalFiles()->notEmpty()) {
                 $data['additionalFiles'] = $object->getAdditionalFiles()
-                    ->map(function (File $file) use ($format, $context) {
+                    ->map(function (AssetFile $file) use ($format, $context) {
                         return $this->normalizer->normalize($file, $format, $context);
                     })->toArray();
             }
@@ -400,7 +373,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return $this->normalizeArticle($object, $data, $format, $context);
     }
 
-    final protected function isArticleType(string $type)
+    final protected function isArticleType($type)
     {
         return in_array($type, [
             'correction',
@@ -409,13 +382,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'insight',
             'research-advance',
             'research-article',
-            'research-exchange',
             'retraction',
             'registered-report',
             'replication-study',
+            'scientific-correspondence',
             'short-report',
             'tools-resources',
-        ]);
+        ], true);
     }
 
     abstract protected function denormalizeArticle(

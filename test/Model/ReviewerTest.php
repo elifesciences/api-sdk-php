@@ -68,7 +68,7 @@ final class ReviewerTest extends PHPUnit_Framework_TestCase
     public function it_may_have_affiliations()
     {
         $with = Builder::for(Reviewer::class)
-            ->withAffiliations($affiliations = [new Place(null, null, ['affiliation'])])
+            ->withAffiliations($affiliations = [new Place(['affiliation'])])
             ->__invoke();
         $withOut = Builder::for(Reviewer::class)
             ->withAffiliations([])

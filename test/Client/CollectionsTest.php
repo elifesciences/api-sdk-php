@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class CollectionsTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Collections */
     private $collections;
 
@@ -179,6 +181,71 @@ final class CollectionsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $values = $this->collections->prepend('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $values = $this->collections->append('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $values = $this->collections->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $values = $this->collections->insert(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockCollectionListCall(1, 1, 5);
+        $this->mockCollectionListCall(1, 100, 5);
+
+        $values = $this->collections->set(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -274,6 +341,14 @@ final class CollectionsTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->collections->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->collections, $this->collections->flatten());
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
@@ -17,6 +18,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 class SearchTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Search */
     private $search;
 
@@ -85,7 +88,7 @@ class SearchTest extends ApiTestCase
         $this->assertInstanceOf(Model::class, $this->search[0]);
 
         $this->mockNotFound(
-            'search?for=&page=6&per-page=1&sort=relevance&order=desc',
+            'search?for=&page=6&per-page=1&sort=relevance&order=desc&use-date=default',
             ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
         );
 
@@ -139,6 +142,39 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_use_published_dates()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'date', 'published');
+        $this->mockFirstPageCall(5, '', true, [], [], 'date', 'published');
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->sortBy('date')->useDate('published')));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_start_date()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_end_date()
+    {
+        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
+    }
+
+    /**
+     * @test
+     */
     public function it_recounts_when_filtering()
     {
         $this->mockCountCall(5);
@@ -186,6 +222,71 @@ class SearchTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->prepend('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->append('foo', 'bar')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->insert(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockCountCall(5);
+        $this->mockFirstPageCall(5);
+
+        $values = $this->search->set(2, 'foo')->map($this->tidyValue());
+
+        $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -195,39 +296,6 @@ class SearchTest extends ApiTestCase
         }
 
         $this->traverseAndSanityCheck($this->search->slice($offset, $length));
-    }
-
-    public function sliceProvider() : array
-    {
-        // 3rd arguments have to be updated to describe the expected result
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -277,6 +345,14 @@ class SearchTest extends ApiTestCase
         };
 
         $this->assertSame(105, $this->search->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->search, $this->search->flatten());
     }
 
     /**
@@ -357,9 +433,9 @@ class SearchTest extends ApiTestCase
         }
     }
 
-    private function mockCountCall(int $count, string $query = '', bool $descendingOrder = true, array $subjects = [], $types = [], $sort = 'relevance')
+    private function mockCountCall(int $count, ...$options)
     {
-        $this->mockSearchCall(1, 1, $count, $query, $descendingOrder, $subjects, $types, $sort);
+        $this->mockSearchCall(1, 1, $count, ...$options);
     }
 
     private function mockFirstPageCall($total, ...$options)

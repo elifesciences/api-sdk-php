@@ -81,6 +81,101 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $collection = $collection->prepend(-1, 0);
+
+        $this->assertSame([-1, 0, 1, 2, 3, 4, 5], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $collection = $collection->append(6, 7);
+
+        $this->assertSame([1, 2, 3, 4, 5, 6, 7], $collection->toArray());
+    }
+
+    /**
+     * @test
+     * @dataProvider dropProvider
+     */
+    public function it_can_have_values_dropped(array $drop, array $expected)
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $collection = $collection->drop(...$drop);
+
+        $this->assertSame($expected, $collection->toArray());
+    }
+
+    public function dropProvider() : array
+    {
+        return [
+            '1, 3' => [[1, 3], [1, 3, 5]],
+            '100' => [[100], [1, 2, 3, 4, 5]],
+            '-2' => [[-2], [1, 2, 3, 5]],
+            '-2, 1' => [[-2, 1], [1, 3, 5]],
+            '4, -2' => [[4, -2], [1, 2, 3]],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider insertProvider
+     */
+    public function it_can_have_values_inserted(int $index, array $expected)
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $collection = $collection->insert($index, 'foo');
+
+        $this->assertSame($expected, $collection->toArray());
+    }
+
+    public function insertProvider() : array
+    {
+        return [
+            '2' => [2, [1, 2, 'foo', 3, 4, 5]],
+            '100' => [100, [1, 2, 3, 4, 5, 'foo']],
+            '-2' => [-2, [1, 2, 3, 'foo', 4, 5]],
+            '-100' => [-100, ['foo', 1, 2, 3, 4, 5]],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider setProvider
+     */
+    public function it_can_have_a_value_set(int $index, array $expected)
+    {
+        $collection = new ArraySequence([1, 2, 3, 4, 5]);
+
+        $collection = $collection->set($index, 'foo');
+
+        $this->assertSame($expected, $collection->toArray());
+    }
+
+    public function setProvider() : array
+    {
+        return [
+            'index 0' => [0, ['foo', 2, 3, 4, 5]],
+            'index 2' => [2, [1, 2, 'foo', 4, 5]],
+            'index 100' => [100, [1, 2, 3, 4, 5, 'foo']],
+            'index -1' => [-1, [1, 2, 3, 4, 'foo']],
+            'index -2' => [-2, [1, 2, 3, 'foo', 5]],
+        ];
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected)
@@ -155,6 +250,20 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_also_provides_the_index_when_filtering_with_a_callback()
+    {
+        $collection = new ArraySequence([5, 9, 100]);
+
+        $filter = function (int $value, int $index) {
+            return $index > 0;
+        };
+
+        $this->assertSame([9, 100], $collection->filter($filter)->toArray());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_reduced()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -164,6 +273,16 @@ final class ArraySequenceTest extends PHPUnit_Framework_TestCase
         };
 
         $this->assertSame(115, $collection->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_flattened()
+    {
+        $collection = new ArraySequence([1, new ArraySequence([2, new ArraySequence([3, 4]), 5]), 6]);
+
+        $this->assertSame([1, 2, 3, 4, 5, 6], $collection->flatten()->toArray());
     }
 
     /**

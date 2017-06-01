@@ -5,22 +5,21 @@ namespace test\eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\JournalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class JournalReferenceNormalizerTest extends TestCase
 {
     /** @var JournalReferenceNormalizer */
     private $normalizer;
@@ -32,7 +31,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new JournalReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -62,7 +61,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new JournalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            new Place(null, null, ['journal']), new StringReferencePage('foo'));
+            'journal', new StringReferencePage('foo'));
 
         return [
             'journal reference' => [$reference, null, true],
@@ -86,7 +85,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new JournalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'journal', new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
                 [
                     'type' => 'journal',
@@ -102,9 +101,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'pages' => [
                         'first' => 'first',
                         'last' => 'last',
@@ -120,7 +117,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['journal']), new StringReferencePage('pages')),
+                    'journal', new StringReferencePage('pages')),
                 [
                     'type' => 'journal',
                     'id' => 'id',
@@ -135,9 +132,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'pages' => 'pages',
                 ],
             ],
@@ -177,7 +172,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_journal_references(array $json, JournalReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, JournalReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, JournalReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -200,9 +195,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     ],
                     'authorsEtAl' => true,
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'pages' => [
                         'first' => 'first',
                         'last' => 'last',
@@ -214,7 +207,7 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new JournalReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'article title',
-                    new Place(null, null, ['journal']), new ReferencePageRange('first', 'last', 'range'), 'volume',
+                    'journal', new ReferencePageRange('first', 'last', 'range'), 'volume',
                     '10.1000/182', 18183754),
             ],
             'minimum' => [
@@ -232,14 +225,12 @@ final class JournalReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                         ],
                     ],
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'pages' => 'pages',
                 ],
                 new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    new Place(null, null, ['journal']), new StringReferencePage('pages')),
+                    'journal', new StringReferencePage('pages')),
             ],
         ];
     }

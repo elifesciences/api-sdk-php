@@ -16,11 +16,7 @@ use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class InterviewNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -81,6 +77,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             ),
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['content']
         );
@@ -108,6 +105,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
 
         if (!empty($context['type'])) {
             $data['type'] = 'interview';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

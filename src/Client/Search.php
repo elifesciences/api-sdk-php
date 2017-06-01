@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -28,6 +29,9 @@ final class Search implements Iterator, Sequence
     private $subjectsQuery = [];
     private $typesQuery = [];
     private $sort = 'relevance';
+    private $useDate = 'default';
+    private $startDate;
+    private $endDate;
 
     // cached outputs
     private $count;
@@ -84,6 +88,37 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
 
+    public function useDate(string $useDate) : self
+    {
+        $clone = clone $this;
+
+        $clone->useDate = $useDate;
+
+        return $clone;
+    }
+
+    public function startDate(DateTimeImmutable $startDate = null) : self
+    {
+        $clone = clone $this;
+
+        $clone->startDate = $startDate;
+
+        $clone->invalidateDataIfDifferent('startDate', $this);
+
+        return $clone;
+    }
+
+    public function endDate(DateTimeImmutable $endDate = null) : self
+    {
+        $clone = clone $this;
+
+        $clone->endDate = $endDate;
+
+        $clone->invalidateDataIfDifferent('endDate', $this);
+
+        return $clone;
+    }
+
     /**
      * @param string $sort 'relevance' or 'date'?
      */
@@ -117,7 +152,10 @@ final class Search implements Iterator, Sequence
                 $this->sort,
                 $this->descendingOrder,
                 $this->subjectsQuery,
-                $this->typesQuery
+                $this->typesQuery,
+                $this->useDate,
+                $this->startDate,
+                $this->endDate
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -173,7 +211,7 @@ final class Search implements Iterator, Sequence
 
     private function invalidateDataIfDifferent(string $field, self $another)
     {
-        if ($this->$field !== $another->$field) {
+        if ($this->$field != $another->$field) {
             $this->count = null;
             $this->types = null;
             $this->subjects = null;

@@ -4,7 +4,6 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
-use eLife\ApiSdk\Model\Place;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -30,7 +29,32 @@ final class ExternalArticleTest extends PHPUnit_Framework_TestCase
             ->withArticleTitle('foo')
             ->__invoke();
 
-        $this->assertSame('foo', $article->getArticleTitle());
+        $this->assertSame('foo', $article->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_article_type()
+    {
+        /** @var ExternalArticle $article */
+        $article = Builder::for(ExternalArticle::class)
+            ->__invoke();
+
+        $this->assertSame('external-article', $article->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_article_id()
+    {
+        /** @var ExternalArticle $article */
+        $article = Builder::for(ExternalArticle::class)
+            ->withUri('http://www.example.com/#1234')
+            ->__invoke();
+
+        $this->assertSame('external-64d4ba4ded4ab0e4c9e67550ff9520735adb2bfe', $article->getId());
     }
 
     /**
@@ -51,10 +75,10 @@ final class ExternalArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_journal()
     {
         $article = Builder::for(ExternalArticle::class)
-            ->withJournal($journal = new Place(null, null, ['foo']))
+            ->withJournal('foo')
             ->__invoke();
 
-        $this->assertEquals($journal, $article->getJournal());
+        $this->assertSame('foo', $article->getJournal());
     }
 
     /**

@@ -22,7 +22,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertInstanceOf(Reference::class, $reference);
     }
@@ -34,7 +34,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertInstanceOf(HasId::class, $reference);
         $this->assertSame('id', $reference->getId());
@@ -47,7 +47,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', $date = new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertEquals($date, $reference->getDate());
     }
@@ -59,10 +59,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), 'a',
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
         $withOut = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertSame('a', $with->getDiscriminator());
         $this->assertNull($withOut->getDiscriminator());
@@ -75,7 +75,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
             $authors = [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertEquals($authors, $reference->getAuthors());
     }
@@ -87,10 +87,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
         $withOut = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertTrue($with->authorsEtAl());
         $this->assertFalse($withOut->authorsEtAl());
@@ -103,7 +103,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertSame('title', $reference->getArticleTitle());
     }
@@ -115,7 +115,7 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            $conference = new Place(null, null, ['conference']));
+            $conference = new Place(['conference']));
 
         $this->assertEquals($conference, $reference->getConference());
     }
@@ -127,10 +127,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']), $pages = new StringReferencePage('foo'));
+            new Place(['conference']), $pages = new StringReferencePage('foo'));
         $withOut = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertEquals($pages, $with->getPages());
         $this->assertNull($withOut->getPages());
@@ -143,10 +143,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']), null, '10.1000/182');
+            new Place(['conference']), null, '10.1000/182');
         $withOut = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
@@ -160,10 +160,10 @@ final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']), null, null, 'http://www.example.com/');
+            new Place(['conference']), null, null, 'http://www.example.com/');
         $withOut = new ConferenceProceedingReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         $this->assertSame('http://www.example.com/', $with->getUri());
         $this->assertNull($withOut->getUri());

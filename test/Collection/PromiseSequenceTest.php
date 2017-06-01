@@ -108,6 +108,66 @@ final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
+
+        $collection = $collection->prepend(-1, 0);
+
+        $this->assertSame([-1, 0, 1, 2, 3, 4, 5], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
+
+        $collection = $collection->append(6, 7);
+
+        $this->assertSame([1, 2, 3, 4, 5, 6, 7], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
+
+        $collection = $collection->drop(1, 3);
+
+        $this->assertSame([1, 3, 5], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
+
+        $collection = $collection->insert(2, 'foo', 'bar');
+
+        $this->assertSame([1, 2, 'foo', 'bar', 3, 4, 5], $collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_a_value_set()
+    {
+        $collection = new PromiseSequence(promise_for([1, 2, 3, 4, 5]));
+
+        $collection = $collection->set(2, 'foo');
+
+        $this->assertSame([1, 2, 'foo', 4, 5], $collection->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected)
@@ -182,6 +242,16 @@ final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
         };
 
         $this->assertSame(115, $collection->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_flattened()
+    {
+        $collection = new PromiseSequence(promise_for([1, new ArraySequence([2]), 3, 4, 5]));
+
+        $this->assertSame([1, 2, 3, 4, 5], $collection->flatten()->toArray());
     }
 
     /**

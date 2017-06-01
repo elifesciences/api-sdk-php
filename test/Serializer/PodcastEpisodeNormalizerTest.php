@@ -12,7 +12,6 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
@@ -61,8 +60,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), rejection_for('No banner'),
-            new Image('', [900 => 'https://placehold.it/900x450']),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
@@ -135,27 +133,18 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter 1 title', 0, 'Chapter impact statement',
+                    new ArraySequence([
+                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
                             new ArraySequence([
                                 Builder::for(ArticlePoA::class)
                                     ->withTitlePrefix('title prefix')
@@ -174,28 +163,33 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                     ],
@@ -208,8 +202,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'chapters' => [
                         [
                             'number' => 1,
-                            'title' => 'Chapter 1 title',
+                            'title' => 'Chapter title',
                             'time' => 0,
+                            'longTitle' => 'Long chapter title',
                             'content' => [
                                 [
                                     'id' => '14107',
@@ -230,25 +225,33 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                         ['id' => 'subject1', 'name' => 'Subject 1'],
                                     ],
                                     'researchOrganisms' => ['research organism'],
+                                    'abstract' => [
+                                        'content' => [
+                                            [
+                                                'type' => 'paragraph',
+                                                'text' => 'Article 14107 abstract text',
+                                            ],
+                                        ],
+                                    ],
                                     'status' => 'poa',
                                 ],
                                 [
                                     'id' => 'tropical-disease',
                                     'type' => 'collection',
                                     'title' => 'Tropical disease',
-                                    'updated' => '2000-01-01T00:00:00Z',
+                                    'published' => '2000-01-01T00:00:00Z',
                                     'image' => [
                                         'thumbnail' => [
                                             'alt' => '',
-                                            'sizes' => [
-                                                '16:9' => [
-                                                    250 => 'https://placehold.it/250x141',
-                                                    500 => 'https://placehold.it/500x281',
-                                                ],
-                                                '1:1' => [
-                                                    70 => 'https://placehold.it/70x70',
-                                                    140 => 'https://placehold.it/140x140',
-                                                ],
+                                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                            'source' => [
+                                                'mediaType' => 'image/jpeg',
+                                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                                'filename' => 'thumbnail.jpg',
+                                            ],
+                                            'size' => [
+                                                'width' => 140,
+                                                'height' => 140,
                                             ],
                                         ],
                                     ],
@@ -258,7 +261,10 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                             'preferred' => 'Prabhat Jha',
                                             'index' => 'Jha, Prabhat',
                                         ],
-                                        'type' => 'senior-editor',
+                                        'type' => [
+                                            'id' => 'senior-editor',
+                                            'label' => 'Senior Editor',
+                                        ],
                                     ],
                                 ],
                             ],
@@ -280,7 +286,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     1,
                     'Podcast episode 1 title',
                     null,
-                    $date,
+                    $published,
+                    null,
                     promise_for($banner),
                     $thumbnail,
                     [
@@ -289,11 +296,11 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'https://www.example.com/episode.mp3'
                         ),
                     ],
-                    new EmptySequence(),
                     new ArraySequence([
                         new PodcastEpisodeChapter(
                             1,
                             'Chapter title',
+                            null,
                             0,
                             null,
                             new EmptySequence()),
@@ -303,28 +310,32 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                     ],
@@ -344,11 +355,11 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date,
+                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                    new ArraySequence([
+                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
                             Builder::for(ArticlePoA::class)->sample('1'),
                         ])),
                     ])),
@@ -357,19 +368,20 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
                     'impactStatement' => 'Podcast episode 1 impact statement',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -386,28 +398,28 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $date, promise_for($banner), $thumbnail,
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new EmptySequence(), new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 0, null, new EmptySequence()),
+                    new ArraySequence([
+                        new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
                     ])),
                 ['snippet' => true],
                 [
                     'number' => 1,
                     'title' => 'Podcast episode 1 title',
-                    'published' => $date->format(ApiSdk::DATE_FORMAT),
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],

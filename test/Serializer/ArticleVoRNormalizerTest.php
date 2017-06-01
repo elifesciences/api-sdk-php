@@ -13,10 +13,8 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
-use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -133,24 +131,16 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
                     ->withPdf('http://www.example.com/')
+                    ->withFiguresPdf('http://www.example.com/figures')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
-                    ->withSequenceOfRelatedArticles(
-                        Builder::for(ArticleVoR::class)->sample('homo-naledi'),
-                        Builder::for(ExternalArticle::class)
-                            ->withArticleTitle('External related article title')
-                            ->withJournal(new Place(null, null, ['Journal']))
-                            ->withAuthorLine('Author line')
-                            ->withUri('http://www.example.com/')
-                            ->__invoke()
-                    )
                     ->__invoke(),
                 [],
                 [
@@ -159,7 +149,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
@@ -167,11 +156,21 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'versionDate' => '2015-09-10T00:00:00Z',
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
+                    'authorLine' => 'Lee R Berger et al',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 abstract text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560abstract',
+                    ],
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -195,65 +194,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'role' => 'Role',
                         ],
                     ],
-                    'relatedArticles' => [
-                        [
-                            'id' => '09560',
-                            'stage' => 'published',
-                            'version' => 1,
-                            'type' => 'research-article',
-                            'doi' => '10.7554/eLife.09560',
-                            'authorLine' => 'Lee R Berger et al',
-                            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
-                            'volume' => 4,
-                            'elocationId' => 'e09560',
-                            'published' => '2015-09-10T00:00:00Z',
-                            'versionDate' => '2015-09-10T00:00:00Z',
-                            'statusDate' => '2015-09-10T00:00:00Z',
-                            'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
-                            'subjects' => [
-                                0 => [
-                                    'id' => 'genomics-evolutionary-biology',
-                                    'name' => 'Genomics and Evolutionary Biology',
-                                ],
-                            ],
-                            'status' => 'vor',
-                            'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                            'image' => [
-                                'thumbnail' => [
-                                    'alt' => '',
-                                    'sizes' => [
-                                        '16:9' => [
-                                            250 => 'https://placehold.it/250x141',
-                                            500 => 'https://placehold.it/500x281',
-                                        ],
-                                        '1:1' => [
-                                            70 => 'https://placehold.it/70x70',
-                                            140 => 'https://placehold.it/140x140',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        [
-                            'articleTitle' => 'External related article title',
-                            'journal' => [
-                                'name' => ['Journal'],
-                            ],
-                            'authorLine' => 'Author line',
-                            'uri' => 'http://www.example.com/',
-                            'type' => 'external-article',
-                        ],
-                    ],
                     'issue' => 1,
-                    'abstract' => [
-                        'content' => [
-                            [
-                                'type' => 'paragraph',
-                                'text' => 'Article 09560 abstract text',
-                            ],
-                        ],
-                        'doi' => '10.7554/eLife.09560abstract',
-                    ],
                     'funding' => [
                         'awards' => [
                             [
@@ -328,28 +269,20 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
                             ],
-                        ],
-                        'banner' => [
-                            'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -398,9 +331,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ],
                     'references' => [
                         [
-                            'type' => 'book',
                             'id' => 'ref1',
                             'date' => '2000',
+                            'bookTitle' => 'book title',
+                            'publisher' => [
+                                'name' => ['publisher'],
+                            ],
                             'authors' => [
                                 [
                                     'type' => 'person',
@@ -410,10 +346,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                     ],
                                 ],
                             ],
-                            'bookTitle' => 'book title',
-                            'publisher' => [
-                                'name' => ['publisher'],
-                            ],
+                            'type' => 'book',
                         ],
                     ],
                     'acknowledgements' => [
@@ -465,13 +398,14 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withAuthorLine(null)
+                    ->withSequenceOfAuthors()
                     ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
-                    ->withPromiseOfBanner(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())
@@ -485,7 +419,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 [],
                 [
@@ -494,22 +427,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
                     'copyright' => [
                         'license' => 'license',
                         'statement' => 'statement',
-                    ],
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'Author',
-                                'index' => 'Author',
-                            ],
-                        ],
                     ],
                     'status' => 'vor',
                     'body' => [
@@ -531,12 +454,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
                     ->withPdf('http://www.example.com/')
+                    ->withFiguresPdf('http://www.example.com/figures')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
@@ -549,7 +473,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',
@@ -557,25 +480,36 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'versionDate' => '2015-09-10T00:00:00Z',
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
+                    'authorLine' => 'Lee R Berger et al',
                     'pdf' => 'http://www.example.com/',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'researchOrganisms' => ['research organism'],
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 abstract text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560abstract',
+                    ],
                     'status' => 'vor',
+                    'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -590,12 +524,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withAuthorLine(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
-                    ->withPromiseOfAbstract(null)
+                    ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
-                    ->withPromiseOfBanner(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())
@@ -609,7 +543,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withSequenceOfRelatedArticles()
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -618,7 +551,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'version' => 1,
                     'type' => 'research-article',
                     'doi' => '10.7554/eLife.09560',
-                    'authorLine' => 'Lee R Berger et al',
                     'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                     'volume' => 4,
                     'elocationId' => 'e09560',

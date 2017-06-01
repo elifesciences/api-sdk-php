@@ -8,13 +8,17 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\MediumArticle;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class MediumArticlesTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var MediumArticles */
     private $mediumArticles;
 
@@ -25,7 +29,7 @@ final class MediumArticlesTest extends ApiTestCase
     {
         $this->mediumArticles = new MediumArticles(
             new MediumClient($this->getHttpClient()),
-            new Serializer([new MediumArticleNormalizer(), new ImageNormalizer()])
+            new NormalizerAwareSerializer([new MediumArticleNormalizer(), new ImageNormalizer(), new AssetFileNormalizer(), new FileNormalizer()])
         );
     }
 
@@ -112,6 +116,71 @@ final class MediumArticlesTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Medium article 1 title', 'Medium article 2 title', 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 2, 'Medium article 3 title', 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockMediumArticleListCall(1, 1, 5);
+        $this->mockMediumArticleListCall(1, 100, 5);
+
+        $values = $this->mediumArticles->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Medium article 1 title', 'Medium article 2 title', 2, 'Medium article 4 title', 'Medium article 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -124,38 +193,6 @@ final class MediumArticlesTest extends ApiTestCase
             $this->assertInstanceOf(MediumArticle::class, $mediumArticle);
             $this->assertSame('Medium article '.($expected[$i]).' title', $mediumArticle->getTitle());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -205,6 +242,14 @@ final class MediumArticlesTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->mediumArticles->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->mediumArticles, $this->mediumArticles->flatten());
     }
 
     /**

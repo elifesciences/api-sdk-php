@@ -2,21 +2,21 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ImageNormalizer implements NormalizerInterface, DenormalizerInterface
+final class ImageNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+
     public function denormalize($data, $class, $format = null, array $context = []) : Image
     {
-        $sizes = [];
-        foreach ($data['sizes'] as $ratio => $images) {
-            $sizes[] = new ImageSize($ratio, $images);
-        }
+        $data['source'] = $this->denormalizer->denormalize($data['source'], File::class);
 
-        return new Image($data['alt'], $sizes);
+        return new Image($data['alt'], $data['uri'], $data['source'], $data['size']['width'], $data['size']['height'], $data['focalPoint']['x'] ?? 50, $data['focalPoint']['y'] ?? 50);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool
@@ -31,11 +31,20 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         $data = [
             'alt' => $object->getAltText(),
-            'sizes' => [],
+            'uri' => $object->getUri(),
+            'source' => $this->normalizer->normalize($object->getSource()),
+            'size' => [
+                'width' => $object->getWidth(),
+                'height' => $object->getHeight(),
+            ],
+            'focalPoint' => [
+                'x' => $object->getFocalPointX(),
+                'y' => $object->getFocalPointY(),
+            ],
         ];
 
-        foreach ($object->getSizes() as $size) {
-            $data['sizes'][$size->getRatio()] = $size->getImages();
+        if (50 === $data['focalPoint']['x'] && 50 === $data['focalPoint']['y']) {
+            unset($data['focalPoint']);
         }
 
         return $data;

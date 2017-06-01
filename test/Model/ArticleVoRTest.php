@@ -9,13 +9,11 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasReferences;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -27,6 +25,22 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function setUp()
     {
         $this->builder = Builder::for(ArticleVoR::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_figures_pdf()
+    {
+        $with = $this->builder
+            ->withFiguresPdf('http://www.example.com/article14107.pdf')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withFiguresPdf(null)
+            ->__invoke();
+
+        $this->assertSame('http://www.example.com/article14107.pdf', $with->getFiguresPdf());
+        $this->assertNull($withOut->getFiguresPdf());
     }
 
     /**
@@ -49,27 +63,10 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
-    public function it_may_have_a_banner()
-    {
-        $with = $this->builder
-            ->withPromiseOfBanner($banner = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]))
-            ->__invoke();
-        $withOut = $this->builder
-            ->withPromiseOfBanner(null)
-            ->__invoke();
-
-        $this->assertInstanceOf(HasBanner::class, $with);
-        $this->assertEquals($banner, $with->getBanner());
-        $this->assertNull($withOut->getBanner());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_a_thumbnail()
     {
         $with = $this->builder
-            ->withThumbnail($thumbnail = new Image('', [new ImageSize('16:9', [250 => 'https://placehold.it/250x141', 500 => 'https://placehold.it/500x281']), new ImageSize('1:1', ['70' => 'https://placehold.it/70x70', '140' => 'https://placehold.it/140x140'])]))
+            ->withThumbnail($thumbnail = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
         $withOut = $this->builder
             ->withThumbnail(null)
@@ -165,8 +162,10 @@ final class ArticleVoRTest extends ArticleVersionTest
                     )),
                 ],
                 false,
+                [],
+                false,
                 'book title',
-                new Place(null, null, ['publisher'])
+                new Place(['publisher'])
             ),
         ]);
 

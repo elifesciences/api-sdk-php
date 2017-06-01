@@ -2,10 +2,10 @@
 
 namespace eLife\ApiSdk\Collection;
 
-use ArrayIterator;
 use eLife\ApiSdk\CanBeCounted;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\ImmutableArrayAccess;
+use EmptyIterator;
 use IteratorAggregate;
 use Traversable;
 
@@ -16,7 +16,7 @@ final class EmptySequence implements IteratorAggregate, Sequence
 
     public function getIterator() : Traversable
     {
-        return new ArrayIterator([]);
+        return new EmptyIterator();
     }
 
     public function count() : int
@@ -27,6 +27,31 @@ final class EmptySequence implements IteratorAggregate, Sequence
     public function toArray() : array
     {
         return [];
+    }
+
+    public function prepend(...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function append(...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function drop(int ...$indexes) : Sequence
+    {
+        return $this;
+    }
+
+    public function insert(int $index, ...$values) : Sequence
+    {
+        return new ArraySequence($values);
+    }
+
+    public function set(int $index, $value) : Sequence
+    {
+        return new ArraySequence([$value]);
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -47,6 +72,11 @@ final class EmptySequence implements IteratorAggregate, Sequence
     public function reduce(callable $callback, $initial = null)
     {
         return $initial;
+    }
+
+    public function flatten() : Sequence
+    {
+        return $this;
     }
 
     public function sort(callable $callback = null) : Sequence

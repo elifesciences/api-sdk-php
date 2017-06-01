@@ -7,15 +7,15 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\WebReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\WebReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class WebReferenceNormalizerTest extends TestCase
 {
     /** @var WebReferenceNormalizer */
     private $normalizer;
@@ -27,7 +27,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new WebReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -79,7 +79,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new WebReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    'http://www.example.com/', 'website'),
+                    'http://www.example.com/', 'website', Date::fromString('2001-01-01')),
                 [
                     'type' => 'web',
                     'id' => 'id',
@@ -98,6 +98,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'discriminator' => 'a',
                     'authorsEtAl' => true,
                     'website' => 'website',
+                    'accessed' => '2001-01-01',
                 ],
             ],
             'minimum' => [
@@ -157,7 +158,7 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_web_references(array $json, WebReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, WebReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, WebReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -182,10 +183,11 @@ final class WebReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     'title' => 'title',
                     'website' => 'website',
                     'uri' => 'http://www.example.com/',
+                    'accessed' => '2001-01-01',
                 ],
                 new WebReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    'http://www.example.com/', 'website'),
+                    'http://www.example.com/', 'website', Date::fromString('2001-01-01')),
             ],
             'minimum' => [
                 [

@@ -14,11 +14,7 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -72,6 +68,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $data['id'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['content'],
             $data['subjects']
@@ -99,6 +96,10 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
 
         if (!empty($context['type'])) {
             $data['type'] = 'blog-article';
+        }
+
+        if ($object->getUpdatedDate()) {
+            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getImpactStatement()) {

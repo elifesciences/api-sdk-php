@@ -7,15 +7,15 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PatentReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class PatentReferenceNormalizerTest extends TestCase
 {
     /** @var PatentReferenceNormalizer */
     private $normalizer;
@@ -27,7 +27,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new PatentReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -173,7 +173,7 @@ final class PatentReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_patent_references(array $json, PatentReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, PatentReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PatentReference::class));
     }
 
     public function denormalizeProvider() : array

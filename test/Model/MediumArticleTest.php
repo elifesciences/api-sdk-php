@@ -5,11 +5,13 @@ namespace test\eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class MediumArticleTest extends PHPUnit_Framework_TestCase
 {
@@ -65,6 +67,7 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
         $mediumArticle = new MediumArticle('http://www.example.com/', 'title', null, $date = new DateTimeImmutable('now', new DateTimeZone('Z')),
             null);
 
+        $this->assertInstanceOf(HasPublishedDate::class, $mediumArticle);
         $this->assertEquals($date, $mediumArticle->getPublishedDate());
     }
 
@@ -73,7 +76,7 @@ final class MediumArticleTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_thumbnail()
     {
-        $image = new Image('', [900 => 'https://placehold.it/900x450']);
+        $image = Builder::for(Image::class)->sample('thumbnail');
         $with = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $image);
         $withOut = new MediumArticle('http://www.example.com/', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null);
 

@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -26,7 +27,6 @@ use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
@@ -37,6 +37,7 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
@@ -72,6 +73,7 @@ final class Builder
                         'id' => '359325',
                         'title' => 'Media coverage: Slime can see',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'impactStatement' => null,
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
@@ -83,9 +85,9 @@ final class Builder
                     return [
                         'id' => 'tropical-disease',
                         'title' => 'Tropical disease',
-                        'subTitle' => promise_for(null),
                         'impactStatement' => null,
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updatedDate' => null,
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'subjects' => new EmptySequence(),
@@ -93,6 +95,9 @@ final class Builder
                         'selectedCuratorEtAl' => false,
                         'curators' => new ArraySequence([
                             self::dummy(Person::class),
+                        ]),
+                        'summary' => new ArraySequence([
+                            new Paragraph('collection tropical-disease summary'),
                         ]),
                         'content' => new EmptySequence(),
                         'relatedContent' => new EmptySequence(),
@@ -115,15 +120,24 @@ final class Builder
                 ExternalArticle::class => function () {
                     return [
                         'articleTitle' => 'External article title',
-                        'journal' => new Place(null, null, ['Another journal']),
+                        'journal' => 'Another journal',
                         'authorLine' => 'Author et al',
                         'uri' => 'http://www.example.com/',
                     ];
                 },
                 Image::class => function () {
                     return [
-                        'altText' => 'Image alt text',
-                        'sizes' => [],
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'altText' => '',
+                        'source' => new File(
+                            'image/jpeg',
+                            'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'example.jpg'
+                        ),
+                        'width' => 1000,
+                        'height' => 500,
+                        'focalPointX' => 50,
+                        'focalPointY' => 50,
                     ];
                 },
                 Interview::class => function () {
@@ -135,8 +149,9 @@ final class Builder
                         ),
                         'title' => 'Controlling traffic',
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'impactStatement' => null,
-                        'content' => $this->rejectSequence(),
+                        'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },
                 Reviewer::class => function () {
@@ -160,7 +175,9 @@ final class Builder
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
                         'type' => 'senior-editor',
+                        'typeLabel' => 'Senior Editor',
                         'image' => null,
+                        'affiliations' => new EmptySequence(),
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
                         'competingInterests' => promise_for(null),
@@ -172,16 +189,30 @@ final class Builder
                         'title' => 'September 2013',
                         'impactStatement' => null,
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
                         'banner' => rejection_for('No banner'),
-                        'thumbnail' => new Image('thumbnail', [900 => 'https://placehold.it/900x450']),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'subjects' => new EmptySequence(),
                         'chapters' => new PromiseSequence(rejection_for('no chapters')),
+                    ];
+                },
+                PressPackage::class => function () {
+                    return [
+                        'id' => '1',
+                        'title' => 'Press package title',
+                        'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updated' => null,
+                        'impactStatement' => null,
+                        'subjects' => new EmptySequence(),
+                        'content' => new ArraySequence([new Paragraph('Press package 1 text')]),
+                        'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
+                        'mediaContacts' => new EmptySequence(),
+                        'about' => new EmptySequence(),
                     ];
                 },
                 ArticlePoA::class => $articlePoA = function () {
@@ -202,17 +233,16 @@ final class Builder
                         'pdf' => null,
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
-                        'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')]))),
+                        'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])),
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
-                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                         'funding' => promise_for(new Funding(
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
-                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                    new Funder(new Place(['Funder']), '10.13039/501100001659'),
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),
@@ -221,7 +251,7 @@ final class Builder
                         )),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
-                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                     ];
                 },
                 ArticleVoR::class => function () {
@@ -240,15 +270,15 @@ final class Builder
                         'volume' => 4,
                         'elocationId' => 'e09560',
                         'pdf' => null,
+                        'figuresPdf' => null,
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
-                        'abstract' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]))),
+                        'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
                         'issue' => promise_for(1),
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'keywords' => new ArraySequence(['Article 09560 keyword']),
                         'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
@@ -279,11 +309,13 @@ final class Builder
                                     )),
                                 ],
                                 false,
+                                [],
+                                false,
                                 'book title',
-                                new Place(null, null, ['publisher'])
+                                new Place(['publisher'])
                             ),
                         ]),
-                        'additionalFiles' => new ArraySequence([new File(null, 'file1', null, 'Additional file 1', new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]),
+                        'additionalFiles' => new ArraySequence([new AssetFile(null, 'file1', null, 'Additional file 1', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]),
                         'generatedDataSets' => new ArraySequence([new DataSet('id', Date::fromString('2000-01-02'), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title', 'data id', 'details', '10.1000/182', 'https://doi.org/10.1000/182')]),
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
@@ -292,7 +324,7 @@ final class Builder
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
-                                    new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                                    new Funder(new Place(['Funder']), '10.13039/501100001659'),
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),
@@ -302,7 +334,6 @@ final class Builder
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
-                        'relatedArticles' => new ArraySequence([new ExternalArticle('Related article title', new Place(null, null, ['Journal']), 'Author line', 'http://www.example.com/')]),
                     ];
                 },
             ];
@@ -333,22 +364,10 @@ final class Builder
                 ],
                 Image::class => [
                     'banner' => function () {
-                        return new Image(
-                            '',
-                            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]
-                        );
+                        return new Image('', 'https://iiif.elifesciences.org/banner.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
                     },
                     'thumbnail' => function () {
-                        return new Image('', [
-                            new ImageSize('16:9', [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ]),
-                            new ImageSize('1:1', [
-                                '70' => 'https://placehold.it/70x70',
-                                '140' => 'https://placehold.it/140x140',
-                            ]),
-                        ]);
+                        return new Image('', 'https://iiif.elifesciences.org/thumbnail.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg', 'thumbnail.jpg'), 140, 140, 50, 50);
                     },
                 ],
                 ArticlePoA::class => [
@@ -388,7 +407,7 @@ final class Builder
                             ->withResearchOrganisms([
                                 'Article 1 research organism',
                             ])
-                            ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
+                            ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 1 abstract text')])));
                     },
                 ],
                 ArticleVoR::class => [
@@ -409,7 +428,7 @@ final class Builder
                             ->withSubjects(new ArraySequence([
                                 self::for(Subject::class)->sample('genomics-evolutionary-biology'),
                             ]))
-                            ->withPromiseOfAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                            ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
@@ -447,6 +466,7 @@ final class Builder
                                 Builder::for(Person::class)->sample('bcooper'),
                                 $pjha,
                             ]))
+                            ->withSummary(new EmptySequence())
                             ->withContent(new ArraySequence([
                                 Builder::for(BlogArticle::class)
                                     ->sample('slime'),
@@ -474,6 +494,7 @@ final class Builder
                         $person = $builder
                             ->withId('bcooper')
                             ->withType('reviewing-editor')
+                            ->withTypeLabel('Reviewing Editor')
                             ->withDetails(new PersonDetails(
                                 'Ben Cooper',
                                 'Cooper, Ben'
@@ -492,6 +513,7 @@ final class Builder
                         $person = $builder
                             ->withId('pjha')
                             ->withType('senior-editor')
+                            ->withTypeLabel('Senior Editor')
                             ->withDetails(new PersonDetails(
                                 'Prabhat Jha',
                                 'Jha, Prabhat'
@@ -521,7 +543,7 @@ final class Builder
                                 ),
                             ])
                             ->withChapters(new ArraySequence([
-                                new PodcastEpisodeChapter(1, 'Chapter title', 0, 'Chapter impact statement', new ArraySequence([
+                                new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
                                     self::for(ArticlePoA::class)->sample('1'),
                                 ])),
                             ]));

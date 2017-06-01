@@ -9,17 +9,17 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ConferenceProceedingReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ConferenceProceedingReferenceNormalizerTest extends TestCase
 {
     /** @var ConferenceProceedingReferenceNormalizer */
     private $normalizer;
@@ -31,7 +31,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
     {
         $this->normalizer = new ConferenceProceedingReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -61,7 +61,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
     {
         $reference = new ConferenceProceedingReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['conference']));
+            new Place(['conference']));
 
         return [
             'conference proceeding reference' => [$reference, null, true],
@@ -87,7 +87,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
             'complete' => [
                 new ConferenceProceedingReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
+                    new Place(['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
                 [
                     'type' => 'conference-proceeding',
@@ -118,7 +118,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
             'minimum' => [
                 new ConferenceProceedingReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))],
-                    false, 'title', new Place(null, null, ['conference'])),
+                    false, 'title', new Place(['conference'])),
                 [
                     'type' => 'conference-proceeding',
                     'id' => 'id',
@@ -181,7 +181,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
      */
     public function it_denormalize_conference_proceeding_reference(array $json, ConferenceProceedingReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ConferenceProceedingReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ConferenceProceedingReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -215,7 +215,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                 ],
                 new ConferenceProceedingReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['conference']), new StringReferencePage('foo'), '10.1000/182',
+                    new Place(['conference']), new StringReferencePage('foo'), '10.1000/182',
                     'http://www.example.com/'),
             ],
             'minimum' => [
@@ -241,7 +241,7 @@ final class ConferenceProceedingReferenceNormalizerTest extends PHPUnit_Framewor
                 ],
                 new ConferenceProceedingReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['conference'])),
+                    new Place(['conference'])),
             ],
         ];
     }

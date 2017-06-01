@@ -7,13 +7,16 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -68,22 +71,6 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_a_sub_title()
-    {
-        $with = $this->builder
-            ->withPromiseOfSubTitle('Tropical disease subtitle')
-            ->__invoke();
-        $without = $this->builder
-            ->withPromiseOfSubTitle(null)
-            ->__invoke();
-
-        $this->assertSame('Tropical disease subtitle', $with->getSubTitle());
-        $this->assertNull($without->getSubTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -107,7 +94,25 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->withPublishedDate($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
             ->__invoke();
 
+        $this->assertInstanceOf(HasPublishedDate::class, $collection);
         $this->assertEquals($publishedDate, $collection->getPublishedDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_updated_date()
+    {
+        $with = $this->builder
+            ->withUpdatedDate($updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withUpdatedDate(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
+        $this->assertEquals($updatedDate, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
     }
 
     /**
@@ -116,9 +121,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_banner()
     {
         $collection = $this->builder
-            ->withPromiseOfBanner(
-                $image = new Image('', [900 => 'https://placehold.it/900x450'])
-            )
+            ->withPromiseOfBanner($image = Builder::for(Image::class)->sample('banner'))
             ->__invoke();
 
         $this->assertInstanceOf(HasBanner::class, $collection);
@@ -131,9 +134,7 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
-            ->withThumbnail(
-                $image = new Image('', [70 => 'https://placehold.it/70x140'])
-            )
+            ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
 
         $this->assertInstanceOf(HasThumbnail::class, $collection);
@@ -201,6 +202,20 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertEquals($curators, $collection->getCurators());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_summary()
+    {
+        $collection = $this->builder
+            ->withSummary($summary = new ArraySequence([
+                new Paragraph('summary'),
+            ]))
+            ->__invoke();
+
+        $this->assertEquals($summary, $collection->getSummary());
     }
 
     /**

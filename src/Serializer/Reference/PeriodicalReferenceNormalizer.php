@@ -4,15 +4,14 @@ namespace eLife\ApiSdk\Serializer\Reference;
 
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\ReferencePages;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class PeriodicalReferenceNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -31,7 +30,7 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
             }, $data['authors']),
             $data['authorsEtAl'] ?? false,
             $data['articleTitle'],
-            $this->denormalizer->denormalize($data['periodical'], Place::class, $format, $context),
+            $data['periodical'],
             $this->denormalizer->denormalize($data['pages'], ReferencePages::class, $format, $context),
             $data['volume'] ?? null,
             $data['uri'] ?? null
@@ -59,7 +58,7 @@ final class PeriodicalReferenceNormalizer implements NormalizerInterface, Denorm
                 return $this->normalizer->normalize($author, $format, $context);
             }, $object->getAuthors()),
             'articleTitle' => $object->getArticleTitle(),
-            'periodical' => $this->normalizer->normalize($object->getPeriodical(), $format, $context),
+            'periodical' => $object->getPeriodical(),
             'pages' => $this->normalizer->normalize($object->getPages(), $format, $context),
         ];
 

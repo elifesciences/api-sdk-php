@@ -19,7 +19,6 @@ final class PodcastEpisodes implements Iterator, Sequence
 
     private $count;
     private $descendingOrder = true;
-    private $subjectsQuery = [];
     private $podcastClient;
     private $denormalizer;
 
@@ -41,19 +40,6 @@ final class PodcastEpisodes implements Iterator, Sequence
             });
     }
 
-    public function forSubject(string ...$subjectId) : PodcastEpisodes
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
-    }
-
     public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
@@ -69,8 +55,7 @@ final class PodcastEpisodes implements Iterator, Sequence
                 ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->descendingOrder,
-                $this->subjectsQuery
+                $this->descendingOrder
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

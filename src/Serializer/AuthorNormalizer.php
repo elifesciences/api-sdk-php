@@ -5,11 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Place;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -36,6 +32,10 @@ abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInte
     final public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [];
+
+        if (count($object->getAdditionalInformation())) {
+            $data['additionalInformation'] = $object->getAdditionalInformation();
+        }
 
         if (count($object->getAffiliations())) {
             $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {

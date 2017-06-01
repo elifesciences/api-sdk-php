@@ -12,7 +12,7 @@ final class ExternalArticle implements Article
     /**
      * @internal
      */
-    public function __construct(string $articleTitle, Place $journal, string $authorLine, string $uri)
+    public function __construct(string $articleTitle, string $journal, string $authorLine, string $uri)
     {
         $this->articleTitle = $articleTitle;
         $this->journal = $journal;
@@ -20,7 +20,7 @@ final class ExternalArticle implements Article
         $this->uri = $uri;
     }
 
-    public function getArticleTitle(): string
+    public function getTitle(): string
     {
         return $this->articleTitle;
     }
@@ -30,7 +30,7 @@ final class ExternalArticle implements Article
         return $this->authorLine;
     }
 
-    public function getJournal(): Place
+    public function getJournal(): string
     {
         return $this->journal;
     }
@@ -38,5 +38,15 @@ final class ExternalArticle implements Article
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    public function getId(): string
+    {
+        return 'external-'.sha1($this->uri);
+    }
+
+    public function getType(): string
+    {
+        return 'external-article';
     }
 }

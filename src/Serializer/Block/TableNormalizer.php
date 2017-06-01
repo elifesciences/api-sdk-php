@@ -5,12 +5,12 @@ namespace eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
-use eLife\ApiSdk\Model\File;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Model\Footnote;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class TableNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -20,14 +20,24 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function denormalize($data, $class, $format = null, array $context = []) : Table
     {
-        return new Table($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null,
-            $data['title'] ?? null, new ArraySequence(array_map(function (array $block) {
+        return new Table(
+            $data['id'] ?? null,
+            $data['title'] ?? null,
+            new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])), $data['tables'], array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['footer'] ?? []), array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, File::class);
-            }, $data['sourceData'] ?? []));
+            }, $data['caption'] ?? [])),
+            new ArraySequence($data['attribution'] ?? []),
+            $data['tables'],
+            array_map(function (array $footnote) {
+                return new Footnote(
+                    $footnote['id'] ?? null,
+                    $footnote['label'] ?? null,
+                    new ArraySequence(array_map(function (array $block) {
+                        return $this->denormalizer->denormalize($block, Block::class);
+                    }, $footnote['text']))
+                );
+            }, $data['footnotes'] ?? [])
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -48,16 +58,8 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             'tables' => $object->getTables(),
         ];
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
-        }
-
         if ($object->getId()) {
             $data['id'] = $object->getId();
-        }
-
-        if ($object->getLabel()) {
-            $data['label'] = $object->getLabel();
         }
 
         if ($object->getTitle()) {
@@ -70,16 +72,28 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
             })->toArray();
         }
 
-        if (count($object->getFooter())) {
-            $data['footer'] = array_map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            }, $object->getFooter());
+        if ($object->getAttribution()->notEmpty()) {
+            $data['attribution'] = $object->getAttribution()->toArray();
         }
 
-        if ($object->getSourceData()) {
-            $data['sourceData'] = array_map(function (File $file) {
-                return $this->normalizer->normalize($file);
-            }, $object->getSourceData());
+        if (count($object->getFootnotes())) {
+            $data['footnotes'] = array_map(function (Footnote $footnote) {
+                $data = [
+                    'text' => $footnote->getText()->map(function (Block $block) {
+                        return $this->normalizer->normalize($block);
+                    })->toArray(),
+                ];
+
+                if ($footnote->getId()) {
+                    $data['id'] = $footnote->getId();
+                }
+
+                if ($footnote->getLabel()) {
+                    $data['label'] = $footnote->getLabel();
+                }
+
+                return $data;
+            }, $object->getFootnotes());
         }
 
         return $data;

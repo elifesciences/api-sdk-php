@@ -9,13 +9,15 @@ use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
-use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
+use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class VideoNormalizerTest extends TestCase
@@ -30,9 +32,10 @@ final class VideoNormalizerTest extends TestCase
     {
         $this->normalizer = new VideoNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new FileNormalizer(),
+            new ImageNormalizer(),
             new ParagraphNormalizer(),
         ]);
     }
@@ -57,7 +60,7 @@ final class VideoNormalizerTest extends TestCase
     public function canNormalizeProvider() : array
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
-        $video = new Video(null, null, null, null, new EmptySequence(), $sources, '', 200, 100);
+        $video = new Video(null, null, new EmptySequence(), new EmptySequence(), $sources, null, 200, 100);
 
         return [
             'video' => [$video, null, true],
@@ -79,13 +82,9 @@ final class VideoNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
+                new Video('id', 'title', new ArraySequence([new Paragraph('caption')]), new ArraySequence(['attribution']),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100,
-                    [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
-                    ]),
+                    Builder::dummy(Image::class), 200, 100, true, true),
                 [
                     'type' => 'video',
                     'sources' => [
@@ -96,9 +95,7 @@ final class VideoNormalizerTest extends TestCase
                     ],
                     'width' => 200,
                     'height' => 100,
-                    'doi' => '10.1000/182',
                     'id' => 'id',
-                    'label' => 'label',
                     'title' => 'title',
                     'caption' => [
                         [
@@ -106,28 +103,28 @@ final class VideoNormalizerTest extends TestCase
                             'text' => 'caption',
                         ],
                     ],
-                    'image' => 'http://www.example.com/image.jpeg',
-                    'sourceData' => [
-                        [
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/data.txt',
-                            'filename' => 'data.txt',
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph2',
-                                ],
-                            ],
+                    'attribution' => [
+                        'attribution',
+                    ],
+                    'placeholder' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
                         ],
                     ],
+                    'autoplay' => true,
+                    'loop' => true,
                 ],
             ],
             'minimum' => [
-                new Video(null, null, null, null, new EmptySequence(),
+                new Video(null, null, new EmptySequence(), new EmptySequence(),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')], null, 200, 100),
                 [
                     'type' => 'video',
@@ -186,9 +183,7 @@ final class VideoNormalizerTest extends TestCase
             'complete' => [
                 [
                     'type' => 'video',
-                    'doi' => '10.1000/182',
                     'id' => 'id',
-                    'label' => 'label',
                     'title' => 'title',
                     'caption' => [
                         [
@@ -196,40 +191,36 @@ final class VideoNormalizerTest extends TestCase
                             'text' => 'caption',
                         ],
                     ],
+                    'attribution' => [
+                        'attribution',
+                    ],
                     'sources' => [
                         [
                             'mediaType' => 'video/mpeg',
                             'uri' => 'http://www.example.com/video.mpeg',
                         ],
                     ],
-                    'image' => 'http://www.example.com/image.jpeg',
-                    'width' => 200,
-                    'height' => 100,
-                    'sourceData' => [
-                        [
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/data.txt',
-                            'filename' => 'data.txt',
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph2',
-                                ],
-                            ],
+                    'placeholder' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
                         ],
                     ],
+                    'width' => 200,
+                    'height' => 100,
+                    'autoplay' => true,
+                    'loop' => true,
                 ],
-                new Video('10.1000/182', 'id', 'label', 'title', new ArraySequence([new Paragraph('caption')]),
+                new Video('id', 'title', new ArraySequence([new Paragraph('caption')]), new ArraySequence(['attribution']),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')],
-                    'http://www.example.com/image.jpeg', 200, 100,
-                    [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
-                    ]),
+                    Builder::dummy(Image::class), 200, 100, true, true),
             ],
             'minimum' => [
                 [
@@ -243,7 +234,7 @@ final class VideoNormalizerTest extends TestCase
                     'width' => 200,
                     'height' => 100,
                 ],
-                new Video(null, null, null, null, new EmptySequence(),
+                new Video(null, null, new EmptySequence(), new EmptySequence(),
                     [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')], null, 200, 100),
             ],
         ];

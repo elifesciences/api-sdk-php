@@ -47,6 +47,51 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         return $this->wait()->toArray();
     }
 
+    public function prepend(...$values) : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) use ($values) {
+                return $collection->prepend(...$values);
+            })
+        );
+    }
+
+    public function append(...$values) : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) use ($values) {
+                return $collection->append(...$values);
+            })
+        );
+    }
+
+    public function drop(int ...$indexes) : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) use ($indexes) {
+                return $collection->drop(...$indexes);
+            })
+        );
+    }
+
+    public function insert(int $index, ...$values) : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) use ($index, $values) {
+                return $collection->insert($index, ...$values);
+            })
+        );
+    }
+
+    public function set(int $index, $value) : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) use ($index, $value) {
+                return $collection->set($index, $value);
+            })
+        );
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         return new self(
@@ -77,6 +122,15 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
     public function reduce(callable $callback, $initial = null)
     {
         return $this->wait()->reduce($callback, $initial);
+    }
+
+    public function flatten() : Sequence
+    {
+        return new self(
+            $this->then(function (Sequence $collection) {
+                return $collection->flatten();
+            })
+        );
     }
 
     public function sort(callable $callback = null) : Sequence

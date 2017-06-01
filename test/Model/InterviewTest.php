@@ -10,6 +10,8 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasImpactStatement;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -26,7 +28,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -42,7 +44,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -57,26 +59,11 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
         $this->assertSame('title', $interview->getTitle());
-    }
-
-    /**
-     * @test
-     */
-    public function it_has_a_sub_title()
-    {
-        $person = new PersonDetails('preferred name', 'index name');
-        $interviewee = new Interviewee($person,
-            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
-        );
-
-        $this->assertSame('An interview with preferred name', $interview->getSubTitle());
     }
 
     /**
@@ -90,10 +77,10 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $intervieweeWithOut = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
-        $with = new Interview('id', $intervieweeWith, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), 'impact statement',
+        $with = new Interview('id', $intervieweeWith, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
-        $withOut = new Interview('id', $intervieweeWithOut, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $withOut = new Interview('id', $intervieweeWithOut, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -110,11 +97,32 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
+        $this->assertInstanceOf(HasPublishedDate::class, $interview);
         $this->assertEquals($date, $interview->getPublishedDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_updated_date()
+    {
+        $person = new PersonDetails('preferred name', 'index name');
+        $interviewee = new Interviewee($person,
+            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
+        $with = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+        );
+        $withOut = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+        );
+
+        $this->assertInstanceOf(HasUpdatedDate::class, $with);
+        $this->assertEquals($date, $with->getUpdatedDate());
+        $this->assertNull($withOut->getUpdatedDate());
     }
 
     /**
@@ -128,7 +136,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
             new ArraySequence($content)
         );
 

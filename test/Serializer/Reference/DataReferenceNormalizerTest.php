@@ -8,16 +8,16 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\DataReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class DataReferenceNormalizerTest extends TestCase
 {
     /** @var DataReferenceNormalizer */
     private $normalizer;
@@ -29,7 +29,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new DataReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -85,7 +85,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
                     'title',
-                    'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
+                    'source', 'id', new Place(['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
                 [
                     'type' => 'data',
@@ -191,7 +191,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_data_references(array $json, DataReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, DataReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, DataReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -249,7 +249,7 @@ final class DataReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                     [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
                     [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
                     'title',
-                    'source', 'id', new Place(null, null, ['assigning authority']), '10.1000/182',
+                    'source', 'id', new Place(['assigning authority']), '10.1000/182',
                     'http://www.example.com/'),
             ],
             'minimum' => [

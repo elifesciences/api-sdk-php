@@ -2,40 +2,35 @@
 
 namespace eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class BookReferenceNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
-    use DenormalizerAwareTrait;
-    use NormalizerAwareTrait;
+    use ContainsBookNormalizer;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : BookReference
+    protected function denormalizeReference($data, $class, $format = null, array $context = []) : Reference
     {
         return new BookReference(
             $data['id'],
-            Date::fromString($data['date']),
-            $data['discriminator'] ?? null,
-            array_map(function (array $author) {
-                return $this->denormalizer->denormalize($author, AuthorEntry::class);
-            }, $data['authors']),
-            $data['authorsEtAl'] ?? false,
+            $data['date'],
+            $data['discriminator'],
+            $data['authors'],
+            $data['authorsEtAl'],
+            $data['editors'],
+            $data['editorsEtAl'],
             $data['bookTitle'],
-            $this->denormalizer->denormalize($data['publisher'], Place::class, $format, $context),
-            $data['volume'] ?? null,
-            $data['edition'] ?? null,
-            $data['doi'] ?? null,
-            $data['pmid'] ?? null,
-            $data['isbn'] ?? null
+            $data['publisher'],
+            $data['volume'],
+            $data['edition'],
+            $data['doi'],
+            $data['pmid'],
+            $data['isbn']
         );
     }
 
@@ -48,48 +43,11 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
     }
 
     /**
-     * @param BookReference $object
+     * @param BookReference $reference
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    protected function normalizeReference(Reference $reference, array $data, string $format = null, array $context = []) : array
     {
-        $data = [
-            'type' => 'book',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
-            'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
-            }, $object->getAuthors()),
-            'bookTitle' => $object->getBookTitle(),
-            'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
-        ];
-
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
-        }
-
-        if ($object->authorsEtAl()) {
-            $data['authorsEtAl'] = $object->authorsEtAl();
-        }
-
-        if ($object->getVolume()) {
-            $data['volume'] = $object->getVolume();
-        }
-
-        if ($object->getEdition()) {
-            $data['edition'] = $object->getEdition();
-        }
-
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
-        }
-
-        if ($object->getPmid()) {
-            $data['pmid'] = $object->getPmid();
-        }
-
-        if ($object->getIsbn()) {
-            $data['isbn'] = $object->getIsbn();
-        }
+        $data['type'] = 'book';
 
         return $data;
     }

@@ -2,36 +2,41 @@
 
 namespace test\eLife\ApiSdk;
 
+use ComposerLocator;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
-use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use JsonSchema\Validator;
 use LogicException;
-use Webmozart\Json\JsonDecoder;
 
 abstract class ApiTestCase extends TestCase
 {
-    use PuliAwareTestCase;
-
     /** @var InMemoryStorageAdapter */
     private $storage;
 
@@ -51,8 +56,8 @@ abstract class ApiTestCase extends TestCase
         if (null === $this->httpClient) {
             $storage = new InMemoryStorageAdapter();
             $validator = new JsonMessageValidator(
-                new PuliSchemaFinder(self::$puli),
-                new JsonDecoder()
+                new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
+                new Validator()
             );
 
             $this->storage = new ValidatingStorageAdapter($storage, $validator);
@@ -191,6 +196,34 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockRelatedArticlesCall($numberOrId, bool $complete = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "article{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+
+        $response = new Response(
+            200,
+            ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            json_encode($this->createRelatedArticlesJson($id, $complete))
+        );
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/articles/'.$id.'/related',
+                [
+                    'Accept' => [
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                    ],
+                ]
+            ),
+            $response
+        );
+    }
+
     final protected function mockArticleCall($numberOrId, bool $complete = false, bool $vor = false, int $version = null)
     {
         if (is_integer($numberOrId)) {
@@ -280,16 +313,78 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockCoverListCall(int $page, int $perPage, int $total, $descendingOrder = true)
-    {
-        $covers = array_map(function (int $id) {
-            return $this->createCoverJson($id, $this->createArticleVoRJson($id));
+    final protected function mockCommunityListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = []
+    ) {
+        $availableModels = [
+            'blog-article' => 'createBlogArticleJson',
+            'collection' => 'createCollectionJson',
+            'event' => 'createEventJson',
+            'interview' => 'createInterviewJson',
+            'research-article' => 'createArticleVoRJson',
+            'replication-study' => 'createArticlePoAJson',
+            // for simplicity, avoiding contents without an id
+            //'labs-post' => ['createLabsPostJson', 'int'],
+            //'podcast-episode' => ['createPodcastEpisodeJson', 'int'],
+        ];
+        $blogArticles = array_map(function (int $id) use ($availableModels) {
+            $modelNames = array_keys($availableModels);
+            $zeroBasedId = $id - 1;
+            $modelName = $modelNames[$zeroBasedId % count($availableModels)];
+            $model = $availableModels[$modelName];
+
+            return array_merge(
+                ['type' => $modelName],
+                $this->{$model}('model-'.$id, true)
+            );
         }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
 
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                'http://api.elifesciences.org/community?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $blogArticles,
+                ])
+            )
+        );
+    }
+
+    final protected function mockCoverListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        bool $descendingOrder = true,
+        string $sort = 'date',
+        string $useDate = 'default',
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
+    ) {
+        $covers = array_map(function (int $id) {
+            return $this->createCoverJson($id, $this->createArticleVoRJson($id));
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(
@@ -354,7 +449,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockEventCall(int $number, bool $complete = false)
+    final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
     {
         $this->storage->save(
             new Request(
@@ -365,7 +460,30 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
-                json_encode($this->createEventJson($number, false, $complete))
+                json_encode($this->createEventJson($number, false, $complete, $external))
+            )
+        );
+    }
+
+    final protected function mockHighlightsCall(string $id, int $page, int $perPage, int $total, $descendingOrder = true, bool $complete = false)
+    {
+        $highlights = array_map(function (int $id) use ($complete) {
+            return $this->createHighlightJson($id, ['type' => 'interview'] + $this->createInterviewJson($id, true, $complete), $complete);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                "http://api.elifesciences.org/highlights/$id?page=$page&per-page=$perPage&order=".($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $highlights,
+                ])
             )
         );
     }
@@ -417,41 +535,41 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockLabsExperimentListCall(int $page, int $perPage, int $total, $descendingOrder = true)
+    final protected function mockLabsPostListCall(int $page, int $perPage, int $total, $descendingOrder = true)
     {
-        $labsExperiments = array_map(function (int $id) {
-            return $this->createLabsExperimentJson($id);
+        $labsPosts = array_map(function (string $id) {
+            return $this->createLabsPostJson($id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/labs-experiments?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)]
+                'http://api.elifesciences.org/labs-posts?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT_LIST, 1)],
+                ['Content-Type' => new MediaType(LabsClient::TYPE_POST_LIST, 1)],
                 json_encode([
                     'total' => $total,
-                    'items' => $labsExperiments,
+                    'items' => $labsPosts,
                 ])
             )
         );
     }
 
-    final protected function mockLabsExperimentCall(int $number, bool $complete = false)
+    final protected function mockLabsPostCall(string $id, bool $complete = false)
     {
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/labs-experiments/'.$number,
-                ['Accept' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)]
+                'http://api.elifesciences.org/labs-posts/'.$id,
+                ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_EXPERIMENT, 1)],
-                json_encode($this->createLabsExperimentJson($number, false, $complete))
+                ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 1)],
+                json_encode($this->createLabsPostJson($id, false, $complete))
             )
         );
     }
@@ -479,6 +597,78 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockMetricCitationsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/citations',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
+                json_encode([
+                    [
+                        'service' => 'Service',
+                        'uri' => 'http://www.example.com/',
+                        'citations' => (int) $id,
+                    ],
+                ])
+            )
+        );
+    }
+
+    final protected function mockMetricDownloadsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/downloads?by=month&page=1&per-page=20&order=desc',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                json_encode([
+                    'totalPeriods' => 1,
+                    'totalValue' => (int) $id,
+                    'periods' => [
+                        [
+                            'period' => '2016-01-01',
+                            'value' => (int) $id,
+                        ],
+                    ],
+                ])
+            )
+        );
+    }
+
+    final protected function mockMetricPageViewsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/page-views?by=month&page=1&per-page=20&order=desc',
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                json_encode([
+                    'totalPeriods' => 1,
+                    'totalValue' => (int) $id,
+                    'periods' => [
+                        [
+                            'period' => '2016-01-01',
+                            'value' => (int) $id,
+                        ],
+                    ],
+                ])
+            )
+        );
+    }
+
     final protected function mockPersonListCall(
         int $page,
         int $perPage,
@@ -488,7 +678,7 @@ abstract class ApiTestCase extends TestCase
         string $type = null
     ) {
         $people = array_map(function (int $id) {
-            return $this->createPersonJson('person'.$id, true);
+            return $this->createPersonJson('person'.$id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -590,6 +780,55 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockPressPackagesListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true
+    ) {
+        $pressPackages = array_map(function (int $id) {
+            return $this->createPressPackageJson("press-package-$id", true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/press-packages?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $pressPackages,
+                ])
+            )
+        );
+    }
+
+    final protected function mockPressPackageCall($numberOrId, bool $complete = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "press-package-{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                "http://api.elifesciences.org/press-packages/$id",
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)],
+                json_encode($this->createPressPackageJson($id, false, $complete))
+            )
+        );
+    }
+
     final protected function mockCollectionListCall(
         int $page,
         int $perPage,
@@ -638,6 +877,35 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockRecommendationsCall(
+        string $type,
+        $id,
+        int $page = 1,
+        int $perPage = 100,
+        int $total = 100,
+        $descendingOrder = true
+    ) {
+        $recommendations = array_map(function (int $id) {
+            return $this->createArticlePoAJson('article'.$id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $recommendations,
+                ])
+            )
+        );
+    }
+
     final protected function mockSearchCall(
         int $page = 1,
         int $perPage = 100,
@@ -646,7 +914,10 @@ abstract class ApiTestCase extends TestCase
         $descendingOrder = true,
         array $subjects = [],
         array $types = [],
-        $sort = 'relevance'
+        $sort = 'relevance',
+        $useDate = 'default',
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
     ) {
         $results = array_map(function (int $id) {
             return $this->createSearchResultJson($id);
@@ -660,10 +931,13 @@ abstract class ApiTestCase extends TestCase
             return '&type[]='.$type;
         }, $types));
 
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
             ),
             new Response(
@@ -691,17 +965,16 @@ abstract class ApiTestCase extends TestCase
                         'insight' => 0,
                         'research-advance' => 0,
                         'research-article' => 0,
-                        'research-exchange' => 0,
                         'retraction' => 0,
                         'registered-report' => 0,
                         'replication-study' => 0,
+                        'scientific-correspondence' => 0,
                         'short-report' => 0,
                         'tools-resources' => 0,
                         'blog-article' => 0,
                         'collection' => 0,
-                        'event' => 0,
                         'interview' => 0,
-                        'labs-experiment' => 0,
+                        'labs-post' => 0,
                         'podcast-episode' => 0,
                     ],
                 ])
@@ -776,16 +1049,16 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Annual report '.$year.' title',
             'impactStatement' => 'Annual report '.$year.' impact statement',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
@@ -809,6 +1082,15 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $articleHistory;
+    }
+
+    private function createRelatedArticlesJson(string $id, bool $complete = false) : array
+    {
+        return [
+            $this->createArticlePoAJson($id.'related1', true, $complete, 1),
+            $this->createArticleVoRJson($id.'related1', true, $complete, 2),
+            $this->createExternalArticleJson($complete),
+        ];
     }
 
     private function createArticlePoAJson(string $id, bool $isSnippet = false, bool $complete = false, int $version = 1) : array
@@ -861,17 +1143,6 @@ abstract class ApiTestCase extends TestCase
                         'type' => 'paragraph',
                         'text' => 'Article '.$id.' abstract text',
                     ],
-                ],
-            ],
-            'relatedArticles' => [
-                [
-                    'type' => 'external-article',
-                    'articleTitle' => 'Related article title',
-                    'journal' => [
-                        'name' => ['Journal'],
-                    ],
-                    'authorLine' => 'Author line',
-                    'uri' => 'http://www.example.com/',
                 ],
             ],
             'funding' => [
@@ -961,7 +1232,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['researchOrganisms']);
             unset($article['reviewers']);
             unset($article['abstract']);
-            unset($article['relatedArticles']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -972,8 +1242,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['copyright']);
             unset($article['authors']);
             unset($article['reviewers']);
-            unset($article['abstract']);
-            unset($article['relatedArticles']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -995,26 +1263,17 @@ abstract class ApiTestCase extends TestCase
         $article += [
             'impactStatement' => 'Article '.$id.' impact statement',
             'image' => [
-                'banner' => [
-                    'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
-                    ],
-                ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1133,9 +1392,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            if (isset($article['image'])) {
-                unset($article['image']['banner']);
-            }
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
@@ -1148,6 +1404,17 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $article;
+    }
+
+    private function createExternalArticleJson(string $id) : array
+    {
+        return [
+            'type' => 'external-article',
+            'articleTitle' => "External article $id title",
+            'journal' => "External article $id journal",
+            'authorLine' => 'Author et all',
+            'uri' => "https://doi.org/10.1016/external.$id",
+        ];
     }
 
     private function createBlogArticleJson(string $id, bool $isSnippet = false, bool $complete = false) : array
@@ -1165,6 +1432,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
+            $blogArticle['updated'] = '2000-01-01T00:00:00Z';
             $blogArticle['impactStatement'] = 'Blog article '.$id.' impact statement';
             $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
@@ -1181,24 +1449,35 @@ abstract class ApiTestCase extends TestCase
         return [
             'title' => 'Cover '.$number.' title',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '2:1' => [
-                        '900' => 'https://placehold.it/900x450',
-                        '1800' => 'https://placehold.it/1800x900',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                    'filename' => 'banner.jpg',
+                ],
+                'size' => [
+                    'width' => 1800,
+                    'height' => 900,
                 ],
             ],
             'item' => $item,
         ];
     }
 
-    private function createEventJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createEventJson($number, bool $isSnippet = false, bool $complete = false, bool $external = false) : array
     {
+        if (is_int($number)) {
+            $id = 'event'.$number;
+        } else {
+            $id = $number;
+        }
+
         $event = [
-            'id' => 'event'.$number,
+            'id' => $id,
             'title' => 'Event '.$number.' title',
             'impactStatement' => 'Event '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00Z',
             'starts' => '2000-01-01T00:00:00Z',
             'ends' => '2100-01-01T00:00:00Z',
             'content' => [
@@ -1210,16 +1489,47 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
+            $event['updated'] = '2000-01-01T00:00:00Z';
             $event['timezone'] = 'Europe/London';
-            $event['venue'] = ['name' => ['venue']];
+        }
+
+        if ($external) {
+            unset($event['content']);
+            $event['uri'] = 'http://www.example.com/';
         }
 
         if ($isSnippet) {
             unset($event['content']);
-            unset($event['venue']);
         }
 
         return $event;
+    }
+
+    private function createHighlightJson(int $number, array $item, bool $complete = false) : array
+    {
+        $highlight = [
+            'title' => 'Highlight '.$number.' title',
+            'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                'alt' => '',
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
+                ],
+            ],
+            'item' => $item,
+        ];
+
+        if (!$complete) {
+            unset($highlight['image']);
+        }
+
+        return $highlight;
     }
 
     private function createInterviewJson(string $id, bool $isSnippet = false, bool $complete = false) : array
@@ -1242,6 +1552,7 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Interview '.$id.' title',
             'impactStatement' => 'Interview '.$id.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -1256,6 +1567,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if (!$complete) {
+            unset($interview['updated']);
             unset($interview['impactStatement']);
             unset($interview['interviewee']['cv']);
         }
@@ -1263,55 +1575,47 @@ abstract class ApiTestCase extends TestCase
         return $interview;
     }
 
-    private function createLabsExperimentJson(int $number, bool $isSnippet = false, bool $complete = false) : array
+    private function createLabsPostJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
-        $labsExperiment = [
-            'number' => $number,
-            'title' => 'Labs experiment '.$number.' title',
-            'impactStatement' => 'Labs experiment '.$number.' impact statement',
+        $labsPost = [
+            'id' => $id,
+            'title' => 'Labs post '.$id.' title',
+            'impactStatement' => 'Labs post '.$id.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-01T00:00:00Z',
             'image' => [
-                'banner' => [
-                    'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
-                    ],
-                ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'Labs experiment '.$number.' text',
+                    'text' => 'Labs post '.$id.' text',
                 ],
             ],
         ];
 
         if ($isSnippet) {
-            unset($labsExperiment['content']);
-            unset($labsExperiment['image']['banner']);
+            unset($labsPost['content']);
         }
 
         if (!$complete) {
-            unset($labsExperiment['impactStatement']);
+            unset($labsPost['updated']);
+            unset($labsPost['impactStatement']);
         }
 
-        return $labsExperiment;
+        return $labsPost;
     }
 
     final private function createMediumArticleJson(int $number)
@@ -1322,16 +1626,16 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Subject '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
@@ -1341,12 +1645,20 @@ abstract class ApiTestCase extends TestCase
     {
         $person = [
             'id' => $id,
-            'type' => 'senior-editor',
+            'type' => [
+                'id' => 'senior-editor',
+                'label' => 'Senior Editor',
+            ],
             'name' => [
                 'preferred' => $id.' preferred',
                 'index' => $id.' index',
             ],
             'orcid' => '0000-0002-1825-0097',
+            'affiliations' => [
+                [
+                    'name' => ['affiliation'],
+                ],
+            ],
             'research' => [
                 'expertises' => [
                     [
@@ -1369,22 +1681,23 @@ abstract class ApiTestCase extends TestCase
             ],
             'competingInterests' => $id.' competing interests',
             'image' => [
+                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',
-                'sizes' => [
-                    '16:9' => [
-                        '250' => 'https://placehold.it/250x141',
-                        '500' => 'https://placehold.it/500x281',
-                    ],
-                    '1:1' => [
-                        '70' => 'https://placehold.it/70x70',
-                        '140' => 'https://placehold.it/140x140',
-                    ],
+                'source' => [
+                    'mediaType' => 'image/jpeg',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                    'filename' => 'thumbnail.jpg',
+                ],
+                'size' => [
+                    'width' => 140,
+                    'height' => 140,
                 ],
             ],
         ];
 
         if (!$complete) {
             unset($person['orcid']);
+            unset($person['affiliations']);
             unset($person['research']);
             unset($person['profile']);
             unset($person['competingInterests']);
@@ -1407,27 +1720,32 @@ abstract class ApiTestCase extends TestCase
             'title' => 'Podcast episode '.$number.' title',
             'impactStatement' => 'Podcast episode '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1437,11 +1755,11 @@ abstract class ApiTestCase extends TestCase
                     'uri' => 'https://www.example.com/episode.mp3',
                 ],
             ],
-            'subjects' => [$this->createSubjectJson(1, true)],
             'chapters' => [
                 [
                     'number' => 1,
                     'title' => 'Chapter title',
+                    'longTitle' => 'Long chapter title',
                     'time' => 0,
                     'impactStatement' => 'Chapter impact statement',
                     'content' => [$this->createArticlePoAJson('1', true, $complete)],
@@ -1451,7 +1769,8 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
-            unset($podcastEpisode['subjects']);
+            unset($podcastEpisode['updated']);
+            unset($podcastEpisode['chapters'][0]['longTitle']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
             unset($podcastEpisode['chapters'][0]['content']);
         }
@@ -1464,41 +1783,109 @@ abstract class ApiTestCase extends TestCase
         return $podcastEpisode;
     }
 
+    final private function createPressPackageJson(string $id, bool $isSnippet = false, bool $isComplete = false) : array
+    {
+        $package = [
+            'id' => $id,
+            'title' => "Press package $id name",
+            'impactStatement' => "Press package $id impact statement",
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => "Press package $id text",
+                ],
+            ],
+            'relatedContent' => [
+                [
+                    'id' => '14107',
+                    'stage' => 'preview',
+                    'version' => 1,
+                    'type' => 'research-article',
+                    'doi' => '10.7554/eLife.14107',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                    'status' => 'poa',
+                ],
+            ],
+            'mediaContacts' => [
+                [
+                    'name' => [
+                        'preferred' => 'preferred',
+                        'index' => 'index',
+                    ],
+                ],
+            ],
+            'about' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => "Press package $id about",
+                ],
+            ],
+        ];
+
+        if (!$isComplete) {
+            unset($package['impactStatement']);
+            unset($package['updated']);
+            unset($package['mediaContacts']);
+            unset($package['about']);
+        }
+
+        if ($isSnippet) {
+            unset($package['impactStatement']);
+            unset($package['content']);
+            unset($package['relatedContent']);
+            unset($package['mediaContacts']);
+            unset($package['about']);
+        }
+
+        return $package;
+    }
+
     private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $collection = [
             'id' => $id,
             'title' => ucfirst($id),
-            'subTitle' => ucfirst($id).' subtitle',
             'impactStatement' => ucfirst($id).' impact statement',
-            'updated' => '2000-01-01T00:00:00Z',
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
             'selectedCurator' => [
                 'id' => 'pjha',
-                'type' => 'senior-editor',
+                'type' => [
+                    'id' => 'senior-editor',
+                    'label' => 'Senior Editor',
+                ],
                 'name' => [
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
@@ -1508,7 +1895,10 @@ abstract class ApiTestCase extends TestCase
             'curators' => [
                 [
                     'id' => 'bcooper',
-                    'type' => 'reviewing-editor',
+                    'type' => [
+                        'id' => 'reviewing-editor',
+                        'label' => 'Reviewing Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Ben Cooper',
                         'index' => 'Cooper, Ben',
@@ -1516,11 +1906,20 @@ abstract class ApiTestCase extends TestCase
                 ],
                 [
                     'id' => 'pjha',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'name' => [
                         'preferred' => 'Prabhat Jha',
                         'index' => 'Jha, Prabhat',
                     ],
+                ],
+            ],
+            'summary' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'summary',
                 ],
             ],
             'content' => [
@@ -1553,6 +1952,14 @@ abstract class ApiTestCase extends TestCase
                     'statusDate' => '2016-03-28T00:00:00Z',
                     'volume' => 5,
                     'elocationId' => 'e14107',
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'podcastEpisodes' => [
@@ -1562,16 +1969,16 @@ abstract class ApiTestCase extends TestCase
                     'published' => '2016-05-27T13:19:42Z',
                     'image' => [
                         'thumbnail' => [
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    '250' => 'https://placehold.it/250x141',
-                                    '500' => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    '70' => 'https://placehold.it/70x70',
-                                    '140' => 'https://placehold.it/140x140',
-                                ],
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -1588,8 +1995,9 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($collection['impactStatement']);
+            unset($collection['updated']);
             unset($collection['selectedCurator']['etAl']);
-            unset($collection['subTitle']);
+            unset($collection['summary']);
             unset($collection['relatedContent']);
             unset($collection['podcastEpisodes']);
             unset($collection['subjects']);
@@ -1597,8 +2005,8 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($collection['image']['banner']);
-            unset($collection['subTitle']);
             unset($collection['curators']);
+            unset($collection['summary']);
             unset($collection['content']);
             unset($collection['relatedContent']);
             unset($collection['podcastEpisodes']);
@@ -1614,9 +2022,8 @@ abstract class ApiTestCase extends TestCase
             'createArticleVoRJson' => 'research-article',
             'createBlogArticleJson' => 'blog-article',
             'createCollectionJson' => 'collection',
-            'createEventJson' => 'event',
             'createInterviewJson' => 'interview',
-            'createLabsExperimentJson' => 'labs-experiment',
+            'createLabsPostJson' => 'labs-post',
             'createPodcastEpisodeJson' => 'podcast-episode',
         ];
         $index = (((int) $id) - 1) % count($allowedModelFactories);
@@ -1637,25 +2044,29 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => 'Subject '.$id.' impact statement',
             'image' => [
                 'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            '900' => 'https://placehold.it/900x450',
-                            '1800' => 'https://placehold.it/1800x900',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
                     ],
                 ],
                 'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            '250' => 'https://placehold.it/250x141',
-                            '500' => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            '70' => 'https://placehold.it/70x70',
-                            '140' => 'https://placehold.it/140x140',
-                        ],
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],

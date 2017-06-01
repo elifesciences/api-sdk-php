@@ -14,6 +14,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class EventsTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Events */
     private $events;
 
@@ -169,6 +171,71 @@ final class EventsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockEventListCall(1, 1, 5);
+        $this->mockEventListCall(1, 100, 5);
+
+        $values = $this->events->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'event1', 'event2', 'event3', 'event4', 'event5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockEventListCall(1, 1, 5);
+        $this->mockEventListCall(1, 100, 5);
+
+        $values = $this->events->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['event1', 'event2', 'event3', 'event4', 'event5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockEventListCall(1, 1, 5);
+        $this->mockEventListCall(1, 100, 5);
+
+        $values = $this->events->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['event1', 'event2', 'event4', 'event5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockEventListCall(1, 1, 5);
+        $this->mockEventListCall(1, 100, 5);
+
+        $values = $this->events->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['event1', 'event2', 2, 'event3', 'event4', 'event5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockEventListCall(1, 1, 5);
+        $this->mockEventListCall(1, 100, 5);
+
+        $values = $this->events->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['event1', 'event2', 2, 'event4', 'event5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -181,38 +248,6 @@ final class EventsTest extends ApiTestCase
             $this->assertInstanceOf(Event::class, $event);
             $this->assertSame('event'.($expected[$i]), $event->getId());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -261,6 +296,14 @@ final class EventsTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->events->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->events, $this->events->flatten());
     }
 
     /**

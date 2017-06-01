@@ -4,17 +4,20 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
-use eLife\ApiSdk\Model\Block\ImageFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Image as ImageModel;
 use eLife\ApiSdk\Serializer\Block\ImageNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
+use eLife\ApiSdk\Serializer\ImageNormalizer as ImageModelNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class ImageNormalizerTest extends TestCase
@@ -29,9 +32,10 @@ final class ImageNormalizerTest extends TestCase
     {
         $this->normalizer = new ImageNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new FileNormalizer(),
+            new ImageModelNormalizer(),
             new ParagraphNormalizer(),
         ]);
     }
@@ -55,9 +59,7 @@ final class ImageNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image(
-            new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
-        );
+        $image = new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageModel::class)->__invoke());
 
         return [
             'image' => [$image, null, true],
@@ -79,25 +81,27 @@ final class ImageNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new Image(
-                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
-                        'alt1', 'http://www.example.com/image1.jpg', ['attribution1'], [
-                            new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                                'text/plain', 'http://www.example.com/image1.txt', 'image1.txt'),
-                        ]),
-                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', new ArraySequence([new Paragraph('paragraph3')]),
-                        'alt2', 'http://www.example.com/image2.jpg', ['attribution2'], [
-                            new File('10.1000/182.3', 'id4', 'label4', 'title4', new ArraySequence([new Paragraph('paragraph4')]),
-                                'text/plain', 'http://www.example.com/image2.txt', 'image2.txt'),
-                        ])
-                ),
+                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']),
+                    Builder::dummy(ImageModel::class), ['attribution1'], [
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]), new EmptySequence(),
+                            new File('text/plain', 'http://www.example.com/image1.txt', 'image1.txt')),
+                    ]),
                 [
                     'type' => 'image',
-                    'uri' => 'http://www.example.com/image1.jpg',
-                    'alt' => 'alt1',
-                    'doi' => '10.1000/182',
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
+                        ],
+                    ],
                     'id' => 'id1',
-                    'label' => 'label1',
                     'title' => 'title1',
                     'caption' => [
                         [
@@ -106,71 +110,27 @@ final class ImageNormalizerTest extends TestCase
                         ],
                     ],
                     'attribution' => [
-                        'attribution1',
-                    ],
-                    'sourceData' => [
-                        [
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/image1.txt',
-                            'filename' => 'image1.txt',
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph2',
-                                ],
-                            ],
-                        ],
-                    ],
-                    'supplements' => [
-                        [
-                            'uri' => 'http://www.example.com/image2.jpg',
-                            'alt' => 'alt2',
-                            'doi' => '10.1000/182.2',
-                            'id' => 'id3',
-                            'label' => 'label3',
-                            'title' => 'title3',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph3',
-                                ],
-                            ],
-                            'attribution' => [
-                                'attribution2',
-                            ],
-                            'sourceData' => [
-                                [
-                                    'mediaType' => 'text/plain',
-                                    'uri' => 'http://www.example.com/image2.txt',
-                                    'filename' => 'image2.txt',
-                                    'doi' => '10.1000/182.3',
-                                    'id' => 'id4',
-                                    'label' => 'label4',
-                                    'title' => 'title4',
-                                    'caption' => [
-                                        [
-                                            'type' => 'paragraph',
-                                            'text' => 'paragraph4',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
+                        'attribution',
                     ],
                 ],
             ],
             'minimum' => [
-                new Image(
-                    new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
-                ),
+                new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::dummy(ImageModel::class), [], []),
                 [
                     'type' => 'image',
-                    'uri' => 'http://www.example.com/image.jpg',
-                    'alt' => '',
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -218,9 +178,7 @@ final class ImageNormalizerTest extends TestCase
             'complete' => [
                 [
                     'type' => 'image',
-                    'doi' => '10.1000/182',
                     'id' => 'id1',
-                    'label' => 'label1',
                     'title' => 'title1',
                     'caption' => [
                         [
@@ -228,87 +186,47 @@ final class ImageNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'alt' => 'alt1',
-                    'uri' => 'http://www.example.com/image1.jpg',
                     'attribution' => [
-                        'attribution1',
+                        'attribution',
                     ],
-                    'sourceData' => [
-                        [
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph2',
-                                ],
-                            ],
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/image1.txt',
-                            'filename' => 'image1.txt',
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
                         ],
-                    ],
-                    'supplements' => [
-                        [
-                            'doi' => '10.1000/182.2',
-                            'id' => 'id3',
-                            'label' => 'label3',
-                            'title' => 'title3',
-                            'caption' => [
-                                [
-                                    'type' => 'paragraph',
-                                    'text' => 'paragraph3',
-                                ],
-                            ],
-                            'alt' => 'alt2',
-                            'uri' => 'http://www.example.com/image2.jpg',
-                            'attribution' => [
-                                'attribution2',
-                            ],
-                            'sourceData' => [
-                                [
-                                    'doi' => '10.1000/182.3',
-                                    'id' => 'id4',
-                                    'label' => 'label4',
-                                    'title' => 'title4',
-                                    'caption' => [
-                                        [
-                                            'type' => 'paragraph',
-                                            'text' => 'paragraph4',
-                                        ],
-                                    ],
-                                    'mediaType' => 'text/plain',
-                                    'uri' => 'http://www.example.com/image2.txt',
-                                    'filename' => 'image2.txt',
-                                ],
-                            ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
                         ],
                     ],
                 ],
-                new Image(
-                    new ImageFile('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
-                        'alt1', 'http://www.example.com/image1.jpg', ['attribution1'], [
-                            new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                                'text/plain', 'http://www.example.com/image1.txt', 'image1.txt'),
-                        ]),
-                    new ImageFile('10.1000/182.2', 'id3', 'label3', 'title3', new ArraySequence([new Paragraph('paragraph3')]),
-                        'alt2', 'http://www.example.com/image2.jpg', ['attribution2'], [
-                            new File('10.1000/182.3', 'id4', 'label4', 'title4', new ArraySequence([new Paragraph('paragraph4')]),
-                                'text/plain', 'http://www.example.com/image2.txt', 'image2.txt'),
-                        ])
-                ),
+                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']),
+                    Builder::dummy(ImageModel::class), ['attribution1'], [
+                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]), new EmptySequence(),
+                            new File('text/plain', 'http://www.example.com/image1.txt', 'image1.txt')),
+                    ]),
             ],
             'minimum' => [
                 [
                     'type' => 'image',
-                    'uri' => 'http://www.example.com/image.jpg',
-                    'alt' => '',
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                            'filename' => 'example.jpg',
+                        ],
+                        'size' => [
+                            'width' => 1000,
+                            'height' => 500,
+                        ],
+                    ],
                 ],
-                new Image(
-                    new ImageFile(null, null, null, null, new EmptySequence(), '', 'http://www.example.com/image.jpg', [], [])
-                ),
+                new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::dummy(ImageModel::class), [], []),
             ],
         ];
     }

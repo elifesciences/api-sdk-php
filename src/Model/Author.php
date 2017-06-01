@@ -4,6 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 abstract class Author implements AuthorEntry
 {
+    private $additionalInformation;
     private $affiliations;
     private $competingInterests;
     private $contribution;
@@ -16,6 +17,7 @@ abstract class Author implements AuthorEntry
      * @internal
      */
     public function __construct(
+        array $additionalInformation = [],
         array $affiliations = [],
         string $competingInterests = null,
         string $contribution = null,
@@ -24,6 +26,7 @@ abstract class Author implements AuthorEntry
         array $phoneNumbers = [],
         array $postalAddresses = []
     ) {
+        $this->additionalInformation = $additionalInformation;
         $this->affiliations = $affiliations;
         $this->competingInterests = $competingInterests;
         $this->contribution = $contribution;
@@ -31,6 +34,14 @@ abstract class Author implements AuthorEntry
         $this->equalContributionGroups = $equalContributionGroups;
         $this->phoneNumbers = $phoneNumbers;
         $this->postalAddresses = $postalAddresses;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAdditionalInformation() : array
+    {
+        return $this->additionalInformation;
     }
 
     /**

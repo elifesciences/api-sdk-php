@@ -3,56 +3,48 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Asset;
+use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Image as ImageModel;
 
-final class Video implements Block, Asset
+final class Video implements AssetBlock
 {
-    private $doi;
     private $id;
-    private $label;
     private $title;
     private $caption;
+    private $attribution;
     private $sources;
-    private $image;
+    private $placeholder;
     private $width;
     private $height;
-    private $sourceData;
+    private $autoplay;
+    private $loop;
 
     /**
      * @internal
      */
     public function __construct(
-        string $doi = null,
         string $id = null,
-        string $label = null,
         string $title = null,
         Sequence $caption,
+        Sequence $attribution,
         array $sources,
-        string $image = null,
+        ImageModel $placeholder = null,
         int $width,
         int $height,
-        array $sourceData = []
+        bool $autoplay = false,
+        bool $loop = false
     ) {
-        $this->doi = $doi;
         $this->id = $id;
-        $this->label = $label;
         $this->title = $title;
         $this->caption = $caption;
+        $this->attribution = $attribution;
         $this->sources = $sources;
-        $this->image = $image;
+        $this->placeholder = $placeholder;
         $this->width = $width;
         $this->height = $height;
-        $this->sourceData = $sourceData;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDoi()
-    {
-        return $this->doi;
+        $this->autoplay = $autoplay;
+        $this->loop = $loop;
     }
 
     /**
@@ -61,14 +53,6 @@ final class Video implements Block, Asset
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLabel()
-    {
-        return $this->label;
     }
 
     /**
@@ -88,36 +72,46 @@ final class Video implements Block, Asset
     }
 
     /**
+     * @return Sequence|string[]
+     */
+    public function getAttribution() : Sequence
+    {
+        return $this->attribution;
+    }
+
+    /**
      * @return VideoSource[]
      */
-    public function getSources(): array
+    public function getSources() : array
     {
         return $this->sources;
     }
 
     /**
-     * @return string|null
+     * @return ImageModel|null
      */
-    public function getImage()
+    public function getPlaceholder()
     {
-        return $this->image;
+        return $this->placeholder;
     }
 
-    public function getWidth(): int
+    public function getWidth() : int
     {
         return $this->width;
     }
 
-    public function getHeight(): int
+    public function getHeight() : int
     {
         return $this->height;
     }
 
-    /**
-     * @return File[]
-     */
-    public function getSourceData(): array
+    public function isAutoplay() : bool
     {
-        return $this->sourceData;
+        return $this->autoplay;
+    }
+
+    public function isLoop() : bool
+    {
+        return $this->loop;
     }
 }

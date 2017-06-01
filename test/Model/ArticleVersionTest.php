@@ -8,16 +8,18 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
-use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
 use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
+use eLife\ApiSdk\Model\HasCiteAs;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -94,6 +96,25 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    final public function it_may_be_cited()
+    {
+        $with = $this->builder
+            ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+            ->withVolume(5)
+            ->withElocationId('e14107')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublished(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasCiteAs::class, $with);
+        $this->assertSame('eLife 2016;5:e14107', $with->getCiteAs());
+        $this->assertNull($withOut->getCiteAs());
+    }
+
+    /**
+     * @test
+     */
     final public function it_has_a_doi()
     {
         $article = $this->builder
@@ -107,13 +128,17 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_has_an_author_line()
+    final public function it_may_have_an_author_line()
     {
-        $article = $this->builder
+        $with = $this->builder
             ->withAuthorLine('Yongjian Huang et al')
             ->__invoke();
+        $withOut = $this->builder
+            ->withAuthorLine(null)
+            ->__invoke();
 
-        $this->assertSame('Yongjian Huang et al', $article->getAuthorLine());
+        $this->assertSame('Yongjian Huang et al', $with->getAuthorLine());
+        $this->assertNull($withOut->getAuthorLine());
     }
 
     /**
@@ -176,6 +201,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->withPublished(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasPublishedDate::class, $with);
         $this->assertEquals($date, $with->getPublishedDate());
         $this->assertNull($withOut->getPublishedDate());
     }
@@ -289,10 +315,10 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     final public function it_may_have_an_abstract()
     {
         $with = $this->builder
-            ->withPromiseOfAbstract($abstract = new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])))
+            ->withAbstract($abstract = new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])))
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfAbstract(null)
+            ->withAbstract(null)
             ->__invoke();
 
         $this->assertEquals($abstract, $with->getAbstract());
@@ -330,27 +356,17 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    final public function it_has_authors()
+    final public function it_may_have_authors()
     {
-        $article = $this->builder
+        $with = $this->builder
             ->withAuthors($authors = new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]))
             ->__invoke();
-
-        $this->assertEquals($authors, $article->getAuthors());
-    }
-
-    /**
-     * @test
-     */
-    final public function it_may_have_related_articles()
-    {
-        $relatedArticles = new ArraySequence([Builder::dummy(ExternalArticle::class)]);
-
-        $article = $this->builder
-            ->withRelatedArticles($relatedArticles)
+        $withOut = $this->builder
+            ->withAuthors(new ArraySequence([]))
             ->__invoke();
 
-        $this->assertEquals($relatedArticles, $article->getRelatedArticles());
+        $this->assertEquals($authors, $with->getAuthors());
+        $this->assertEmpty($withOut->getAuthors());
     }
 
     /**
@@ -363,7 +379,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
                 new ArraySequence([
                     new FundingAward(
                         'award',
-                        new Funder(new Place(null, null, ['Funder']), '10.13039/501100001659'),
+                        new Funder(new Place(['Funder']), '10.13039/501100001659'),
                         'awardId',
                         new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                     ),
@@ -409,7 +425,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_additional_files()
     {
         $article = $this->builder
-            ->withAdditionalFiles($files = new ArraySequence([new File(null, null, null, null, new EmptySequence(), 'image/jpeg', 'https://placehold.it/900x450', 'image.jpeg')]))
+            ->withAdditionalFiles($files = new ArraySequence([new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'https://placehold.it/900x450', 'image.jpeg'))]))
             ->__invoke();
 
         $this->assertEquals($files, $article->getAdditionalFiles());

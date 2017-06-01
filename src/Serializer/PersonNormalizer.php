@@ -12,13 +12,10 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use function GuzzleHttp\Promise\promise_for;
 
@@ -49,6 +46,11 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         if (!empty($context['snippet'])) {
             $person = $this->snippetDenormalizer->denormalizeSnippet($data);
 
+            $data['affiliations'] = new PromiseSequence($person
+                ->then(function (Result $person) {
+                    return $person['affiliations'] ?? [];
+                }));
+
             $data['competingInterests'] = $person
                 ->then(function (Result $person) {
                     return $person['competingInterests'] ?? null;
@@ -64,12 +66,20 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
                     return $person['research'] ?? [];
                 });
         } else {
+            $data['affiliations'] = new ArraySequence($data['affiliations'] ?? []);
+
             $data['competingInterests'] = promise_for($data['competingInterests'] ?? null);
 
             $data['profile'] = new ArraySequence($data['profile'] ?? []);
 
             $data['research'] = promise_for($data['research'] ?? []);
         }
+
+        $data['affiliations'] = $data['affiliations']->map(function (array $place) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($place, Place::class, $format, $context);
+        });
 
         if (isset($data['image'])) {
             $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
@@ -101,8 +111,10 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         return new Person(
             $data['id'],
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
-            $data['type'],
+            $data['type']['id'],
+            $data['type']['label'],
             $data['image'] ?? null,
+            $data['affiliations'],
             $data['research'],
             $data['profile'],
             $data['competingInterests']
@@ -122,13 +134,22 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         $data = $this->normalizer->normalize($object->getDetails(), $format, $context);
 
         $data['id'] = $object->getId();
-        $data['type'] = $object->getType();
+        $data['type'] = [
+            'id' => $object->getType(),
+            'label' => $object->getTypeLabel(),
+        ];
 
         if ($object->getThumbnail()) {
             $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {
+            if ($object->getAffiliations()->notEmpty()) {
+                $data['affiliations'] = $object->getAffiliations()->map(function (Place $place) use ($format, $context) {
+                    return $this->normalizer->normalize($place, $format, $context);
+                })->toArray();
+            }
+
             if ($object->getResearch()) {
                 if (!$object->getResearch()->getExpertises()->isEmpty()) {
                     $data['research']['expertises'] = $object->getResearch()->getExpertises()

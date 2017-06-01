@@ -62,15 +62,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['ethics'] ?? [];
                 }));
 
-            if (empty($data['image'])) {
-                $data['image']['banner'] = promise_for(null);
-            } else {
-                $data['image']['banner'] = $article
-                    ->then(function (Result $article) {
-                        return $article['image']['banner'] ?? null;
-                    });
-            }
-
             $data['keywords'] = new PromiseSequence($article
                 ->then(function (Result $article) {
                     return $article['keywords'] ?? [];
@@ -94,8 +85,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['digest'] = promise_for($data['digest'] ?? null);
 
             $data['ethics'] = new ArraySequence($data['ethics'] ?? []);
-
-            $data['image']['banner'] = promise_for($data['image']['banner'] ?? null);
 
             $data['keywords'] = new ArraySequence($data['keywords'] ?? []);
 
@@ -171,16 +160,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 
-        $data['image']['banner'] = $data['image']['banner']
-            ->then(function (array $banner = null) use ($format, $context) {
-                if (empty($banner)) {
-                    return null;
-                }
-
-                return $this->denormalizer->denormalize($banner, Image::class,
-                    $format, $context);
-            });
-
         if (false === empty($data['image']['thumbnail'])) {
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
                 $format, $context);
@@ -197,7 +176,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['version'],
             $data['type'],
             $data['doi'],
-            $data['authorLine'],
+            $data['authorLine'] ?? null,
             $data['titlePrefix'] ?? null,
             $data['title'],
             $data['published'],
@@ -206,15 +185,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['volume'],
             $data['elocationId'],
             $data['pdf'] ?? null,
+            $data['figuresPdf'] ?? null,
             $data['subjects'],
             $data['researchOrganisms'] ?? [],
-            $data['abstract'],
+            $data['abstract'] ?? null,
             $data['issue'],
             $data['copyright'],
             $data['authors'],
             $data['reviewers'],
             $data['impactStatement'] ?? null,
-            $data['image']['banner'],
             $data['image']['thumbnail'] ?? null,
             $data['keywords'],
             $data['digest'],
@@ -229,8 +208,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['funding'],
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse'],
-            $data['relatedArticles']
+            $data['authorResponse']
         );
     }
 
@@ -255,6 +233,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     ) : array {
         $data['status'] = 'vor';
 
+        if ($article->getFiguresPdf()) {
+            $data['figuresPdf'] = $article->getFiguresPdf();
+        }
+
         if ($article->getImpactStatement()) {
             $data['impactStatement'] = $article->getImpactStatement();
         }
@@ -264,10 +246,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         }
 
         if (empty($context['snippet'])) {
-            if ($article->getBanner()) {
-                $data['image']['banner'] = $this->normalizer->normalize($article->getBanner(), $format, $context);
-            }
-
             if (count($article->getKeywords())) {
                 $data['keywords'] = $article->getKeywords()->toArray();
             }

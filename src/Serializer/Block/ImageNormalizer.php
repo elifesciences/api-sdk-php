@@ -5,13 +5,12 @@ namespace eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
-use eLife\ApiSdk\Model\Block\ImageFile;
-use eLife\ApiSdk\Model\File;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Model\Image as ImageFile;
+use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
+use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ImageNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -21,12 +20,15 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
 
     public function denormalize($data, $class, $format = null, array $context = []) : Image
     {
-        $imageFiles = [$this->denormalizeImageFile($data)];
-        foreach ($data['supplements'] ?? [] as $supplement) {
-            $imageFiles[] = $this->denormalizeImageFile($supplement);
-        }
-
-        return new Image(...$imageFiles);
+        return new Image(
+            $data['id'] ?? null,
+            $data['title'] ?? null,
+            new ArraySequence(array_map(function (array $block) {
+                return $this->denormalizer->denormalize($block, Block::class);
+            }, $data['caption'] ?? [])),
+            new ArraySequence($data['attribution'] ?? []),
+            $this->denormalizer->denormalize($data['image'], ImageFile::class)
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null)
@@ -42,12 +44,27 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        $data = array_merge(['type' => 'image'], $this->normalizeImageFile($object->getImage()));
+        $data = [
+            'type' => 'image',
+            'image' => $this->normalizer->normalize($object->getImage()),
+        ];
 
-        if (false === empty($object->getSupplements())) {
-            $data['supplements'] = array_map(function (ImageFile $supplement) {
-                return $this->normalizeImageFile($supplement);
-            }, $object->getSupplements());
+        if ($object->getId()) {
+            $data['id'] = $object->getId();
+        }
+
+        if ($object->getTitle()) {
+            $data['title'] = $object->getTitle();
+        }
+
+        if ($object->getCaption()->notEmpty()) {
+            $data['caption'] = $object->getCaption()->map(function (Block $block) {
+                return $this->normalizer->normalize($block);
+            })->toArray();
+        }
+
+        if ($object->getAttribution()->notEmpty()) {
+            $data['attribution'] = $object->getAttribution()->toArray();
         }
 
         return $data;
@@ -56,58 +73,5 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     public function supportsNormalization($data, $format = null) : bool
     {
         return $data instanceof Image;
-    }
-
-    private function denormalizeImageFile(array $image) : ImageFile
-    {
-        return new ImageFile($image['doi'] ?? null, $image['id'] ?? null, $image['label'] ?? null,
-            $image['title'] ?? null, new ArraySequence(array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $image['caption'] ?? [])), $image['alt'], $image['uri'],
-            $image['attribution'] ?? [], array_map(function (array $file) {
-                return $this->denormalizer->denormalize($file, File::class);
-            }, $image['sourceData'] ?? []));
-    }
-
-    private function normalizeImageFile(ImageFile $image) : array
-    {
-        $data = [
-            'uri' => $image->getUri(),
-            'alt' => $image->getAltText(),
-        ];
-
-        if ($image->getDoi()) {
-            $data['doi'] = $image->getDoi();
-        }
-
-        if ($image->getId()) {
-            $data['id'] = $image->getId();
-        }
-
-        if ($image->getLabel()) {
-            $data['label'] = $image->getLabel();
-        }
-
-        if ($image->getTitle()) {
-            $data['title'] = $image->getTitle();
-        }
-
-        if ($image->getCaption()->notEmpty()) {
-            $data['caption'] = $image->getCaption()->map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            })->toArray();
-        }
-
-        if ($image->getAttribution()) {
-            $data['attribution'] = $image->getAttribution();
-        }
-
-        if ($image->getSourceData()) {
-            $data['sourceData'] = array_map(function (File $file) {
-                return $this->normalizer->normalize($file);
-            }, $image->getSourceData());
-        }
-
-        return $data;
     }
 }

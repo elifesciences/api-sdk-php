@@ -6,10 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, HasImpactStatement, HasReferences, HasThumbnail
+final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasThumbnail
 {
+    private $figuresPdf;
     private $impactStatement;
-    private $banner;
     private $thumbnail;
     private $keywords;
     private $digest;
@@ -31,7 +31,7 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         int $version,
         string $type,
         string $doi,
-        string $authorLine,
+        string $authorLine = null,
         string $titlePrefix = null,
         string $title,
         DateTimeImmutable $published = null,
@@ -40,15 +40,15 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         int $volume,
         string $elocationId,
         string $pdf = null,
+        string $figuresPdf = null,
         Sequence $subjects,
         array $researchOrganisms,
-        PromiseInterface $abstract,
+        ArticleSection $abstract = null,
         PromiseInterface $issue,
         PromiseInterface $copyright,
         Sequence $authors,
         Sequence $reviewers,
         string $impactStatement = null,
-        PromiseInterface $banner,
         Image $thumbnail = null,
         Sequence $keywords,
         PromiseInterface $digest,
@@ -63,15 +63,14 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
         PromiseInterface $funding,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
-        PromiseInterface $authorResponse,
-        Sequence $relatedArticles
+        PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
-            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $relatedArticles,
+            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
             $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
 
+        $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
-        $this->banner = $banner;
         $this->thumbnail = $thumbnail;
         $this->keywords = $keywords;
         $this->digest = $digest;
@@ -88,17 +87,17 @@ final class ArticleVoR extends ArticleVersion implements HasBanner, HasContent, 
     /**
      * @return string|null
      */
-    public function getImpactStatement()
+    public function getFiguresPdf()
     {
-        return $this->impactStatement;
+        return $this->figuresPdf;
     }
 
     /**
-     * @return Image|null
+     * @return string|null
      */
-    public function getBanner()
+    public function getImpactStatement()
     {
-        return $this->banner->wait();
+        return $this->impactStatement;
     }
 
     /**

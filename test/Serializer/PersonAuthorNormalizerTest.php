@@ -2,19 +2,22 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
@@ -30,9 +33,10 @@ final class PersonAuthorNormalizerTest extends TestCase
     {
         $this->normalizer = new PersonAuthorNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new AddressNormalizer(),
+            new ParagraphNormalizer(),
             new PersonDetailsNormalizer(),
             new PlaceNormalizer(),
         ]);
@@ -79,13 +83,15 @@ final class PersonAuthorNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
+                    new ArraySequence([new Paragraph('biography')]), true, 'role',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
                         $somewhere = Builder::for(Address::class)->sample('somewhere'),
                     ]),
                 [
+                    'additionalInformation' => ['additional information'],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -110,7 +116,14 @@ final class PersonAuthorNormalizerTest extends TestCase
                         'index' => 'index name',
                     ],
                     'orcid' => '0000-0002-1825-0097',
+                    'biography' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'biography',
+                        ],
+                    ],
                     'deceased' => true,
+                    'role' => 'role',
                 ],
             ],
             'minimum' => [
@@ -175,7 +188,15 @@ final class PersonAuthorNormalizerTest extends TestCase
                         'index' => 'index name',
                     ],
                     'orcid' => '0000-0002-1825-0097',
+                    'biography' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'biography',
+                        ],
+                    ],
                     'deceased' => true,
+                    'role' => 'role',
+                    'additionalInformation' => ['additional information'],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -195,8 +216,9 @@ final class PersonAuthorNormalizerTest extends TestCase
                         ],
                     ],
                 ],
-                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
+                    new ArraySequence([new Paragraph('biography')]), true, 'role',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
                         $somewhere = Builder::for(Address::class)->sample('somewhere'),

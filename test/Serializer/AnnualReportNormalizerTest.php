@@ -4,12 +4,13 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class AnnualReportNormalizerTest extends TestCase
@@ -24,7 +25,7 @@ final class AnnualReportNormalizerTest extends TestCase
     {
         $this->normalizer = new AnnualReportNormalizer();
 
-        new Serializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
     }
 
     /**
@@ -46,7 +47,7 @@ final class AnnualReportNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)->sample('thumbnail');
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image);
 
         return [
@@ -103,7 +104,7 @@ final class AnnualReportNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
@@ -112,7 +113,19 @@ final class AnnualReportNormalizerTest extends TestCase
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
+                        ],
+                    ],
                     'impactStatement' => 'impact statement',
                 ],
             ],
@@ -122,7 +135,19 @@ final class AnnualReportNormalizerTest extends TestCase
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
+                        ],
+                    ],
                 ],
             ],
         ];

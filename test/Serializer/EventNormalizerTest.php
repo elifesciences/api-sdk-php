@@ -7,16 +7,15 @@ use DateTimeZone;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class EventNormalizerTest extends ApiTestCase
@@ -54,9 +53,8 @@ final class EventNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')),
-            rejection_for('Event venue should not be unwrapped'));
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         return [
             'event' => [$event, null, true],
@@ -121,21 +119,24 @@ final class EventNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $starts = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $ends = new DateTimeImmutable('now', new DateTimeZone('Z'));
+        $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $updated = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
+        $starts = new DateTimeImmutable('2017-01-01T14:00:00Z', new DateTimeZone('Z'));
+        $ends = new DateTimeImmutable('2017-01-01T16:00:00Z', new DateTimeZone('Z'));
         $timezone = new DateTimeZone('Europe/London');
-        $venue = new Place(null, null, ['venue']);
 
         return [
-            'complete' => [
-                new Event('id', 'title', 'impact statement', $starts, $ends, $timezone,
-                    new ArraySequence([new Paragraph('text')]), promise_for($venue)),
+            'complete with content' => [
+                new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, null,
+                    new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
                     'title' => 'title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $published->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'timezone' => $timezone->getName(),
                     'content' => [
@@ -144,16 +145,30 @@ final class EventNormalizerTest extends ApiTestCase
                             'text' => 'text',
                         ],
                     ],
-                    'venue' => ['name' => ['venue']],
                 ],
             ],
-            'minimum' => [
-                new Event('id', 'title', null, $starts, $ends, null, new ArraySequence([new Paragraph('text')]),
-                    promise_for(null)),
+            'complete with uri' => [
+                new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
                 [],
                 [
                     'id' => 'id',
                     'title' => 'title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $published->format(ApiSdk::DATE_FORMAT),
+                    'impactStatement' => 'impact statement',
+                    'timezone' => $timezone->getName(),
+                    'uri' => 'http://www.example.com/',
+                ],
+            ],
+            'minimum' => [
+                new Event('id', 'title', null, $published, null, $starts, $ends, null, null, new ArraySequence([new Paragraph('text')])),
+                [],
+                [
+                    'id' => 'id',
+                    'title' => 'title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                     'content' => [
@@ -164,13 +179,15 @@ final class EventNormalizerTest extends ApiTestCase
                     ],
                 ],
             ],
-            'complete snippet' => [
-                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $starts, $ends, $timezone,
-                    new ArraySequence([new Paragraph('Event 1 text')]), promise_for($venue)),
+            'complete snippet with content' => [
+                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $published, $updated, $starts, $ends, $timezone, null,
+                    new ArraySequence([new Paragraph('Event 1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
                     'title' => 'Event 1 title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Event 1 impact statement',
@@ -181,13 +198,33 @@ final class EventNormalizerTest extends ApiTestCase
                     $test->mockEventCall(1, true);
                 },
             ],
+            'complete snippet with uri' => [
+                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
+                ['snippet' => true, 'type' => true],
+                [
+                    'id' => 'event1',
+                    'title' => 'Event 1 title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'updated' => $updated->format(ApiSdk::DATE_FORMAT),
+                    'starts' => $starts->format(ApiSdk::DATE_FORMAT),
+                    'ends' => $ends->format(ApiSdk::DATE_FORMAT),
+                    'impactStatement' => 'Event 1 impact statement',
+                    'timezone' => $timezone->getName(),
+                    'type' => 'event',
+                    'uri' => 'http://www.example.com/',
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockEventCall(1, true, true);
+                },
+            ],
             'minimum snippet' => [
-                new Event('event1', 'Event 1 title', null, $starts, $ends, null,
-                    new ArraySequence([new Paragraph('Event 1 text')]), promise_for(null)),
+                new Event('event1', 'Event 1 title', null, $published, null, $starts, $ends, null, null,
+                    new ArraySequence([new Paragraph('Event 1 text')])),
                 ['snippet' => true],
                 [
                     'id' => 'event1',
                     'title' => 'Event 1 title',
+                    'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                 ],

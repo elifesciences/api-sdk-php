@@ -7,13 +7,13 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
-use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TableNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\TestCase;
 
 final class TableNormalizerTest extends TestCase
@@ -28,7 +28,7 @@ final class TableNormalizerTest extends TestCase
     {
         $this->normalizer = new TableNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new FileNormalizer(),
             new ParagraphNormalizer(),
@@ -54,7 +54,7 @@ final class TableNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $table = new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []);
+        $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
 
         return [
             'table' => [$table, null, true],
@@ -76,17 +76,12 @@ final class TableNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), ['<table></table>'],
-                    [new Paragraph('footer')], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
-                    ]),
+                new Table('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']), ['<table></table>'],
+                    [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))]),
                 [
                     'type' => 'table',
                     'tables' => ['<table></table>'],
-                    'doi' => '10.1000/182',
                     'id' => 'id1',
-                    'label' => 'label1',
                     'title' => 'title1',
                     'caption' => [
                         [
@@ -94,25 +89,25 @@ final class TableNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'footer' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'footer',
-                        ],
+                    'attribution' => [
+                        'attribution',
                     ],
-                    'sourceData' => [
+                    'footnotes' => [
                         [
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/data.txt',
-                            'filename' => 'data.txt',
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
+                            'text' => [
                                 [
                                     'type' => 'paragraph',
-                                    'text' => 'paragraph2',
+                                    'text' => 'footnote 1',
+                                ],
+                            ],
+                            'id' => 'fn1',
+                            'label' => '#',
+                        ],
+                        [
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 2',
                                 ],
                             ],
                         ],
@@ -120,7 +115,7 @@ final class TableNormalizerTest extends TestCase
                 ],
             ],
             'minimum' => [
-                new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []),
+                new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>']),
                 [
                     'type' => 'table',
                     'tables' => ['<table></table>'],
@@ -171,53 +166,48 @@ final class TableNormalizerTest extends TestCase
             'complete' => [
                 [
                     'type' => 'table',
-                    'doi' => '10.1000/182',
                     'id' => 'id1',
-                    'label' => 'label1',
                     'title' => 'title1',
                     'caption' => [
                         [
                             'type' => 'paragraph',
-                            'text' => 'caption',
+                            'text' => 'paragraph1',
                         ],
+                    ],
+                    'attribution' => [
+                        'attribution',
                     ],
                     'tables' => ['<table></table>'],
-                    'footer' => [
+                    'footnotes' => [
                         [
-                            'type' => 'paragraph',
-                            'text' => 'footer',
-                        ],
-                    ],
-                    'sourceData' => [
-                        [
-                            'doi' => '10.1000/182.1',
-                            'id' => 'id2',
-                            'label' => 'label2',
-                            'title' => 'title2',
-                            'caption' => [
+                            'text' => [
                                 [
                                     'type' => 'paragraph',
-                                    'text' => 'paragraph2',
+                                    'text' => 'footnote 1',
                                 ],
                             ],
-                            'mediaType' => 'text/plain',
-                            'uri' => 'http://www.example.com/data.txt',
-                            'filename' => 'data.txt',
+                            'id' => 'fn1',
+                            'label' => '#',
+                        ],
+                        [
+                            'text' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'footnote 2',
+                                ],
+                            ],
                         ],
                     ],
                 ],
-                new Table('10.1000/182', 'id1', 'label1', 'title1', new ArraySequence([new Paragraph('caption')]), ['<table></table>'],
-                    [new Paragraph('footer')], [
-                        new File('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]),
-                            'text/plain', 'http://www.example.com/data.txt', 'data.txt'),
-                    ]),
+                new Table('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']), ['<table></table>'],
+                    [new Footnote('fn1', '#', new ArraySequence([new Paragraph('footnote 1')])), new Footnote(null, null, new ArraySequence([new Paragraph('footnote 2')]))]),
             ],
             'minimum' => [
                 [
                     'type' => 'table',
                     'tables' => ['<table></table>'],
                 ],
-                new Table(null, null, null, null, new EmptySequence(), ['<table></table>'], [], []),
+                new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>']),
             ],
         ];
     }

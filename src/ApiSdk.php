@@ -6,27 +6,38 @@ use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
+use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
+use eLife\ApiClient\HttpClient\UserAgentPrependingHttpClient;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
+use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
-use eLife\ApiSdk\Client\LabsExperiments;
+use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
+use eLife\ApiSdk\Client\PressPackages;
+use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -35,6 +46,7 @@ use eLife\ApiSdk\Serializer\AppendixNormalizer;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
+use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
@@ -44,20 +56,26 @@ use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
+use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
-use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
+use eLife\ApiSdk\Serializer\LabsPostNormalizer;
+use eLife\ApiSdk\Serializer\MediaContactNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
+use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
+use PackageVersions\Versions;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
@@ -65,55 +83,83 @@ final class ApiSdk
 {
     const DATE_FORMAT = 'Y-m-d\TH:i:s\Z';
 
+    private $version;
     private $httpClient;
     private $articlesClient;
     private $blogClient;
+    private $collectionsClient;
+    private $communityClient;
     private $coversClient;
     private $eventsClient;
+    private $highlightsClient;
     private $interviewsClient;
     private $labsClient;
+    private $metricsClient;
     private $peopleClient;
     private $podcastClient;
-    private $collectionsClient;
+    private $pressPackagesClient;
+    private $recommendationsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
     private $annualReports;
     private $articles;
     private $blogArticles;
+    private $community;
     private $covers;
     private $events;
+    private $highlights;
     private $interviews;
-    private $labsExperiments;
+    private $labsPosts;
     private $mediumArticles;
+    private $metrics;
     private $people;
     private $podcastEpisodes;
+    private $pressPackages;
     private $collections;
+    private $recommendations;
     private $search;
     private $subjects;
 
     public function __construct(HttpClient $httpClient)
     {
-        $this->httpClient = $httpClient;
+        $originalVersion = Versions::getVersion('elife/api-sdk');
+        list($version, $reference) = explode('@', $originalVersion);
+        if (false !== strpos($version, 'dev')) {
+            if (40 === strlen($reference)) {
+                $version = implode('@', [$version, substr($reference, 0, 7)]);
+            } else {
+                $version = $originalVersion;
+            }
+        }
+
+        $this->version = $version;
+        $this->httpClient = new UserAgentPrependingHttpClient($httpClient, 'eLifeApiSdk/'.$this->version);
         $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->collectionsClient = new CollectionsClient($this->httpClient);
+        $this->communityClient = new CommunityClient($this->httpClient);
         $this->coversClient = new CoversClient($this->httpClient);
         $this->eventsClient = new EventsClient($this->httpClient);
+        $this->highlightsClient = new HighlightsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
+        $this->metricsClient = new MetricsClient($this->httpClient);
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
+        $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
+        $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
-        $this->serializer = new Serializer([
+        $this->serializer = new NormalizerAwareSerializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
             new AppendixNormalizer(),
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new AssetFileNormalizer(),
             new BlogArticleNormalizer($this->blogClient),
             new CollectionNormalizer($this->collectionsClient),
             new CoverNormalizer(),
@@ -122,21 +168,28 @@ final class ApiSdk
             new ExternalArticleNormalizer(),
             new FileNormalizer(),
             new GroupAuthorNormalizer(),
+            new HighlightNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
-            new LabsExperimentNormalizer($this->labsClient),
+            new LabsPostNormalizer($this->labsClient),
+            new MediaContactNormalizer(),
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
             new PersonDetailsNormalizer(),
             new PersonNormalizer($this->peopleClient),
             new PlaceNormalizer(),
+            new PodcastEpisodeChapterModelNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
+            new PressPackageNormalizer($this->pressPackagesClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
+            new Block\ButtonNormalizer(),
             new Block\CodeNormalizer(),
+            new Block\ExcerptNormalizer(),
+            new Block\FigureNormalizer(),
             new Block\ImageNormalizer(),
             new Block\ListingNormalizer(),
             new Block\MathMLNormalizer(),
@@ -163,6 +216,11 @@ final class ApiSdk
             new Reference\UnknownReferenceNormalizer(),
             new Reference\WebReferenceNormalizer(),
         ], [new JsonEncoder()]);
+    }
+
+    public function getVersion() : string
+    {
+        return $this->version;
     }
 
     public function annualReports() : AnnualReports
@@ -192,6 +250,15 @@ final class ApiSdk
         return $this->blogArticles;
     }
 
+    public function community() : Community
+    {
+        if (empty($this->community)) {
+            $this->community = new Community($this->communityClient, $this->serializer);
+        }
+
+        return $this->community;
+    }
+
     public function covers() : Covers
     {
         if (empty($this->covers)) {
@@ -210,6 +277,15 @@ final class ApiSdk
         return $this->events;
     }
 
+    public function highlights() : Highlights
+    {
+        if (empty($this->highlights)) {
+            $this->highlights = new Highlights($this->highlightsClient, $this->serializer);
+        }
+
+        return $this->highlights;
+    }
+
     public function interviews() : Interviews
     {
         if (empty($this->interviews)) {
@@ -219,13 +295,13 @@ final class ApiSdk
         return $this->interviews;
     }
 
-    public function labsExperiments() : LabsExperiments
+    public function labsPosts() : LabsPosts
     {
-        if (empty($this->labsExperiments)) {
-            $this->labsExperiments = new LabsExperiments($this->labsClient, $this->serializer);
+        if (empty($this->labsPosts)) {
+            $this->labsPosts = new LabsPosts($this->labsClient, $this->serializer);
         }
 
-        return $this->labsExperiments;
+        return $this->labsPosts;
     }
 
     public function mediumArticles() : MediumArticles
@@ -235,6 +311,15 @@ final class ApiSdk
         }
 
         return $this->mediumArticles;
+    }
+
+    public function metrics() : Metrics
+    {
+        if (empty($this->metrics)) {
+            $this->metrics = new Metrics($this->metricsClient);
+        }
+
+        return $this->metrics;
     }
 
     public function people() : People
@@ -255,6 +340,15 @@ final class ApiSdk
         return $this->podcastEpisodes;
     }
 
+    public function pressPackages() : PressPackages
+    {
+        if (empty($this->pressPackages)) {
+            $this->pressPackages = new PressPackages($this->pressPackagesClient, $this->serializer);
+        }
+
+        return $this->pressPackages;
+    }
+
     public function collections() : Collections
     {
         if (empty($this->collections)) {
@@ -262,6 +356,15 @@ final class ApiSdk
         }
 
         return $this->collections;
+    }
+
+    public function recommendations() : Recommendations
+    {
+        if (empty($this->recommendations)) {
+            $this->recommendations = new Recommendations($this->recommendationsClient, $this->serializer);
+        }
+
+        return $this->recommendations;
     }
 
     public function subjects() : Subjects

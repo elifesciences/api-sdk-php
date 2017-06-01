@@ -10,11 +10,12 @@ use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
-use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class PodcastEpisodesTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var PodcastEpisodes */
     private $podcastEpisodes;
 
@@ -121,59 +122,71 @@ final class PodcastEpisodesTest extends ApiTestCase
 
         $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()[0]);
         $this->assertSame('Chapter title', $podcastEpisode->getChapters()[0]->getTitle());
-
-        $this->assertInstanceOf(Subject::class, $podcastEpisode->getSubjects()[0]);
-        $this->assertSame('Subject 1 name', $podcastEpisode->getSubjects()[0]->getName());
-
-        $this->mockSubjectCall('1');
-
-        $this->assertSame('Subject 1 impact statement',
-            $podcastEpisode->getSubjects()[0]->getImpactStatement());
     }
 
     /**
      * @test
      */
-    public function it_can_be_filtered_by_subject()
+    public function it_can_be_prepended()
     {
-        $this->mockPodcastEpisodeListCall(1, 1, 5, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(1, 100, 5, true, ['subject']);
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
 
-        foreach ($this->podcastEpisodes->forSubject('subject') as $i => $podcastEpisode) {
-            $this->assertSame($i, $podcastEpisode->getNumber());
-        }
+        $values = $this->podcastEpisodes->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
     }
 
     /**
      * @test
      */
-    public function it_recounts_when_filtering_by_subject()
+    public function it_can_be_appended()
     {
-        $this->mockPodcastEpisodeListCall(1, 1, 10);
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
 
-        $this->podcastEpisodes->count();
+        $values = $this->podcastEpisodes->append(0, 1)->map($this->tidyValue());
 
-        $this->mockPodcastEpisodeListCall(1, 1, 4, true, ['subject']);
-
-        $this->assertSame(4, $this->podcastEpisodes->forSubject('subject')->count());
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title', 0, 1], $values->toArray());
     }
 
     /**
      * @test
      */
-    public function it_fetches_pages_again_when_filtering_by_subject()
+    public function it_can_have_values_dropped()
     {
-        $this->mockPodcastEpisodeListCall(1, 1, 200);
-        $this->mockPodcastEpisodeListCall(1, 100, 200);
-        $this->mockPodcastEpisodeListCall(2, 100, 200);
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
 
-        $this->podcastEpisodes->toArray();
+        $values = $this->podcastEpisodes->drop(2)->map($this->tidyValue());
 
-        $this->mockPodcastEpisodeListCall(1, 1, 200, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(1, 100, 200, true, ['subject']);
-        $this->mockPodcastEpisodeListCall(2, 100, 200, true, ['subject']);
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
 
-        $this->podcastEpisodes->forSubject('subject')->toArray();
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 2, 'Podcast episode 3 title', 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5);
+        $this->mockPodcastEpisodeListCall(1, 100, 5);
+
+        $values = $this->podcastEpisodes->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['Podcast episode 1 title', 'Podcast episode 2 title', 2, 'Podcast episode 4 title', 'Podcast episode 5 title'], $values->toArray());
     }
 
     /**
@@ -190,38 +203,6 @@ final class PodcastEpisodesTest extends ApiTestCase
             $this->assertInstanceOf(PodcastEpisode::class, $podcastEpisode);
             $this->assertSame($expected[$i], $podcastEpisode->getNumber());
         }
-    }
-
-    public function sliceProvider() : array
-    {
-        return [
-            'offset 1, length 1' => [
-                1,
-                1,
-                [2],
-                [
-                    ['page' => 2, 'per-page' => 1],
-                ],
-            ],
-            'offset -2, no length' => [
-                -2,
-                null,
-                [4, 5],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-            'offset 6, no length' => [
-                6,
-                null,
-                [],
-                [
-                    ['page' => 1, 'per-page' => 1],
-                    ['page' => 1, 'per-page' => 100],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -271,6 +252,14 @@ final class PodcastEpisodesTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->podcastEpisodes->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->podcastEpisodes, $this->podcastEpisodes->flatten());
     }
 
     /**

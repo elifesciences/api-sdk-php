@@ -5,12 +5,11 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
@@ -26,7 +25,7 @@ final class ExternalArticleNormalizerTest extends TestCase
     {
         $this->normalizer = new ExternalArticleNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PlaceNormalizer(),
         ]);
@@ -121,16 +120,14 @@ final class ExternalArticleNormalizerTest extends TestCase
             [
                 Builder::for(ExternalArticle::class)
                     ->withArticleTitle('article title')
-                    ->withJournal($journal = new Place(null, null, ['journal']))
+                    ->withJournal('journal')
                     ->withAuthorLine('author line')
                     ->withUri('http://www.example.com/')
                     ->__invoke(),
                 [],
                 [
                     'articleTitle' => 'article title',
-                    'journal' => [
-                        'name' => ['journal'],
-                    ],
+                    'journal' => 'journal',
                     'authorLine' => 'author line',
                     'uri' => 'http://www.example.com/',
                 ],

@@ -5,11 +5,12 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement, HasSubjects
+final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
 {
     private $id;
     private $title;
     private $published;
+    private $updated;
     private $impactStatement;
     private $content;
     private $subjects;
@@ -21,6 +22,7 @@ final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement,
         string $id,
         string $title,
         DateTimeImmutable $published,
+        DateTimeImmutable $updated = null,
         string $impactStatement = null,
         Sequence $content,
         Sequence $subjects
@@ -28,6 +30,7 @@ final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement,
         $this->id = $id;
         $this->title = $title;
         $this->published = $published;
+        $this->updated = $updated;
         $this->impactStatement = $impactStatement;
         $this->content = $content;
         $this->subjects = $subjects;
@@ -54,6 +57,14 @@ final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement,
     public function getPublishedDate() : DateTimeImmutable
     {
         return $this->published;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updated;
     }
 
     /**

@@ -14,6 +14,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class InterviewsTest extends ApiTestCase
 {
+    use SlicingTestCase;
+
     /** @var Interviews */
     private $interviews;
 
@@ -124,6 +126,71 @@ final class InterviewsTest extends ApiTestCase
 
     /**
      * @test
+     */
+    public function it_can_be_prepended()
+    {
+        $this->mockInterviewListCall(1, 1, 5);
+        $this->mockInterviewListCall(1, 100, 5);
+
+        $values = $this->interviews->prepend(0, 1)->map($this->tidyValue());
+
+        $this->assertSame([0, 1, 'interview1', 'interview2', 'interview3', 'interview4', 'interview5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_appended()
+    {
+        $this->mockInterviewListCall(1, 1, 5);
+        $this->mockInterviewListCall(1, 100, 5);
+
+        $values = $this->interviews->append(0, 1)->map($this->tidyValue());
+
+        $this->assertSame(['interview1', 'interview2', 'interview3', 'interview4', 'interview5', 0, 1], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_dropped()
+    {
+        $this->mockInterviewListCall(1, 1, 5);
+        $this->mockInterviewListCall(1, 100, 5);
+
+        $values = $this->interviews->drop(2)->map($this->tidyValue());
+
+        $this->assertSame(['interview1', 'interview2', 'interview4', 'interview5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_inserted()
+    {
+        $this->mockInterviewListCall(1, 1, 5);
+        $this->mockInterviewListCall(1, 100, 5);
+
+        $values = $this->interviews->insert(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['interview1', 'interview2', 2, 'interview3', 'interview4', 'interview5'], $values->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_have_values_set()
+    {
+        $this->mockInterviewListCall(1, 1, 5);
+        $this->mockInterviewListCall(1, 100, 5);
+
+        $values = $this->interviews->set(2, 2)->map($this->tidyValue());
+
+        $this->assertSame(['interview1', 'interview2', 2, 'interview4', 'interview5'], $values->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider sliceProvider
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
@@ -216,6 +283,14 @@ final class InterviewsTest extends ApiTestCase
         };
 
         $this->assertSame(115, $this->interviews->reduce($reduce, 100));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_need_to_be_flattened()
+    {
+        $this->assertSame($this->interviews, $this->interviews->flatten());
     }
 
     /**

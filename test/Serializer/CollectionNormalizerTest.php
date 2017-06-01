@@ -6,8 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Image;
@@ -129,9 +131,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPromiseOfSubTitle('A selection of papers')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
+                    ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->sample('epidemiology-global-health'),
@@ -147,6 +149,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                         Builder::for(Person::class)
                             ->sample('bcooper'),
                         $selectedCurator,
+                    ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
                     ]))
                     ->withContent(new ArraySequence([
                         Builder::for(ArticleVoR::class)
@@ -169,30 +174,34 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'subTitle' => 'A selection of papers',
                     'impactStatement' => 'eLife has published papers on many...',
-                    'updated' => '2015-09-16T11:19:26Z',
+                    'published' => '2015-09-16T11:19:26Z',
+                    'updated' => '2015-09-17T11:19:26Z',
                     'image' => [
                         'banner' => [
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -208,7 +217,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -218,7 +230,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'curators' => [
                         0 => [
                             'id' => 'bcooper',
-                            'type' => 'reviewing-editor',
+                            'type' => [
+                                'id' => 'reviewing-editor',
+                                'label' => 'Reviewing Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Ben Cooper',
                                 'index' => 'Cooper, Ben',
@@ -226,11 +241,20 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                         1 => [
                             'id' => 'pjha',
-                            'type' => 'senior-editor',
+                            'type' => [
+                                'id' => 'senior-editor',
+                                'label' => 'Senior Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
                             ],
+                        ],
+                    ],
+                    'summary' => [
+                        0 => [
+                            'type' => 'paragraph',
+                            'text' => 'summary',
                         ],
                     ],
                     'content' => [
@@ -256,18 +280,27 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 ],
                             ],
                             'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 09560 abstract text',
+                                    ],
+                                ],
+                                'doi' => '10.7554/eLife.09560abstract',
+                            ],
                             'image' => [
                                 'thumbnail' => [
                                     'alt' => '',
-                                    'sizes' => [
-                                        '16:9' => [
-                                            250 => 'https://placehold.it/250x141',
-                                            500 => 'https://placehold.it/500x281',
-                                        ],
-                                        '1:1' => [
-                                            70 => 'https://placehold.it/70x70',
-                                            140 => 'https://placehold.it/140x140',
-                                        ],
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
                                     ],
                                 ],
                             ],
@@ -314,6 +347,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'published' => '2016-03-28T00:00:00Z',
                             'versionDate' => '2016-03-28T00:00:00Z',
                             'statusDate' => '2016-03-28T00:00:00Z',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'podcastEpisodes' => [
@@ -324,15 +365,15 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'image' => [
                                 'thumbnail' => [
                                     'alt' => '',
-                                    'sizes' => [
-                                        '16:9' => [
-                                            250 => 'https://placehold.it/250x141',
-                                            500 => 'https://placehold.it/500x281',
-                                        ],
-                                        '1:1' => [
-                                            70 => 'https://placehold.it/70x70',
-                                            140 => 'https://placehold.it/140x140',
-                                        ],
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
                                     ],
                                 ],
                             ],
@@ -371,6 +412,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withCurators(new ArraySequence([
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
                         Builder::for(ArticlePoA::class)
                             ->sample('growth-factor'),
@@ -380,34 +422,41 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'updated' => '2015-09-16T11:19:26Z',
+                    'published' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'banner' => [
+                            'uri' => 'https://iiif.elifesciences.org/banner.jpg',
                             'alt' => '',
-                            'sizes' => [
-                                '2:1' => [
-                                    900 => 'https://placehold.it/900x450',
-                                    1800 => 'https://placehold.it/1800x900',
-                                ],
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                                'filename' => 'banner.jpg',
+                            ],
+                            'size' => [
+                                'width' => 1800,
+                                'height' => 900,
                             ],
                         ],
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -416,7 +465,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'curators' => [
                         0 => [
                             'id' => 'pjha',
-                            'type' => 'senior-editor',
+                            'type' => [
+                                'id' => 'senior-editor',
+                                'label' => 'Senior Editor',
+                            ],
                             'name' => [
                                 'preferred' => 'Prabhat Jha',
                                 'index' => 'Jha, Prabhat',
@@ -438,6 +490,14 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'statusDate' => '2016-03-28T00:00:00Z',
                             'volume' => 5,
                             'elocationId' => 'e14107',
+                            'abstract' => [
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -450,9 +510,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                 Builder::for(Collection::class)
                     ->withId('1')
                     ->withTitle('Tropical disease')
-                    ->withPromiseOfSubTitle('1 subtitle')
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
+                    ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->sample('epidemiology-global-health'),
@@ -469,6 +529,9 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('bcooper', ['snippet' => false]),
                         Builder::for(Person::class)
                             ->sample('pjha', ['snippet' => false]),
+                    ]))
+                    ->withSummary(new ArraySequence([
+                        new Paragraph('summary'),
                     ]))
                     ->withContent(new ArraySequence([
                         $blogArticle = Builder::for(BlogArticle::class)
@@ -488,19 +551,20 @@ final class CollectionNormalizerTest extends ApiTestCase
                     'id' => '1',
                     'title' => 'Tropical disease',
                     'impactStatement' => 'eLife has published papers on many...',
-                    'updated' => '2015-09-16T11:19:26Z',
+                    'published' => '2015-09-16T11:19:26Z',
+                    'updated' => '2015-09-17T11:19:26Z',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
@@ -516,7 +580,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',
@@ -551,6 +618,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('bcooper', ['snippet' => false]),
                         $selectedCurator,
                     ]))
+                    ->withSummary(new EmptySequence())
                     ->withContent(new ArraySequence([
                         $blogArticle = Builder::for(BlogArticle::class)
                             ->sample('slime'),
@@ -560,25 +628,28 @@ final class CollectionNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Tropical disease',
-                    'updated' => '2015-09-16T11:19:26Z',
+                    'published' => '2015-09-16T11:19:26Z',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',
-                            'sizes' => [
-                                '16:9' => [
-                                    250 => 'https://placehold.it/250x141',
-                                    500 => 'https://placehold.it/500x281',
-                                ],
-                                '1:1' => [
-                                    70 => 'https://placehold.it/70x70',
-                                    140 => 'https://placehold.it/140x140',
-                                ],
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],
                     'selectedCurator' => [
                         'id' => 'pjha',
-                        'type' => 'senior-editor',
+                        'type' => [
+                            'id' => 'senior-editor',
+                            'label' => 'Senior Editor',
+                        ],
                         'name' => [
                             'preferred' => 'Prabhat Jha',
                             'index' => 'Jha, Prabhat',

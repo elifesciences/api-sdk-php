@@ -5,18 +5,19 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
-use GuzzleHttp\Promise\PromiseInterface;
 
-final class Event implements Model, HasContent, HasId, HasImpactStatement
+final class Event implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $title;
     private $impactStatement;
+    private $publishedDate;
+    private $updatedDate;
     private $starts;
     private $ends;
     private $timeZone;
+    private $uri;
     private $content;
-    private $venue;
 
     /**
      * @internal
@@ -25,28 +26,32 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         string $id,
         string $title,
         string $impactStatement = null,
+        DateTimeImmutable $publishedDate,
+        DateTimeImmutable $updatedDate = null,
         DateTimeImmutable $starts,
         DateTimeImmutable $ends,
         DateTimeZone $timeZone = null,
-        Sequence $content,
-        PromiseInterface $venue
+        string $uri = null,
+        Sequence $content
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
+        $this->publishedDate = $publishedDate;
+        $this->updatedDate = $updatedDate;
         $this->starts = $starts;
         $this->ends = $ends;
         $this->timeZone = $timeZone;
+        $this->uri = $uri;
         $this->content = $content;
-        $this->venue = $venue;
     }
 
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -59,12 +64,25 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         return $this->impactStatement;
     }
 
-    public function getStarts(): DateTimeImmutable
+    public function getPublishedDate() : DateTimeImmutable
+    {
+        return $this->publishedDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedDate()
+    {
+        return $this->updatedDate;
+    }
+
+    public function getStarts() : DateTimeImmutable
     {
         return $this->starts;
     }
 
-    public function getEnds(): DateTimeImmutable
+    public function getEnds() : DateTimeImmutable
     {
         return $this->ends;
     }
@@ -77,16 +95,16 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement
         return $this->timeZone;
     }
 
-    public function getContent(): Sequence
+    /**
+     * @return string|null
+     */
+    public function getUri()
     {
-        return $this->content;
+        return $this->uri;
     }
 
-    /**
-     * @return Place|null
-     */
-    public function getVenue()
+    public function getContent() : Sequence
     {
-        return $this->venue->wait();
+        return $this->content;
     }
 }

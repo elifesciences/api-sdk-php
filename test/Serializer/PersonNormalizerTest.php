@@ -9,15 +9,16 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 
@@ -56,8 +57,8 @@ final class PersonNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', null,
-            rejection_for('Research should not be unwrapped'),
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'title', null,
+            new PromiseSequence(rejection_for('Affiliations should not be unwrapped')), rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
             rejection_for('Competing interests should not be unwrapped'));
 
@@ -125,26 +126,16 @@ final class PersonNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
-        $banner = new Image('',
-            [new ImageSize('2:1', [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900'])]);
-        $thumbnail = new Image('', [
-            new ImageSize('16:9', [
-                250 => 'https://placehold.it/250x141',
-                500 => 'https://placehold.it/500x281',
-            ]),
-            new ImageSize('1:1', [
-                '70' => 'https://placehold.it/70x70',
-                '140' => 'https://placehold.it/140x140',
-            ]),
-        ]);
+        $banner = Builder::for(Image::class)->sample('banner');
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    'senior-editor', $thumbnail,
-                    promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
+                    'senior-editor', 'Senior Editor', $thumbnail,
+                    new ArraySequence([new Place(['affiliation'])]), promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('Person 1 profile text')]),
                     promise_for('Person 1 competing interests')),
                 [],
@@ -155,18 +146,26 @@ final class PersonNormalizerTest extends ApiTestCase
                     ],
                     'orcid' => '0000-0002-1825-0097',
                     'id' => 'person1',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
+                        ],
+                    ],
+                    'affiliations' => [
+                        [
+                            'name' => ['affiliation'],
                         ],
                     ],
                     'research' => [
@@ -187,7 +186,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    null, promise_for(null), new EmptySequence(), promise_for(null)),
+                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
                 [],
                 [
                     'name' => [
@@ -195,12 +194,16 @@ final class PersonNormalizerTest extends ApiTestCase
                         'index' => 'Person 1 index',
                     ],
                     'id' => 'person1',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                 ],
             ],
             'complete snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    'senior-editor', $thumbnail,
+                    'senior-editor', 'Senior Editor', $thumbnail,
+                    new ArraySequence([new Place(['affiliation'])]),
                     promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('person1 profile text')]),
                     promise_for('person1 competing interests')),
@@ -212,18 +215,21 @@ final class PersonNormalizerTest extends ApiTestCase
                     ],
                     'orcid' => '0000-0002-1825-0097',
                     'id' => 'person1',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                     'image' => [
                         'alt' => '',
-                        'sizes' => [
-                            '16:9' => [
-                                250 => 'https://placehold.it/250x141',
-                                500 => 'https://placehold.it/500x281',
-                            ],
-                            '1:1' => [
-                                70 => 'https://placehold.it/70x70',
-                                140 => 'https://placehold.it/140x140',
-                            ],
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
                         ],
                     ],
                 ],
@@ -233,7 +239,7 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'minimum snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    null, promise_for(null), new EmptySequence(), promise_for(null)),
+                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
                 ['snippet' => true],
                 [
                     'name' => [
@@ -241,7 +247,10 @@ final class PersonNormalizerTest extends ApiTestCase
                         'index' => 'Person 1 index',
                     ],
                     'id' => 'person1',
-                    'type' => 'senior-editor',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
                 ],
                 function (ApiTestCase $test) {
                     $test->mockPersonCall(1);

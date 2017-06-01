@@ -6,13 +6,14 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\MediumArticle;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class MediumArticleNormalizerTest extends TestCase
@@ -27,7 +28,7 @@ final class MediumArticleNormalizerTest extends TestCase
     {
         $this->normalizer = new MediumArticleNormalizer();
 
-        new Serializer([$this->normalizer, new ImageNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
     }
 
     /**
@@ -106,7 +107,7 @@ final class MediumArticleNormalizerTest extends TestCase
     public function normalizeProvider() : array
     {
         $date = (new DateTimeImmutable('now', new DateTimeZone('Z')))->setTimezone(new DateTimeZone('Z'));
-        $image = new Image('alt', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
@@ -116,7 +117,19 @@ final class MediumArticleNormalizerTest extends TestCase
                     'title' => 'title',
                     'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
-                    'image' => ['alt' => 'alt', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                    'image' => [
+                        'alt' => '',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                        'source' => [
+                            'mediaType' => 'image/jpeg',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                            'filename' => 'thumbnail.jpg',
+                        ],
+                        'size' => [
+                            'width' => 140,
+                            'height' => 140,
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [

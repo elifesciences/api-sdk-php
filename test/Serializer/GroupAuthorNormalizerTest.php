@@ -7,18 +7,20 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
@@ -34,9 +36,10 @@ final class GroupAuthorNormalizerTest extends TestCase
     {
         $this->normalizer = new GroupAuthorNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new AddressNormalizer(),
+            new ParagraphNormalizer(),
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
             new PlaceNormalizer(),
@@ -85,17 +88,21 @@ final class GroupAuthorNormalizerTest extends TestCase
         return [
             'complete' => [
                 new GroupAuthor('group', new ArraySequence([
-                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
+                        new ArraySequence([new Paragraph('biography')]), true, 'role',
+                        ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [$somewhere]),
                 [
+                    'additionalInformation' => [
+                        'additional information',
+                    ],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -118,6 +125,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                     'name' => 'group',
                     'people' => [
                         [
+                            'additionalInformation' => ['additional information'],
                             'affiliations' => [
                                 [
                                     'name' => ['affiliation'],
@@ -142,7 +150,14 @@ final class GroupAuthorNormalizerTest extends TestCase
                                 'index' => 'index name',
                             ],
                             'orcid' => '0000-0002-1825-0097',
+                            'biography' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'biography',
+                                ],
+                            ],
                             'deceased' => true,
+                            'role' => 'role',
                         ],
                     ],
                     'groups' => [
@@ -213,6 +228,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                 [
                     'type' => 'group',
                     'name' => 'group',
+                    'additionalInformation' => ['additional information'],
                     'affiliations' => [
                         [
                             'name' => ['affiliation'],
@@ -233,6 +249,7 @@ final class GroupAuthorNormalizerTest extends TestCase
                     ],
                     'people' => [
                         [
+                            'additionalInformation' => ['additional information'],
                             'affiliations' => [
                                 [
                                     'name' => ['affiliation'],
@@ -257,7 +274,14 @@ final class GroupAuthorNormalizerTest extends TestCase
                                 'index' => 'index name',
                             ],
                             'orcid' => '0000-0002-1825-0097',
+                            'biography' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'biography',
+                                ],
+                            ],
                             'deceased' => true,
+                            'role' => 'role',
                         ],
                     ],
                     'groups' => [
@@ -273,14 +297,15 @@ final class GroupAuthorNormalizerTest extends TestCase
                     ],
                 ],
                 new GroupAuthor('group', new ArraySequence([
-                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'), true,
-                        [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
+                        new ArraySequence([new Paragraph('biography')]), true, 'role',
+                        ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                         ['foo@example.com'], [1], ['+12025550182;ext=555'],
                         [
                             $somewhere = Builder::for(Address::class)->sample('somewhere'),
                         ]),
                 ]), ['sub-group' => [new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097')]],
-                    [new Place(null, null, ['affiliation'])], 'competing interests', 'contribution',
+                    ['additional information'], [new Place(['affiliation'])], 'competing interests', 'contribution',
                     ['foo@example.com'], [1], ['+12025550182;ext=555'],
                     [
                         $somewhere,

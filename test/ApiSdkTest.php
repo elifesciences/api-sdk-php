@@ -7,13 +7,18 @@ use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
+use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
+use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
-use eLife\ApiSdk\Client\LabsExperiments;
+use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
+use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
+use eLife\ApiSdk\Client\PressPackages;
+use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
@@ -90,6 +95,22 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_creates_community()
+    {
+        $this->assertInstanceOf(Community::class, $this->apiSdk->community());
+
+        $this->mockCommunityListCall(1, 1, 1);
+        $this->mockBlogArticleCall('model-1', true);
+
+        $this->assertInternalType(
+            'array',
+            $this->apiSdk->getSerializer()->normalize($this->apiSdk->community()[0])
+        );
+    }
+
+    /**
+     * @test
+     */
     public function it_creates_covers()
     {
         $this->assertInstanceOf(Covers::class, $this->apiSdk->covers());
@@ -117,6 +138,19 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_creates_highlights()
+    {
+        $this->assertInstanceOf(Highlights::class, $this->apiSdk->highlights());
+
+        $this->mockHighlightsCall('foo', 1, 1, 1);
+        $this->mockHighlightsCall('foo', 1, 100, 1);
+
+        $this->apiSdk->highlights()->get('foo')->toArray();
+    }
+
+    /**
+     * @test
+     */
     public function it_creates_interviews()
     {
         $this->assertInstanceOf(Interviews::class, $this->apiSdk->interviews());
@@ -129,13 +163,13 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_creates_labs_experiments()
+    public function it_creates_labs_posts()
     {
-        $this->assertInstanceOf(LabsExperiments::class, $this->apiSdk->labsExperiments());
+        $this->assertInstanceOf(LabsPosts::class, $this->apiSdk->labsPosts());
 
-        $this->mockLabsExperimentCall(1);
+        $this->mockLabsPostCall(1);
 
-        $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsExperiments()->get(1)->wait());
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsPosts()->get(1)->wait());
     }
 
     /**
@@ -151,6 +185,18 @@ final class ApiSdkTest extends ApiTestCase
         foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
             $this->apiSdk->getSerializer()->normalize($mediumArticle);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_metrics()
+    {
+        $this->assertInstanceOf(Metrics::class, $this->apiSdk->metrics());
+
+        $this->mockMetricPageViewsCall('article', '09560');
+
+        $this->apiSdk->metrics()->totalPageViews('article', '09560')->wait();
     }
 
     /**
@@ -176,6 +222,31 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockPodcastEpisodeCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->podcastEpisodes()->get(1)->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_press_packages()
+    {
+        $this->assertInstanceOf(PressPackages::class, $this->apiSdk->pressPackages());
+
+        $this->mockPressPackageCall(7);
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->pressPackages()->get('press-package-7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_recommendations()
+    {
+        $this->assertInstanceOf(Recommendations::class, $this->apiSdk->recommendations());
+
+        $this->mockRecommendationsCall('article', '12345', 1, 1, 10);
+        $this->mockRecommendationsCall('article', '12345', 1, 100, 10);
+
+        $this->assertCount(10, $this->apiSdk->recommendations()->list('article', '12345')->toArray());
     }
 
     /**
@@ -232,7 +303,10 @@ final class ApiSdkTest extends ApiTestCase
     {
         return $this->classNameProvider(
             Block\Box::class,
+            Block\Button::class,
             Block\Code::class,
+            Block\Excerpt::class,
+            Block\Figure::class,
             Block\Image::class,
             Block\Listing::class,
             Block\MathML::class,

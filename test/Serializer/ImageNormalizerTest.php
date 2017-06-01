@@ -2,11 +2,14 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Model\ImageSize;
+use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class ImageNormalizerTest extends TestCase
@@ -20,6 +23,8 @@ final class ImageNormalizerTest extends TestCase
     protected function setUpNormalizer()
     {
         $this->normalizer = new ImageNormalizer();
+
+        new NormalizerAwareSerializer([$this->normalizer, new FileNormalizer()]);
     }
 
     /**
@@ -41,7 +46,7 @@ final class ImageNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]);
+        $image = Builder::dummy(Image::class);
 
         return [
             'image' => [$image, null, true],
@@ -97,28 +102,44 @@ final class ImageNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
+        $file = new File('image/jpeg', 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg', 'example.jpg');
+
         return [
             'complete' => [
-                new Image('alt', [
-                    new ImageSize('2:1',
-                        [900 => 'https://placehold.it/900x450', 1800 => 'https://placehold.it/1800x900']),
-                    new ImageSize('4:1',
-                        [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450']),
-                ]),
+                new Image('alt', 'https://iiif.elifesciences.org/example.jpg', $file, 1000, 500, 25, 75),
                 [
                     'alt' => 'alt',
-                    'sizes' => [
-                        '2:1' => [
-                            900 => 'https://placehold.it/900x450',
-                            1800 => 'https://placehold.it/1800x900',
-                        ],
-                        '4:1' => [900 => 'https://placehold.it/900x225', 1800 => 'https://placehold.it/1800x450'],
+                    'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                        'filename' => 'example.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1000,
+                        'height' => 500,
+                    ],
+                    'focalPoint' => [
+                        'x' => 25,
+                        'y' => 75,
                     ],
                 ],
             ],
             'minimum' => [
-                new Image('', [new ImageSize('2:1', [900 => 'https://placehold.it/900x450'])]),
-                ['alt' => '', 'sizes' => ['2:1' => [900 => 'https://placehold.it/900x450']]],
+                new Image('', 'https://iiif.elifesciences.org/example.jpg', $file, 1000, 500, 50, 50),
+                [
+                    'alt' => '',
+                    'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
+                        'filename' => 'example.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1000,
+                        'height' => 500,
+                    ],
+                ],
             ],
         ];
     }

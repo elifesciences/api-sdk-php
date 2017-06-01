@@ -8,16 +8,16 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ReportReference;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReportReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Serializer;
+use test\eLife\ApiSdk\TestCase;
 
-final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ReportReferenceNormalizerTest extends TestCase
 {
     /** @var ReportReferenceNormalizer */
     private $normalizer;
@@ -29,7 +29,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $this->normalizer = new ReportReferenceNormalizer();
 
-        new Serializer([
+        new NormalizerAwareSerializer([
             $this->normalizer,
             new PersonDetailsNormalizer(),
             new PersonAuthorNormalizer(),
@@ -58,7 +58,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
     {
         $reference = new ReportReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-            new Place(null, null, ['publisher']));
+            new Place(['publisher']));
 
         return [
             'report reference' => [$reference, null, true],
@@ -82,7 +82,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'complete' => [
                 new ReportReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
+                    new Place(['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
                 [
                     'type' => 'report',
@@ -112,7 +112,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
             'minimum' => [
                 new ReportReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
                 [
                     'type' => 'report',
                     'id' => 'id',
@@ -168,7 +168,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
      */
     public function it_denormalize_report_references(array $json, ReportReference $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ReportReference::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ReportReference::class));
     }
 
     public function denormalizeProvider() : array
@@ -201,7 +201,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ReportReference('id', Date::fromString('2000-01-01'), 'a',
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], true, 'title',
-                    new Place(null, null, ['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
+                    new Place(['publisher']), '10.1000/182', 18183754, '978-3-16-148410-0',
                     'http://www.example.com/'),
             ],
             'minimum' => [
@@ -225,7 +225,7 @@ final class ReportReferenceNormalizerTest extends PHPUnit_Framework_TestCase
                 ],
                 new ReportReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
-                    new Place(null, null, ['publisher'])),
+                    new Place(['publisher'])),
             ],
         ];
     }

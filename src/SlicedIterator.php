@@ -16,7 +16,7 @@ trait SlicedIterator
         $inPage = $this->key - ($page * $this->pageBatch) + $this->pageBatch - 1;
 
         $pageContents = $this->getPage($page);
-        if (!array_key_exists($inPage, $pageContents)) {
+        if (!isset($pageContents[$inPage])) {
             throw new OutOfRangeException("Cannot find element with key $inPage in page $page");
         }
 

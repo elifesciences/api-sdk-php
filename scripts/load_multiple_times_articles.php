@@ -36,9 +36,6 @@ for ($i = 0; $i < 100; ++$i) {
     echo "Slicing $offset, $limit", PHP_EOL;
     $countBefore = $count;
     foreach ($articles->slice($offset, $limit) as $a) {
-        if ($a === null) {
-            continue;
-        }
         // uncomment to force full loading
         //$a->getCopyright();
         $articleObjectsHashes[] = $hash = spl_object_hash($a);

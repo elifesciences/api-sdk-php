@@ -132,7 +132,7 @@ final class EventsTest extends ApiTestCase
         $this->mockEventListCall(1, 1, 5, true, 'open');
         $this->mockEventListCall(1, 100, 5, true, 'open');
 
-        foreach ($this->events->show(Events::SHOW_OPEN) as $i => $event) {
+        foreach ($this->events->show('open') as $i => $event) {
             $this->assertSame('event'.$i, $event->getId());
         }
     }
@@ -148,7 +148,7 @@ final class EventsTest extends ApiTestCase
 
         $this->mockEventListCall(1, 1, 10, true, 'open');
 
-        $this->assertSame(10, $this->events->show(Events::SHOW_OPEN)->count());
+        $this->assertSame(10, $this->events->show('open')->count());
     }
 
     /**
@@ -166,7 +166,7 @@ final class EventsTest extends ApiTestCase
         $this->mockEventListCall(1, 100, 200, true, 'open');
         $this->mockEventListCall(2, 100, 200, true, 'open');
 
-        $this->events->show(Events::SHOW_OPEN)->toArray();
+        $this->events->show('open')->toArray();
     }
 
     /**

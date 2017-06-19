@@ -15,10 +15,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Events implements Iterator, Sequence
 {
-    const SHOW_ALL = 'all';
-    const SHOW_OPEN = 'open';
-    const SHOW_CLOSED = 'closed';
-
     use Client;
 
     private $count;

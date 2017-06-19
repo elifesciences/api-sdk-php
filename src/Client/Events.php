@@ -15,11 +15,15 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Events implements Iterator, Sequence
 {
+    const SHOW_ALL = 'all';
+    const SHOW_OPEN = 'open';
+    const SHOW_CLOSED = 'closed';
+
     use Client;
 
     private $count;
     private $descendingOrder = true;
-    private $type = 'all';
+    private $show = 'all';
     private $eventsClient;
     private $denormalizer;
 
@@ -42,13 +46,13 @@ final class Events implements Iterator, Sequence
             });
     }
 
-    public function forType(string $type) : Events
+    public function show(string $show) : Events
     {
         $clone = clone $this;
 
-        $clone->type = $type;
+        $clone->show = $show;
 
-        if ($clone->type !== $this->type) {
+        if ($clone->show !== $this->show) {
             $clone->count = null;
         }
 
@@ -70,7 +74,7 @@ final class Events implements Iterator, Sequence
                 ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->type,
+                $this->show,
                 $this->descendingOrder
             )
             ->then(function (Result $result) {

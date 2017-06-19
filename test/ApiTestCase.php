@@ -426,7 +426,7 @@ abstract class ApiTestCase extends TestCase
         int $perPage,
         int $total,
         $descendingOrder = true,
-        string $type = 'all'
+        string $show = 'all'
     ) {
         $events = array_map(function (int $id) {
             return $this->createEventJson($id, true);
@@ -435,7 +435,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/events?page='.$page.'&per-page='.$perPage.'&type='.$type.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                'http://api.elifesciences.org/events?page='.$page.'&per-page='.$perPage.'&show='.$show.'&order='.($descendingOrder ? 'desc' : 'asc'),
                 ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
             ),
             new Response(

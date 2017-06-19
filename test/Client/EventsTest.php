@@ -90,7 +90,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame('event1', $this->events[0]->getId());
 
         $this->mockNotFound(
-            'events?page=6&per-page=1&type=all&order=desc',
+            'events?page=6&per-page=1&show=all&order=desc',
             ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
         );
 
@@ -127,12 +127,12 @@ final class EventsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_can_be_filtered_by_type()
+    public function it_can_be_filtered_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 5, true, 'open');
         $this->mockEventListCall(1, 100, 5, true, 'open');
 
-        foreach ($this->events->forType('open') as $i => $event) {
+        foreach ($this->events->show('open') as $i => $event) {
             $this->assertSame('event'.$i, $event->getId());
         }
     }
@@ -140,7 +140,7 @@ final class EventsTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_recounts_when_filtering_by_type()
+    public function it_recounts_when_filtering_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 10);
 
@@ -148,13 +148,13 @@ final class EventsTest extends ApiTestCase
 
         $this->mockEventListCall(1, 1, 10, true, 'open');
 
-        $this->assertSame(10, $this->events->forType('open')->count());
+        $this->assertSame(10, $this->events->show('open')->count());
     }
 
     /**
      * @test
      */
-    public function it_fetches_pages_again_when_filtering_by_type()
+    public function it_fetches_pages_again_when_filtering_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 200);
         $this->mockEventListCall(1, 100, 200);
@@ -166,7 +166,7 @@ final class EventsTest extends ApiTestCase
         $this->mockEventListCall(1, 100, 200, true, 'open');
         $this->mockEventListCall(2, 100, 200, true, 'open');
 
-        $this->events->forType('open')->toArray();
+        $this->events->show('open')->toArray();
     }
 
     /**

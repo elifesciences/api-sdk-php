@@ -195,6 +195,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'issue' => 1,
+                    'ethics' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'ethics',
+                        ],
+                    ],
                     'funding' => [
                         'awards' => [
                             [
@@ -353,12 +359,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         [
                             'type' => 'paragraph',
                             'text' => 'acknowledgements',
-                        ],
-                    ],
-                    'ethics' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'ethics',
                         ],
                     ],
                     'decisionLetter' => [

@@ -238,6 +238,7 @@ final class Builder
                         'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
+                        'ethics' => new ArraySequence([new Paragraph('ethics')]),
                         'funding' => promise_for(new Funding(
                             new ArraySequence([
                                 new FundingAward(

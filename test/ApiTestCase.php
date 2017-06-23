@@ -1145,6 +1145,12 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'ethics' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'ethics',
+                ],
+            ],
             'funding' => [
                 'awards' => [
                     [
@@ -1232,6 +1238,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['researchOrganisms']);
             unset($article['reviewers']);
             unset($article['abstract']);
+            unset($article['ethics']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
@@ -1242,6 +1249,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['copyright']);
             unset($article['authors']);
             unset($article['reviewers']);
+            unset($article['ethics']);
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);

@@ -192,18 +192,6 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
-    public function it_may_have_ethics()
-    {
-        $article = $this->builder
-            ->withEthics($ethics = new ArraySequence([new Paragraph('ethics')]))
-            ->__invoke();
-
-        $this->assertEquals($ethics, $article->getEthics());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_a_decision_letter()
     {
         $with = $this->builder

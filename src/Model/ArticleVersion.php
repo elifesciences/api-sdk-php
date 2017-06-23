@@ -32,6 +32,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
     private $copyright;
     private $authors;
     private $reviewers;
+    private $ethics;
     private $funding;
     private $generatedDataSets;
     private $usedDataSets;
@@ -62,6 +63,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
         PromiseInterface $copyright,
         Sequence $authors,
         Sequence $reviewers,
+        Sequence $ethics,
         PromiseInterface $funding,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
@@ -88,6 +90,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
         $this->copyright = $copyright;
         $this->authors = $authors;
         $this->reviewers = $reviewers;
+        $this->ethics = $ethics;
         $this->funding = $funding;
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
@@ -246,6 +249,14 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPublishe
     final public function getReviewers() : Sequence
     {
         return $this->reviewers;
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    final public function getEthics() : Sequence
+    {
+        return $this->ethics;
     }
 
     /**

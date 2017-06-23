@@ -118,6 +118,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                     return $article['dataSets'] ?? null;
                 });
 
+            $data['ethics'] = new PromiseSequence($complete
+                ->then(function (Result $article) {
+                    return $article['ethics'] ?? [];
+                }));
+
             $data['funding'] = $complete
                 ->then(function (Result $article) {
                     return $article['funding'] ?? null;
@@ -142,6 +147,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['copyright'] = promise_for($data['copyright']);
 
             $data['dataSets'] = promise_for($data['dataSets'] ?? null);
+
+            $data['ethics'] = new ArraySequence($data['ethics'] ?? []);
 
             $data['funding'] = promise_for($data['funding'] ?? null);
 
@@ -171,6 +178,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             ->then(function (array $copyright) {
                 return new Copyright($copyright['license'], $copyright['statement'], $copyright['holder'] ?? null);
             });
+
+        $data['ethics'] = $data['ethics']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
 
         $data['generatedDataSets'] = new PromiseSequence($data['dataSets']
             ->then(function (array $dataSets = null) use ($format, $context) {
@@ -318,6 +329,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getIssue()) {
                 $data['issue'] = $object->getIssue();
+            }
+
+            if (!$object->getEthics()->isEmpty()) {
+                $data['ethics'] = $object->getEthics()
+                    ->map(function (Block $block) use ($format, $context) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray();
             }
 
             if ($object->getFunding()) {

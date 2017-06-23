@@ -17,7 +17,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $appendices;
     private $references;
     private $acknowledgements;
-    private $ethics;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -67,7 +66,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
             $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
-            $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
+            $ethics, $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
@@ -78,7 +77,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->appendices = $appendices;
         $this->references = $references;
         $this->acknowledgements = $acknowledgements;
-        $this->ethics = $ethics;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -145,14 +143,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAcknowledgements() : Sequence
     {
         return $this->acknowledgements;
-    }
-
-    /**
-     * @return Sequence|Block[]
-     */
-    public function getEthics() : Sequence
-    {
-        return $this->ethics;
     }
 
     /**

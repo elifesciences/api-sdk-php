@@ -184,6 +184,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ],
                     ],
                     'issue' => 1,
+                    'ethics' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'ethics',
+                        ],
+                    ],
                     'funding' => [
                         'awards' => [
                             [
@@ -277,6 +283,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withAbstract(null)
+                    ->withSequenceOfEthics()
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()
@@ -354,6 +361,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withAbstract(null)
+                    ->withSequenceOfEthics()
                     ->withPromiseOfFunding(null)
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()

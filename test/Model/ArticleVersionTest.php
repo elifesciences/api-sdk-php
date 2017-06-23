@@ -372,6 +372,18 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_ethics()
+    {
+        $article = $this->builder
+            ->withEthics($ethics = new ArraySequence([new Paragraph('ethics')]))
+            ->__invoke();
+
+        $this->assertEquals($ethics, $article->getEthics());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_funding()
     {
         $with = $this->builder

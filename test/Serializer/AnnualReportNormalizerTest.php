@@ -48,7 +48,7 @@ final class AnnualReportNormalizerTest extends TestCase
     public function canNormalizeProvider() : array
     {
         $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
 
         return [
             'annual report' => [$annualReport, null, true],
@@ -108,7 +108,7 @@ final class AnnualReportNormalizerTest extends TestCase
 
         return [
             'complete' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', 'impact statement', $image),
+                new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', 'impact statement', $image),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
@@ -126,11 +126,12 @@ final class AnnualReportNormalizerTest extends TestCase
                             'height' => 140,
                         ],
                     ],
+                    'pdf' => 'http://www.example.com/2012/assets/annual-report-2012.pdf',
                     'impactStatement' => 'impact statement',
                 ],
             ],
             'minimum' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', 'title', null, $image),
+                new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',

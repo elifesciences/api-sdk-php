@@ -17,6 +17,7 @@ final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerI
         return new AnnualReport(
             $data['year'],
             $data['uri'],
+            $data['pdf'] ?? null,
             $data['title'],
             $data['impactStatement'] ?? null,
             $this->denormalizer->denormalize($data['image'], Image::class, $format, $context)
@@ -39,6 +40,10 @@ final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerI
             'title' => $object->getTitle(),
             'image' => $this->normalizer->normalize($object->getImage(), $format, $context),
         ];
+
+        if ($object->getPdf()) {
+            $data['pdf'] = $object->getPdf();
+        }
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();

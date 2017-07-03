@@ -19,6 +19,7 @@ use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\HasCiteAs;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -274,6 +275,7 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->withPdf(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasPdf::class, $with);
         $this->assertSame('http://www.example.com/article14107.pdf', $with->getPdf());
         $this->assertNull($withOut->getPdf());
     }

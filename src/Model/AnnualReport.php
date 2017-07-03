@@ -2,18 +2,20 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class AnnualReport implements Model, HasImpactStatement
+final class AnnualReport implements Model, HasImpactStatement, HasPdf
 {
     private $year;
     private $uri;
+    private $pdf;
     private $title;
     private $impactStatement;
     private $image;
 
-    public function __construct(int $year, string $uri, string $title, string $impactStatement = null, Image $image)
+    public function __construct(int $year, string $uri, string $pdf = null, string $title, string $impactStatement = null, Image $image)
     {
         $this->year = $year;
         $this->uri = $uri;
+        $this->pdf = $pdf;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
         $this->image = $image;
@@ -27,6 +29,14 @@ final class AnnualReport implements Model, HasImpactStatement
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPdf()
+    {
+        return $this->pdf;
     }
 
     public function getTitle(): string

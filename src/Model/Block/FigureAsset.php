@@ -3,8 +3,8 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\AssetFile;
+use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasDoi;
 
 final class FigureAsset implements HasDoi
@@ -21,7 +21,7 @@ final class FigureAsset implements HasDoi
         string $doi = null,
         string $label,
         Sequence $sourceData,
-        AssetBlock $asset
+        BlockWithCaption $asset
     ) {
         $this->doi = $doi;
         $this->label = $label;
@@ -47,7 +47,7 @@ final class FigureAsset implements HasDoi
         return $this->sourceData;
     }
 
-    public function getAsset() : AssetBlock
+    public function getAsset() : BlockWithCaption
     {
         return $this->asset;
     }

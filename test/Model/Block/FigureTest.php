@@ -20,7 +20,7 @@ final class FigureTest extends PHPUnit_Framework_TestCase
     public function it_is_a_block()
     {
         $assets = new ArraySequence([
-            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageFile::class)->__invoke())),
+            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke())),
         ]);
 
         $figure = new Figure(...$assets);
@@ -34,7 +34,7 @@ final class FigureTest extends PHPUnit_Framework_TestCase
     public function it_has_assets()
     {
         $assets = new ArraySequence([
-            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageFile::class)->__invoke())),
+            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke())),
         ]);
 
         $figure = new Figure(...$assets);

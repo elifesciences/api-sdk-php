@@ -4,10 +4,11 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Model\Asset;
 use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\File;
+use eLife\ApiSdk\Model\HasAttribution;
+use eLife\ApiSdk\Model\HasCaption;
 use PHPUnit_Framework_TestCase;
 
 final class AssetFileTest extends PHPUnit_Framework_TestCase
@@ -19,7 +20,7 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
     {
         $file = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
-        $this->assertInstanceOf(Asset::class, $file);
+        $this->assertInstanceOf(HasCaption::class, $file);
     }
 
     /**
@@ -92,6 +93,7 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
         $with = new AssetFile(null, null, null, null, new EmptySequence(), $attribution, new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
         $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
+        $this->assertInstanceOf(HasAttribution::class, $with);
         $this->assertEquals($attribution, $with->getAttribution());
         $this->assertEmpty($withOut->getAttribution());
     }

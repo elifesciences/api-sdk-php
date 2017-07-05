@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -16,7 +17,7 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         $data['source'] = $this->denormalizer->denormalize($data['source'], File::class);
 
-        return new Image($data['alt'], $data['uri'], $data['source'], $data['size']['width'], $data['size']['height'], $data['focalPoint']['x'] ?? 50, $data['focalPoint']['y'] ?? 50);
+        return new Image($data['alt'], $data['uri'], new ArraySequence($data['attribution'] ?? []), $data['source'], $data['size']['width'], $data['size']['height'], $data['focalPoint']['x'] ?? 50, $data['focalPoint']['y'] ?? 50);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool
@@ -45,6 +46,10 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
 
         if (50 === $data['focalPoint']['x'] && 50 === $data['focalPoint']['y']) {
             unset($data['focalPoint']);
+        }
+
+        if ($object->getAttribution()->notEmpty()) {
+            $data['attribution'] = $object->getAttribution()->toArray();
         }
 
         return $data;

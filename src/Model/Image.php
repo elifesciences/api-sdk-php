@@ -2,10 +2,13 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Image
+use eLife\ApiSdk\Collection\Sequence;
+
+final class Image implements HasAttribution
 {
     private $altText;
     private $uri;
+    private $attribution;
     private $source;
     private $width;
     private $height;
@@ -15,10 +18,11 @@ final class Image
     /**
      * @internal
      */
-    public function __construct(string $altText, string $uri, File $source, int $width, int $height, int $focalPointX, int $focalPointY)
+    public function __construct(string $altText, string $uri, Sequence $attribution, File $source, int $width, int $height, int $focalPointX, int $focalPointY)
     {
         $this->altText = $altText;
         $this->uri = $uri;
+        $this->attribution = $attribution;
         $this->source = $source;
         $this->width = $width;
         $this->height = $height;
@@ -34,6 +38,11 @@ final class Image
     public function getUri() : string
     {
         return $this->uri;
+    }
+
+    public function getAttribution() : Sequence
+    {
+        return $this->attribution;
     }
 
     public function getSource() : File

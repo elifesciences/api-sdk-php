@@ -4,10 +4,11 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Table;
+use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\Footnote;
+use eLife\ApiSdk\Model\HasAttribution;
 use PHPUnit_Framework_TestCase;
 
 final class TableTest extends PHPUnit_Framework_TestCase
@@ -19,7 +20,7 @@ final class TableTest extends PHPUnit_Framework_TestCase
     {
         $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
 
-        $this->assertInstanceOf(AssetBlock::class, $table);
+        $this->assertInstanceOf(BlockWithCaption::class, $table);
     }
 
     /**
@@ -67,6 +68,7 @@ final class TableTest extends PHPUnit_Framework_TestCase
         $with = new Table(null, null, new EmptySequence(), $attribution, [], [], []);
         $withOut = new Table(null, null, new EmptySequence(), new EmptySequence(), [], [], []);
 
+        $this->assertInstanceOf(HasAttribution::class, $with);
         $this->assertEquals($attribution, $with->getAttribution());
         $this->assertEmpty($withOut->getAttribution());
     }

@@ -3,13 +3,14 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\BlockWithCaption;
+use eLife\ApiSdk\Model\HasAttribution;
 
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table implements AssetBlock
+final class Table implements HasAttribution, BlockWithCaption
 {
     private $id;
     private $title;

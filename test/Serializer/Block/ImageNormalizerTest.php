@@ -4,11 +4,9 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image as ImageModel;
 use eLife\ApiSdk\Serializer\Block\ImageNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
@@ -59,7 +57,7 @@ final class ImageNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageModel::class)->__invoke());
+        $image = new Image(null, null, new EmptySequence(), Builder::for(ImageModel::class)->__invoke());
 
         return [
             'image' => [$image, null, true],
@@ -81,11 +79,10 @@ final class ImageNormalizerTest extends TestCase
     {
         return [
             'complete' => [
-                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']),
-                    Builder::dummy(ImageModel::class), ['attribution1'], [
-                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]), new EmptySequence(),
-                            new File('text/plain', 'http://www.example.com/image1.txt', 'image1.txt')),
-                    ]),
+                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
+                    Builder::for(ImageModel::class)
+                        ->withSequenceOfAttribution('attribution')
+                        ->__invoke()),
                 [
                     'type' => 'image',
                     'image' => [
@@ -100,6 +97,9 @@ final class ImageNormalizerTest extends TestCase
                             'width' => 1000,
                             'height' => 500,
                         ],
+                        'attribution' => [
+                            'attribution',
+                        ],
                     ],
                     'id' => 'id1',
                     'title' => 'title1',
@@ -109,13 +109,10 @@ final class ImageNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'attribution' => [
-                        'attribution',
-                    ],
                 ],
             ],
             'minimum' => [
-                new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::dummy(ImageModel::class), [], []),
+                new Image(null, null, new EmptySequence(), Builder::dummy(ImageModel::class)),
                 [
                     'type' => 'image',
                     'image' => [
@@ -186,9 +183,6 @@ final class ImageNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'attribution' => [
-                        'attribution',
-                    ],
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/example.jpg',
@@ -201,13 +195,15 @@ final class ImageNormalizerTest extends TestCase
                             'width' => 1000,
                             'height' => 500,
                         ],
+                        'attribution' => [
+                            'attribution',
+                        ],
                     ],
                 ],
-                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]), new ArraySequence(['attribution']),
-                    Builder::dummy(ImageModel::class), ['attribution1'], [
-                        new AssetFile('10.1000/182.1', 'id2', 'label2', 'title2', new ArraySequence([new Paragraph('paragraph2')]), new EmptySequence(),
-                            new File('text/plain', 'http://www.example.com/image1.txt', 'image1.txt')),
-                    ]),
+                new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
+                    Builder::for(ImageModel::class)
+                        ->withSequenceOfAttribution('attribution')
+                        ->__invoke()),
             ],
             'minimum' => [
                 [
@@ -226,7 +222,7 @@ final class ImageNormalizerTest extends TestCase
                         ],
                     ],
                 ],
-                new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::dummy(ImageModel::class), [], []),
+                new Image(null, null, new EmptySequence(), Builder::dummy(ImageModel::class)),
             ],
         ];
     }

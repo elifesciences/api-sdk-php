@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-interface Asset extends HasId
+interface HasCaption extends HasId
 {
     /**
      * @return string|null
@@ -15,9 +15,4 @@ interface Asset extends HasId
      * @return Sequence|Block[]
      */
     public function getCaption() : Sequence;
-
-    /**
-     * @return Sequence|string[]
-     */
-    public function getAttribution() : Sequence;
 }

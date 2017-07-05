@@ -129,6 +129,7 @@ final class Builder
                     return [
                         'uri' => 'https://iiif.elifesciences.org/example.jpg',
                         'altText' => '',
+                        'attribution' => new EmptySequence(),
                         'source' => new File(
                             'image/jpeg',
                             'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
@@ -365,10 +366,10 @@ final class Builder
                 ],
                 Image::class => [
                     'banner' => function () {
-                        return new Image('', 'https://iiif.elifesciences.org/banner.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
+                        return new Image('', 'https://iiif.elifesciences.org/banner.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
                     },
                     'thumbnail' => function () {
-                        return new Image('', 'https://iiif.elifesciences.org/thumbnail.jpg', new File('image/jpeg', 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg', 'thumbnail.jpg'), 140, 140, 50, 50);
+                        return new Image('', 'https://iiif.elifesciences.org/thumbnail.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg', 'thumbnail.jpg'), 140, 140, 50, 50);
                     },
                 ],
                 ArticlePoA::class => [

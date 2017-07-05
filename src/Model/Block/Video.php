@@ -8,7 +8,7 @@ use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image as ImageModel;
 
-final class Video implements HasAttribution, BlockWithCaption
+final class Video implements BlockWithCaption, HasAttribution
 {
     private $id;
     private $title;

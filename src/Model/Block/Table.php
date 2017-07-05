@@ -10,7 +10,7 @@ use eLife\ApiSdk\Model\HasAttribution;
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table implements HasAttribution, BlockWithCaption
+final class Table implements BlockWithCaption, HasAttribution
 {
     private $id;
     private $title;

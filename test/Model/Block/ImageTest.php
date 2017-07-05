@@ -63,6 +63,19 @@ final class ImageTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_attribution()
+    {
+        $attribution = new ArraySequence(['attribution']);
+        $with = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->withAttribution($attribution)->__invoke());
+        $withOut = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->withAttribution(new EmptySequence())->__invoke());
+
+        $this->assertSame($attribution, $with->getAttribution());
+        $this->assertEmpty($withOut->getAttribution());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_an_image()
     {
         $imageFile = new Image(null, null, new EmptySequence(), $image = Builder::for(ImageFile::class)->__invoke());

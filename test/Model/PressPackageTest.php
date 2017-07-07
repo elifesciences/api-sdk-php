@@ -147,11 +147,15 @@ final class PressPackageTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_related_content()
     {
-        $package = $this->builder
+        $with = $this->builder
             ->withRelatedContent(new ArraySequence($relatedContent = [Builder::dummy(ArticlePoA::class)]))
             ->__invoke();
+        $withOut = $this->builder
+            ->withRelatedContent(new EmptySequence())
+            ->__invoke();
 
-        $this->assertEquals($relatedContent, $package->getRelatedContent()->toArray());
+        $this->assertEquals($relatedContent, $with->getRelatedContent()->toArray());
+        $this->assertEmpty($withOut->getRelatedContent()->toArray());
     }
 
     /**

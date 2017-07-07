@@ -32,7 +32,7 @@ final class PressPackages implements Iterator, Sequence
     {
         return $this->pressPackagesClient
             ->getPackage(
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)],
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
                 $id
             )
             ->then(function (Result $result) {

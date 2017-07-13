@@ -819,11 +819,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/press-packages/$id",
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)]
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)],
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
                 json_encode($this->createPressPackageJson($id, false, $complete))
             )
         );
@@ -1837,6 +1837,7 @@ abstract class ApiTestCase extends TestCase
         if (!$isComplete) {
             unset($package['impactStatement']);
             unset($package['updated']);
+            unset($package['relatedContent']);
             unset($package['mediaContacts']);
             unset($package['about']);
         }

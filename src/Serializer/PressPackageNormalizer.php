@@ -33,7 +33,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             },
             function (string $id) use ($pressPackagesClient) : PromiseInterface {
                 return $pressPackagesClient->getPackage(
-                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 1)],
+                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
                     $id
                 );
             }
@@ -52,7 +52,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
 
             $data['relatedContent'] = new PromiseSequence($article
                 ->then(function (Result $article) {
-                    return $article['relatedContent'];
+                    return $article['relatedContent'] ?? [];
                 }));
 
             $data['mediaContacts'] = new PromiseSequence($article
@@ -66,7 +66,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
                 }));
         } else {
             $data['content'] = new ArraySequence($data['content']);
-            $data['relatedContent'] = new ArraySequence($data['relatedContent']);
+            $data['relatedContent'] = new ArraySequence($data['relatedContent'] ?? []);
             $data['mediaContacts'] = new ArraySequence($data['mediaContacts'] ?? []);
             $data['about'] = new ArraySequence($data['about'] ?? []);
         }
@@ -140,9 +140,11 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
 
-            $data['relatedContent'] = $object->getRelatedContent()->map(function (ArticleVersion $article) use ($format, $context) {
-                return $this->normalizer->normalize($article, $format, ['snippet' => true] + $context);
-            })->toArray();
+            if ($object->getRelatedContent()->notEmpty()) {
+                $data['relatedContent'] = $object->getRelatedContent()->map(function (ArticleVersion $article) use ($format, $context) {
+                    return $this->normalizer->normalize($article, $format, ['snippet' => true] + $context);
+                })->toArray();
+            }
 
             if ($object->getMediaContacts()->notEmpty()) {
                 $data['mediaContacts'] = $object->getMediaContacts()->map(function (MediaContact $mediaContact) use ($format, $context) {

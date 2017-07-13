@@ -211,23 +211,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     ->withImpactStatement(null)
                     ->withSequenceOfSubjects()
                     ->withSequenceOfContent(new Paragraph('Press package id text'))
-                    ->withSequenceOfRelatedContent(
-                        Builder::for(ArticlePoA::class)
-                            ->withStage(ArticlePoA::STAGE_PREVIEW)
-                            ->withPublished(null)
-                            ->withVersionDate(null)
-                            ->withStatusDate(null)
-                            ->withAuthorLine(null)
-                            ->withPromiseOfIssue(null)
-                            ->withSequenceOfReviewers()
-                            ->withAbstract(null)
-                            ->withSequenceOfEthics()
-                            ->withPromiseOfFunding(null)
-                            ->withSequenceOfGeneratedDataSets()
-                            ->withSequenceOfUsedDataSets()
-                            ->withSequenceOfAdditionalFiles()
-                            ->__invoke()
-                    )
+                    ->withSequenceOfRelatedContent()
                     ->withSequenceOfMediaContacts()
                     ->withSequenceOfAbout()
                     ->__invoke(),
@@ -240,19 +224,6 @@ final class PressPackageNormalizerTest extends ApiTestCase
                         [
                             'type' => 'paragraph',
                             'text' => 'Press package id text',
-                        ],
-                    ],
-                    'relatedContent' => [
-                        [
-                            'id' => '14107',
-                            'stage' => 'preview',
-                            'version' => 1,
-                            'type' => 'research-article',
-                            'doi' => '10.7554/eLife.14107',
-                            'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
-                            'volume' => 5,
-                            'elocationId' => 'e14107',
-                            'status' => 'poa',
                         ],
                     ],
                 ],
@@ -310,23 +281,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     ->withImpactStatement(null)
                     ->withSequenceOfSubjects()
                     ->withSequenceOfContent(new Paragraph('Press package id text'))
-                    ->withSequenceOfRelatedContent(
-                        Builder::for(ArticlePoA::class)
-                            ->withStage(ArticlePoA::STAGE_PREVIEW)
-                            ->withPublished(null)
-                            ->withVersionDate(null)
-                            ->withStatusDate(null)
-                            ->withAuthorLine(null)
-                            ->withPromiseOfIssue(null)
-                            ->withSequenceOfReviewers()
-                            ->withAbstract(null)
-                            ->withSequenceOfEthics()
-                            ->withPromiseOfFunding(null)
-                            ->withSequenceOfGeneratedDataSets()
-                            ->withSequenceOfUsedDataSets()
-                            ->withSequenceOfAdditionalFiles()
-                            ->__invoke()
-                    )
+                    ->withSequenceOfRelatedContent()
                     ->withSequenceOfMediaContacts()
                     ->withSequenceOfAbout()
                     ->__invoke(),

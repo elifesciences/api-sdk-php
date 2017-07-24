@@ -26,7 +26,6 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['caption'] ?? [])),
-            new ArraySequence($data['attribution'] ?? []),
             $this->denormalizer->denormalize($data['image'], ImageFile::class)
         );
     }
@@ -61,10 +60,6 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
-        }
-
-        if ($object->getAttribution()->notEmpty()) {
-            $data['attribution'] = $object->getAttribution()->toArray();
         }
 
         return $data;

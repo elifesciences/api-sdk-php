@@ -4,10 +4,11 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
+use eLife\ApiSdk\Model\BlockWithCaption;
+use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -22,7 +23,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, new EmptySequence(), new EmptySequence(), $sources, null, 200, 100);
 
-        $this->assertInstanceOf(AssetBlock::class, $video);
+        $this->assertInstanceOf(BlockWithCaption::class, $video);
     }
 
     /**
@@ -75,6 +76,7 @@ final class VideoTest extends PHPUnit_Framework_TestCase
         $with = new Video(null, null, new EmptySequence(), $attribution, $sources, null, 200, 100);
         $withOut = new Video(null, null, new EmptySequence(), new EmptySequence(), $sources, null, 200, 100);
 
+        $this->assertInstanceOf(HasAttribution::class, $with);
         $this->assertEquals($attribution, $with->getAttribution());
         $this->assertEmpty($withOut->getAttribution());
     }

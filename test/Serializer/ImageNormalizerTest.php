@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -106,7 +108,7 @@ final class ImageNormalizerTest extends TestCase
 
         return [
             'complete' => [
-                new Image('alt', 'https://iiif.elifesciences.org/example.jpg', $file, 1000, 500, 25, 75),
+                new Image('alt', 'https://iiif.elifesciences.org/example.jpg', new ArraySequence(['attribution']), $file, 1000, 500, 25, 75),
                 [
                     'alt' => 'alt',
                     'uri' => 'https://iiif.elifesciences.org/example.jpg',
@@ -123,10 +125,13 @@ final class ImageNormalizerTest extends TestCase
                         'x' => 25,
                         'y' => 75,
                     ],
+                    'attribution' => [
+                        'attribution',
+                    ],
                 ],
             ],
             'minimum' => [
-                new Image('', 'https://iiif.elifesciences.org/example.jpg', $file, 1000, 500, 50, 50),
+                new Image('', 'https://iiif.elifesciences.org/example.jpg', new EmptySequence(), $file, 1000, 500, 50, 50),
                 [
                     'alt' => '',
                     'uri' => 'https://iiif.elifesciences.org/example.jpg',

@@ -3,16 +3,16 @@
 namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\AssetBlock;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\BlockWithCaption;
+use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image as ImageModel;
 
-final class Image implements AssetBlock
+final class Image implements BlockWithCaption, HasAttribution
 {
     private $id;
     private $title;
     private $caption;
-    private $attribution;
     private $image;
 
     /**
@@ -22,13 +22,11 @@ final class Image implements AssetBlock
         string $id = null,
         string $title = null,
         Sequence $caption,
-        Sequence $attribution,
         ImageModel $image
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->caption = $caption;
-        $this->attribution = $attribution;
         $this->image = $image;
     }
 
@@ -61,7 +59,7 @@ final class Image implements AssetBlock
      */
     public function getAttribution() : Sequence
     {
-        return $this->attribution;
+        return $this->image->getAttribution();
     }
 
     public function getImage() : ImageModel

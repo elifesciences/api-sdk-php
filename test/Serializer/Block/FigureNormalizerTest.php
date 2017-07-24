@@ -71,7 +71,7 @@ final class FigureNormalizerTest extends TestCase
     public function canNormalizeProvider() : array
     {
         $assets = new ArraySequence([
-            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageModel::class)->__invoke())),
+            new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageModel::class)->__invoke())),
         ]);
         $figure = new Figure(...$assets);
 
@@ -114,8 +114,9 @@ final class FigureNormalizerTest extends TestCase
                             'id3',
                             'title3',
                             new ArraySequence([new Paragraph('caption3')]),
-                            new ArraySequence(['attribution3']),
-                            Builder::for(ImageModel::class)->__invoke()
+                            Builder::for(ImageModel::class)
+                                ->withSequenceOfAttribution('attribution3')
+                                ->__invoke()
                         )
                     )
                 ),
@@ -136,6 +137,9 @@ final class FigureNormalizerTest extends TestCase
                                     'width' => 1000,
                                     'height' => 500,
                                 ],
+                                'attribution' => [
+                                    'attribution3',
+                                ],
                             ],
                             'id' => 'id3',
                             'title' => 'title3',
@@ -144,9 +148,6 @@ final class FigureNormalizerTest extends TestCase
                                     'type' => 'paragraph',
                                     'text' => 'caption3',
                                 ],
-                            ],
-                            'attribution' => [
-                                'attribution3',
                             ],
                             'doi' => '10.1000/182.1',
                             'label' => 'label1',
@@ -176,7 +177,7 @@ final class FigureNormalizerTest extends TestCase
             ],
             'minimum' => [
                 new Figure(
-                    new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageModel::class)->__invoke()))
+                    new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageModel::class)->__invoke()))
                 ),
                 [
                     'type' => 'figure',
@@ -252,6 +253,9 @@ final class FigureNormalizerTest extends TestCase
                             'image' => [
                                 'alt' => '',
                                 'uri' => 'https://iiif.elifesciences.org/example.jpg',
+                                'attribution' => [
+                                    'attribution3',
+                                ],
                                 'source' => [
                                     'mediaType' => 'image/jpeg',
                                     'uri' => 'https://iiif.elifesciences.org/example.jpg/full/full/0/default.jpg',
@@ -269,9 +273,6 @@ final class FigureNormalizerTest extends TestCase
                                     'type' => 'paragraph',
                                     'text' => 'caption3',
                                 ],
-                            ],
-                            'attribution' => [
-                                'attribution3',
                             ],
                             'doi' => '10.1000/182.1',
                             'label' => 'label1',
@@ -317,8 +318,9 @@ final class FigureNormalizerTest extends TestCase
                             'id3',
                             'title3',
                             new ArraySequence([new Paragraph('caption3')]),
-                            new ArraySequence(['attribution3']),
-                            Builder::for(ImageModel::class)->__invoke()
+                            Builder::for(ImageModel::class)
+                                ->withSequenceOfAttribution('attribution3')
+                                ->__invoke()
                         )
                     )
                 ),
@@ -347,7 +349,7 @@ final class FigureNormalizerTest extends TestCase
                     ],
                 ],
                 new Figure(
-                    new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), new EmptySequence(), Builder::for(ImageModel::class)->__invoke()))
+                    new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageModel::class)->__invoke()))
                 ),
             ],
         ];

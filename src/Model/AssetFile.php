@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class AssetFile implements Asset
+final class AssetFile implements HasAttribution, HasCaption
 {
     private $doi;
     private $id;

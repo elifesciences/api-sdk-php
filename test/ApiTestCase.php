@@ -1559,6 +1559,21 @@ abstract class ApiTestCase extends TestCase
             ],
             'title' => 'Interview '.$id.' title',
             'impactStatement' => 'Interview '.$id.' impact statement',
+            'image' => [
+                'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
+                    ],
+                ],
+            ],
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-02T00:00:00Z',
             'content' => [
@@ -1577,6 +1592,7 @@ abstract class ApiTestCase extends TestCase
         if (!$complete) {
             unset($interview['updated']);
             unset($interview['impactStatement']);
+            unset($interview['image']);
             unset($interview['interviewee']['cv']);
         }
 

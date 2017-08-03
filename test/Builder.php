@@ -487,6 +487,7 @@ final class Builder
                                 ])
                             ))
                             ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28Z'))
                             ->withContent(new ArraySequence([new Paragraph('Interview 1 text')]));
                     },
@@ -653,6 +654,9 @@ final class Builder
         }, $class->getConstructor()->getParameters());
         $constructorArguments = [];
         $testDataRemainingToUse = $this->testData;
+        if ($unused = array_diff($constructorArgumentNames, array_keys($testDataRemainingToUse))) {
+            throw new LogicException("Some defaults were not specified, but expected by the constructor of $this->model: ".var_export(array_values($unused), true));
+        }
         foreach ($constructorArgumentNames as $name) {
             $constructorArguments[] = $testDataRemainingToUse[$name];
             unset($testDataRemainingToUse[$name]);

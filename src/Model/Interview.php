@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Interview implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasUpdatedDate
+final class Interview implements Model, HasContent, HasId, HasImpactStatement, HasThumbnail, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $interviewee;
@@ -13,6 +13,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
     private $published;
     private $updated;
     private $impactStatement;
+    private $thumbnail;
     private $content;
 
     /**
@@ -25,6 +26,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
         DateTimeImmutable $published,
         DateTimeImmutable $updated = null,
         string $impactStatement = null,
+        Image $thumbnail = null,
         Sequence $content
     ) {
         $this->id = $id;
@@ -33,6 +35,7 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
         $this->published = $published;
         $this->updated = $updated;
         $this->impactStatement = $impactStatement;
+        $this->thumbnail = $thumbnail;
         $this->content = $content;
     }
 
@@ -57,6 +60,14 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
     public function getImpactStatement()
     {
         return $this->impactStatement;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 
     public function getPublishedDate() : DateTimeImmutable

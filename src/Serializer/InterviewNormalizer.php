@@ -10,6 +10,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
@@ -69,6 +70,11 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             return new IntervieweeCvLine($cvLine['date'], $cvLine['text']);
         });
 
+        if (false === empty($data['image']['thumbnail'])) {
+            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
+                $format, $context);
+        }
+
         return new Interview(
             $data['id'],
             new Interviewee(
@@ -79,6 +85,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
+            $data['image']['thumbnail'] ?? null,
             $data['content']
         );
     }
@@ -113,6 +120,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
 
         if ($object->getImpactStatement()) {
             $data['impactStatement'] = $object->getImpactStatement();
+        }
+
+        if ($object->getThumbnail()) {
+            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {

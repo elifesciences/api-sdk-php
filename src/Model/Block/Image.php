@@ -14,6 +14,7 @@ final class Image implements BlockWithCaption, HasAttribution
     private $title;
     private $caption;
     private $image;
+    private $inline;
 
     /**
      * @internal
@@ -22,12 +23,14 @@ final class Image implements BlockWithCaption, HasAttribution
         string $id = null,
         string $title = null,
         Sequence $caption,
-        ImageModel $image
+        ImageModel $image,
+        bool $inline = false
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->caption = $caption;
         $this->image = $image;
+        $this->inline = $inline;
     }
 
     /**
@@ -65,5 +68,10 @@ final class Image implements BlockWithCaption, HasAttribution
     public function getImage() : ImageModel
     {
         return $this->image;
+    }
+
+    public function isInline() : bool
+    {
+        return $this->inline;
     }
 }

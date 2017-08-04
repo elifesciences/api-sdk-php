@@ -26,7 +26,8 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['caption'] ?? [])),
-            $this->denormalizer->denormalize($data['image'], ImageFile::class)
+            $this->denormalizer->denormalize($data['image'], ImageFile::class),
+            $data['inline'] ?? false
         );
     }
 
@@ -60,6 +61,10 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['caption'] = $object->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
+        }
+
+        if ($object->isInline()) {
+            $data['inline'] = true;
         }
 
         return $data;

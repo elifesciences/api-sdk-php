@@ -10,6 +10,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
@@ -19,6 +20,7 @@ use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\rejection_for;
 
 final class InterviewNormalizerTest extends ApiTestCase
@@ -59,7 +61,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null,
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -126,6 +128,7 @@ final class InterviewNormalizerTest extends ApiTestCase
 
     public function normalizeProvider() : array
     {
+        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
 
@@ -134,7 +137,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $published, $updated, 'impact statement', new ArraySequence([new Paragraph('text')])
+                    $published, $updated, 'impact statement', $thumbnail, new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [
@@ -156,6 +159,21 @@ final class InterviewNormalizerTest extends ApiTestCase
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -167,7 +185,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum' => [
                 new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'title', $published, null, null, new ArraySequence([new Paragraph('text')])),
+                    'title', $published, null, null, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -191,7 +209,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $published, $updated,
-                    'Interview 1 impact statement', new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 impact statement', $thumbnail, new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true, 'type' => true],
                 [
@@ -207,6 +225,21 @@ final class InterviewNormalizerTest extends ApiTestCase
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Interview 1 impact statement',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
                     'type' => 'interview',
                 ],
                 function (ApiTestCase $test) {
@@ -216,7 +249,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'Interview 1 title', $published, null, null, new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 title', $published, null, null, null, new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [

@@ -82,4 +82,16 @@ final class ImageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($image, $imageFile->getImage());
     }
+
+    /**
+     * @test
+     */
+    public function it_may_be_inlined()
+    {
+        $true = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke(), true);
+        $false = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke());
+
+        $this->assertTrue($true->isInline());
+        $this->assertFalse($false->isInline());
+    }
 }

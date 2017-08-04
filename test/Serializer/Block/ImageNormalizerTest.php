@@ -82,7 +82,7 @@ final class ImageNormalizerTest extends TestCase
                 new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
                     Builder::for(ImageModel::class)
                         ->withSequenceOfAttribution('attribution')
-                        ->__invoke()),
+                        ->__invoke(), true),
                 [
                     'type' => 'image',
                     'image' => [
@@ -109,6 +109,7 @@ final class ImageNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
+                    'inline' => true,
                 ],
             ],
             'minimum' => [
@@ -199,11 +200,12 @@ final class ImageNormalizerTest extends TestCase
                             'attribution',
                         ],
                     ],
+                    'inline' => true,
                 ],
                 new Image('id1', 'title1', new ArraySequence([new Paragraph('paragraph1')]),
                     Builder::for(ImageModel::class)
                         ->withSequenceOfAttribution('attribution')
-                        ->__invoke()),
+                        ->__invoke(), true),
             ],
             'minimum' => [
                 [

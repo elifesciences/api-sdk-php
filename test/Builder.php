@@ -152,6 +152,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
+                        'thumbnail' => null,
                         'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },

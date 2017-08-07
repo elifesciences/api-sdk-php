@@ -329,6 +329,14 @@ final class ApiSdkTest extends ApiTestCase
         $this->assertTrue($this->apiSdk->getSerializer()->supportsDenormalization([], $reference));
     }
 
+    /**
+     * @test
+     */
+    public function causing_a_warning()
+    {
+        fopen('a.txt', 'r');
+    }
+
     public function denormalizeReferencesProvider() : Traversable
     {
         return $this->classNameProvider(

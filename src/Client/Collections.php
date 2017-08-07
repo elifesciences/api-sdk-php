@@ -19,6 +19,7 @@ final class Collections implements Iterator, Sequence
     private $count;
     private $descendingOrder = true;
     private $subjectsQuery = [];
+    private $containingQuery = [];
     private $collectionsClient;
     private $denormalizer;
 
@@ -53,6 +54,19 @@ final class Collections implements Iterator, Sequence
         return $clone;
     }
 
+    public function containing(string ...$items) : self
+    {
+        $clone = clone $this;
+
+        $clone->containingQuery = array_unique(array_merge($this->containingQuery, $items));
+
+        if ($clone->containingQuery !== $this->containingQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
@@ -69,7 +83,8 @@ final class Collections implements Iterator, Sequence
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,
-                $this->subjectsQuery
+                $this->subjectsQuery,
+                $this->containingQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

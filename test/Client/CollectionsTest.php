@@ -182,6 +182,51 @@ final class CollectionsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_filtered_by_contents()
+    {
+        $this->mockCollectionListCall(1, 1, 5, true, [], ['article/1234', 'interview/5678']);
+        $this->mockCollectionListCall(1, 100, 5, true, [], ['article/1234', 'interview/5678']);
+
+        foreach ($this->collections->containing('article/1234', 'interview/5678') as $i => $collection) {
+            $this->assertSame((string) $i, $collection->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering_by_contents()
+    {
+        $this->mockCollectionListCall(1, 1, 10);
+
+        $this->collections->count();
+
+        $this->mockCollectionListCall(1, 1, 4, true, [], ['article/1234', 'interview/5678']);
+
+        $this->assertSame(4, $this->collections->containing('article/1234', 'interview/5678')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_filtering_by_contents()
+    {
+        $this->mockCollectionListCall(1, 1, 200);
+        $this->mockCollectionListCall(1, 100, 200);
+        $this->mockCollectionListCall(2, 100, 200);
+
+        $this->collections->toArray();
+
+        $this->mockCollectionListCall(1, 1, 200, true, [], ['article/1234', 'interview/5678']);
+        $this->mockCollectionListCall(1, 100, 200, true, [], ['article/1234', 'interview/5678']);
+        $this->mockCollectionListCall(2, 100, 200, true, [], ['article/1234', 'interview/5678']);
+
+        $this->collections->containing('article/1234', 'interview/5678')->toArray();
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_prepended()
     {
         $this->mockCollectionListCall(1, 1, 5);

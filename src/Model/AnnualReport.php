@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class AnnualReport implements Model, HasImpactStatement, HasPdf
+final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, HasPdf
 {
     private $year;
     private $uri;
@@ -19,6 +19,11 @@ final class AnnualReport implements Model, HasImpactStatement, HasPdf
         $this->title = $title;
         $this->impactStatement = $impactStatement;
         $this->image = $image;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::annualReport($this->year);
     }
 
     public function getYear(): int

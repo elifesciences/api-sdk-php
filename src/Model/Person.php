@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Person implements Model, HasId, HasThumbnail
+final class Person implements Model, HasId, HasIdentifier, HasThumbnail
 {
     private $id;
     private $details;
@@ -40,6 +40,11 @@ final class Person implements Model, HasId, HasThumbnail
         $this->research = $research;
         $this->profile = $profile;
         $this->competingInterests = $competingInterests;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::person($this->id);
     }
 
     public function getId() : string

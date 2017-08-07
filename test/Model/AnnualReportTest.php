@@ -3,8 +3,10 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AnnualReport;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPdf;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -14,7 +16,19 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_an_id()
+    public function it_has_an_identifier()
+    {
+        $image = Builder::for(Image::class)->sample('thumbnail');
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+
+        $this->assertInstanceOf(HasIdentifier::class, $annualReport);
+        $this->assertEquals(Identifier::annualReport(2012), $annualReport->getIdentifier());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_year()
     {
         $image = Builder::for(Image::class)->sample('thumbnail');
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);

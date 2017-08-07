@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Subject implements Model, HasBanner, HasId, HasImpactStatement, HasThumbnail
+final class Subject implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasThumbnail
 {
     private $id;
     private $name;
@@ -27,6 +27,11 @@ final class Subject implements Model, HasBanner, HasId, HasImpactStatement, HasT
         $this->impactStatement = $impactStatement;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::subject($this->id);
     }
 
     public function getId() : string

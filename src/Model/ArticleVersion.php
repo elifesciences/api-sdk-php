@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPdf, HasPublishedDate, HasSubjects
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifier, HasPdf, HasPublishedDate, HasSubjects
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -95,6 +95,11 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasPdf, Has
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
         $this->additionalFiles = $additionalFiles;
+    }
+
+    final public function getIdentifier() : Identifier
+    {
+        return Identifier::article($this->id);
     }
 
     final public function getId() : string

@@ -19,9 +19,11 @@ use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\HasCiteAs;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -43,6 +45,19 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertInstanceOf(Article::class, $article);
+    }
+
+    /**
+     * @test
+     */
+    final public function it_has_an_identifier()
+    {
+        $article = $this->builder
+            ->withId('14107')
+            ->__invoke();
+
+        $this->assertInstanceOf(HasIdentifier::class, $article);
+        $this->assertEquals(Identifier::article('14107'), $article->getIdentifier());
     }
 
     /**

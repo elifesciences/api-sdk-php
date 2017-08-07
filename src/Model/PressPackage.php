@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class PressPackage implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
+final class PressPackage implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -43,6 +43,11 @@ final class PressPackage implements Model, HasContent, HasId, HasImpactStatement
         $this->relatedContent = $relatedContent;
         $this->mediaContacts = $mediaContacts;
         $this->about = $about;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::pressPackage($this->id);
     }
 
     public function getId() : string

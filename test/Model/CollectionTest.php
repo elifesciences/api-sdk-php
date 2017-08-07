@@ -12,11 +12,13 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -42,6 +44,19 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
         $collection = $this->builder->__invoke();
 
         $this->assertInstanceOf(Model::class, $collection);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $collection = $this->builder
+            ->withId('tropical-disease')
+            ->__invoke();
+
+        $this->assertInstanceOf(HasIdentifier::class, $collection);
+        $this->assertEquals(Identifier::collection('tropical-disease'), $collection->getIdentifier());
     }
 
     /**

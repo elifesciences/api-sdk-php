@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
+final class BlogArticle implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -34,6 +34,11 @@ final class BlogArticle implements Model, HasContent, HasId, HasImpactStatement,
         $this->impactStatement = $impactStatement;
         $this->content = $content;
         $this->subjects = $subjects;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::blogArticle($this->id);
     }
 
     public function getId() : string

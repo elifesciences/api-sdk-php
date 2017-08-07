@@ -12,10 +12,12 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
@@ -36,6 +38,20 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(Model::class, $blogArticle);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
+            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+        );
+
+        $this->assertInstanceOf(HasIdentifier::class, $blogArticle);
+        $this->assertEquals(Identifier::blogArticle('id'), $blogArticle->getIdentifier());
     }
 
     /**

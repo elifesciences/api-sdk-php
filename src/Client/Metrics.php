@@ -7,6 +7,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;
+use eLife\ApiSdk\Model\Identifier;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class Metrics
@@ -18,13 +19,13 @@ final class Metrics
         $this->metricsClient = $metricsClient;
     }
 
-    public function citations(string $type, $id) : PromiseInterface
+    public function citations(Identifier $identifier) : PromiseInterface
     {
         return $this->metricsClient
             ->citations(
                 ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
-                $type,
-                $id
+                $identifier->getType(),
+                $identifier->getId()
             )
             ->then(function (Result $result) {
                 $sources = [];
@@ -37,26 +38,26 @@ final class Metrics
             });
     }
 
-    public function totalPageViews(string $type, $id) : PromiseInterface
+    public function totalPageViews(Identifier $identifier) : PromiseInterface
     {
         return $this->metricsClient
             ->pageViews(
                 ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
-                $type,
-                $id
+                $identifier->getType(),
+                $identifier->getId()
             )
             ->then(function (Result $result) {
                 return $result['totalValue'];
             });
     }
 
-    public function totalDownloads(string $type, $id) : PromiseInterface
+    public function totalDownloads(Identifier $identifier) : PromiseInterface
     {
         return $this->metricsClient
             ->downloads(
                 ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
-                $type,
-                $id
+                $identifier->getType(),
+                $identifier->getId()
             )
             ->then(function (Result $result) {
                 return $result['totalValue'];

@@ -4,8 +4,10 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
@@ -25,6 +27,18 @@ final class SubjectTest extends PHPUnit_Framework_TestCase
             rejection_for('No banner'), rejection_for('Image should not be unwrapped'));
 
         $this->assertInstanceOf(Model::class, $subject);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $subject = new Subject('id', 'name', rejection_for('Impact statement should not be unwrapped'),
+            rejection_for('No banner'), rejection_for('Image should not be unwrapped'));
+
+        $this->assertInstanceOf(HasIdentifier::class, $subject);
+        $this->assertEquals(Identifier::subject('id'), $subject->getIdentifier());
     }
 
     /**

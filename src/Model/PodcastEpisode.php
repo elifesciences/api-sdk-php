@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $number;
     private $title;
@@ -41,6 +41,11 @@ final class PodcastEpisode implements Model, HasBanner, HasImpactStatement, HasP
         $this->thumbnail = $thumbnail;
         $this->sources = $sources;
         $this->chapters = $chapters;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::podcastEpisode($this->number);
     }
 
     public function getNumber() : int

@@ -6,6 +6,7 @@ use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;
+use eLife\ApiSdk\Model\Identifier;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class MetricsTest extends ApiTestCase
@@ -30,7 +31,7 @@ final class MetricsTest extends ApiTestCase
 
         $expected = new CitationsMetric(new CitationsMetricSource('Service', 'http://www.example.com/', 9560));
 
-        $this->assertEquals($expected, $this->metrics->citations('article', '09560')->wait());
+        $this->assertEquals($expected, $this->metrics->citations(Identifier::article('09560'))->wait());
     }
 
     /**
@@ -40,7 +41,7 @@ final class MetricsTest extends ApiTestCase
     {
         $this->mockMetricPageViewsCall('article', '09560');
 
-        $this->assertSame(9560, $this->metrics->totalPageViews('article', '09560')->wait());
+        $this->assertSame(9560, $this->metrics->totalPageViews(Identifier::article('09560'))->wait());
     }
 
     /**
@@ -50,6 +51,6 @@ final class MetricsTest extends ApiTestCase
     {
         $this->mockMetricDownloadsCall('article', '09560');
 
-        $this->assertSame(9560, $this->metrics->totalDownloads('article', '09560')->wait());
+        $this->assertSame(9560, $this->metrics->totalDownloads(Identifier::article('09560'))->wait());
     }
 }

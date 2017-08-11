@@ -17,7 +17,7 @@ final class Identifier
 
     public static function fromString(string $string) : Identifier
     {
-        preg_match('/^(annual-report|article|blog-article|collection|event|interview|labs-post|person|podcast-episode|press-package|subject):([a-z0-9-]+)$/', $string, $matches);
+        preg_match('~^(annual-report|article|blog-article|collection|event|interview|labs-post|person|podcast-episode|press-package|subject)/([a-z0-9-]+)$~', $string, $matches);
 
         if (empty($matches[1]) || empty($matches[2])) {
             throw new InvalidArgumentException("Invalid identifier '$string'");
@@ -83,7 +83,7 @@ final class Identifier
 
     public function __toString()
     {
-        return "{$this->type}:{$this->id}";
+        return "{$this->type}/{$this->id}";
     }
 
     public function getType() : string

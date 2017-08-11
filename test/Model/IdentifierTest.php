@@ -37,7 +37,7 @@ final class IdentifierTest extends PHPUnit_Framework_TestCase
      */
     public function it_can_be_created_from_a_string(string $method, string $type, string $id)
     {
-        $identifier = Identifier::fromString("$type:$id");
+        $identifier = Identifier::fromString("$type/$id");
 
         $this->assertSame($type, $identifier->getType());
         $this->assertSame((string) $id, $identifier->getId());

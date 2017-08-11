@@ -8,10 +8,12 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\HasBanner;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
@@ -35,6 +37,20 @@ final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
 
         $this->assertInstanceOf(Model::class, $podcastEpisode);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            rejection_for('No banner'), Builder::for(Image::class)->sample('thumbnail'),
+            [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
+            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+
+        $this->assertInstanceOf(HasIdentifier::class, $podcastEpisode);
+        $this->assertEquals(Identifier::podcastEpisode('1'), $podcastEpisode->getIdentifier());
     }
 
     /**

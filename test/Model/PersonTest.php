@@ -7,7 +7,9 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasThumbnail;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -32,6 +34,20 @@ final class PersonTest extends PHPUnit_Framework_TestCase
             rejection_for('Competing interests should not be unwrapped'));
 
         $this->assertInstanceOf(Model::class, $person);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'label', null,
+            new PromiseSequence(rejection_for('Affiliations should not be unwrapped')), rejection_for('Research should not be unwrapped'),
+            new PromiseSequence(rejection_for('Profile should not be unwrapped')),
+            rejection_for('Competing interests should not be unwrapped'));
+
+        $this->assertInstanceOf(HasIdentifier::class, $person);
+        $this->assertEquals(Identifier::person('id'), $person->getIdentifier());
     }
 
     /**

@@ -9,9 +9,11 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -38,6 +40,19 @@ final class PressPackageTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertInstanceOf(Model::class, $package);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $package = $this->builder
+            ->withId('id')
+            ->__invoke();
+
+        $this->assertInstanceOf(HasIdentifier::class, $package);
+        $this->assertEquals(Identifier::pressPackage('id'), $package->getIdentifier());
     }
 
     /**

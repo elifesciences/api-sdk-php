@@ -9,10 +9,12 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
@@ -23,6 +25,22 @@ use function GuzzleHttp\Promise\rejection_for;
 
 final class InterviewTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $person = new PersonDetails('preferred name', 'index name');
+        $interviewee = new Interviewee($person,
+            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null,
+            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+        );
+
+        $this->assertInstanceOf(HasIdentifier::class, $interview);
+        $this->assertEquals(Identifier::interview('id'), $interview->getIdentifier());
+    }
+
     /**
      * @test
      */

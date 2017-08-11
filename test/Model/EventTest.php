@@ -10,9 +10,11 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
+use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
@@ -28,6 +30,18 @@ final class EventTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(Model::class, $event);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+
+        $this->assertInstanceOf(HasIdentifier::class, $event);
+        $this->assertEquals(Identifier::event('id'), $event->getIdentifier());
     }
 
     /**

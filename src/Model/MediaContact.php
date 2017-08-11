@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class MediaContact implements Model
+final class MediaContact
 {
     private $details;
     private $affiliations;

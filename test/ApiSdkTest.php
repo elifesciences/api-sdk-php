@@ -22,6 +22,7 @@ use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Reference;
 use Traversable;
 
@@ -196,7 +197,7 @@ final class ApiSdkTest extends ApiTestCase
 
         $this->mockMetricPageViewsCall('article', '09560');
 
-        $this->apiSdk->metrics()->totalPageViews('article', '09560')->wait();
+        $this->apiSdk->metrics()->totalPageViews(Identifier::article('09560'))->wait();
     }
 
     /**
@@ -246,7 +247,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockRecommendationsCall('article', '12345', 1, 1, 10);
         $this->mockRecommendationsCall('article', '12345', 1, 100, 10);
 
-        $this->assertCount(10, $this->apiSdk->recommendations()->list('article', '12345')->toArray());
+        $this->assertCount(10, $this->apiSdk->recommendations()->list(Identifier::article('12345'))->toArray());
     }
 
     /**

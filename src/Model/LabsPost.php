@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class LabsPost implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -34,6 +34,11 @@ final class LabsPost implements Model, HasContent, HasId, HasImpactStatement, Ha
         $this->impactStatement = $impactStatement;
         $this->thumbnail = $thumbnail;
         $this->content = $content;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::labsPost($this->id);
     }
 
     public function getId() : string

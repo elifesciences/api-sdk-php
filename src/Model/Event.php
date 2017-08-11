@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Event implements Model, HasContent, HasId, HasImpactStatement, HasPublishedDate, HasUpdatedDate
+final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -44,6 +44,11 @@ final class Event implements Model, HasContent, HasId, HasImpactStatement, HasPu
         $this->timeZone = $timeZone;
         $this->uri = $uri;
         $this->content = $content;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::event($this->id);
     }
 
     public function getId() : string

@@ -7,6 +7,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Model;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -22,12 +23,12 @@ final class Recommendations
         $this->denormalizer = $denormalizer;
     }
 
-    public function list(string $type, $id) : Sequence
+    public function list(Identifier $identifier) : Sequence
     {
         $recommendationsClient = $this->recommendationsClient;
         $denormalizer = $this->denormalizer;
 
-        return new class($recommendationsClient, $denormalizer, $type, $id) implements Iterator, Sequence {
+        return new class($recommendationsClient, $denormalizer, $identifier->getType(), $identifier->getId()) implements Iterator, Sequence {
             use Client;
 
             private $count;

@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Collection implements Model, HasBanner, HasId, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -59,6 +59,11 @@ final class Collection implements Model, HasBanner, HasId, HasImpactStatement, H
         $this->content = $content;
         $this->relatedContent = $relatedContent;
         $this->podcastEpisodes = $podcastEpisodes;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::collection($this->id);
     }
 
     public function getId() : string

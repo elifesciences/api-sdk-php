@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Interview implements Model, HasContent, HasId, HasImpactStatement, HasThumbnail, HasPublishedDate, HasUpdatedDate
+final class Interview implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasThumbnail, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $interviewee;
@@ -37,6 +37,11 @@ final class Interview implements Model, HasContent, HasId, HasImpactStatement, H
         $this->impactStatement = $impactStatement;
         $this->thumbnail = $thumbnail;
         $this->content = $content;
+    }
+
+    public function getIdentifier() : Identifier
+    {
+        return Identifier::interview($this->id);
     }
 
     public function getId() : string

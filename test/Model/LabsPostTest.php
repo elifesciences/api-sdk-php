@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
@@ -31,6 +32,19 @@ final class LabsPostTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(Model::class, $labsPost);
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_an_identifier()
+    {
+        $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            Builder::for(Image::class)->sample('thumbnail'),
+            new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
+        );
+
+        $this->assertEquals(Identifier::labsPost('80000001'), $labsPost->getIdentifier());
     }
 
     /**

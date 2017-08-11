@@ -9,6 +9,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\Identifier;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class RecommendationsTest extends ApiTestCase
@@ -31,7 +32,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_is_a_sequence()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->assertInstanceOf(Sequence::class, $list);
     }
@@ -41,7 +42,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_traversed()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 200);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 200);
@@ -58,7 +59,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_counted()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 10);
 
@@ -71,7 +72,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_casts_to_an_array()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 10);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 10);
@@ -91,7 +92,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_accessed_like_an_array()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 1);
 
@@ -112,7 +113,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_is_an_immutable_array()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->expectException(BadMethodCallException::class);
 
@@ -125,7 +126,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         foreach ($calls as $call) {
             $this->mockRecommendationsCall('article', 'article1', $call['page'], $call['per-page'], 5);
@@ -143,7 +144,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_mapped()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 3);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 3);
@@ -160,7 +161,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_filtered()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 5);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 5);
@@ -179,7 +180,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_reduced()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 5);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 5);
@@ -196,7 +197,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_sorted()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 5);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 5);
@@ -215,7 +216,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_can_be_reversed()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 5, false);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 5, false);
@@ -230,7 +231,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_does_not_recount_when_reversed()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 10);
 
@@ -244,7 +245,7 @@ final class RecommendationsTest extends ApiTestCase
      */
     public function it_fetches_pages_again_when_reversed()
     {
-        $list = $this->recommendations->list('article', 'article1');
+        $list = $this->recommendations->list(Identifier::article('article1'));
 
         $this->mockRecommendationsCall('article', 'article1', 1, 1, 200);
         $this->mockRecommendationsCall('article', 'article1', 1, 100, 200);

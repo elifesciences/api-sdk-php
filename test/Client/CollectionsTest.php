@@ -10,6 +10,7 @@ use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
@@ -187,7 +188,7 @@ final class CollectionsTest extends ApiTestCase
         $this->mockCollectionListCall(1, 1, 5, true, [], ['article/1234', 'interview/5678']);
         $this->mockCollectionListCall(1, 100, 5, true, [], ['article/1234', 'interview/5678']);
 
-        foreach ($this->collections->containing('article/1234', 'interview/5678') as $i => $collection) {
+        foreach ($this->collections->containing(Identifier::article('1234'), Identifier::interview('5678')) as $i => $collection) {
             $this->assertSame((string) $i, $collection->getId());
         }
     }
@@ -203,7 +204,7 @@ final class CollectionsTest extends ApiTestCase
 
         $this->mockCollectionListCall(1, 1, 4, true, [], ['article/1234', 'interview/5678']);
 
-        $this->assertSame(4, $this->collections->containing('article/1234', 'interview/5678')->count());
+        $this->assertSame(4, $this->collections->containing(Identifier::article('1234'), Identifier::interview('5678'))->count());
     }
 
     /**
@@ -221,7 +222,7 @@ final class CollectionsTest extends ApiTestCase
         $this->mockCollectionListCall(1, 100, 200, true, [], ['article/1234', 'interview/5678']);
         $this->mockCollectionListCall(2, 100, 200, true, [], ['article/1234', 'interview/5678']);
 
-        $this->collections->containing('article/1234', 'interview/5678')->toArray();
+        $this->collections->containing(Identifier::article('1234'), Identifier::interview('5678'))->toArray();
     }
 
     /**

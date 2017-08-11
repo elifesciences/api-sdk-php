@@ -8,6 +8,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Identifier;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -54,11 +55,11 @@ final class Collections implements Iterator, Sequence
         return $clone;
     }
 
-    public function containing(string ...$items) : self
+    public function containing(Identifier ...$items) : self
     {
         $clone = clone $this;
 
-        $clone->containingQuery = array_unique(array_merge($this->containingQuery, $items));
+        $clone->containingQuery = array_unique(array_merge($this->containingQuery, array_map('strval', $items)));
 
         if ($clone->containingQuery !== $this->containingQuery) {
             $clone->count = null;

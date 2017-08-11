@@ -846,7 +846,7 @@ abstract class ApiTestCase extends TestCase
         }, $subjects));
 
         $containingQuery = implode('', array_map(function (string $item) {
-            return '&containing[]='.urlencode($item);
+            return '&containing[]='.$item;
         }, $containing));
 
         $this->storage->save(

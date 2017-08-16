@@ -834,7 +834,8 @@ abstract class ApiTestCase extends TestCase
         int $perPage,
         int $total,
         $descendingOrder = true,
-        array $subjects = []
+        array $subjects = [],
+        array $containing = []
     ) {
         $collections = array_map(function (int $id) {
             return $this->createCollectionJson($id, true);
@@ -844,10 +845,14 @@ abstract class ApiTestCase extends TestCase
             return '&subject[]='.$subjectId;
         }, $subjects));
 
+        $containingQuery = implode('', array_map(function (string $item) {
+            return '&containing[]='.$item;
+        }, $containing));
+
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                'http://api.elifesciences.org/collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$containingQuery,
                 ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
             ),
             new Response(

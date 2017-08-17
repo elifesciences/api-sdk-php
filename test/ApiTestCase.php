@@ -14,6 +14,7 @@ use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
@@ -449,6 +450,34 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockJobAdvertListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        string $show = 'all'
+    ) {
+        $jobAdverts = array_map(function (int $id) {
+            return $this->createJobAdvertJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/job-adverts?page='.$page.'&per-page='.$perPage.'&show='.$show.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $jobAdverts,
+                ])
+            )
+        );
+    }
+
     final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
     {
         $this->storage->save(
@@ -461,6 +490,22 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
                 json_encode($this->createEventJson($number, false, $complete, $external))
+            )
+        );
+    }
+
+    final protected function mockJobAdvertCall(int $number, bool $isUpdated = false)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/job-adverts/jobAdvert'.$number,
+                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)],
+                json_encode($this->createJobAdvertJson($number, false, $isUpdated))
             )
         );
     }
@@ -1516,6 +1561,39 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $event;
+    }
+
+    private function createJobAdvertJson($number, bool $isSnippet = false, bool $isUpdated = false, bool $external = false) : array
+    {
+        if (is_int($number)) {
+            $id = 'job-advert'.$number;
+        } else {
+            $id = $number;
+        }
+
+        $jobAdvert = [
+            'id' => $id,
+            'title' => 'Event '.$number.' title',
+            'impactStatement' => 'Event '.$number.' impact statement',
+            'published' => '2000-01-01T00:00:00Z',
+            'closingDate' => '2000-02-01T00:00:00Z',
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'JobAdvert '.$number.' text',
+                ],
+            ],
+        ];
+
+        if ($isUpdated) {
+            $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
+        }
+
+        if ($isSnippet) {
+            unset($jobAdvert['content']);
+        }
+
+        return $jobAdvert;
     }
 
     private function createHighlightJson(int $number, array $item, bool $complete = false) : array

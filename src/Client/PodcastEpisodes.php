@@ -8,6 +8,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -19,6 +20,7 @@ final class PodcastEpisodes implements Iterator, Sequence
 
     private $count;
     private $descendingOrder = true;
+    private $containingQuery = [];
     private $podcastClient;
     private $denormalizer;
 
@@ -40,6 +42,19 @@ final class PodcastEpisodes implements Iterator, Sequence
             });
     }
 
+    public function containing(Identifier ...$items) : self
+    {
+        $clone = clone $this;
+
+        $clone->containingQuery = array_unique(array_merge($this->containingQuery, array_map('strval', $items)));
+
+        if ($clone->containingQuery !== $this->containingQuery) {
+            $clone->count = null;
+        }
+
+        return $clone;
+    }
+
     public function slice(int $offset, int $length = null) : Sequence
     {
         if (null === $length) {
@@ -55,7 +70,8 @@ final class PodcastEpisodes implements Iterator, Sequence
                 ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->descendingOrder
+                $this->descendingOrder,
+                $this->containingQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

@@ -8,7 +8,6 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
@@ -17,6 +16,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 final class PodcastEpisodes implements Iterator, Sequence
 {
     use Client;
+    use Contains;
 
     private $count;
     private $descendingOrder = true;
@@ -40,19 +40,6 @@ final class PodcastEpisodes implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), PodcastEpisode::class);
             });
-    }
-
-    public function containing(Identifier ...$items) : self
-    {
-        $clone = clone $this;
-
-        $clone->containingQuery = array_unique(array_merge($this->containingQuery, array_map('strval', $items)));
-
-        if ($clone->containingQuery !== $this->containingQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence

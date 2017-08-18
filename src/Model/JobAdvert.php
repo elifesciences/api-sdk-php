@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class JobAdvert implements Model, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate
+final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -38,7 +38,7 @@ final class JobAdvert implements Model, HasId, HasIdentifier, HasImpactStatement
 
     public function getIdentifier() : Identifier
     {
-        return Identifier::event($this->id);
+        return Identifier::jobAdvert($this->id);
     }
 
     public function getId() : string

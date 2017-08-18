@@ -70,9 +70,9 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
         return
-            Event::class === $type
+            JobAdvert::class === $type
             ||
-            Model::class === $type && 'event' === ($data['type'] ?? 'unknown');
+            Model::class === $type && 'job-advert' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -88,7 +88,7 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'jobAdvert';
+            $data['type'] = 'job-advert';
         }
 
         if ($object->getUpdatedDate()) {

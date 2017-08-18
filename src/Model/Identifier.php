@@ -56,7 +56,12 @@ final class Identifier
         return new self('interview', $id);
     }
 
-    public static function labsPost(string $id) : Identifier
+    public static function jobAdvert(string $id) : Identifier
+    {
+      return new self('job-advert', $id);
+    }
+
+  public static function labsPost(string $id) : Identifier
     {
         return new self('labs-post', $id);
     }

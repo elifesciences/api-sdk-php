@@ -7,7 +7,6 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasIdentifier;
@@ -15,6 +14,7 @@ use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Identifier;
+use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
@@ -26,10 +26,10 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+            new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertInstanceOf(Model::class, $event);
+        $this->assertInstanceOf(Model::class, $jobAdvert);
     }
 
     /**
@@ -37,11 +37,11 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_identifier()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertInstanceOf(HasIdentifier::class, $event);
-        $this->assertEquals(Identifier::event('id'), $event->getIdentifier());
+        $this->assertInstanceOf(HasIdentifier::class, $jobAdvert);
+        $this->assertEquals(Identifier::jobAdvert('id'), $jobAdvert->getIdentifier());
     }
 
     /**
@@ -49,11 +49,11 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertInstanceOf(HasId::class, $event);
-        $this->assertSame('id', $event->getId());
+      $this->assertInstanceOf(HasId::class, $jobAdvert);
+        $this->assertSame('id', $jobAdvert->getId());
     }
 
     /**
@@ -61,10 +61,10 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertSame('title', $event->getTitle());
+      $this->assertSame('title', $jobAdvert->getTitle());
     }
 
     /**
@@ -72,10 +72,10 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+        $with = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+          new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
+        $withOut = new JobAdvert('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+          new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
         $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
@@ -87,11 +87,11 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $event = new Event('id', 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', $published = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+          new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertInstanceOf(HasPublishedDate::class, $event);
-        $this->assertEquals($published, $event->getPublishedDate());
+        $this->assertInstanceOf(HasPublishedDate::class, $jobAdvert);
+        $this->assertEquals($published, $jobAdvert->getPublishedDate());
     }
 
     /**
@@ -99,10 +99,10 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_updated_date()
     {
-        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+        $with = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')),
+          new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
+        $withOut = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),null,
+          new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updated, $with->getUpdatedDate());
@@ -112,52 +112,12 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_start_date()
+    public function it_has_a_closing_date()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, $starts = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), $closing = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
-        $this->assertEquals($starts, $event->getStarts());
-    }
-
-    /**
-     * @test
-     */
-    public function it_has_an_end_date()
-    {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), $ends = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-
-        $this->assertEquals($ends, $event->getEnds());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_timezone()
-    {
-        $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
-            $timeZone = new DateTimeZone('Europe/London'), null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-
-        $this->assertEquals($timeZone, $with->getTimeZone());
-        $this->assertNull($withOut->getTimeZone());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_uri()
-    {
-        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'http://www.example.com/',
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-
-        $this->assertEquals('http://www.example.com/', $with->getUri());
-        $this->assertNull($withOut->getUri());
+        $this->assertEquals($closing, $jobAdvert->getClosingDate());
     }
 
     /**
@@ -167,10 +127,10 @@ final class JobAdvertTest extends PHPUnit_Framework_TestCase
     {
         $content = [new Block\Paragraph('foo')];
 
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            new ArraySequence($content));
+      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', $closing = new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        new ArraySequence($content));
 
-        $this->assertInstanceOf(HasContent::class, $event);
-        $this->assertEquals($content, $event->getContent()->toArray());
+        $this->assertInstanceOf(HasContent::class, $jobAdvert);
+        $this->assertEquals($content, $jobAdvert->getContent()->toArray());
     }
 }

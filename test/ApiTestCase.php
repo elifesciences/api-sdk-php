@@ -454,7 +454,7 @@ abstract class ApiTestCase extends TestCase
         int $page,
         int $perPage,
         int $total,
-        $descendingOrder = true,
+        bool $descendingOrder = true,
         string $show = 'all'
     ) {
         $jobAdverts = array_map(function (int $id) {
@@ -499,7 +499,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/job-adverts/jobAdvert'.$number,
+                'http://api.elifesciences.org/job-adverts/job-advert'.$number,
                 ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)]
             ),
             new Response(
@@ -1563,10 +1563,10 @@ abstract class ApiTestCase extends TestCase
         return $event;
     }
 
-    private function createJobAdvertJson($number, bool $isSnippet = false, bool $isUpdated = false) : array
+    private function createJobAdvertJson($number, bool $isSnippet = false, bool $complete = false) : array
     {
         if (is_int($number)) {
-            $id = 'jobAdvert'.$number;
+            $id = 'job-advert'.$number;
         } else {
             $id = $number;
         }
@@ -1574,23 +1574,23 @@ abstract class ApiTestCase extends TestCase
         $jobAdvert = [
             'id' => $id,
             'title' => 'Job advert '.$number.' title',
-            'impactStatement' => 'Job advert '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'closingDate' => '2000-02-01T00:00:00Z',
             'content' => [
                 [
                     'type' => 'paragraph',
-                    'text' => 'JobAdvert '.$number.' text',
+                    'text' => 'Job advert '.$number.' text',
                 ],
             ],
         ];
 
-        if ($isUpdated) {
-            $jobAdvert['updated'] = '2000-01-02T00:00:00Z';
-        }
-
         if ($isSnippet) {
             unset($jobAdvert['content']);
+        }
+
+        if ($complete) {
+          $jobAdvert['impactStatement'] = 'Job advert '.$number.' impact statement';
+          $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
         }
 
         return $jobAdvert;

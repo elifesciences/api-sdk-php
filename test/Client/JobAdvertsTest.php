@@ -46,7 +46,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       foreach ($this->jobAdverts as $i => $jobAdvert) {
           $this->assertInstanceOf(JobAdvert::class, $jobAdvert);
-          $this->assertSame('jobAdvert'.$i, $jobAdvert->getId());
+          $this->assertSame('job-advert'.$i, $jobAdvert->getId());
       }
   }
 
@@ -116,13 +116,13 @@ final class JobAdvertsTest extends ApiTestCase
   {
       $this->mockJobAdvertCall(7);
 
-      $jobAdvert = $this->jobAdverts->get('jobAdvert7')->wait();
+      $jobAdvert = $this->jobAdverts->get('job-advert7')->wait();
 
       $this->assertInstanceOf(JobAdvert::class, $jobAdvert);
-      $this->assertSame('jobAdvert7', $jobAdvert->getId());
+      $this->assertSame('job-advert7', $jobAdvert->getId());
 
       $this->assertInstanceOf(Paragraph::class, $jobAdvert->getContent()[0]);
-      $this->assertSame('jobAvert 7 text', $jobAdvert->getContent()[0]->getText());
+      $this->assertSame('Job advert 7 text', $jobAdvert->getContent()[0]->getText());
   }
 
   /**
@@ -134,7 +134,7 @@ final class JobAdvertsTest extends ApiTestCase
       $this->mockJobAdvertListCall(1, 100, 5, true, 'open');
 
       foreach ($this->jobAdverts->show('open') as $i => $jobAdvert) {
-          $this->assertSame('jobAdvert'.$i, $jobAdvert->getId());
+          $this->assertSame('job-advert'.$i, $jobAdvert->getId());
       }
   }
 
@@ -180,7 +180,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       $values = $this->jobAdverts->prepend(0, 1)->map($this->tidyValue());
 
-      $this->assertSame([0, 1, 'jobAdvert1', 'jobAdvert2', 'jobAdvert3', 'jobAdvert4', 'jobAdvert5'], $values->toArray());
+      $this->assertSame([0, 1, 'job-advert1', 'job-advert2', 'job-advert3', 'job-advert4', 'job-advert5'], $values->toArray());
   }
 
   /**
@@ -193,7 +193,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       $values = $this->jobAdverts->append(0, 1)->map($this->tidyValue());
 
-      $this->assertSame(['jobAdvert1', 'jobAdvert2', 'jobAdvert3', 'jobAdvert4', 'jobAdvert5', 0, 1], $values->toArray());
+      $this->assertSame(['job-advert1', 'job-advert2', 'job-advert3', 'job-advert4', 'job-advert5', 0, 1], $values->toArray());
   }
 
   /**
@@ -206,7 +206,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       $values = $this->jobAdverts->drop(2)->map($this->tidyValue());
 
-      $this->assertSame(['jobAdvert1', 'jobAdvert2', 'jobAdvert4', 'jobAdvert5'], $values->toArray());
+      $this->assertSame(['job-advert1', 'job-advert2', 'job-advert4', 'job-advert5'], $values->toArray());
   }
 
   /**
@@ -219,7 +219,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       $values = $this->jobAdverts->insert(2, 2)->map($this->tidyValue());
 
-      $this->assertSame(['jobAdvert1', 'jobAdvert2', 2, 'jobAdvert3', 'jobAdvert4', 'jobAdvert5'], $values->toArray());
+      $this->assertSame(['job-advert1', 'job-advert2', 2, 'job-advert3', 'job-advert4', 'job-advert5'], $values->toArray());
   }
 
   /**
@@ -232,7 +232,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       $values = $this->jobAdverts->set(2, 2)->map($this->tidyValue());
 
-      $this->assertSame(['jobAdvert1', 'jobAdvert2', 2, 'jobAdvert4', 'jobAdvert5'], $values->toArray());
+      $this->assertSame(['job-advert1', 'job-advert2', 2, 'job-advert4', 'job-advert5'], $values->toArray());
   }
 
   /**
@@ -247,7 +247,7 @@ final class JobAdvertsTest extends ApiTestCase
 
       foreach ($this->jobAdverts->slice($offset, $length) as $i => $jobAdvert) {
           $this->assertInstanceOf(JobAdvert::class, $jobAdvert);
-          $this->assertSame('jobAdvert'.($expected[$i]), $jobAdvert->getId());
+          $this->assertSame('job-advert'.($expected[$i]), $jobAdvert->getId());
       }
   }
 
@@ -264,7 +264,7 @@ final class JobAdvertsTest extends ApiTestCase
           return $jobAdvert->getId();
       };
 
-      $this->assertSame(['jobAdvert1', 'jobAdvert2', 'jobAdvert3'], $this->jobAdverts->map($map)->toArray());
+      $this->assertSame(['job-advert1', 'job-advert2', 'job-advert3'], $this->jobAdverts->map($map)->toArray());
   }
 
   /**
@@ -280,7 +280,7 @@ final class JobAdvertsTest extends ApiTestCase
       };
 
       foreach ($this->jobAdverts->filter($filter) as $i => $jobAdvert) {
-          $this->assertSame('jobAdvert'.($i + 4), $jobAdvert->getId());
+          $this->assertSame('job-advert'.($i + 4), $jobAdvert->getId());
       }
   }
 
@@ -320,7 +320,7 @@ final class JobAdvertsTest extends ApiTestCase
       };
 
       foreach ($this->jobAdverts->sort($sort) as $i => $jobAdvert) {
-          $this->assertSame('jobAdvert'.(5 - $i), $jobAdvert->getId());
+          $this->assertSame('job-advert'.(5 - $i), $jobAdvert->getId());
       }
   }
 
@@ -333,7 +333,7 @@ final class JobAdvertsTest extends ApiTestCase
       $this->mockJobAdvertListCall(1, 100, 5, false);
 
       foreach ($this->jobAdverts->reverse() as $i => $jobAdvert) {
-          $this->assertSame('jobAdvert'.$i, $jobAdvert->getId());
+          $this->assertSame('job-advert'.$i, $jobAdvert->getId());
       }
   }
 

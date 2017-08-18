@@ -171,7 +171,7 @@ final class ApiSdkTest extends ApiTestCase
 
       $this->mockJobAdvertCall(7, true);
 
-      $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('jobAdvert7')->wait());
+      $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('job-advert7')->wait());
   }
 
     /**

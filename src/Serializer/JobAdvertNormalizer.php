@@ -52,9 +52,9 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
             $data['content'] = new ArraySequence($data['content'] ?? []);
         }
 
-      $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
-        return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
-      });
+        $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
+        });
 
         return new JobAdvert(
             $data['id'],

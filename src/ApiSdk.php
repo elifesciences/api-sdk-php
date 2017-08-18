@@ -42,7 +42,6 @@ use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AppendixNormalizer;

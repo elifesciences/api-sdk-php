@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
 
 final class JobAdvert implements Model, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate

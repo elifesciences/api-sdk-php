@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;

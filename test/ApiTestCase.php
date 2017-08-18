@@ -1563,18 +1563,18 @@ abstract class ApiTestCase extends TestCase
         return $event;
     }
 
-    private function createJobAdvertJson($number, bool $isSnippet = false, bool $isUpdated = false, bool $external = false) : array
+    private function createJobAdvertJson($number, bool $isSnippet = false, bool $isUpdated = false) : array
     {
         if (is_int($number)) {
-            $id = 'job-advert'.$number;
+            $id = 'jobAdvert'.$number;
         } else {
             $id = $number;
         }
 
         $jobAdvert = [
             'id' => $id,
-            'title' => 'Event '.$number.' title',
-            'impactStatement' => 'Event '.$number.' impact statement',
+            'title' => 'Job advert '.$number.' title',
+            'impactStatement' => 'Job advert '.$number.' impact statement',
             'published' => '2000-01-01T00:00:00Z',
             'closingDate' => '2000-02-01T00:00:00Z',
             'content' => [
@@ -1586,7 +1586,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($isUpdated) {
-            $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
+            $jobAdvert['updated'] = '2000-01-02T00:00:00Z';
         }
 
         if ($isSnippet) {

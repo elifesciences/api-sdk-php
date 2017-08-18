@@ -12,6 +12,7 @@ use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
+use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
@@ -161,7 +162,19 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->interviews()->get('interview1')->wait());
     }
 
-    /**
+  /**
+   * @test
+   */
+  public function it_creates_job_adverts()
+  {
+    $this->assertInstanceOf(JobAdverts::class, $this->apiSdk->jobAdverts());
+
+    $this->mockJobAdvertCall(7, true);
+
+    $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('jobAdvert7')->wait());
+  }
+
+  /**
      * @test
      */
     public function it_creates_labs_posts()

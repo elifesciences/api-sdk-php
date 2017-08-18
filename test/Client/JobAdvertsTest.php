@@ -46,7 +46,7 @@ final class JobAdvertsTest extends ApiTestCase
 
     foreach ($this->jobAdverts as $i => $jobAdvert) {
       $this->assertInstanceOf(JobAdvert::class, $jobAdvert);
-      $this->assertSame('job-advert'.$i, $jobAdvert->getId());
+      $this->assertSame('jobAdvert'.$i, $jobAdvert->getId());
     }
   }
 

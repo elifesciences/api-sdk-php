@@ -8,6 +8,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -122,6 +123,51 @@ final class PodcastEpisodesTest extends ApiTestCase
 
         $this->assertInstanceOf(PodcastEpisodeChapter::class, $podcastEpisode->getChapters()[0]);
         $this->assertSame('Chapter title', $podcastEpisode->getChapters()[0]->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_contents()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 5, true, ['article/1234', 'interview/5678']);
+        $this->mockPodcastEpisodeListCall(1, 100, 5, true, ['article/1234', 'interview/5678']);
+
+        foreach ($this->podcastEpisodes->containing(Identifier::article('1234'), Identifier::interview('5678')) as $i => $podcastEpisode) {
+            $this->assertSame($i, $podcastEpisode->getNumber());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering_by_contents()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 10);
+
+        $this->podcastEpisodes->count();
+
+        $this->mockPodcastEpisodeListCall(1, 1, 4, true, ['article/1234', 'interview/5678']);
+
+        $this->assertSame(4, $this->podcastEpisodes->containing(Identifier::article('1234'), Identifier::interview('5678'))->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_fetches_pages_again_when_filtering_by_contents()
+    {
+        $this->mockPodcastEpisodeListCall(1, 1, 200);
+        $this->mockPodcastEpisodeListCall(1, 100, 200);
+        $this->mockPodcastEpisodeListCall(2, 100, 200);
+
+        $this->podcastEpisodes->toArray();
+
+        $this->mockPodcastEpisodeListCall(1, 1, 200, true, ['article/1234', 'interview/5678']);
+        $this->mockPodcastEpisodeListCall(1, 100, 200, true, ['article/1234', 'interview/5678']);
+        $this->mockPodcastEpisodeListCall(2, 100, 200, true, ['article/1234', 'interview/5678']);
+
+        $this->podcastEpisodes->containing(Identifier::article('1234'), Identifier::interview('5678'))->toArray();
     }
 
     /**

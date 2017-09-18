@@ -16,9 +16,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 final class PodcastEpisodes implements Iterator, Sequence
 {
     use Client;
+    use Contains;
 
     private $count;
     private $descendingOrder = true;
+    private $containingQuery = [];
     private $podcastClient;
     private $denormalizer;
 
@@ -55,7 +57,8 @@ final class PodcastEpisodes implements Iterator, Sequence
                 ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
                 ($offset / $length) + 1,
                 $length,
-                $this->descendingOrder
+                $this->descendingOrder,
+                $this->containingQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

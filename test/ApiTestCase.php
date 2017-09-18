@@ -782,20 +782,20 @@ abstract class ApiTestCase extends TestCase
         int $perPage,
         int $total,
         $descendingOrder = true,
-        array $subjects = []
+        array $containing = []
     ) {
         $podcastEpisodes = array_map(function (int $id) {
             return $this->createPodcastEpisodeJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
-        $subjectsQuery = implode('', array_map(function (string $subjectId) {
-            return '&subject[]='.$subjectId;
-        }, $subjects));
+        $containingQuery = implode('', array_map(function (string $item) {
+            return '&containing[]='.$item;
+        }, $containing));
 
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/podcast-episodes?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
+                'http://api.elifesciences.org/podcast-episodes?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$containingQuery,
                 ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)]
             ),
             new Response(

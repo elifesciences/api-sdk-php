@@ -11,6 +11,7 @@ use eLife\ApiClient\ApiClient\CoversClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
@@ -32,6 +33,7 @@ use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
+use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
@@ -61,6 +63,7 @@ use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\HighlightNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
+use eLife\ApiSdk\Serializer\JobAdvertNormalizer;
 use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\ApiSdk\Serializer\MediaContactNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
@@ -96,6 +99,7 @@ final class ApiSdk
     private $eventsClient;
     private $highlightsClient;
     private $interviewsClient;
+    private $jobAdvertsClient;
     private $labsClient;
     private $metricsClient;
     private $peopleClient;
@@ -114,6 +118,7 @@ final class ApiSdk
     private $events;
     private $highlights;
     private $interviews;
+    private $jobAdverts;
     private $labsPosts;
     private $mediumArticles;
     private $metrics;
@@ -148,6 +153,7 @@ final class ApiSdk
         $this->eventsClient = new EventsClient($this->httpClient);
         $this->highlightsClient = new HighlightsClient($this->httpClient);
         $this->interviewsClient = new InterviewsClient($this->httpClient);
+        $this->jobAdvertsClient = new JobAdvertsClient($this->httpClient);
         $this->labsClient = new LabsClient($this->httpClient);
         $this->metricsClient = new MetricsClient($this->httpClient);
         $this->peopleClient = new PeopleClient($this->httpClient);
@@ -177,6 +183,7 @@ final class ApiSdk
             new HighlightNormalizer(),
             new ImageNormalizer(),
             new InterviewNormalizer($this->interviewsClient),
+            new JobAdvertNormalizer($this->jobAdvertsClient),
             new LabsPostNormalizer($this->labsClient),
             new MediaContactNormalizer(),
             new MediumArticleNormalizer(),
@@ -282,6 +289,15 @@ final class ApiSdk
         }
 
         return $this->events;
+    }
+
+    public function jobAdverts() : JobAdverts
+    {
+        if (empty($this->jobAdverts)) {
+            $this->jobAdverts = new JobAdverts($this->jobAdvertsClient, $this->serializer);
+        }
+
+        return $this->jobAdverts;
     }
 
     public function highlights() : Highlights

@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^7.0",
-        "elife/api-client": "^1.0@dev",
+        "elife/api-client": "dev-profiles",
         "guzzlehttp/promises": "^1.0",
         "ocramius/package-versions": "^1.1",
         "symfony/serializer": "^2.8.2 || ^3.0.2"

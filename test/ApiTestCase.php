@@ -20,6 +20,7 @@ use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
@@ -825,6 +826,57 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
                 json_encode($this->createPressPackageJson($id, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockProfileListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true
+    ) {
+        $profiles = array_map(function (int $id) {
+            return $this->createProfileJson("profile{$id}");
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/profiles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $profiles,
+                ])
+            )
+        );
+    }
+
+    /**
+     * @param string|int $numberOrId
+     */
+    final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "profile{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+        $this->storage->save(
+            new Request(
+                'GET',
+                "http://api.elifesciences.org/profiles/{$id}",
+                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
+                json_encode($this->createProfileJson($id, $isSnippet, $complete))
             )
         );
     }
@@ -1872,6 +1924,39 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $package;
+    }
+
+    private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $profile = [
+            'id' => $id,
+            'name' => [
+                'preferred' => "{$id} preferred",
+                'index' => "{$id} index",
+            ],
+            'orcid' => '0000-0002-1825-0097',
+            'affiliations' => [
+                [
+                    'name' => ['affiliation'],
+                ],
+            ],
+            'emailAddresses' => [
+                'foo@example.com',
+            ],
+        ];
+
+        if (!$complete) {
+            unset($profile['orcid']);
+            unset($profile['affiliations']);
+            unset($profile['emailAddresses']);
+        }
+
+        if ($isSnippet) {
+            unset($profile['affiliations']);
+            unset($profile['emailAddresses']);
+        }
+
+        return $profile;
     }
 
     private function createCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array

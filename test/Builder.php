@@ -38,6 +38,7 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\PressPackage;
+use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
@@ -215,6 +216,14 @@ final class Builder
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
                         'mediaContacts' => new EmptySequence(),
                         'about' => new EmptySequence(),
+                    ];
+                },
+                Profile::class => function () {
+                    return [
+                        'id' => 'jqpublic',
+                        'details' => new PersonDetails('preferred name', 'index name'),
+                        'affiliations' => new EmptySequence(),
+                        'emailAddresses' => new EmptySequence(),
                     ];
                 },
                 ArticlePoA::class => $articlePoA = function () {

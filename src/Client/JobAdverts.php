@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Client;
 
-use ArrayObject;
 use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -25,7 +24,6 @@ final class JobAdverts implements Iterator, Sequence
 
     public function __construct(JobAdvertsClient $jobAdvertsClient, DenormalizerInterface $denormalizer)
     {
-        $this->jobAdverts = new ArrayObject();
         $this->jobAdvertsClient = $jobAdvertsClient;
         $this->denormalizer = $denormalizer;
     }

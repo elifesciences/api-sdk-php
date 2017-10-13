@@ -450,6 +450,22 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/events/event'.$number,
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                json_encode($this->createEventJson($number, false, $complete, $external))
+            )
+        );
+    }
+
     final protected function mockJobAdvertListCall(
         int $page,
         int $perPage,
@@ -474,22 +490,6 @@ abstract class ApiTestCase extends TestCase
                     'total' => $total,
                     'items' => $jobAdverts,
                 ])
-            )
-        );
-    }
-
-    final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
-    {
-        $this->storage->save(
-            new Request(
-                'GET',
-                'http://api.elifesciences.org/events/event'.$number,
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)]
-            ),
-            new Response(
-                200,
-                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
-                json_encode($this->createEventJson($number, false, $complete, $external))
             )
         );
     }
@@ -1589,8 +1589,8 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($complete) {
-          $jobAdvert['impactStatement'] = 'Job advert '.$number.' impact statement';
-          $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
+            $jobAdvert['impactStatement'] = 'Job advert '.$number.' impact statement';
+            $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
         }
 
         return $jobAdvert;

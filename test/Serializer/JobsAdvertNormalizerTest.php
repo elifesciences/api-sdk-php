@@ -54,8 +54,8 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-      $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now',  new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
-        new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
+        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+            new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
         return [
             'job advert' => [$jobAdvert, null, true],

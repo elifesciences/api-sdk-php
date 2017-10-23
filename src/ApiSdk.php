@@ -18,6 +18,7 @@ use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
@@ -39,6 +40,7 @@ use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
+use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
@@ -74,6 +76,7 @@ use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
+use eLife\ApiSdk\Serializer\ProfileNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
@@ -102,6 +105,7 @@ final class ApiSdk
     private $peopleClient;
     private $podcastClient;
     private $pressPackagesClient;
+    private $profilesClient;
     private $recommendationsClient;
     private $searchClient;
     private $subjectsClient;
@@ -121,6 +125,7 @@ final class ApiSdk
     private $people;
     private $podcastEpisodes;
     private $pressPackages;
+    private $profiles;
     private $collections;
     private $recommendations;
     private $search;
@@ -154,6 +159,7 @@ final class ApiSdk
         $this->peopleClient = new PeopleClient($this->httpClient);
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
+        $this->profilesClient = new ProfilesClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
@@ -189,6 +195,7 @@ final class ApiSdk
             new PodcastEpisodeChapterModelNormalizer(),
             new PodcastEpisodeNormalizer($this->podcastClient),
             new PressPackageNormalizer($this->pressPackagesClient),
+            new ProfileNormalizer($this->profilesClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
@@ -363,6 +370,15 @@ final class ApiSdk
         }
 
         return $this->pressPackages;
+    }
+
+    public function profiles() : Profiles
+    {
+        if (empty($this->profiles)) {
+            $this->profiles = new Profiles($this->profilesClient, $this->serializer);
+        }
+
+        return $this->profiles;
     }
 
     public function collections() : Collections

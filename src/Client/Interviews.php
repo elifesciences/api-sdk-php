@@ -31,7 +31,7 @@ final class Interviews implements Iterator, Sequence
     {
         return $this->interviewsClient
             ->getInterview(
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
                 $id
             )
             ->then(function (Result $result) {

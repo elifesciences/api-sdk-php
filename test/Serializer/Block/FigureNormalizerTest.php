@@ -156,9 +156,9 @@ final class FigureNormalizerTest extends TestCase
                                     'mediaType' => 'text/plain',
                                     'uri' => 'http://www.example.com/image2.txt',
                                     'filename' => 'image2.txt',
-                                    'doi' => '10.1000/182.2',
                                     'id' => 'id2',
                                     'label' => 'label2',
+                                    'doi' => '10.1000/182.2',
                                     'title' => 'title2',
                                     'caption' => [
                                         [

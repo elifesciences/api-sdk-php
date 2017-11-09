@@ -31,7 +31,7 @@ final class LabsPosts implements Iterator, Sequence
     {
         return $this->labsClient
             ->getPost(
-                ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)],
+                ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)],
                 $id
             )
             ->then(function (Result $result) {

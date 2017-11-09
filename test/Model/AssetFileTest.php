@@ -18,7 +18,7 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_an_asset()
     {
-        $file = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertInstanceOf(HasCaption::class, $file);
     }
@@ -28,8 +28,8 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_doi()
     {
-        $with = new AssetFile('10.1000/182', null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $with = new AssetFile('10.1000/182', 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $withOut = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
@@ -38,25 +38,21 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_have_an_id()
+    public function it_has_an_id()
     {
-        $with = new AssetFile(null, 'id', null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
-        $this->assertSame('id', $with->getId());
-        $this->assertNull($withOut->getId());
+        $this->assertSame('id', $file->getId());
     }
 
     /**
      * @test
      */
-    public function it_may_have_a_label()
+    public function it_has_a_label()
     {
-        $with = new AssetFile(null, null, 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
-        $this->assertSame('label', $with->getLabel());
-        $this->assertNull($withOut->getLabel());
+        $this->assertSame('label', $file->getLabel());
     }
 
     /**
@@ -64,8 +60,8 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_title()
     {
-        $with = new AssetFile(null, null, null, 'title', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $with = new AssetFile(null, 'id', 'label', 'title', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $withOut = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertSame('title', $with->getTitle());
         $this->assertNull($withOut->getTitle());
@@ -77,8 +73,8 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_caption()
     {
         $caption = new ArraySequence([new Paragraph('caption')]);
-        $with = new AssetFile(null, null, null, null, $caption, new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $with = new AssetFile(null, 'id', 'label', null, $caption, new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $withOut = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertEquals($caption, $with->getCaption());
         $this->assertEmpty($withOut->getCaption());
@@ -90,8 +86,8 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
     public function it_may_have_attribution()
     {
         $attribution = new ArraySequence(['attribution']);
-        $with = new AssetFile(null, null, null, null, new EmptySequence(), $attribution, new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
-        $withOut = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $with = new AssetFile(null, 'id', 'label', null, new EmptySequence(), $attribution, new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $withOut = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertInstanceOf(HasAttribution::class, $with);
         $this->assertEquals($attribution, $with->getAttribution());
@@ -103,7 +99,7 @@ final class AssetFileTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_file()
     {
-        $file = new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), $theFile = new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
+        $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), $theFile = new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
 
         $this->assertEquals($theFile, $file->getFile());
     }

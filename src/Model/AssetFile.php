@@ -19,8 +19,8 @@ final class AssetFile implements HasAttribution, HasCaption
      */
     public function __construct(
         string $doi = null,
-        string $id = null,
-        string $label = null,
+        string $id,
+        string $label,
         string $title = null,
         Sequence $caption,
         Sequence $attribution,

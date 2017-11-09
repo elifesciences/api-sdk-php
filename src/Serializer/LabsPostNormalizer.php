@@ -32,7 +32,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
             },
             function (string $id) use ($labsClient) : PromiseInterface {
                 return $labsClient->getPost(
-                    ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)],
+                    ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)],
                     $id
                 );
             }

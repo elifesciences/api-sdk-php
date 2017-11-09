@@ -41,7 +41,7 @@ final class FigureAssetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_source_data()
     {
-        $sourceData = new ArraySequence([new AssetFile(null, null, null, null, new EmptySequence(), new EmptySequence(), new File('text/csv', 'http://www.example.com/data.csv', 'data.csv'))]);
+        $sourceData = new ArraySequence([new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('text/csv', 'http://www.example.com/data.csv', 'data.csv'))]);
         $figureAsset = new FigureAsset(null, 'label', $sourceData, new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], []));
 
         $this->assertEquals($sourceData, $figureAsset->getSourceData());

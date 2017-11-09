@@ -50,8 +50,8 @@ final class Articles implements Iterator, Sequence
                 ->getArticleLatestVersion(
                     [
                         'Accept' => [
-                            new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
-                            new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
                         ],
                     ],
                     $id
@@ -65,8 +65,8 @@ final class Articles implements Iterator, Sequence
             ->getArticleVersion(
                 [
                     'Accept' => [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
                     ],
                 ],
                 $id,

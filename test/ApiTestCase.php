@@ -236,13 +236,13 @@ abstract class ApiTestCase extends TestCase
         if ($vor) {
             $response = new Response(
                 200,
-                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1)],
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2)],
                 json_encode($this->createArticleVoRJson($id, false, $complete, $version ?? 1))
             );
         } else {
             $response = new Response(
                 200,
-                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1)],
+                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2)],
                 json_encode($this->createArticlePoAJson($id, false, $complete, $version ?? 1))
             );
         }
@@ -253,8 +253,8 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.($version ? '/versions/'.$version : ''),
                 [
                     'Accept' => [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 1),
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 1),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
                     ],
                 ]
             ),
@@ -305,11 +305,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/blog-articles/'.$id,
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)]
+                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
+                ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)],
                 json_encode($this->createBlogArticleJson($id, false, $complete))
             )
         );
@@ -457,11 +457,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/events/event'.$number,
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)]
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 2)],
                 json_encode($this->createEventJson($number, false, $complete, $external))
             )
         );
@@ -571,11 +571,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/interviews/'.$id,
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)]
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
                 json_encode($this->createInterviewJson($id, false, $complete))
             )
         );
@@ -610,11 +610,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/labs-posts/'.$id,
-                ['Accept' => new MediaType(LabsClient::TYPE_POST, 1)]
+                ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 1)],
+                ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 2)],
                 json_encode($this->createLabsPostJson($id, false, $complete))
             )
         );
@@ -865,11 +865,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/press-packages/$id",
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)]
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
+                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
                 json_encode($this->createPressPackageJson($id, false, $complete))
             )
         );
@@ -1320,7 +1320,7 @@ abstract class ApiTestCase extends TestCase
             'additionalFiles' => [
                 [
                     'id' => 'file1',
-                    'title' => 'Additional file 1',
+                    'label' => 'Additional file 1',
                     'mediaType' => 'image/jpeg',
                     'uri' => 'https://placehold.it/900x450',
                     'filename' => 'image.jpeg',

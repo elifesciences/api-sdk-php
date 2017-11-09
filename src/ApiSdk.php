@@ -208,6 +208,7 @@ final class ApiSdk
             new Block\ListingNormalizer(),
             new Block\MathMLNormalizer(),
             new Block\ParagraphNormalizer(),
+            new Block\ProfileNormalizer(),
             new Block\QuestionNormalizer(),
             new Block\QuoteNormalizer(),
             new Block\SectionNormalizer(),

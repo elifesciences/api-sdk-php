@@ -28,7 +28,7 @@ final class Recommendations
         $recommendationsClient = $this->recommendationsClient;
         $denormalizer = $this->denormalizer;
 
-        return new class($recommendationsClient, $denormalizer, $identifier -> getType(), $identifier -> getId()) implements Iterator, Sequence {
+        return new class($recommendationsClient, $denormalizer, $identifier->getType(), $identifier->getId()) implements Iterator, Sequence {
             use Client;
 
             private $count;

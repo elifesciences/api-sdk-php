@@ -43,18 +43,12 @@ final class AssetFile implements HasAttribution, HasCaption
         return $this->doi;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getLabel()
+    public function getLabel() : string
     {
         return $this->label;
     }

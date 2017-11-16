@@ -34,7 +34,7 @@ final class Events implements Iterator, Sequence
     {
         return $this->eventsClient
             ->getEvent(
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 1)],
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)],
                 $id
             )
             ->then(function (Result $result) {

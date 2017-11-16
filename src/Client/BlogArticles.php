@@ -32,7 +32,7 @@ final class BlogArticles implements Iterator, Sequence
     {
         return $this->blogClient
             ->getArticle(
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 1)],
+                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)],
                 $id
             )
             ->then(function (Result $result) {

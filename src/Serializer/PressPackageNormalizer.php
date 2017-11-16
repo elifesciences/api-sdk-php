@@ -33,7 +33,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             },
             function (string $id) use ($pressPackagesClient) : PromiseInterface {
                 return $pressPackagesClient->getPackage(
-                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 2)],
+                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
                     $id
                 );
             }

@@ -35,7 +35,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             },
             function (string $id) use ($interviewsClient) : PromiseInterface {
                 return $interviewsClient->getInterview(
-                    ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 1)],
+                    ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
                     $id
                 );
             }

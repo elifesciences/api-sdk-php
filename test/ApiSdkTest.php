@@ -163,17 +163,17 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->interviews()->get('interview1')->wait());
     }
 
-  /**
-   * @test
-   */
-  public function it_creates_job_adverts()
-  {
-      $this->assertInstanceOf(JobAdverts::class, $this->apiSdk->jobAdverts());
+    /**
+     * @test
+     */
+    public function it_creates_job_adverts()
+    {
+        $this->assertInstanceOf(JobAdverts::class, $this->apiSdk->jobAdverts());
 
-      $this->mockJobAdvertCall(7, true);
+        $this->mockJobAdvertCall(7, true);
 
-      $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('job-advert7')->wait());
-  }
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('job-advert7')->wait());
+    }
 
     /**
      * @test
@@ -338,6 +338,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Listing::class,
             Block\MathML::class,
             Block\Paragraph::class,
+            Block\Profile::class,
             Block\Question::class,
             Block\Quote::class,
             Block\Section::class,

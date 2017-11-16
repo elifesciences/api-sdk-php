@@ -16,7 +16,7 @@ final class AssetFileNormalizer implements NormalizerInterface, DenormalizerInte
 
     public function denormalize($data, $class, $format = null, array $context = []) : AssetFile
     {
-        return new AssetFile($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'] ?? null,
+        return new AssetFile($data['doi'] ?? null, $data['id'], $data['label'], $data['title'] ?? null,
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['caption'] ?? [])), new ArraySequence($data['attribution'] ?? []), $this->denormalizer->denormalize($data, File::class, $format, $context));
@@ -34,16 +34,11 @@ final class AssetFileNormalizer implements NormalizerInterface, DenormalizerInte
     {
         $data = $this->normalizer->normalize($object->getFile());
 
+        $data['id'] = $object->getId();
+        $data['label'] = $object->getLabel();
+
         if ($object->getDoi()) {
             $data['doi'] = $object->getDoi();
-        }
-
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
-        }
-
-        if ($object->getLabel()) {
-            $data['label'] = $object->getLabel();
         }
 
         if ($object->getTitle()) {

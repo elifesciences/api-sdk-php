@@ -260,7 +260,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             'uri' => 'https://placehold.it/900x450',
                             'filename' => 'image.jpeg',
                             'id' => 'file1',
-                            'title' => 'Additional file 1',
+                            'label' => 'Additional file 1',
                         ],
                     ],
                     'status' => 'poa',

@@ -49,10 +49,10 @@ final class Articles implements Iterator, Sequence
             return $this->articlesClient
                 ->getArticleLatestVersion(
                     [
-                        'Accept' => [
+                        'Accept' => implode(', ', [
                             new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
                             new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
-                        ],
+                        ]),
                     ],
                     $id
                 )
@@ -64,10 +64,10 @@ final class Articles implements Iterator, Sequence
         return $this->articlesClient
             ->getArticleVersion(
                 [
-                    'Accept' => [
+                    'Accept' => implode(', ', [
                         new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
                         new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
-                    ],
+                    ]),
                 ],
                 $id,
                 $version

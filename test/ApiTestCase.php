@@ -53,6 +53,12 @@ abstract class ApiTestCase extends TestCase
         $this->httpClient = null;
     }
 
+    final public function disableValidationOfResponses()
+    {
+        $this->storage = new InMemoryStorageAdapter();
+        $this->addMockMiddleware();
+    }
+
     final protected function getHttpClient() : HttpClient
     {
         if (null === $this->httpClient) {
@@ -63,17 +69,21 @@ abstract class ApiTestCase extends TestCase
             );
 
             $this->storage = new ValidatingStorageAdapter($storage, $validator);
-
-            $stack = HandlerStack::create();
-            $stack->push(new MockMiddleware($this->storage, 'replay'));
-
-            $this->httpClient = new Guzzle6HttpClient(new Client([
-                'base_uri' => 'http://api.elifesciences.org',
-                'handler' => $stack,
-            ]));
+            $this->addMockMiddleware();
         }
 
         return $this->httpClient;
+    }
+
+    private function addMockMiddleware()
+    {
+        $stack = HandlerStack::create();
+        $stack->push(new MockMiddleware($this->storage, 'replay'));
+
+        $this->httpClient = new Guzzle6HttpClient(new Client([
+            'base_uri' => 'http://api.elifesciences.org',
+            'handler' => $stack,
+        ]));
     }
 
     final protected function mockNotFound(string $uri, array $headers)
@@ -904,8 +914,9 @@ abstract class ApiTestCase extends TestCase
 
     /**
      * @param string|int $numberOrId
+     * @param bool $idOld  deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */
-    final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false)
+    final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false, bool $isOld = false)
     {
         if (is_integer($numberOrId)) {
             $id = "profile{$numberOrId}";
@@ -921,7 +932,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
-                json_encode($this->createProfileJson($id, $isSnippet, $complete))
+                json_encode($this->createProfileJson($id, $isSnippet, $complete, $isOld))
             )
         );
     }
@@ -2004,7 +2015,10 @@ abstract class ApiTestCase extends TestCase
         return $package;
     }
 
-    private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    /**
+     * @param bool $idOld  deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
+     */
+    private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false, bool $isOld = false) : array
     {
         $profile = [
             'id' => $id,
@@ -2032,6 +2046,18 @@ abstract class ApiTestCase extends TestCase
                 ]
             ],
         ];
+
+        if ($isOld) {
+            $profile['affiliations'] = [
+                [
+                    'name' => ['affiliation'],
+                ],
+            ];
+            $profile['emailAddresses'] = [
+                'foo@example.com',
+                'secret@example.com',
+            ];
+        }
 
         if (!$complete) {
             unset($profile['orcid']);

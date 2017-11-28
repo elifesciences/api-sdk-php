@@ -13,7 +13,7 @@ final class AccessControl implements Model
      */
     public function __construct(
         $value,
-        string $access
+        string $access = 'public'
     ) {
         $this->value = $value;
         $this->access = $access;

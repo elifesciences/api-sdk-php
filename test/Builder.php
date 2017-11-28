@@ -8,6 +8,7 @@ use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticlePoA;
@@ -59,6 +60,12 @@ final class Builder
     {
         if (self::$defaults === null) {
             self::$defaults = [
+                AccessControl::class => function () {
+                    return [
+                        'value' => 'sample',
+                        'access' => 'public',
+                    ];
+                },
                 Address::class => function () {
                     return [
                         'formatted' => new ArraySequence(['foo', 'bar']),

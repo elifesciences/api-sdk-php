@@ -6,6 +6,7 @@ use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
@@ -118,8 +119,17 @@ final class ProfileNormalizerTest extends ApiTestCase
     {
         return [
             'complete' => [
-                new Profile('profile1', new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
-                    new ArraySequence([new Place(['affiliation'])]), new ArraySequence(['foo@example.com'])),
+                new Profile(
+                    'profile1',
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]), 
+                    new ArraySequence([
+                        new AccessControl('foo@example.com', 'public'),
+                        new AccessControl('secret@example.com', 'restricted'),
+                    ])
+                ),
                 [],
                 [
                     'name' => [
@@ -130,11 +140,21 @@ final class ProfileNormalizerTest extends ApiTestCase
                     'id' => 'profile1',
                     'affiliations' => [
                         [
-                            'name' => ['affiliation'],
+                            'value' => [
+                                'name' => ['affiliation'],
+                            ],
+                            'access' => 'public',
                         ],
                     ],
                     'emailAddresses' => [
-                        'foo@example.com',
+                        [
+                            'value' => 'foo@example.com',
+                            'access' => 'public',
+                        ],
+                        [
+                            'value' => 'secret@example.com',
+                            'access' => 'restricted',
+                        ],
                     ],
                 ],
             ],
@@ -150,8 +170,17 @@ final class ProfileNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new Profile('profile1', new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
-                    new ArraySequence([new Place(['affiliation'])]), new ArraySequence(['foo@example.com'])),
+                new Profile(
+                    'profile1', 
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]),
+                    new ArraySequence([
+                        new AccessControl('foo@example.com'),
+                        new AccessControl('secret@example.com', 'restricted'),
+                    ])
+                ),
                 ['snippet' => true],
                 [
                     'name' => [

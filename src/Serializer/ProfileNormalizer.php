@@ -7,6 +7,7 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
@@ -58,8 +59,15 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
 
         $data['affiliations'] = $data['affiliations']->map(function (array $place) use ($format, $context) {
             unset($context['snippet']);
+            $context['class'] = Place::class;
 
-            return $this->denormalizer->denormalize($place, Place::class, $format, $context);
+            return $this->denormalizer->denormalize($place, AccessControl::class, $format, $context);
+        });
+
+        $data['emailAddresses'] = $data['emailAddresses']->map(function(array $accessControl) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($accessControl, AccessControl::class, $format, $context);
         });
 
         return new Profile(
@@ -86,12 +94,14 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
 
         if (empty($context['snippet'])) {
             if ($object->getAffiliations()->notEmpty()) {
-                $data['affiliations'] = $object->getAffiliations()->map(function (Place $place) use ($format, $context) {
-                    return $this->normalizer->normalize($place, $format, $context);
+                $data['affiliations'] = $object->getAffiliations()->map(function (AccessControl $accessControl) use ($format, $context) {
+                    return $this->normalizer->normalize($accessControl, $format, $context + ['class' => Place::class]);
                 })->toArray();
             }
             if ($object->getEmailAddresses()->notEmpty()) {
-                $data['emailAddresses'] = $object->getEmailAddresses()->toArray();
+                $data['emailAddresses'] = $object->getEmailAddresses()->map(function(AccessControl $accessControl) use ($format, $context) {
+                    return $this->normalizer->normalize($accessControl, $format, $context);
+                })->toArray();
             }
         }
 

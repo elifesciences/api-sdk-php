@@ -2015,11 +2015,21 @@ abstract class ApiTestCase extends TestCase
             'orcid' => '0000-0002-1825-0097',
             'affiliations' => [
                 [
-                    'name' => ['affiliation'],
+                    'value' => [
+                        'name' => ['affiliation'],
+                    ],
+                    'access' => 'public',
                 ],
             ],
             'emailAddresses' => [
-                'foo@example.com',
+                [
+                    'value' => 'foo@example.com',
+                    'access' => 'public',
+                ],
+                [
+                    'value' => 'secret@example.com',
+                    'access' => 'restricted',
+                ]
             ],
         ];
 

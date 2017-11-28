@@ -57,17 +57,20 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
             $data['emailAddresses'] = new ArraySequence($data['emailAddresses'] ?? []);
         }
 
-        $data['affiliations'] = $data['affiliations']->map(function (array $place) use ($format, $context) {
+        $data['affiliations'] = $data['affiliations']->map(function (array $maybeAccessControl) use ($format, $context) {
             unset($context['snippet']);
-            $context['class'] = Place::class;
 
-            return $this->denormalizer->denormalize($place, AccessControl::class, $format, $context);
+            $maybeAccessControl = $this->wrapInAccessControl($maybeAccessControl);
+
+            return $this->denormalizer->denormalize($maybeAccessControl, AccessControl::class, $format, $context + ['class' => Place::class]);
         });
 
-        $data['emailAddresses'] = $data['emailAddresses']->map(function(array $accessControl) use ($format, $context) {
+        $data['emailAddresses'] = $data['emailAddresses']->map(function(/*array*/ $maybeAccessControl) use ($format, $context) {
             unset($context['snippet']);
 
-            return $this->denormalizer->denormalize($accessControl, AccessControl::class, $format, $context);
+            $maybeAccessControl = $this->wrapInAccessControl($maybeAccessControl);
+
+            return $this->denormalizer->denormalize($maybeAccessControl, AccessControl::class, $format, $context);
         });
 
         return new Profile(
@@ -111,5 +114,21 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
     public function supportsNormalization($data, $format = null) : bool
     {
         return $data instanceof Profile;
+    }
+
+    /**
+     * Backward compatibility with emailAddresses
+     * and affiliations without access control
+     */
+    private function wrapInAccessControl($maybeAccessControl)
+    {
+        if (empty($maybeAccessControl['access'])) {
+            return [
+                'value' => $maybeAccessControl,
+                'access' => 'public',
+            ];
+        }
+
+        return $maybeAccessControl;
     }
 }

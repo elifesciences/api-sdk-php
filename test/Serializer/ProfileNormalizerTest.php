@@ -116,7 +116,8 @@ final class ProfileNormalizerTest extends ApiTestCase
     }
 
     /**
-     * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged
+     * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged.
+     *
      * @test
      * @dataProvider normalizeProviderBackwardCompatibility
      */
@@ -138,7 +139,7 @@ final class ProfileNormalizerTest extends ApiTestCase
                     new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
                     new ArraySequence([
                         new AccessControl(new Place(['affiliation'])),
-                    ]), 
+                    ]),
                     new ArraySequence([
                         new AccessControl('foo@example.com', 'public'),
                         new AccessControl('secret@example.com', 'restricted'),
@@ -185,7 +186,7 @@ final class ProfileNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new Profile(
-                    'profile1', 
+                    'profile1',
                     new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
                     new ArraySequence([
                         new AccessControl(new Place(['affiliation'])),
@@ -234,7 +235,7 @@ final class ProfileNormalizerTest extends ApiTestCase
                     new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
                     new ArraySequence([
                         new AccessControl(new Place(['affiliation'])),
-                    ]), 
+                    ]),
                     new ArraySequence([
                         new AccessControl('foo@example.com'),
                         new AccessControl('secret@example.com'),
@@ -261,7 +262,7 @@ final class ProfileNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new Profile(
-                    'profile1', 
+                    'profile1',
                     new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
                     new ArraySequence([
                         new AccessControl(new Place(['affiliation'])),

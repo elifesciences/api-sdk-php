@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\AccessControl;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -19,6 +18,7 @@ final class AccessControlNormalizer implements NormalizerInterface, Denormalizer
             unset($context['class']);
             $data['value'] = $this->denormalizer->denormalize($data['value'], $class, $format, $context);
         }
+
         return new AccessControl(
             $data['value'],
             $data['access']
@@ -40,6 +40,7 @@ final class AccessControlNormalizer implements NormalizerInterface, Denormalizer
             unset($context['class']);
             $value = $this->normalizer->normalize($value, $format, $context);
         }
+
         return [
             'value' => $value,
             'access' => $object->getAccess(),

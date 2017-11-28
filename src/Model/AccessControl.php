@@ -9,6 +9,7 @@ final class AccessControl implements Model
 
     /**
      * @internal
+     *
      * @param mixed $value
      */
     public function __construct(

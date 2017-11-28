@@ -914,7 +914,7 @@ abstract class ApiTestCase extends TestCase
 
     /**
      * @param string|int $numberOrId
-     * @param bool $idOld  deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
+     * @param bool       $idOld      deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */
     final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false, bool $isOld = false)
     {
@@ -2016,7 +2016,7 @@ abstract class ApiTestCase extends TestCase
     }
 
     /**
-     * @param bool $idOld  deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
+     * @param bool $idOld deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */
     private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false, bool $isOld = false) : array
     {
@@ -2043,7 +2043,7 @@ abstract class ApiTestCase extends TestCase
                 [
                     'value' => 'secret@example.com',
                     'access' => 'restricted',
-                ]
+                ],
             ],
         ];
 

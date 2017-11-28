@@ -65,7 +65,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
             return $this->denormalizer->denormalize($maybeAccessControl, AccessControl::class, $format, $context + ['class' => Place::class]);
         });
 
-        $data['emailAddresses'] = $data['emailAddresses']->map(function(/*array*/ $maybeAccessControl) use ($format, $context) {
+        $data['emailAddresses'] = $data['emailAddresses']->map(function (/*array*/ $maybeAccessControl) use ($format, $context) {
             unset($context['snippet']);
 
             $maybeAccessControl = $this->wrapInAccessControl($maybeAccessControl);
@@ -102,7 +102,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
                 })->toArray();
             }
             if ($object->getEmailAddresses()->notEmpty()) {
-                $data['emailAddresses'] = $object->getEmailAddresses()->map(function(AccessControl $accessControl) use ($format, $context) {
+                $data['emailAddresses'] = $object->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
                     return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
@@ -118,7 +118,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
 
     /**
      * Backward compatibility with emailAddresses
-     * and affiliations without access control
+     * and affiliations without access control.
      *
      * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */

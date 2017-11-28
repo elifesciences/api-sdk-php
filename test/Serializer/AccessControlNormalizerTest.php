@@ -2,10 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\AccessControl;
-use eLife\ApiSdk\Serializer\AddressNormalizer;
-use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

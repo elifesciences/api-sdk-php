@@ -89,7 +89,7 @@ final class ProfileTest extends PHPUnit_Framework_TestCase
     {
         $with = Builder::for(Profile::class)
             ->withEmailAddresses($emailAddresses = new ArraySequence([
-                new AccessControl('foo@example.com')
+                new AccessControl('foo@example.com'),
             ]))
             ->__invoke();
 

@@ -119,6 +119,8 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
     /**
      * Backward compatibility with emailAddresses
      * and affiliations without access control
+     *
+     * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */
     private function wrapInAccessControl($maybeAccessControl)
     {

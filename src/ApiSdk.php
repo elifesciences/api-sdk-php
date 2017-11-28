@@ -44,6 +44,7 @@ use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Serializer\AccessControlNormalizer;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AppendixNormalizer;
@@ -165,6 +166,7 @@ final class ApiSdk
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
         $this->serializer = new NormalizerAwareSerializer([
+            new AccessControlNormalizer(),
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
             new AppendixNormalizer(),

@@ -42,7 +42,7 @@ final class Profile implements Model, HasId, HasIdentifier
     }
 
     /**
-     * @return Sequence|Place[]
+     * @return Sequence|AccessControl[]
      */
     public function getAffiliations() : Sequence
     {
@@ -50,7 +50,7 @@ final class Profile implements Model, HasId, HasIdentifier
     }
 
     /**
-     * @return Sequence|string[]
+     * @return Sequence|AccessControl[]
      */
     public function getEmailAddresses() : Sequence
     {

@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\Identifier;
@@ -87,7 +88,9 @@ final class ProfileTest extends PHPUnit_Framework_TestCase
     public function it_may_have_email_addresses()
     {
         $with = Builder::for(Profile::class)
-            ->withEmailAddresses($emailAddresses = new ArraySequence(['foo@example.com']))
+            ->withEmailAddresses($emailAddresses = new ArraySequence([
+                new AccessControl('foo@example.com'),
+            ]))
             ->__invoke();
 
         $withOut = Builder::for(Profile::class)

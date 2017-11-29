@@ -6,6 +6,7 @@ use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
@@ -114,12 +115,36 @@ final class ProfileNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
+    /**
+     * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged.
+     *
+     * @test
+     * @dataProvider normalizeProviderBackwardCompatibility
+     */
+    public function it_denormalize_profiles_from_api_responses_without_access_control(
+        Profile $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        $this->it_denormalize_profiles($expected, $context, $json, $extra);
+    }
+
     public function normalizeProvider() : array
     {
         return [
             'complete' => [
-                new Profile('profile1', new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
-                    new ArraySequence([new Place(['affiliation'])]), new ArraySequence(['foo@example.com'])),
+                new Profile(
+                    'profile1',
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]),
+                    new ArraySequence([
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
+                    ])
+                ),
                 [],
                 [
                     'name' => [
@@ -130,11 +155,21 @@ final class ProfileNormalizerTest extends ApiTestCase
                     'id' => 'profile1',
                     'affiliations' => [
                         [
-                            'name' => ['affiliation'],
+                            'value' => [
+                                'name' => ['affiliation'],
+                            ],
+                            'access' => 'public',
                         ],
                     ],
                     'emailAddresses' => [
-                        'foo@example.com',
+                        [
+                            'value' => 'foo@example.com',
+                            'access' => 'public',
+                        ],
+                        [
+                            'value' => 'secret@example.com',
+                            'access' => 'restricted',
+                        ],
                     ],
                 ],
             ],
@@ -150,8 +185,17 @@ final class ProfileNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new Profile('profile1', new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
-                    new ArraySequence([new Place(['affiliation'])]), new ArraySequence(['foo@example.com'])),
+                new Profile(
+                    'profile1',
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]),
+                    new ArraySequence([
+                        new AccessControl('foo@example.com'),
+                        new AccessControl('secret@example.com', 'restricted'),
+                    ])
+                ),
                 ['snippet' => true],
                 [
                     'name' => [
@@ -177,6 +221,71 @@ final class ProfileNormalizerTest extends ApiTestCase
                 ],
                 function (ApiTestCase $test) {
                     $test->mockProfileCall(1);
+                },
+            ],
+        ];
+    }
+
+    public static function normalizeProviderBackwardCompatibility() : array
+    {
+        return [
+            'complete' => [
+                new Profile(
+                    'profile1',
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]),
+                    new ArraySequence([
+                        new AccessControl('foo@example.com'),
+                        new AccessControl('secret@example.com'),
+                    ])
+                ),
+                [],
+                [
+                    'name' => [
+                        'preferred' => 'Profile 1 preferred',
+                        'index' => 'Profile 1 index',
+                    ],
+                    'orcid' => '0000-0002-1825-0097',
+                    'id' => 'profile1',
+                    'affiliations' => [
+                        [
+                            'name' => ['affiliation'],
+                        ],
+                    ],
+                    'emailAddresses' => [
+                        'foo@example.com',
+                        'secret@example.com',
+                    ],
+                ],
+            ],
+            'complete snippet' => [
+                new Profile(
+                    'profile1',
+                    new PersonDetails('Profile 1 preferred', 'Profile 1 index', '0000-0002-1825-0097'),
+                    new ArraySequence([
+                        new AccessControl(new Place(['affiliation'])),
+                    ]),
+                    new ArraySequence([
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
+                        // note if it was in the old response, we have to assume it's public
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_PUBLIC),
+                    ])
+                ),
+                ['snippet' => true],
+                [
+                    'name' => [
+                        'preferred' => 'Profile 1 preferred',
+                        'index' => 'Profile 1 index',
+                    ],
+                    'orcid' => '0000-0002-1825-0097',
+                    'id' => 'profile1',
+                ],
+                function (ApiTestCase $test) {
+                    $test->disableValidationOfResponses();
+                    $test->setUpNormalizer();
+                    $test->mockProfileCall(1, $complete = true, $isSnippet = false, $isOld = true);
                 },
             ],
         ];

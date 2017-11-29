@@ -12,18 +12,6 @@ final class AccessControlTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_is_a_model()
-    {
-        $accessControl = Builder::for(AccessControl::class)
-            ->withValue('value1')
-            ->__invoke();
-
-        $this->assertInstanceOf(Model::class, $accessControl);
-    }
-
-    /**
-     * @test
-     */
     public function it_has_a_value()
     {
         $accessControl = Builder::for(AccessControl::class)

@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class AccessControl implements Model
+final class AccessControl
 {
     const ACCESS_PUBLIC = 'public';
     const ACCESS_RESTRICTED = 'restricted';

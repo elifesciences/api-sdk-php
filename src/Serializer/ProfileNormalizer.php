@@ -57,20 +57,16 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
             $data['emailAddresses'] = new ArraySequence($data['emailAddresses'] ?? []);
         }
 
-        $data['affiliations'] = $data['affiliations']->map(function (array $maybeAccessControl) use ($format, $context) {
+        $data['affiliations'] = $data['affiliations']->map(function (array $accessControl) use ($format, $context) {
             unset($context['snippet']);
 
-            $maybeAccessControl = $this->wrapInAccessControl($maybeAccessControl);
-
-            return $this->denormalizer->denormalize($maybeAccessControl, AccessControl::class, $format, $context + ['class' => Place::class]);
+            return $this->denormalizer->denormalize($accessControl, AccessControl::class, $format, $context + ['class' => Place::class]);
         });
 
-        $data['emailAddresses'] = $data['emailAddresses']->map(function (/*array*/ $maybeAccessControl) use ($format, $context) {
+        $data['emailAddresses'] = $data['emailAddresses']->map(function (array $accessControl) use ($format, $context) {
             unset($context['snippet']);
 
-            $maybeAccessControl = $this->wrapInAccessControl($maybeAccessControl);
-
-            return $this->denormalizer->denormalize($maybeAccessControl, AccessControl::class, $format, $context);
+            return $this->denormalizer->denormalize($accessControl, AccessControl::class, $format, $context);
         });
 
         return new Profile(
@@ -98,7 +94,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
         if (empty($context['snippet'])) {
             if ($object->getAffiliations()->notEmpty()) {
                 $data['affiliations'] = $object->getAffiliations()->map(function (AccessControl $accessControl) use ($format, $context) {
-                    return $this->normalizer->normalize($accessControl, $format, $context + ['class' => Place::class]);
+                    return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
             if ($object->getEmailAddresses()->notEmpty()) {
@@ -114,23 +110,5 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
     public function supportsNormalization($data, $format = null) : bool
     {
         return $data instanceof Profile;
-    }
-
-    /**
-     * Backward compatibility with emailAddresses
-     * and affiliations without access control.
-     *
-     * Remove after https://github.com/elifesciences/api-raml/pull/204 is merged
-     */
-    private function wrapInAccessControl($maybeAccessControl)
-    {
-        if (empty($maybeAccessControl['access'])) {
-            return [
-                'value' => $maybeAccessControl,
-                'access' => AccessControl::ACCESS_PUBLIC,
-            ];
-        }
-
-        return $maybeAccessControl;
     }
 }

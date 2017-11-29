@@ -3,7 +3,6 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AccessControl;
-use eLife\ApiSdk\Model\Model;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 

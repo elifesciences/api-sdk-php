@@ -35,14 +35,8 @@ final class AccessControlNormalizer implements NormalizerInterface, Denormalizer
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        $value = $object->getValue();
-        if ($context['class'] ?? false) {
-            unset($context['class']);
-            $value = $this->normalizer->normalize($value, $format, $context);
-        }
-
         return [
-            'value' => $value,
+            'value' => $this->normalizer->normalize($object->getValue(), $format, $context),
             'access' => $object->getAccess(),
         ];
     }

@@ -3,11 +3,12 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\AccessControl;
-use eLife\ApiSdk\Model\Address;
+use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class AccessControlNormalizerTest extends TestCase
@@ -21,6 +22,11 @@ final class AccessControlNormalizerTest extends TestCase
     protected function setUpNormalizer()
     {
         $this->normalizer = new AccessControlNormalizer();
+
+        new NormalizerAwareSerializer([
+            $this->normalizer,
+            new PlaceNormalizer(),
+        ]);
     }
 
     /**
@@ -88,26 +94,27 @@ final class AccessControlNormalizerTest extends TestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalize_access_controls(AccessControl $expected, array $json)
+    public function it_denormalize_access_controls(AccessControl $expected, array $json, array $context = [])
     {
-        $actual = $this->normalizer->denormalize($json, AccessControl::class);
+        $actual = $this->normalizer->denormalize($json, AccessControl::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
     public function normalizeProvider() : array
     {
-        $address = Builder::for(Address::class)->sample('simple');
-
         return [
-            'complete' => [
-                new AccessControl('sample', 'restricted'),
+            'restricted place' => [
+                new AccessControl(new Place(['place']), 'restricted'),
                 [
-                    'value' => 'sample',
+                    'value' => [
+                        'name' => ['place'],
+                    ],
                     'access' => 'restricted',
                 ],
+                ['class' => Place::class],
             ],
-            'minimum' => [
+            'public string' => [
                 $accessControl = new AccessControl('sample'),
                 [
                     'value' => 'sample',

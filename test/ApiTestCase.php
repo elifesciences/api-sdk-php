@@ -53,12 +53,6 @@ abstract class ApiTestCase extends TestCase
         $this->httpClient = null;
     }
 
-    final public function disableValidationOfResponses()
-    {
-        $this->storage = new InMemoryStorageAdapter();
-        $this->addMockMiddleware();
-    }
-
     final protected function getHttpClient() : HttpClient
     {
         if (null === $this->httpClient) {
@@ -914,9 +908,8 @@ abstract class ApiTestCase extends TestCase
 
     /**
      * @param string|int $numberOrId
-     * @param bool       $idOld      deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
      */
-    final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false, bool $isOld = false)
+    final protected function mockProfileCall($numberOrId, bool $complete = false, bool $isSnippet = false)
     {
         if (is_integer($numberOrId)) {
             $id = "profile{$numberOrId}";
@@ -932,7 +925,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
-                json_encode($this->createProfileJson($id, $isSnippet, $complete, $isOld))
+                json_encode($this->createProfileJson($id, $isSnippet, $complete))
             )
         );
     }
@@ -2015,10 +2008,7 @@ abstract class ApiTestCase extends TestCase
         return $package;
     }
 
-    /**
-     * @param bool $idOld deprecated, remove after https://github.com/elifesciences/api-raml/pull/204 is merged
-     */
-    private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false, bool $isOld = false) : array
+    private function createProfileJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $profile = [
             'id' => $id,
@@ -2046,18 +2036,6 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
-
-        if ($isOld) {
-            $profile['affiliations'] = [
-                [
-                    'name' => ['affiliation'],
-                ],
-            ];
-            $profile['emailAddresses'] = [
-                'foo@example.com',
-                'secret@example.com',
-            ];
-        }
 
         if (!$complete) {
             unset($profile['orcid']);

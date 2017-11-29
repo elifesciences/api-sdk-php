@@ -63,7 +63,7 @@ final class Builder
                 AccessControl::class => function () {
                     return [
                         'value' => 'sample',
-                        'access' => 'public',
+                        'access' => AccessControl::ACCESS_PUBLIC,
                     ];
                 },
                 Address::class => function () {

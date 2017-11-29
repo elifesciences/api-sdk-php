@@ -4,6 +4,9 @@ namespace eLife\ApiSdk\Model;
 
 final class AccessControl implements Model
 {
+    const ACCESS_PUBLIC = 'public';
+    const ACCESS_RESTRICTED = 'restricted';
+
     private $value;
     private $access;
 
@@ -14,7 +17,7 @@ final class AccessControl implements Model
      */
     public function __construct(
         $value,
-        string $access = 'public'
+        string $access = self::ACCESS_PUBLIC
     ) {
         $this->value = $value;
         $this->access = $access;

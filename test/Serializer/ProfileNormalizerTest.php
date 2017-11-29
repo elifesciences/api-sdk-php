@@ -141,8 +141,8 @@ final class ProfileNormalizerTest extends ApiTestCase
                         new AccessControl(new Place(['affiliation'])),
                     ]),
                     new ArraySequence([
-                        new AccessControl('foo@example.com', 'public'),
-                        new AccessControl('secret@example.com', 'restricted'),
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
                     ])
                 ),
                 [],
@@ -268,9 +268,9 @@ final class ProfileNormalizerTest extends ApiTestCase
                         new AccessControl(new Place(['affiliation'])),
                     ]),
                     new ArraySequence([
-                        new AccessControl('foo@example.com', 'public'),
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
                         // note if it was in the old response, we have to assume it's public
-                        new AccessControl('secret@example.com', 'public'),
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_PUBLIC),
                     ])
                 ),
                 ['snippet' => true],

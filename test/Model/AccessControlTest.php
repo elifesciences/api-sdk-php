@@ -27,9 +27,9 @@ final class AccessControlTest extends PHPUnit_Framework_TestCase
     public function it_has_an_access()
     {
         $accessControl = Builder::for(AccessControl::class)
-            ->withAccess('public')
+            ->withAccess(AccessControl::ACCESS_PUBLIC)
             ->__invoke();
 
-        $this->assertSame('public', $accessControl->getAccess());
+        $this->assertSame(AccessControl::ACCESS_PUBLIC, $accessControl->getAccess());
     }
 }

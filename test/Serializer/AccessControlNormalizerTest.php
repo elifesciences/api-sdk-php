@@ -105,7 +105,7 @@ final class AccessControlNormalizerTest extends TestCase
     {
         return [
             'restricted place' => [
-                new AccessControl(new Place(['place']), 'restricted'),
+                new AccessControl(new Place(['place']), AccessControl::ACCESS_RESTRICTED),
                 [
                     'value' => [
                         'name' => ['place'],
@@ -115,7 +115,7 @@ final class AccessControlNormalizerTest extends TestCase
                 ['class' => Place::class],
             ],
             'public string' => [
-                $accessControl = new AccessControl('sample'),
+                $accessControl = new AccessControl('sample', AccessControl::ACCESS_PUBLIC),
                 [
                     'value' => 'sample',
                     'access' => 'public',

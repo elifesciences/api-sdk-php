@@ -127,7 +127,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
         if (empty($maybeAccessControl['access'])) {
             return [
                 'value' => $maybeAccessControl,
-                'access' => 'public',
+                'access' => AccessControl::ACCESS_PUBLIC,
             ];
         }
 

@@ -26,6 +26,11 @@ final class Identifier
         return new self($matches[1], $matches[2]);
     }
 
+    public static function annotation(string $id) : Identifier
+    {
+        return new self('annotation', $id);
+    }
+
     public static function annualReport(int $year) : Identifier
     {
         return new self('annual-report', $year);

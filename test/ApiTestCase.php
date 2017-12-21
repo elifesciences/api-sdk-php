@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk;
 use ComposerLocator;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use DateTimeImmutable;
+use eLife\ApiClient\ApiClient\AnnotationsClient;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
@@ -93,6 +94,35 @@ abstract class ApiTestCase extends TestCase
                 ['Content-Type' => 'application/problem+json'],
                 json_encode([
                     'title' => 'Not found',
+                ])
+            )
+        );
+    }
+
+    final protected function mockAnnotationListCall(
+        string $by,
+        int $page,
+        int $perPage,
+        int $total,
+        bool $descendingOrder = true,
+        string $useDate = 'updated'
+    ) {
+        $annotations = array_map(function (int $id) {
+            return $this->createAnnotationJson('annotation-'.$id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/annotations?by='.$by.'&page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate,
+                ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $annotations,
                 ])
             )
         );
@@ -1145,6 +1175,33 @@ abstract class ApiTestCase extends TestCase
         }
 
         return range($firstId, $lastId);
+    }
+
+    final private function createAnnotationJson(string $id, bool $complete = false)
+    {
+        $annotation = [
+            'id' => $id,
+            'access' => 'public',
+            'parents' => [],
+            'document' => [
+                'uri' => 'http://www.example.com/document/',
+                'title' => 'Document title',
+            ],
+            'highlight' => 'Highlighted text',
+            'created' => '1999-12-31T00:00:00Z',
+        ];
+
+        if ($complete) {
+            $annotation['updated'] = '2000-01-01T00:00:00Z';
+            $annotation['content'] = [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Annotation '.$id.' text',
+                ],
+            ];
+        }
+
+        return $annotation;
     }
 
     final private function createAnnualReportJson(int $year)

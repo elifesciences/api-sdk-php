@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Annotations;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
@@ -41,6 +42,19 @@ final class ApiSdkTest extends ApiTestCase
     protected function setUpApiSdk()
     {
         $this->apiSdk = new ApiSdk($this->getHttpClient());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_annotations()
+    {
+        $this->assertInstanceOf(Annotations::class, $this->apiSdk->annotations());
+
+        $this->mockAnnotationListCall('foo', 1, 1, 1);
+        $this->mockAnnotationListCall('foo', 1, 100, 1);
+
+        $this->apiSdk->annotations()->list('foo')->toArray();
     }
 
     /**

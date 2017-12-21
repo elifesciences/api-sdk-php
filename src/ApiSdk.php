@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk;
 
+use eLife\ApiClient\ApiClient\AnnotationsClient;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
@@ -24,6 +25,7 @@ use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
 use eLife\ApiClient\HttpClient\UserAgentPrependingHttpClient;
+use eLife\ApiSdk\Client\Annotations;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Client\BlogArticles;
@@ -46,6 +48,8 @@ use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\AnnotationDocumentNormalizer;
+use eLife\ApiSdk\Serializer\AnnotationNormalizer;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AppendixNormalizer;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
@@ -92,6 +96,7 @@ final class ApiSdk
 
     private $version;
     private $httpClient;
+    private $annotationsClient;
     private $articlesClient;
     private $blogClient;
     private $collectionsClient;
@@ -146,6 +151,7 @@ final class ApiSdk
 
         $this->version = $version;
         $this->httpClient = new UserAgentPrependingHttpClient($httpClient, 'eLifeApiSdk/'.$this->version);
+        $this->annotationsClient = new AnnotationsClient($this->httpClient);
         $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->collectionsClient = new CollectionsClient($this->httpClient);
@@ -168,6 +174,8 @@ final class ApiSdk
         $this->serializer = new NormalizerAwareSerializer([
             new AccessControlNormalizer(),
             new AddressNormalizer(),
+            new AnnotationDocumentNormalizer(),
+            new AnnotationNormalizer(),
             new AnnualReportNormalizer(),
             new AppendixNormalizer(),
             new ArticleHistoryNormalizer(),
@@ -238,6 +246,15 @@ final class ApiSdk
     public function getVersion() : string
     {
         return $this->version;
+    }
+
+    public function annotations() : Annotations
+    {
+        if (empty($this->annotations)) {
+            $this->annotations = new Annotations(new AnnotationsClient($this->httpClient), $this->serializer);
+        }
+
+        return $this->annotations;
     }
 
     public function annualReports() : AnnualReports

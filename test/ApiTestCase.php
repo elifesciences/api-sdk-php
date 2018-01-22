@@ -1182,7 +1182,6 @@ abstract class ApiTestCase extends TestCase
         $annotation = [
             'id' => $id,
             'access' => 'public',
-            'parents' => [],
             'document' => [
                 'uri' => 'http://www.example.com/document/',
                 'title' => 'Document title',
@@ -1192,6 +1191,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
+            $annotation['parents'] = ['foo'];
             $annotation['updated'] = '2000-01-01T00:00:00Z';
             $annotation['content'] = [
                 [

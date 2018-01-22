@@ -10,7 +10,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Csa\\Bundle\\GuzzleBundle\\": "./vendor-extra/Csa/GuzzleBundle",
             "test\\eLife\\ApiSdk\\": "./test"
         }
     },
@@ -22,6 +21,7 @@
         "symfony/serializer": "^2.8.2 || ^3.0.2"
     },
     "require-dev": {
+        "csa/guzzle-cache-middleware": "^1.0",
         "elife/api": "dev-master",
         "elife/api-validator": "^1.0@dev",
         "guzzlehttp/guzzle": "^6.0",

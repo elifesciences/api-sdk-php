@@ -202,7 +202,6 @@ final class AnnotationNormalizerTest extends ApiTestCase
                         'title' => 'Document title',
                         'uri' => 'http://example.com',
                     ],
-                    'parents' => [],
                     'highlight' => 'Highlighted text',
                     'created' => $created->format(ApiSdk::DATE_FORMAT),
                 ],

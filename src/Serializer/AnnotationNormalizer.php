@@ -52,7 +52,6 @@ final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInt
             'id' => $object->getId(),
             'access' => $object->getAccess(),
             'document' => $this->normalizer->normalize($object->getDocument(), $format, $context),
-            'parents' => $object->getParents()->toArray(),
             'created' => $object->getCreatedDate()->format(ApiSdk::DATE_FORMAT),
         ];
 
@@ -62,6 +61,10 @@ final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInt
 
         if ($object->getUpdatedDate()) {
             $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        }
+
+        if ($object->getParents()->notEmpty()) {
+            $data['parents'] = $object->getParents()->toArray();
         }
 
         if ($object->getContent()->notEmpty()) {

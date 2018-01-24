@@ -37,7 +37,7 @@ final class ProfileTest extends PHPUnit_Framework_TestCase
             ->__invoke();
 
         $this->assertInstanceOf(HasIdentifier::class, $profile);
-        $this->assertEquals(Identifier::person('id'), $profile->getIdentifier());
+        $this->assertEquals(Identifier::profile('id'), $profile->getIdentifier());
     }
 
     /**

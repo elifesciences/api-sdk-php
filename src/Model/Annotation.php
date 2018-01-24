@@ -9,7 +9,7 @@ final class Annotation implements Model, HasContent, HasId, HasIdentifier, HasCr
 {
     private $id;
     private $access;
-    private $parents;
+    private $ancestors;
     private $document;
     private $highlight;
     private $created;
@@ -23,7 +23,7 @@ final class Annotation implements Model, HasContent, HasId, HasIdentifier, HasCr
         string $id,
         string $access,
         AnnotationDocument $document,
-        Sequence $parents,
+        Sequence $ancestors,
         string $highlight = null,
         DateTimeImmutable $created,
         DateTimeImmutable $updated = null,
@@ -32,7 +32,7 @@ final class Annotation implements Model, HasContent, HasId, HasIdentifier, HasCr
         $this->id = $id;
         $this->access = $access;
         $this->document = $document;
-        $this->parents = $parents;
+        $this->ancestors = $ancestors;
         $this->highlight = $highlight;
         $this->created = $created;
         $this->updated = $updated;
@@ -57,9 +57,9 @@ final class Annotation implements Model, HasContent, HasId, HasIdentifier, HasCr
     /**
      * @return Sequence|string[]
      */
-    public function getParents() : Sequence
+    public function getAncestors() : Sequence
     {
-        return $this->parents;
+        return $this->ancestors;
     }
 
     public function getDocument() : AnnotationDocument

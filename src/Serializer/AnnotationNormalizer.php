@@ -30,7 +30,7 @@ final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInt
             $data['id'],
             $data['access'],
             $data['document'],
-            new ArraySequence($data['parents'] ?? []),
+            new ArraySequence($data['ancestors'] ?? []),
             $data['highlight'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['created']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
@@ -63,8 +63,8 @@ final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInt
             $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getParents()->notEmpty()) {
-            $data['parents'] = $object->getParents()->toArray();
+        if ($object->getAncestors()->notEmpty()) {
+            $data['ancestors'] = $object->getAncestors()->toArray();
         }
 
         if ($object->getContent()->notEmpty()) {

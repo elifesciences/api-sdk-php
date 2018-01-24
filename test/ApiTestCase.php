@@ -1191,7 +1191,7 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if ($complete) {
-            $annotation['parents'] = ['foo'];
+            $annotation['ancestors'] = ['foo'];
             $annotation['updated'] = '2000-01-01T00:00:00Z';
             $annotation['content'] = [
                 [

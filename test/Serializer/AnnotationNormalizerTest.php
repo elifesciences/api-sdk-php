@@ -53,7 +53,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation parents should not be unwrapped')), 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
         );
 
@@ -134,7 +134,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
                         'title' => 'Document title',
                         'uri' => 'http://example.com',
                     ],
-                    'parents' => [
+                    'ancestors' => [
                         'id2',
                     ],
                     'highlight' => 'Highlighted text',
@@ -159,7 +159,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
                         'title' => 'Document title',
                         'uri' => 'http://example.com',
                     ],
-                    'parents' => [
+                    'ancestors' => [
                         'id2',
                     ],
                     'created' => $created->format(ApiSdk::DATE_FORMAT),
@@ -183,7 +183,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
                         'title' => 'Document title',
                         'uri' => 'http://example.com',
                     ],
-                    'parents' => [
+                    'ancestors' => [
                         'id2',
                     ],
                     'highlight' => 'Highlighted text',

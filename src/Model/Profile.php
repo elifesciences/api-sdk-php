@@ -28,7 +28,7 @@ final class Profile implements Model, HasId, HasIdentifier
 
     public function getIdentifier() : Identifier
     {
-        return Identifier::person($this->id);
+        return Identifier::profile($this->id);
     }
 
     public function getId() : string

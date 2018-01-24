@@ -101,9 +101,9 @@ final class AnnotationTest extends PHPUnit_Framework_TestCase
             new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
         );
 
-        $this->assertSame($ancestors, $with->getancestors()->toArray());
-        $this->assertTrue($withOut->getancestors()->isEmpty());
-        $this->assertEmpty($withOut->getancestors()->toArray());
+        $this->assertSame($ancestors, $with->getAncestors()->toArray());
+        $this->assertTrue($withOut->getAncestors()->isEmpty());
+        $this->assertEmpty($withOut->getAncestors()->toArray());
     }
 
     /**

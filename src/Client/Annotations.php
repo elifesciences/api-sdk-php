@@ -23,26 +23,28 @@ final class Annotations
         $this->denormalizer = $denormalizer;
     }
 
-    public function list(string $by) : Sequence
+    public function list(string $by, string $access = 'public') : Sequence
     {
         $annotationsClient = $this->annotationsClient;
         $denormalizer = $this->denormalizer;
 
-        return new class($annotationsClient, $denormalizer, $by) implements Iterator, Sequence {
+        return new class($annotationsClient, $denormalizer, $by, $access) implements Iterator, Sequence {
             use Client;
 
             private $count;
             private $descendingOrder = true;
             private $useDate = 'updated';
+            private $access;
             private $annotationsClient;
             private $denormalizer;
             private $by;
 
-            public function __construct(AnnotationsClient $annotationsClient, DenormalizerInterface $denormalizer, string $by)
+            public function __construct(AnnotationsClient $annotationsClient, DenormalizerInterface $denormalizer, string $by, string $access)
             {
                 $this->annotationsClient = $annotationsClient;
                 $this->denormalizer = $denormalizer;
                 $this->by = $by;
+                $this->access = $access;
             }
 
             /**
@@ -74,7 +76,8 @@ final class Annotations
                         ($offset / $length) + 1,
                         $length,
                         $this->descendingOrder,
-                        $this->useDate
+                        $this->useDate,
+                        $this->access
                     )
                     ->then(function (Result $result) {
                         $this->count = $result['total'];

@@ -38,6 +38,18 @@ final class AnnotationsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_has_an_access_level()
+    {
+        $list = $this->annotations->list('username', 'restricted');
+
+        $this->mockAnnotationListCall('username', 1, 1, 1, true, 'updated', 'restricted');
+
+        $this->assertFalse($list->isEmpty());
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_traversed()
     {
         $list = $this->annotations->list('username');
@@ -98,7 +110,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame('annotation-1', $list[0]->getId());
 
         $this->mockNotFound(
-            'annotations?by=username&page=6&per-page=1&order=desc&use-date=updated',
+            'annotations?by=username&page=6&per-page=1&order=desc&use-date=updated&access=public',
             ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
         );
 

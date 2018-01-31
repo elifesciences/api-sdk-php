@@ -105,7 +105,8 @@ abstract class ApiTestCase extends TestCase
         int $perPage,
         int $total,
         bool $descendingOrder = true,
-        string $useDate = 'updated'
+        string $useDate = 'updated',
+        string $access = 'public'
     ) {
         $annotations = array_map(function (int $id) {
             return $this->createAnnotationJson('annotation-'.$id, true);
@@ -114,7 +115,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/annotations?by='.$by.'&page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate,
+                'http://api.elifesciences.org/annotations?by='.$by.'&page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.'&access='.$access,
                 ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
             ),
             new Response(

@@ -129,7 +129,7 @@ final class PersonNormalizerTest extends ApiTestCase
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            promise_for($banner), promise_for($thumbnail));
+            new ArraySequence([new Paragraph('Aims and scope text')]), promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [

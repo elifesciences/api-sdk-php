@@ -3,6 +3,10 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -14,6 +18,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 
 final class SubjectNormalizerTest extends ApiTestCase
 {
@@ -51,7 +56,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('id', 'name', promise_for(null), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('id', 'name', promise_for(null), new PromiseSequence(rejection_for('Profile should not be unwrapped')), promise_for($banner), promise_for($thumbnail));
 
         return [
             'subject' => [$subject, null, true],
@@ -121,7 +126,7 @@ final class SubjectNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    promise_for($banner), promise_for($thumbnail)),
+                    new ArraySequence([new Paragraph('Aims and scope text')]), promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -158,8 +163,8 @@ final class SubjectNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Subject('subject1', 'Subject 1 name', promise_for(null), promise_for($banner),
-                    promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', promise_for(null), new EmptySequence(),
+                    promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -196,7 +201,7 @@ final class SubjectNormalizerTest extends ApiTestCase
             ],
             'snippet' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    promise_for($banner), promise_for($thumbnail)),
+                    new EmptySequence(), promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',

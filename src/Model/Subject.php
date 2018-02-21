@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
 final class Subject implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasThumbnail
@@ -9,6 +10,7 @@ final class Subject implements Model, HasBanner, HasId, HasIdentifier, HasImpact
     private $id;
     private $name;
     private $impactStatement;
+    private $aimsAndScope;
     private $banner;
     private $thumbnail;
 
@@ -19,12 +21,14 @@ final class Subject implements Model, HasBanner, HasId, HasIdentifier, HasImpact
         string $id,
         string $name,
         PromiseInterface $impactStatement,
+        Sequence $aimsAndScope,
         PromiseInterface $banner,
         PromiseInterface $thumbnail
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->impactStatement = $impactStatement;
+        $this->aimsAndScope = $aimsAndScope;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
     }
@@ -50,6 +54,14 @@ final class Subject implements Model, HasBanner, HasId, HasIdentifier, HasImpact
     public function getImpactStatement()
     {
         return $this->impactStatement->wait();
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getAimsAndScope() : Sequence
+    {
+        return $this->aimsAndScope;
     }
 
     public function getBanner() : Image

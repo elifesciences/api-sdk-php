@@ -27,10 +27,10 @@ final class PersonResearchTest extends PHPUnit_Framework_TestCase
     public function subjectsProvider() : array
     {
         $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('No impact statement'), rejection_for('No banner'),
-                rejection_for('No thumbnail')),
-            new Subject('subject2', 'Subject 2', rejection_for('No impact statement'), rejection_for('No banner'),
-                rejection_for('No thumbnail')),
+            new Subject('subject1', 'Subject 1', rejection_for('No impact statement'), new PromiseSequence(rejection_for('No aims and scope')),
+                rejection_for('No banner'), rejection_for('No thumbnail')),
+            new Subject('subject2', 'Subject 2', rejection_for('No impact statement'), new PromiseSequence(rejection_for('No aims and scope')),
+                rejection_for('No banner'), rejection_for('No thumbnail')),
         ];
 
         return [

@@ -2307,6 +2307,10 @@ abstract class ApiTestCase extends TestCase
             'id' => $id,
             'name' => 'Subject '.$id.' name',
             'impactStatement' => 'Subject '.$id.' impact statement',
+            'aimsAndScope' => [
+                'type' => 'paragraph',
+                'text' => 'Subject '.$id.' impact statement',
+            ],
             'image' => [
                 'banner' => [
                     'uri' => 'https://iiif.elifesciences.org/banner.jpg',
@@ -2339,6 +2343,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($subject['impactStatement']);
+            unset($subject['aimsAndScope']);
             unset($subject['image']);
         }
 

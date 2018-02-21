@@ -3,6 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -30,9 +31,10 @@ final class SubjectNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
+        $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
-
-        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -56,7 +58,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('id', 'name', promise_for(null), new PromiseSequence(rejection_for('Profile should not be unwrapped')), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('id', 'name', promise_for(null), new PromiseSequence(rejection_for('Aims and scope should not be unwrapped')), promise_for($banner), promise_for($thumbnail));
 
         return [
             'subject' => [$subject, null, true],
@@ -126,7 +128,7 @@ final class SubjectNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    new ArraySequence([new Paragraph('Aims and scope text')]), promise_for($banner), promise_for($thumbnail)),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -160,6 +162,12 @@ final class SubjectNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'impactStatement' => 'Subject subject1 impact statement',
+                    'aimsAndScope' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'Subject subject1 aims and scope',
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [

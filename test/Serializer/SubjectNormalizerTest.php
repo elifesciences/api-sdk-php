@@ -206,7 +206,7 @@ final class SubjectNormalizerTest extends ApiTestCase
             ],
             'snippet' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    new EmptySequence(), promise_for($banner), promise_for($thumbnail)),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',

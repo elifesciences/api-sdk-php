@@ -47,7 +47,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             });
             $data['aimsAndScope'] = new PromiseSequence($subject
                 ->then(function (Result $subject) {
-                    return $subject['aimsAndScope'];
+                    return $subject['aimsAndScope'] ?? [];
                 }));
             $data['image'] = $subject->then(function (Result $subject) use ($format, $context) {
                 return $subject['image'];
@@ -59,6 +59,8 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         }
 
         $data['aimsAndScope'] = $data['aimsAndScope']->map(function (array $block) use ($format, $context) {
+            unset($context['snippet']);
+
             return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
         });
 

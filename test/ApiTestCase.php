@@ -2308,8 +2308,10 @@ abstract class ApiTestCase extends TestCase
             'name' => 'Subject '.$id.' name',
             'impactStatement' => 'Subject '.$id.' impact statement',
             'aimsAndScope' => [
-                'type' => 'paragraph',
-                'text' => 'Subject '.$id.' impact statement',
+                [
+                    'type' => 'paragraph',
+                    'text' => 'Subject '.$id.' aims and scope',
+                ],
             ],
             'image' => [
                 'banner' => [

@@ -176,7 +176,7 @@ final class Builder
                         'id' => 'subject1',
                         'name' => 'Subject 1',
                         'impactStatement' => promise_for('Subject subject1 impact statement'),
-                        'aimsAndScope' => new EmptySequence(),
+                        'aimsAndScope' => new ArraySequence([new Paragraph('Subject subject1 aims and scope')]),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
                     ];

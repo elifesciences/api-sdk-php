@@ -123,7 +123,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         $actual = $this->normalizer->denormalize($json, PodcastEpisode::class, null, $context);
 
-        $this->mockSubjectCall('1');
+        $this->mockSubjectCall('1', true);
         $this->mockSubjectCall('subject1');
         $this->mockArticleCall('1', !empty($context['complete']), false, 1);
         $this->mockArticleCall('14107', !empty($context['complete']), false, 1);

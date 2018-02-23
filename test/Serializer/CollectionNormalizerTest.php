@@ -401,10 +401,10 @@ final class CollectionNormalizerTest extends ApiTestCase
                         ],
                     ],
                 ],
-                function ($test) {
+                function (ApiTestCase $test) {
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockSubjectCall('epidemiology-global-health', true);
-                    $test->mockSubjectCall('microbiology-infectious-disease', true);
+                    $test->mockSubjectCall('microbiology-infectious-disease');
                     $test->mockSubjectCall('genomics-evolutionary-biology', true);
                     $test->mockBlogArticleCall('359325');
                     $test->mockArticleCall('09560', true, $vor = true, 1);
@@ -611,7 +611,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockCollectionCall('1', true);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockSubjectCall('epidemiology-global-health', true);
-                    $test->mockSubjectCall('microbiology-infectious-disease', true);
+                    $test->mockSubjectCall('microbiology-infectious-disease');
                     $test->mockBlogArticleCall('359325');
                     $test->mockArticleCall('14107', true, false, 1);
                     $test->mockPodcastEpisodeCall('29', true);

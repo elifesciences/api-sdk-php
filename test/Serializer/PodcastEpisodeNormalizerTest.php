@@ -273,12 +273,12 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     ],
                     'impactStatement' => 'Podcast episode 1 impact statement',
                 ],
-                function ($test) {
+                function (ApiTestCase $test) {
                     $test->mockCollectionCall('tropical-disease', false);
                     $test->mockPersonCall('pjha', false);
                     $test->mockPersonCall('bcooper', false);
                     $test->mockBlogArticleCall('359325', false);
-                    $test->mockSubjectCall('biophysics-structural-biology');
+                    $test->mockSubjectCall('biophysics-structural-biology', true);
                 },
             ],
             'minimum' => [

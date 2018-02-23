@@ -104,13 +104,17 @@ final class SubjectNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalize_subjects(Subject $expected, array $context, array $json)
-    {
-        $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
-
-        if (!empty($context['snippet'])) {
-            $this->mockSubjectCall('subject1');
+    public function it_denormalize_subjects(
+        Subject $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
         }
+
+        $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -202,7 +206,7 @@ final class SubjectNormalizerTest extends ApiTestCase
                     ],
                 ],
             ],
-            'snippet' => [
+            'complete snippet' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
                     new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
@@ -210,6 +214,21 @@ final class SubjectNormalizerTest extends ApiTestCase
                     'id' => 'subject1',
                     'name' => 'Subject 1 name',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockSubjectCall('subject1', true);
+                },
+            ],
+            'minimum snippet' => [
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
+                    new EmptySequence(), promise_for($banner), promise_for($thumbnail)),
+                ['snippet' => true],
+                [
+                    'id' => 'subject1',
+                    'name' => 'Subject 1 name',
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockSubjectCall('subject1');
+                },
             ],
         ];
     }

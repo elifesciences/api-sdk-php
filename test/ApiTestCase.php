@@ -1142,7 +1142,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockSubjectCall($numberOrId)
+    final protected function mockSubjectCall($numberOrId, bool $complete = false, bool $isSnippet = false)
     {
         if (is_integer($numberOrId)) {
             $id = "subject{$numberOrId}";
@@ -1158,7 +1158,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
-                json_encode($this->createSubjectJson($id))
+                json_encode($this->createSubjectJson($id, $isSnippet, $complete))
             )
         );
     }
@@ -2301,7 +2301,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final private function createSubjectJson(string $id, bool $isSnippet = false) : array
+    final private function createSubjectJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $subject = [
             'id' => $id,
@@ -2342,6 +2342,10 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+
+        if (!$complete) {
+            unset($subject['aimsAndScope']);
+        }
 
         if ($isSnippet) {
             unset($subject['impactStatement']);

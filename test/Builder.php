@@ -176,7 +176,7 @@ final class Builder
                         'id' => 'subject1',
                         'name' => 'Subject 1',
                         'impactStatement' => promise_for('Subject subject1 impact statement'),
-                        'aimsAndScope' => new ArraySequence([new Paragraph('Subject subject1 aims and scope')]),
+                        'aimsAndScope' => new EmptySequence(),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
                     ];
@@ -575,36 +575,31 @@ final class Builder
                         return $builder
                             ->withId('1')
                             ->withName('Subject 1 name')
-                            ->withPromiseOfImpactStatement('Subject 1 impact statement')
-                            ->withAimsAndScope(new ArraySequence([new Paragraph('Subject 1 aims and scope')]));
+                            ->withPromiseOfImpactStatement('Subject 1 impact statement');
                     },
                     'genomics-evolutionary-biology' => function ($builder) {
                         return $builder
                             ->withId('genomics-evolutionary-biology')
                             ->withName('Genomics and Evolutionary Biology')
-                            ->withPromiseOfImpactStatement('Subject genomics-evolutionary-biology impact statement')
-                            ->withAimsAndScope(new ArraySequence([new Paragraph('Subject genomics-evolutionary-biology aims and scope')]));
+                            ->withPromiseOfImpactStatement('Subject genomics-evolutionary-biology impact statement');
                     },
                     'biophysics-structural-biology' => function ($builder) {
                         return $builder
                             ->withId('biophysics-structural-biology')
                             ->withName('Biophysics and Structural Biology')
-                            ->withPromiseOfImpactStatement('Subject biophysics-structural-biology impact statement')
-                            ->withAimsAndScope(new ArraySequence([new Paragraph('Subject biophysics-structural-biology aims and scope')]));
+                            ->withPromiseOfImpactStatement('Subject biophysics-structural-biology impact statement');
                     },
                     'epidemiology-global-health' => function ($builder) {
                         return $builder
                             ->withId('epidemiology-global-health')
                             ->withName('Epidemiology and Global Health')
-                            ->withPromiseOfImpactStatement('Subject epidemiology-global-health impact statement')
-                            ->withAimsAndScope(new ArraySequence([new Paragraph('Subject epidemiology-global-health aims and scope')]));
+                            ->withPromiseOfImpactStatement('Subject epidemiology-global-health impact statement');
                     },
                     'microbiology-infectious-disease' => function ($builder) {
                         return $builder
                             ->withId('microbiology-infectious-disease')
                             ->withName('Microbiology and Infectious Disease')
-                            ->withPromiseOfImpactStatement('Subject microbiology-infectious-disease impact statement')
-                            ->withAimsAndScope(new ArraySequence([new Paragraph('Subject microbiology-infectious-disease aims and scope')]));
+                            ->withPromiseOfImpactStatement('Subject microbiology-infectious-disease impact statement');
                     },
                 ],
             ];

@@ -59,8 +59,6 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         }
 
         $data['aimsAndScope'] = $data['aimsAndScope']->map(function (array $block) use ($format, $context) {
-            unset($context['snippet']);
-
             return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
         });
 
@@ -111,7 +109,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
                 $data['impactStatement'] = $object->getImpactStatement();
             }
 
-            if (!$object->getAimsAndScope()->isEmpty()) {
+            if ($object->getAimsAndScope()->notEmpty()) {
                 $data['aimsAndScope'] = $object->getAimsAndScope()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);

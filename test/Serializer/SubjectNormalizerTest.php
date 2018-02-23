@@ -6,7 +6,6 @@ use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
@@ -16,7 +15,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class SubjectNormalizerTest extends ApiTestCase
 {
@@ -55,7 +53,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('id', 'name', promise_for(null), new PromiseSequence(rejection_for('Aims and scope should not be unwrapped')), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('id', 'name', promise_for(null), new EmptySequence(), promise_for($banner), promise_for($thumbnail));
 
         return [
             'subject' => [$subject, null, true],

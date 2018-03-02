@@ -111,7 +111,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
 
             if ($object->getAimsAndScope()->notEmpty()) {
                 $data['aimsAndScope'] = $object->getAimsAndScope()
-                    ->map(function (Block $block) use ($format, $context) {
+                    ->map(function (Block\Paragraph $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
             }

@@ -3,11 +3,12 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\FileNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
-use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -25,9 +26,10 @@ final class SubjectNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
+        $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
-
-        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -51,7 +53,7 @@ final class SubjectNormalizerTest extends ApiTestCase
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('id', 'name', promise_for(null), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('id', 'name', promise_for(null), new EmptySequence(), promise_for($banner), promise_for($thumbnail));
 
         return [
             'subject' => [$subject, null, true],
@@ -102,13 +104,17 @@ final class SubjectNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalize_subjects(Subject $expected, array $context, array $json)
-    {
-        $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
-
-        if (!empty($context['snippet'])) {
-            $this->mockSubjectCall('subject1');
+    public function it_denormalize_subjects(
+        Subject $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    ) {
+        if ($extra) {
+            call_user_func($extra, $this);
         }
+
+        $actual = $this->normalizer->denormalize($json, Subject::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -121,7 +127,7 @@ final class SubjectNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    promise_for($banner), promise_for($thumbnail)),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -155,11 +161,17 @@ final class SubjectNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'impactStatement' => 'Subject subject1 impact statement',
+                    'aimsAndScope' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'Subject subject1 aims and scope',
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [
-                new Subject('subject1', 'Subject 1 name', promise_for(null), promise_for($banner),
-                    promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', promise_for(null), new EmptySequence(),
+                    promise_for($banner), promise_for($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -194,14 +206,29 @@ final class SubjectNormalizerTest extends ApiTestCase
                     ],
                 ],
             ],
-            'snippet' => [
+            'complete snippet' => [
                 new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    promise_for($banner), promise_for($thumbnail)),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',
                     'name' => 'Subject 1 name',
                 ],
+                function (ApiTestCase $test) {
+                    $test->mockSubjectCall('subject1', true);
+                },
+            ],
+            'minimum snippet' => [
+                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
+                    new EmptySequence(), promise_for($banner), promise_for($thumbnail)),
+                ['snippet' => true],
+                [
+                    'id' => 'subject1',
+                    'name' => 'Subject 1 name',
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockSubjectCall('subject1');
+                },
             ],
         ];
     }

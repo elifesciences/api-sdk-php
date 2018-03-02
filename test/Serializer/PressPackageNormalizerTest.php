@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
@@ -126,7 +127,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            promise_for($banner), promise_for($thumbnail));
+            new ArraySequence([new Paragraph('Aims and scope text')]), promise_for($banner), promise_for($thumbnail));
 
         return [
             'complete' => [

@@ -102,8 +102,8 @@ final class SearchSubjectsNormalizerTest extends ApiTestCase
      */
     public function it_denormalize_subjects(SearchSubjects $expected, array $context, array $json)
     {
-        $this->mockSubjectCall('biophysics-structural-biology');
-        $this->mockSubjectCall('genomics-evolutionary-biology');
+        $this->mockSubjectCall('biophysics-structural-biology', true);
+        $this->mockSubjectCall('genomics-evolutionary-biology', true);
 
         $actual = $this->normalizer->denormalize($json, SearchSubjects::class, null, $context);
 

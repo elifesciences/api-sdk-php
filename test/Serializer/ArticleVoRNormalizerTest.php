@@ -130,8 +130,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
-                    ->withPdf('http://www.example.com/')
+                    ->withPdf('http://www.example.com/pdf')
                     ->withFiguresPdf('http://www.example.com/figures')
+                    ->withPromiseOfXml('http://www.example.com/xml')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -157,7 +158,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
                     'authorLine' => 'Lee R Berger et al',
-                    'pdf' => 'http://www.example.com/',
+                    'pdf' => 'http://www.example.com/pdf',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
@@ -171,6 +172,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
+                    'xml' => 'http://www.example.com/xml',
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -403,6 +405,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
+                    ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
@@ -453,8 +456,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
-                    ->withPdf('http://www.example.com/')
+                    ->withPdf('http://www.example.com/pdf')
                     ->withFiguresPdf('http://www.example.com/figures')
+                    ->withPromiseOfXml('http://www.example.com/xml')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -481,7 +485,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'statusDate' => '2015-09-10T00:00:00Z',
                     'titlePrefix' => 'title prefix',
                     'authorLine' => 'Lee R Berger et al',
-                    'pdf' => 'http://www.example.com/',
+                    'pdf' => 'http://www.example.com/pdf',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
@@ -527,6 +531,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAuthorLine(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
+                    ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)

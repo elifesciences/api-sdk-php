@@ -298,6 +298,22 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    final public function it_may_have_xml()
+    {
+        $with = $this->builder
+            ->withPromiseOfXml('http://www.example.com/article14107.xml')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfXml(null)
+            ->__invoke();
+
+        $this->assertSame('http://www.example.com/article14107.xml', $with->getXml());
+        $this->assertNull($withOut->getXml());
+    }
+
+    /**
+     * @test
+     */
     final public function it_may_have_subjects()
     {
         $subjects = new ArraySequence([Builder::dummy(Subject::class)]);

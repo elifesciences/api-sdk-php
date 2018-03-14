@@ -250,6 +250,7 @@ final class Builder
                         'volume' => 5,
                         'elocationId' => 'e14107',
                         'pdf' => null,
+                        'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])),
@@ -291,6 +292,7 @@ final class Builder
                         'elocationId' => 'e09560',
                         'pdf' => null,
                         'figuresPdf' => null,
+                        'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
@@ -420,7 +422,8 @@ final class Builder
                             ->withStatusDate(new DateTimeImmutable('1999-12-31T00:00:00Z'))
                             ->withVolume(1)
                             ->withElocationId('e1')
-                            ->withPdf('http://www.example.com/')
+                            ->withPdf('http://www.example.com/pdf')
+                            ->withPromiseOfXml('http://www.example.com/xml')
                             ->withSubjects(new ArraySequence([
                                 self::for(Subject::class)->sample('1'),
                             ]))

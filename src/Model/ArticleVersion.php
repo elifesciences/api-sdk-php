@@ -25,6 +25,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     private $volume;
     private $elocationId;
     private $pdf;
+    private $xml;
     private $subjects;
     private $researchOrganisms;
     private $abstract;
@@ -56,6 +57,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         int $volume,
         string $elocationId,
         string $pdf = null,
+        PromiseInterface $xml = null,
         Sequence $subjects,
         array $researchOrganisms,
         ArticleSection $abstract = null,
@@ -83,6 +85,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         $this->volume = $volume;
         $this->elocationId = $elocationId;
         $this->pdf = $pdf;
+        $this->xml = $xml;
         $this->subjects = $subjects;
         $this->researchOrganisms = $researchOrganisms;
         $this->abstract = $abstract;
@@ -207,6 +210,14 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     public function getPdf()
     {
         return $this->pdf;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getXml()
+    {
+        return $this->xml->wait();
     }
 
     /**

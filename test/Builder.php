@@ -58,7 +58,7 @@ final class Builder
 
     private function defaultTestData()
     {
-        if (self::$defaults === null) {
+        if (null === self::$defaults) {
             self::$defaults = [
                 AccessControl::class => function () {
                     return [
@@ -364,7 +364,7 @@ final class Builder
 
     private function sampleRecipes()
     {
-        if (self::$sampleRecipes === null) {
+        if (null === self::$sampleRecipes) {
             self::$sampleRecipes = [
                 Address::class => [
                     'simple' => function ($builder) {

@@ -42,7 +42,7 @@ final class SearchSubjects implements Iterator, Countable
 
     public function valid()
     {
-        return $this->key() !== false;
+        return false !== $this->key();
     }
 
     public function rewind()

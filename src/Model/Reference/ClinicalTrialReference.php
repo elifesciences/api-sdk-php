@@ -67,17 +67,17 @@ final class ClinicalTrialReference implements Reference
         return $this->authors;
     }
 
-    public function authorsEtAl(): bool
+    public function authorsEtAl() : bool
     {
         return $this->authorsEtAl;
     }
 
-    public function getAuthorsType(): string
+    public function getAuthorsType() : string
     {
         return $this->authorsType;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }

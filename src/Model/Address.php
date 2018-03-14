@@ -35,7 +35,7 @@ final class Address
     /**
      * @return Sequence|string[]
      */
-    public function getFormatted(): Sequence
+    public function getFormatted() : Sequence
     {
         return $this->formatted;
     }
@@ -43,7 +43,7 @@ final class Address
     /**
      * @return Sequence|string[]
      */
-    public function getStreetAddress(): Sequence
+    public function getStreetAddress() : Sequence
     {
         return $this->streetAddress;
     }
@@ -51,7 +51,7 @@ final class Address
     /**
      * @return Sequence|string[]
      */
-    public function getLocality(): Sequence
+    public function getLocality() : Sequence
     {
         return $this->locality;
     }
@@ -59,7 +59,7 @@ final class Address
     /**
      * @return Sequence|string[]
      */
-    public function getArea(): Sequence
+    public function getArea() : Sequence
     {
         return $this->area;
     }

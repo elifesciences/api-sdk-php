@@ -21,7 +21,7 @@ final class Funding
     /**
      * @return Sequence|FundingAward[]
      */
-    public function getAwards(): Sequence
+    public function getAwards() : Sequence
     {
         return $this->awards;
     }

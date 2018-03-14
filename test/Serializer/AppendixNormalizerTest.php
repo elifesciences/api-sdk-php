@@ -110,7 +110,7 @@ final class AppendixNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Appendix::class));
     }
 
-    public function normalizeProvider() :array
+    public function normalizeProvider() : array
     {
         return [
             'complete' => [

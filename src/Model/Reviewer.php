@@ -44,7 +44,7 @@ final class Reviewer
     /**
      * @return Place[]
      */
-    final public function getAffiliations(): array
+    public function getAffiliations() : array
     {
         return $this->affiliations;
     }

@@ -47,7 +47,7 @@ abstract class Author implements AuthorEntry
     /**
      * @return Place[]
      */
-    final public function getAffiliations(): array
+    final public function getAffiliations() : array
     {
         return $this->affiliations;
     }
@@ -71,7 +71,7 @@ abstract class Author implements AuthorEntry
     /**
      * @return string[]
      */
-    final public function getEmailAddresses(): array
+    final public function getEmailAddresses() : array
     {
         return $this->emailAddresses;
     }
@@ -79,7 +79,7 @@ abstract class Author implements AuthorEntry
     /**
      * @return int[]
      */
-    final public function getEqualContributionGroups(): array
+    final public function getEqualContributionGroups() : array
     {
         return $this->equalContributionGroups;
     }
@@ -87,7 +87,7 @@ abstract class Author implements AuthorEntry
     /**
      * @return string[]
      */
-    final public function getPhoneNumbers(): array
+    final public function getPhoneNumbers() : array
     {
         return $this->phoneNumbers;
     }
@@ -95,7 +95,7 @@ abstract class Author implements AuthorEntry
     /**
      * @return Address[]
      */
-    final public function getPostalAddresses(): array
+    final public function getPostalAddresses() : array
     {
         return $this->postalAddresses;
     }

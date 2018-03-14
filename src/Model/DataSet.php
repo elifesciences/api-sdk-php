@@ -39,12 +39,12 @@ final class DataSet implements HasDoi, HasId
         $this->uri = $uri;
     }
 
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getDate(): Date
+    public function getDate() : Date
     {
         return $this->date;
     }
@@ -52,17 +52,17 @@ final class DataSet implements HasDoi, HasId
     /**
      * @return AuthorEntry[]
      */
-    public function getAuthors(): array
+    public function getAuthors() : array
     {
         return $this->authors;
     }
 
-    public function authorsEtAl(): bool
+    public function authorsEtAl() : bool
     {
         return $this->authorsEtAl;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }

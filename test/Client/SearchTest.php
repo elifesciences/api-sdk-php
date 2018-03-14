@@ -326,7 +326,7 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(5);
 
         $filter = function (Model $model) {
-            return get_class($model) == BlogArticle::class;
+            return BlogArticle::class == get_class($model);
         };
 
         $this->assertEquals(1, count($this->search->filter($filter)));

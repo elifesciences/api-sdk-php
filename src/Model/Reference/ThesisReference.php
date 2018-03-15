@@ -62,7 +62,7 @@ final class ThesisReference implements Reference, HasDoi
         return $this->author;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }

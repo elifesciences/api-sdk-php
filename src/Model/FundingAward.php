@@ -22,12 +22,12 @@ final class FundingAward implements HasId
         $this->recipients = $recipients;
     }
 
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }
 
-    public function getSource(): Funder
+    public function getSource() : Funder
     {
         return $this->source;
     }
@@ -43,7 +43,7 @@ final class FundingAward implements HasId
     /**
      * @return Sequence|Author[]
      */
-    public function getRecipients(): Sequence
+    public function getRecipients() : Sequence
     {
         return $this->recipients;
     }

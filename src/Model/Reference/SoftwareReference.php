@@ -67,12 +67,12 @@ final class SoftwareReference implements Reference
         return $this->authors;
     }
 
-    public function authorsEtAl(): bool
+    public function authorsEtAl() : bool
     {
         return $this->authorsEtAl;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }

@@ -26,12 +26,12 @@ final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, Ha
         return Identifier::annualReport($this->year);
     }
 
-    public function getYear(): int
+    public function getYear() : int
     {
         return $this->year;
     }
 
-    public function getUri(): string
+    public function getUri() : string
     {
         return $this->uri;
     }
@@ -44,7 +44,7 @@ final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, Ha
         return $this->pdf;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -57,7 +57,7 @@ final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, Ha
         return $this->impactStatement;
     }
 
-    public function getImage(): Image
+    public function getImage() : Image
     {
         return $this->image;
     }

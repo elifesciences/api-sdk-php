@@ -86,7 +86,7 @@ final class DataReference implements Reference, HasDoi
         return $this->authors;
     }
 
-    public function authorsEtAl(): bool
+    public function authorsEtAl() : bool
     {
         return $this->authorsEtAl;
     }
@@ -99,7 +99,7 @@ final class DataReference implements Reference, HasDoi
         return $this->compilers;
     }
 
-    public function compilersEtAl(): bool
+    public function compilersEtAl() : bool
     {
         return $this->compilersEtAl;
     }
@@ -112,17 +112,17 @@ final class DataReference implements Reference, HasDoi
         return $this->curators;
     }
 
-    public function curatorsEtAl(): bool
+    public function curatorsEtAl() : bool
     {
         return $this->curatorsEtAl;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
 
-    public function getSource(): string
+    public function getSource() : string
     {
         return $this->source;
     }

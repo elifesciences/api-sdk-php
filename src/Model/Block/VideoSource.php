@@ -16,12 +16,12 @@ final class VideoSource
         $this->uri = $uri;
     }
 
-    public function getMediaType(): string
+    public function getMediaType() : string
     {
         return $this->mediaType;
     }
 
-    public function getUri(): string
+    public function getUri() : string
     {
         return $this->uri;
     }

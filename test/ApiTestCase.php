@@ -1274,7 +1274,8 @@ abstract class ApiTestCase extends TestCase
             'volume' => 1,
             'issue' => 1,
             'elocationId' => 'e'.$id,
-            'pdf' => 'http://www.example.com/',
+            'pdf' => 'http://www.example.com/pdf',
+            'xml' => 'http://www.example.com/xml',
             'subjects' => [$this->createSubjectJson('1', true)],
             'researchOrganisms' => ['Article '.$id.' research organism'],
             'copyright' => [
@@ -1398,6 +1399,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['statusDate']);
             unset($article['issue']);
             unset($article['pdf']);
+            unset($article['xml']);
             unset($article['subjects']);
             unset($article['researchOrganisms']);
             unset($article['reviewers']);
@@ -1410,6 +1412,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($article['issue']);
+            unset($article['xml']);
             unset($article['copyright']);
             unset($article['authors']);
             unset($article['reviewers']);

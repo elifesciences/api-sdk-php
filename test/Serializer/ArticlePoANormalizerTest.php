@@ -124,7 +124,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             'complete' => [
                 Builder::for(ArticlePoA::class)
                     ->withTitlePrefix('title prefix')
-                    ->withPdf('http://www.example.com/')
+                    ->withPdf('http://www.example.com/pdf')
+                    ->withPromiseOfXml('http://www.example.com/xml')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -147,7 +148,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'statusDate' => '2016-03-28T00:00:00Z',
                     'titlePrefix' => 'title prefix',
                     'authorLine' => 'Yongjian Huang et al',
-                    'pdf' => 'http://www.example.com/',
+                    'pdf' => 'http://www.example.com/pdf',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
@@ -160,6 +161,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
+                    'xml' => 'http://www.example.com/xml',
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -279,6 +281,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withStatusDate(null)
                     ->withAuthorLine(null)
                     ->withSequenceOfAuthors()
+                    ->withPromiseOfXml(null)
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
@@ -309,7 +312,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
             'complete snippet' => [
                 Builder::for(ArticlePoA::class)
                     ->withTitlePrefix('title prefix')
-                    ->withPdf('http://www.example.com/')
+                    ->withPdf('http://www.example.com/pdf')
+                    ->withPromiseOfXml('http://www.example.com/xml')
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->withId('subject1')
@@ -332,7 +336,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     'statusDate' => '2016-03-28T00:00:00Z',
                     'titlePrefix' => 'title prefix',
                     'authorLine' => 'Yongjian Huang et al',
-                    'pdf' => 'http://www.example.com/',
+                    'pdf' => 'http://www.example.com/pdf',
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
@@ -358,6 +362,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withVersionDate(null)
                     ->withStatusDate(null)
                     ->withAuthorLine(null)
+                    ->withPromiseOfXml(null)
                     ->withPromiseOfIssue(null)
                     ->withSequenceOfReviewers()
                     ->withAbstract(null)

@@ -40,6 +40,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         string $elocationId,
         string $pdf = null,
         string $figuresPdf = null,
+        PromiseInterface $xml,
         Sequence $subjects,
         array $researchOrganisms,
         ArticleSection $abstract = null,
@@ -65,7 +66,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
-            $volume, $elocationId, $pdf, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
+            $volume, $elocationId, $pdf, $xml, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
             $ethics, $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->figuresPdf = $figuresPdf;

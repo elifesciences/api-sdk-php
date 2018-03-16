@@ -137,6 +137,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 ->then(function (Result $article) {
                     return $article['reviewers'] ?? [];
                 }));
+
+            $data['xml'] = $complete
+                ->then(function (Result $article) {
+                    return $article['xml'] ?? null;
+                });
         } else {
             $complete = null;
 
@@ -155,6 +160,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['issue'] = promise_for($data['issue'] ?? null);
 
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
+
+            $data['xml'] = promise_for($data['xml'] ?? null);
         }
 
         if (!empty($data['abstract'])) {
@@ -306,6 +313,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         }
 
         if (empty($context['snippet'])) {
+            if ($object->getXml()) {
+                $data['xml'] = $object->getXml();
+            }
+
             $data['copyright'] = [
                 'license' => $object->getCopyright()->getLicense(),
                 'statement' => $object->getCopyright()->getStatement(),

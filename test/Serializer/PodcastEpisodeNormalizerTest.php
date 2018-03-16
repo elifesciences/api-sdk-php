@@ -148,7 +148,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             new ArraySequence([
                                 Builder::for(ArticlePoA::class)
                                     ->withTitlePrefix('title prefix')
-                                    ->withPdf('http://www.example.com/')
+                                    ->withPdf('http://www.example.com/pdf')
+                                    ->withPromiseOfXml('http://www.example.com/xml')
                                     ->withSubjects(new ArraySequence([
                                         Builder::for(Subject::class)
                                             ->withId('subject1')
@@ -220,7 +221,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                     'versionDate' => '2016-03-28T00:00:00Z',
                                     'statusDate' => '2016-03-28T00:00:00Z',
                                     'titlePrefix' => 'title prefix',
-                                    'pdf' => 'http://www.example.com/',
+                                    'pdf' => 'http://www.example.com/pdf',
                                     'subjects' => [
                                         ['id' => 'subject1', 'name' => 'Subject 1'],
                                     ],

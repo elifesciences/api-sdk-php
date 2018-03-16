@@ -38,7 +38,7 @@ $articlesCount = 0;
 $invalidArticles = 0;
 $articleIds = [];
 foreach ($articles as $a) {
-    if ($a === null) {
+    if (null === $a) {
         ++$invalidArticles;
         continue;
     }

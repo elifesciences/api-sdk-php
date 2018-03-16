@@ -16,7 +16,7 @@ final class Funder
         $this->funderId = $funderId;
     }
 
-    public function getPlace(): Place
+    public function getPlace() : Place
     {
         return $this->place;
     }

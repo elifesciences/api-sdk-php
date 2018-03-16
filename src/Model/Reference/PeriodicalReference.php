@@ -69,12 +69,12 @@ final class PeriodicalReference implements Reference
         return $this->authors;
     }
 
-    public function authorsEtAl(): bool
+    public function authorsEtAl() : bool
     {
         return $this->authorsEtAl;
     }
 
-    public function getArticleTitle(): string
+    public function getArticleTitle() : string
     {
         return $this->articleTitle;
     }

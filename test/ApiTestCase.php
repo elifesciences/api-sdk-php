@@ -1178,7 +1178,7 @@ abstract class ApiTestCase extends TestCase
         return range($firstId, $lastId);
     }
 
-    final private function createAnnotationJson(string $id, bool $complete = false)
+    private function createAnnotationJson(string $id, bool $complete = false)
     {
         $annotation = [
             'id' => $id,
@@ -1205,7 +1205,7 @@ abstract class ApiTestCase extends TestCase
         return $annotation;
     }
 
-    final private function createAnnualReportJson(int $year)
+    private function createAnnualReportJson(int $year)
     {
         return [
             'year' => $year,
@@ -1842,7 +1842,7 @@ abstract class ApiTestCase extends TestCase
         return $labsPost;
     }
 
-    final private function createMediumArticleJson(int $number)
+    private function createMediumArticleJson(int $number)
     {
         return [
             'uri' => 'http://www.example.com/mediumArticle'.$number,
@@ -2007,7 +2007,7 @@ abstract class ApiTestCase extends TestCase
         return $podcastEpisode;
     }
 
-    final private function createPressPackageJson(string $id, bool $isSnippet = false, bool $isComplete = false) : array
+    private function createPressPackageJson(string $id, bool $isSnippet = false, bool $isComplete = false) : array
     {
         $package = [
             'id' => $id,
@@ -2304,7 +2304,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final private function createSubjectJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    private function createSubjectJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
         $subject = [
             'id' => $id,

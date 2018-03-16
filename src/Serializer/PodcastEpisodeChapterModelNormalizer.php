@@ -28,7 +28,7 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
                 promise_for($data['episode']->getChapters())
                     ->then(function (Sequence $chapters) use ($data) {
                         foreach ($chapters as $chapter) {
-                            if ($chapter->getNumber() === $data['chapter']['number']) {
+                            if ($data['chapter']['number'] === $chapter->getNumber()) {
                                 return $chapter->getContent();
                             }
                         }

@@ -32,12 +32,12 @@ final class PodcastEpisodeChapter implements HasContent, HasImpactStatement
         $this->content = $content;
     }
 
-    public function getNumber(): int
+    public function getNumber() : int
     {
         return $this->number;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -50,7 +50,7 @@ final class PodcastEpisodeChapter implements HasContent, HasImpactStatement
         return $this->longTitle;
     }
 
-    public function getTime(): int
+    public function getTime() : int
     {
         return $this->time;
     }
@@ -66,7 +66,7 @@ final class PodcastEpisodeChapter implements HasContent, HasImpactStatement
     /**
      * @return Sequence|Model[]
      */
-    public function getContent(): Sequence
+    public function getContent() : Sequence
     {
         return $this->content;
     }

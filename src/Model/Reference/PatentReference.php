@@ -75,7 +75,7 @@ final class PatentReference implements Reference
         return $this->inventors;
     }
 
-    public function inventorsEtAl(): bool
+    public function inventorsEtAl() : bool
     {
         return $this->inventorsEtAl;
     }
@@ -88,12 +88,12 @@ final class PatentReference implements Reference
         return $this->assignees;
     }
 
-    public function assigneesEtAl(): bool
+    public function assigneesEtAl() : bool
     {
         return $this->assigneesEtAl;
     }
 
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }

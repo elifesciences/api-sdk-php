@@ -18,7 +18,7 @@ final class Copyright
     /**
      * @return string
      */
-    public function getLicense(): string
+    public function getLicense() : string
     {
         return $this->license;
     }
@@ -26,7 +26,7 @@ final class Copyright
     /**
      * @return string
      */
-    public function getStatement(): string
+    public function getStatement() : string
     {
         return $this->statement;
     }

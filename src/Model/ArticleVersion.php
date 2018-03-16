@@ -57,7 +57,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         int $volume,
         string $elocationId,
         string $pdf = null,
-        PromiseInterface $xml = null,
+        PromiseInterface $xml,
         Sequence $subjects,
         array $researchOrganisms,
         ArticleSection $abstract = null,

@@ -40,7 +40,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         string $elocationId,
         string $pdf = null,
         string $figuresPdf = null,
-        PromiseInterface $xml = null,
+        PromiseInterface $xml,
         Sequence $subjects,
         array $researchOrganisms,
         ArticleSection $abstract = null,

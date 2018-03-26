@@ -228,6 +228,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'statement' => 'Funding statement',
                     ],
                     'dataSets' => [
+                        'availability' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Data availability',
+                            ],
+                        ],
                         'generated' => [
                             [
                                 'id' => 'id',
@@ -414,6 +420,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAppendices(new EmptySequence())
                     ->withReferences(new EmptySequence())
                     ->withAdditionalFiles(new EmptySequence())
+                    ->withDataAvailability(new EmptySequence())
                     ->withGeneratedDataSets(new EmptySequence())
                     ->withUsedDataSets(new EmptySequence())
                     ->withAcknowledgements(new EmptySequence())
@@ -540,6 +547,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAppendices(new EmptySequence())
                     ->withReferences(new EmptySequence())
                     ->withAdditionalFiles(new EmptySequence())
+                    ->withDataAvailability(new EmptySequence())
                     ->withGeneratedDataSets(new EmptySequence())
                     ->withUsedDataSets(new EmptySequence())
                     ->withAcknowledgements(new EmptySequence())

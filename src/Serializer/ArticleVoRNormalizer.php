@@ -191,6 +191,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['appendices'],
             $data['references'],
             $data['additionalFiles'],
+            $data['dataAvailability'],
             $data['generatedDataSets'],
             $data['usedDataSets'],
             $data['acknowledgements'],

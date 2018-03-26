@@ -1341,6 +1341,12 @@ abstract class ApiTestCase extends TestCase
                 'statement' => 'Funding statement',
             ],
             'dataSets' => [
+                'availability' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Data availability',
+                    ],
+                ],
                 'generated' => [
                     [
                         'id' => 'id',

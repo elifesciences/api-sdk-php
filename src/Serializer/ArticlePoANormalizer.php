@@ -41,6 +41,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['reviewers'],
             $data['ethics'],
             $data['funding'],
+            $data['dataAvailability'],
             $data['generatedDataSets'],
             $data['usedDataSets'],
             $data['additionalFiles']

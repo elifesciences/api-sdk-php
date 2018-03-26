@@ -56,6 +56,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $appendices,
         Sequence $references,
         Sequence $additionalFiles,
+        Sequence $dataAvailability,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
         Sequence $acknowledgements,
@@ -67,7 +68,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
             $volume, $elocationId, $pdf, $xml, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
-            $ethics, $funding, $generatedDataSets, $usedDataSets, $additionalFiles);
+            $ethics, $funding, $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;

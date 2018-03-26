@@ -190,6 +190,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 
+        $data['dataAvailability'] = new PromiseSequence($data['dataSets']
+            ->then(function (array $dataSets = null) use ($format, $context) {
+                return array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                }, $dataSets['availability'] ?? []);
+            }));
+
         $data['generatedDataSets'] = new PromiseSequence($data['dataSets']
             ->then(function (array $dataSets = null) use ($format, $context) {
                 return array_map(function (array $block) use ($format, $context) {
@@ -375,6 +382,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                         })->toArray();
                 }
                 $data['funding']['statement'] = $object->getFunding()->getStatement();
+            }
+
+            if ($object->getDataAvailability()->notEmpty()) {
+                $data['dataSets']['availability'] = $object->getDataAvailability()
+                    ->map(function (Block $block) use ($format, $context) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray();
             }
 
             if ($object->getGeneratedDataSets()->notEmpty()) {

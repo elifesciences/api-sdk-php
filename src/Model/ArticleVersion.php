@@ -35,6 +35,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     private $reviewers;
     private $ethics;
     private $funding;
+    private $dataAvailability;
     private $generatedDataSets;
     private $usedDataSets;
     private $additionalFiles;
@@ -67,6 +68,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         Sequence $reviewers,
         Sequence $ethics,
         PromiseInterface $funding,
+        Sequence $dataAvailability,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
         Sequence $additionalFiles
@@ -95,6 +97,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         $this->reviewers = $reviewers;
         $this->ethics = $ethics;
         $this->funding = $funding;
+        $this->dataAvailability = $dataAvailability;
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
         $this->additionalFiles = $additionalFiles;
@@ -281,6 +284,14 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     public function getFunding()
     {
         return $this->funding->wait();
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getDataAvailability() : Sequence
+    {
+        return $this->dataAvailability;
     }
 
     /**

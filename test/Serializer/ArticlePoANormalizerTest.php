@@ -217,6 +217,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         'statement' => 'Funding statement',
                     ],
                     'dataSets' => [
+                        'availability' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Data availability',
+                            ],
+                        ],
                         'generated' => [
                             [
                                 'id' => 'id',
@@ -288,6 +294,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withAbstract(null)
                     ->withSequenceOfEthics()
                     ->withPromiseOfFunding(null)
+                    ->withSequenceOfDataAvailability()
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()
                     ->withSequenceOfAdditionalFiles()
@@ -368,6 +375,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withAbstract(null)
                     ->withSequenceOfEthics()
                     ->withPromiseOfFunding(null)
+                    ->withSequenceOfDataAvailability()
                     ->withSequenceOfGeneratedDataSets()
                     ->withSequenceOfUsedDataSets()
                     ->withSequenceOfAdditionalFiles()

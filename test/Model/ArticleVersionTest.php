@@ -443,6 +443,22 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_data_availability()
+    {
+        $with = $this->builder
+            ->withDataAvailability($availability = new ArraySequence([new Paragraph('availability')]))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withDataAvailability(new EmptySequence())
+            ->__invoke();
+
+        $this->assertEquals($availability, $with->getDataAvailability());
+        $this->assertEmpty($withOut->getDataAvailability());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_generated_data_sets()
     {
         $article = $this->builder

@@ -1102,6 +1102,7 @@ abstract class ApiTestCase extends TestCase
                         'insight' => 0,
                         'research-advance' => 0,
                         'research-article' => 0,
+                        'research-communication' => 0,
                         'retraction' => 0,
                         'registered-report' => 0,
                         'replication-study' => 0,

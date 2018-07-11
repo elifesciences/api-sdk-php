@@ -85,12 +85,12 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         }
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
-        }
         $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         if ($object->getUpdatedDate()) {
             $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        }
+        if ($object->getImpactStatement()) {
+            $data['impactStatement'] = $object->getImpactStatement();
         }
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);

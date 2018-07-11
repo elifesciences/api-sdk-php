@@ -12,6 +12,7 @@ use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\CommunityClient;
 use eLife\ApiClient\ApiClient\CoversClient;
+use eLife\ApiClient\ApiClient\DigestsClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
@@ -1010,6 +1011,49 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
                 json_encode($this->createCollectionJson($id, false, $complete))
+            )
+        );
+    }
+
+    final protected function mockDigestListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true
+    ) {
+        $digests = array_map(function (int $id) {
+            return $this->createDigestJson("digest-{$id}", true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/digests?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $digests,
+                ])
+            )
+        );
+    }
+
+    final protected function mockDigestCall(string $id, bool $complete = true)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/digests/'.$id,
+                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => new MediaType(DigestsClient::TYPE_DIGEST, 1)],
+                json_encode($this->createDigestJson($id, false, $complete))
             )
         );
     }
@@ -2288,6 +2332,101 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $collection;
+    }
+
+    private function createDigestJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $digest = [
+            'id' => $id,
+            'title' => "Digest {$id} title",
+            'impactStatement' => "Digest {$id} impact statement",
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
+            'image' => [
+                'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
+                    ],
+                ],
+            ],
+            'subjects' => [$this->createSubjectJson(1, true)],
+            'content' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => "Digest {$id} text",
+                ],
+            ],
+            'relatedContent' => [
+                [
+                    'type' => 'research-article',
+                    'status' => 'vor',
+                    'stage' => 'published',
+                    'id' => '09560',
+                    'version' => 1,
+                    'doi' => '10.7554/eLife.09560',
+                    'authorLine' => 'Lee R Berger et al',
+                    'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                    'volume' => 4,
+                    'elocationId' => 'e09560',
+                    'published' => '2015-09-10T00:00:00Z',
+                    'versionDate' => '2015-09-10T00:00:00Z',
+                    'statusDate' => '2015-09-10T00:00:00Z',
+                    'pdf' => 'https://elifesciences.org/content/4/e09560.pdf',
+                    'subjects' => [
+                        [
+                            'id' => 'genomics-evolutionary-biology',
+                            'name' => 'Genomics and Evolutionary Biology',
+                        ],
+                    ],
+                    'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 abstract text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560abstract',
+                    ],
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        if (!$complete) {
+            unset($digest['impactStatement']);
+            unset($digest['updated']);
+            unset($digest['subjects']);
+        }
+
+        if ($isSnippet) {
+            unset($digest['content']);
+            unset($digest['relatedContent']);
+        }
+
+        return $digest;
     }
 
     private function createSearchResultJson(string $id) : array

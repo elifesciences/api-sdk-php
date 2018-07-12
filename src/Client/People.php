@@ -19,7 +19,7 @@ final class People implements Iterator, Sequence
     private $count;
     private $descendingOrder = true;
     private $subjectsQuery = [];
-    private $typeQuery;
+    private $typeQuery = [];
     private $peopleClient;
     private $denormalizer;
 
@@ -54,11 +54,11 @@ final class People implements Iterator, Sequence
         return $clone;
     }
 
-    public function forType(string $type) : People
+    public function forType(string ...$type) : People
     {
         $clone = clone $this;
 
-        $clone->typeQuery = $type;
+        $clone->typeQuery = array_unique(array_merge($this->typeQuery, $type));
 
         if ($clone->typeQuery !== $this->typeQuery) {
             $clone->count = null;

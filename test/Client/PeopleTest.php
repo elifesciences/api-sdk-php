@@ -183,8 +183,8 @@ final class PeopleTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_type()
     {
-        $this->mockPersonListCall(1, 1, 5, true, [], 'senior-editor');
-        $this->mockPersonListCall(1, 100, 5, true, [], 'senior-editor');
+        $this->mockPersonListCall(1, 1, 5, true, [], ['senior-editor']);
+        $this->mockPersonListCall(1, 100, 5, true, [], ['senior-editor']);
 
         foreach ($this->people->forType('senior-editor') as $i => $person) {
             $this->assertSame('person'.$i, $person->getId());
@@ -200,7 +200,7 @@ final class PeopleTest extends ApiTestCase
 
         $this->people->count();
 
-        $this->mockPersonListCall(1, 1, 10, true, [], 'senior-editor');
+        $this->mockPersonListCall(1, 1, 10, true, [], ['senior-editor']);
 
         $this->assertSame(10, $this->people->forType('senior-editor')->count());
     }
@@ -216,9 +216,9 @@ final class PeopleTest extends ApiTestCase
 
         $this->people->toArray();
 
-        $this->mockPersonListCall(1, 1, 200, true, [], 'senior-editor');
-        $this->mockPersonListCall(1, 100, 200, true, [], 'senior-editor');
-        $this->mockPersonListCall(2, 100, 200, true, [], 'senior-editor');
+        $this->mockPersonListCall(1, 1, 200, true, [], ['senior-editor']);
+        $this->mockPersonListCall(1, 100, 200, true, [], ['senior-editor']);
+        $this->mockPersonListCall(2, 100, 200, true, [], ['senior-editor']);
 
         $this->people->forType('senior-editor')->toArray();
     }

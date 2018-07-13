@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
+final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasThumbnail, HasUpdatedDate
 {
     private $id;
     private $title;

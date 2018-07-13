@@ -16,8 +16,10 @@ use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Identifier;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
@@ -126,6 +128,19 @@ final class DigestTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
         $this->assertEquals($updatedDate, $with->getUpdatedDate());
         $this->assertNull($withOut->getUpdatedDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_has_a_thumbnail()
+    {
+        $digest = $this->builder
+            ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
+            ->__invoke();
+
+        $this->assertInstanceOf(HasThumbnail::class, $digest);
+        $this->assertEquals($image, $digest->getThumbnail());
     }
 
     /**

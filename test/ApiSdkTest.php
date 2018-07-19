@@ -10,6 +10,7 @@ use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Client\Covers;
+use eLife\ApiSdk\Client\Digests;
 use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
@@ -138,6 +139,18 @@ final class ApiSdkTest extends ApiTestCase
         foreach ($this->apiSdk->covers() as $cover) {
             $this->apiSdk->getSerializer()->normalize($cover);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_digests()
+    {
+        $this->assertInstanceOf(Digests::class, $this->apiSdk->digests());
+
+        $this->mockDigestCall('1');
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->digests()->get('1')->wait());
     }
 
     /**

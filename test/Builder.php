@@ -22,6 +22,7 @@ use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\Digest;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
@@ -123,6 +124,19 @@ final class Builder
                         'details' => null,
                         'doi' => null,
                         'uri' => 'http://www.example.com/',
+                    ];
+                },
+                Digest::class => function () {
+                    return [
+                        'id' => '1',
+                        'title' => 'Digest 1 title',
+                        'impactStatement' => null,
+                        'published' => new DateTimeImmutable('2018-07-05T10:21:01Z'),
+                        'updated' => null,
+                        'thumbnail' => Builder::for(Image::class)->sample('thumbnail'),
+                        'subjects' => new EmptySequence(),
+                        'content' => new ArraySequence([new Paragraph('Digest 1 text')]),
+                        'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
                     ];
                 },
                 ExternalArticle::class => function () {

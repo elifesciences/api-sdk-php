@@ -8,9 +8,10 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Digests;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Digest;
-use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class DigestsTest extends ApiTestCase
@@ -124,13 +125,12 @@ final class DigestsTest extends ApiTestCase
         $this->assertInstanceOf(Paragraph::class, $digest->getContent()[0]);
         $this->assertSame('Digest digest-7 text', $digest->getContent()[0]->getText());
 
-        $this->assertInstanceOf(Subject::class, $digest->getSubjects()[0]);
-        $this->assertSame('Subject 1 name', $digest->getSubjects()[0]->getName());
+        $this->assertInstanceOf(ArticleVoR::class, $digest->getRelatedContent()[0]);
+        $this->assertContains('Homo naledi', $digest->getRelatedContent()[0]->getTitle());
 
-        $this->mockSubjectCall('1');
+        $this->mockArticleCall('09560', true, true, 1);
 
-        $this->assertSame('Subject 1 impact statement',
-            $digest->getSubjects()[0]->getImpactStatement());
+        $this->assertInstanceOf(Block::class, $digest->getRelatedContent()[0]->getContent()[0]);
     }
 
     /**

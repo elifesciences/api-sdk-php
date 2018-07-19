@@ -757,7 +757,7 @@ abstract class ApiTestCase extends TestCase
         int $total,
         $descendingOrder = true,
         array $subjects = [],
-        string $type = null
+        array $types = []
     ) {
         $people = array_map(function (int $id) {
             return $this->createPersonJson('person'.$id);
@@ -767,11 +767,9 @@ abstract class ApiTestCase extends TestCase
             return '&subject[]='.$subjectId;
         }, $subjects));
 
-        if ($type) {
-            $typeQuery = '&type='.$type;
-        } else {
-            $typeQuery = '';
-        }
+        $typeQuery = implode('', array_map(function (string $type) {
+            return '&type[]='.$type;
+        }, $types));
 
         $this->storage->save(
             new Request(

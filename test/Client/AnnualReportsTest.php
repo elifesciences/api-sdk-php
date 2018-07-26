@@ -11,7 +11,6 @@ use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use test\eLife\ApiSdk\ApiTestCase;
 
@@ -29,7 +28,7 @@ final class AnnualReportsTest extends ApiTestCase
     {
         $this->annualReports = new AnnualReports(
             new AnnualReportsClient($this->getHttpClient()),
-            new NormalizerAwareSerializer([new AnnualReportNormalizer(), new ImageNormalizer(), new AssetFileNormalizer(), new FileNormalizer()])
+            new NormalizerAwareSerializer([new AnnualReportNormalizer(), new AssetFileNormalizer(), new FileNormalizer()])
         );
     }
 

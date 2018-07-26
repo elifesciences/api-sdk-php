@@ -9,16 +9,14 @@ final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, Ha
     private $pdf;
     private $title;
     private $impactStatement;
-    private $image;
 
-    public function __construct(int $year, string $uri, string $pdf = null, string $title, string $impactStatement = null, Image $image)
+    public function __construct(int $year, string $uri, string $pdf = null, string $title, string $impactStatement = null)
     {
         $this->year = $year;
         $this->uri = $uri;
         $this->pdf = $pdf;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
-        $this->image = $image;
     }
 
     public function getIdentifier() : Identifier
@@ -55,10 +53,5 @@ final class AnnualReport implements Model, HasIdentifier, HasImpactStatement, Ha
     public function getImpactStatement()
     {
         return $this->impactStatement;
-    }
-
-    public function getImage() : Image
-    {
-        return $this->image;
     }
 }

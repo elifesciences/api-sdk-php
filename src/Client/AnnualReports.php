@@ -50,7 +50,7 @@ final class AnnualReports implements Iterator, Sequence
 
         return new PromiseSequence($this->annualReportsClient
             ->listReports(
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2],
+                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

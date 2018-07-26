@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-interface HasCaption extends HasId
+interface HasCaption
 {
     /**
      * @return string|null

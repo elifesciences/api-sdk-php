@@ -4,9 +4,10 @@ namespace eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasId;
 
-final class YouTube implements Block, HasId
+final class YouTube implements BlockWithCaption, HasId
 {
     private $id;
     private $title;

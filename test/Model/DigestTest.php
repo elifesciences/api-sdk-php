@@ -103,6 +103,19 @@ final class DigestTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_stage()
+    {
+        $digest = $this->builder
+            ->withStage('published')
+            ->__invoke();
+
+        $this->assertInstanceOf(Digest::class, $digest);
+        $this->assertSame('published', $digest->getStage());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_published_date()
     {
         $digest = $this->builder

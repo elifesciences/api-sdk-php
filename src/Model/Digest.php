@@ -10,6 +10,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
     private $id;
     private $title;
     private $impactStatement;
+    private $stage;
     private $published;
     private $updated;
     private $thumbnail;
@@ -24,6 +25,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
         string $id,
         string $title,
         string $impactStatement = null,
+        string $stage,
         DateTimeImmutable $published,
         DateTimeImmutable $updated = null,
         Image $thumbnail,
@@ -34,6 +36,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
         $this->id = $id;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
+        $this->stage = $stage;
         $this->published = $published;
         $this->updated = $updated;
         $this->thumbnail = $thumbnail;
@@ -63,6 +66,11 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
     public function getImpactStatement()
     {
         return $this->impactStatement;
+    }
+
+    public function getStage() : string
+    {
+        return $this->stage;
     }
 
     public function getPublishedDate() : DateTimeImmutable

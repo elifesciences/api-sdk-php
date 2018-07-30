@@ -132,7 +132,7 @@ final class Builder
                         'title' => 'Digest 1 title',
                         'impactStatement' => null,
                         'stage' => 'published',
-                        'published' => new DateTimeImmutable('2018-07-05T10:21:01Z'),
+                        'published' => null,
                         'updated' => null,
                         'thumbnail' => Builder::for(Image::class)->sample('thumbnail'),
                         'subjects' => new EmptySequence(),

@@ -139,6 +139,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Digest 1 title')
                     ->withImpactStatement('Digest 1 impact statement')
+                    ->withStage('published')
                     ->withPublished($published)
                     ->withUpdated($updated)
                     ->withThumbnail($thumbnail)
@@ -237,7 +238,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 Builder::for(Digest::class)
                     ->withId('1')
                     ->withTitle('Digest 1 title')
-                    ->withPublished($published)
+                    ->withStage('preview')
                     ->withThumbnail($thumbnail)
                     ->withSequenceOfContent($content)
                     ->withSequenceOfRelatedContent($article)
@@ -246,8 +247,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Digest 1 title',
-                    'stage' => 'published',
-                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'stage' => 'preview',
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -329,6 +329,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Digest 1 title')
                     ->withImpactStatement('Digest 1 impact statement')
+                    ->withStage('published')
                     ->withPublished($published)
                     ->withUpdated($updated)
                     ->withThumbnail($thumbnail)
@@ -374,7 +375,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 Builder::for(Digest::class)
                     ->withId('1')
                     ->withTitle('Digest 1 title')
-                    ->withPublished($published)
+                    ->withStage('preview')
                     ->withThumbnail($thumbnail)
                     ->withSequenceOfContent($content)
                     ->withSequenceOfRelatedContent($article)
@@ -383,8 +384,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Digest 1 title',
-                    'stage' => 'published',
-                    'published' => $published->format(ApiSdk::DATE_FORMAT),
+                    'stage' => 'preview',
                     'image' => [
                         'thumbnail' => [
                             'alt' => '',

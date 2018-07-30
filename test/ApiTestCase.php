@@ -2418,6 +2418,9 @@ abstract class ApiTestCase extends TestCase
             unset($digest['impactStatement']);
             unset($digest['updated']);
             unset($digest['subjects']);
+
+            unset($digest['published']);
+            $digest['stage'] = 'preview';
         }
 
         if ($isSnippet) {

@@ -63,6 +63,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
             $data['id'],
             $data['title'],
             $data['impactStatement'] ?? null,
+            $data['stage'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context + ['snippet' => false]),
@@ -85,6 +86,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         }
         $data['id'] = $object->getId();
         $data['title'] = $object->getTitle();
+        $data['stage'] = $object->getStage();
         $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         if ($object->getUpdatedDate()) {
             $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);

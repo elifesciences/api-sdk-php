@@ -153,6 +153,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Digest 1 impact statement',
+                    'stage' => 'published',
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -245,6 +246,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Digest 1 title',
+                    'stage' => 'published',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'content' => [
                         [
@@ -339,6 +341,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     'type' => 'digest',
                     'id' => '1',
                     'title' => 'Digest 1 title',
+                    'stage' => 'published',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'Digest 1 impact statement',
@@ -380,6 +383,7 @@ final class DigestNormalizerTest extends ApiTestCase
                 [
                     'id' => '1',
                     'title' => 'Digest 1 title',
+                    'stage' => 'published',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'image' => [
                         'thumbnail' => [

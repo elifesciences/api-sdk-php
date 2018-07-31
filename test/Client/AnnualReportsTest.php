@@ -96,7 +96,7 @@ final class AnnualReportsTest extends ApiTestCase
 
         $this->mockNotFound(
             'annual-reports?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)]
+            ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)]
         );
 
         $this->assertFalse(isset($this->annualReports[5]));

@@ -103,14 +103,31 @@ final class DigestTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_a_published_date()
+    public function it_has_a_stage()
     {
         $digest = $this->builder
-            ->withPublished($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
+            ->withStage('published')
             ->__invoke();
 
-        $this->assertInstanceOf(HasPublishedDate::class, $digest);
-        $this->assertEquals($publishedDate, $digest->getPublishedDate());
+        $this->assertInstanceOf(Digest::class, $digest);
+        $this->assertSame('published', $digest->getStage());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_published_date()
+    {
+        $with = $this->builder
+            ->withPublished($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublished(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasPublishedDate::class, $with);
+        $this->assertEquals($publishedDate, $with->getPublishedDate());
+        $this->assertNull($withOut->getPublishedDate());
     }
 
     /**

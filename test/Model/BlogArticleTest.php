@@ -178,7 +178,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
         $content = [
             new Block\Paragraph('foo'),
             new Block\Image(null, null, new EmptySequence(), Builder::for(Image::class)->__invoke()),
-            new Block\YouTube('foo', 300, 200),
+            new Block\YouTube('foo', null, new EmptySequence(), 300, 200),
         ];
 
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, new ArraySequence($content),

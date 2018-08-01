@@ -7,7 +7,9 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\YouTube;
+use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\YouTubeNormalizer;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
@@ -23,6 +25,11 @@ final class YouTubeNormalizerTest extends TestCase
     protected function setUpNormalizer()
     {
         $this->normalizer = new YouTubeNormalizer();
+
+        new NormalizerAwareSerializer([
+            $this->normalizer,
+            new ParagraphNormalizer(),
+        ]);
     }
 
     /**
@@ -76,6 +83,8 @@ final class YouTubeNormalizerTest extends TestCase
                 [
                     'type' => 'youtube',
                     'id' => 'foo',
+                    'width' => 300,
+                    'height' => 200,
                     'title' => 'title1',
                     'caption' => [
                         [
@@ -83,8 +92,6 @@ final class YouTubeNormalizerTest extends TestCase
                             'text' => 'paragraph1',
                         ],
                     ],
-                    'width' => 300,
-                    'height' => 200,
                 ],
             ],
             'minimum' => [

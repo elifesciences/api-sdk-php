@@ -26,6 +26,8 @@ final class YouTube implements BlockWithCaption, HasId
         int $height
     ) {
         $this->id = $id;
+        $this->title = $title;
+        $this->caption = $caption;
         $this->width = $width;
         $this->height = $height;
     }

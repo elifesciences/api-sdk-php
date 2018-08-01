@@ -69,6 +69,42 @@ final class YouTubeNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($youTube));
     }
 
+    /**
+     * @test
+     */
+    public function it_is_a_denormalizer()
+    {
+        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
+    }
+
+    /**
+     * @test
+     * @dataProvider canDenormalizeProvider
+     */
+    public function it_can_denormalize_youtubes($data, $format, array $context, bool $expected)
+    {
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+    }
+
+    public function canDenormalizeProvider() : array
+    {
+        return [
+            'youtube' => [[], YouTube::class, [], true],
+            'block that is a youtube' => [['type' => 'youtube'], Block::class, [], true],
+            'block that isn\'t a youtube' => [['type' => 'foo'], Block::class, [], false],
+            'non-youtube' => [[], get_class($this), [], false],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider normalizeProvider
+     */
+    public function it_denormalize_youtubes(YouTube $expected, array $json)
+    {
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, YouTube::class));
+    }
+
     public function normalizeProvider() : array
     {
         return [
@@ -108,85 +144,6 @@ final class YouTubeNormalizerTest extends TestCase
                     'width' => 300,
                     'height' => 200,
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_is_a_denormalizer()
-    {
-        $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
-    }
-
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
-    public function it_can_denormalize_youtubes($data, $format, array $context, bool $expected)
-    {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
-    }
-
-    public function canDenormalizeProvider() : array
-    {
-        return [
-            'youtube' => [[], YouTube::class, [], true],
-            'block that is a youtube' => [['type' => 'youtube'], Block::class, [], true],
-            'block that isn\'t a youtube' => [['type' => 'foo'], Block::class, [], false],
-            'non-youtube' => [[], get_class($this), [], false],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
-    public function it_denormalize_youtubes(array $json, YouTube $expected)
-    {
-        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, YouTube::class));
-    }
-
-    public function denormalizeProvider() : array
-    {
-        return [
-            'complete' => [
-                [
-                    'type' => 'youtube',
-                    'id' => 'foo',
-                    'title' => 'title1',
-                    'caption' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'paragraph1',
-                        ],
-                    ],
-                    'width' => 300,
-                    'height' => 200,
-                ],
-                new YouTube(
-                    'foo',
-                    'title1',
-                    new ArraySequence([new Paragraph('paragraph1')]),
-                    300,
-                    200
-                ),
-            ],
-            'minimum' => [
-                [
-                    'type' => 'youtube',
-                    'id' => 'foo',
-                    'width' => 300,
-                    'height' => 200,
-                ],
-                new YouTube(
-                    'foo',
-                    null,
-                    new EmptySequence(),
-                    300,
-                    200
-                ),
             ],
         ];
     }

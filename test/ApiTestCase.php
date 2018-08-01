@@ -2338,6 +2338,7 @@ abstract class ApiTestCase extends TestCase
             'id' => $id,
             'title' => "Digest {$id} title",
             'impactStatement' => "Digest {$id} impact statement",
+            'stage' => 'published',
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-02T00:00:00Z',
             'image' => [
@@ -2417,6 +2418,9 @@ abstract class ApiTestCase extends TestCase
             unset($digest['impactStatement']);
             unset($digest['updated']);
             unset($digest['subjects']);
+
+            unset($digest['published']);
+            $digest['stage'] = 'preview';
         }
 
         if ($isSnippet) {

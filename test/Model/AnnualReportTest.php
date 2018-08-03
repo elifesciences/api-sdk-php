@@ -7,9 +7,7 @@ use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\Identifier;
-use eLife\ApiSdk\Model\Image;
 use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Builder;
 
 final class AnnualReportTest extends PHPUnit_Framework_TestCase
 {
@@ -18,8 +16,7 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_identifier()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertInstanceOf(HasIdentifier::class, $annualReport);
         $this->assertEquals(Identifier::annualReport(2012), $annualReport->getIdentifier());
@@ -30,8 +27,7 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_year()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertSame(2012, $annualReport->getYear());
     }
@@ -41,8 +37,7 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_uri()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertSame('http://www.example.com/2012', $annualReport->getUri());
     }
@@ -52,9 +47,8 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_pdf()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $with = new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', null, $image);
-        $withOut = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $with = new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', null);
+        $withOut = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertInstanceOf(HasPdf::class, $with);
         $this->assertSame('http://www.example.com/2012/assets/annual-report-2012.pdf', $with->getPdf());
@@ -66,8 +60,7 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertSame('title', $annualReport->getTitle());
     }
@@ -77,23 +70,11 @@ final class AnnualReportTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $with = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', 'impact statement', $image);
-        $withOut = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $with = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', 'impact statement');
+        $withOut = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
-    }
-
-    /**
-     * @test
-     */
-    public function it_has_an_image()
-    {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
-
-        $this->assertEquals($image, $annualReport->getImage());
     }
 }

@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\AnnualReport;
-use eLife\ApiSdk\Model\Image;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,8 +18,7 @@ final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerI
             $data['uri'],
             $data['pdf'] ?? null,
             $data['title'],
-            $data['impactStatement'] ?? null,
-            $this->denormalizer->denormalize($data['image'], Image::class, $format, $context)
+            $data['impactStatement'] ?? null
         );
     }
 
@@ -38,7 +36,6 @@ final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerI
             'year' => $object->getYear(),
             'uri' => $object->getUri(),
             'title' => $object->getTitle(),
-            'image' => $this->normalizer->normalize($object->getImage(), $format, $context),
         ];
 
         if ($object->getPdf()) {

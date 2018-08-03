@@ -3,14 +3,11 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\AnnualReport;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
-use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
 
 final class AnnualReportNormalizerTest extends TestCase
@@ -25,7 +22,7 @@ final class AnnualReportNormalizerTest extends TestCase
     {
         $this->normalizer = new AnnualReportNormalizer();
 
-        new NormalizerAwareSerializer([$this->normalizer, new ImageNormalizer(), new FileNormalizer()]);
+        new NormalizerAwareSerializer([$this->normalizer, new FileNormalizer()]);
     }
 
     /**
@@ -47,8 +44,7 @@ final class AnnualReportNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image);
+        $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
 
         return [
             'annual report' => [$annualReport, null, true],
@@ -104,51 +100,23 @@ final class AnnualReportNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
-        $image = Builder::for(Image::class)->sample('thumbnail');
-
         return [
             'complete' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', 'impact statement', $image),
+                new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', 'impact statement'),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
-                    'image' => [
-                        'alt' => '',
-                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
-                        'source' => [
-                            'mediaType' => 'image/jpeg',
-                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                            'filename' => 'thumbnail.jpg',
-                        ],
-                        'size' => [
-                            'width' => 140,
-                            'height' => 140,
-                        ],
-                    ],
                     'pdf' => 'http://www.example.com/2012/assets/annual-report-2012.pdf',
                     'impactStatement' => 'impact statement',
                 ],
             ],
             'minimum' => [
-                new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null, $image),
+                new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null),
                 [
                     'year' => 2012,
                     'uri' => 'http://www.example.com/2012',
                     'title' => 'title',
-                    'image' => [
-                        'alt' => '',
-                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
-                        'source' => [
-                            'mediaType' => 'image/jpeg',
-                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                            'filename' => 'thumbnail.jpg',
-                        ],
-                        'size' => [
-                            'width' => 140,
-                            'height' => 140,
-                        ],
-                    ],
                 ],
             ],
         ];

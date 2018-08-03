@@ -140,11 +140,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/annual-reports?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)]
+                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 1)],
+                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $annualReports,
@@ -159,11 +159,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/annual-reports/'.$year,
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 1)]
+                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 1)],
+                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)],
                 json_encode($this->createAnnualReportJson($year))
             )
         );
@@ -1255,19 +1255,6 @@ abstract class ApiTestCase extends TestCase
             'uri' => 'http://www.example.com/annual-reports/'.$year,
             'title' => 'Annual report '.$year.' title',
             'impactStatement' => 'Annual report '.$year.' impact statement',
-            'image' => [
-                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
-                'alt' => '',
-                'source' => [
-                    'mediaType' => 'image/jpeg',
-                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                    'filename' => 'thumbnail.jpg',
-                ],
-                'size' => [
-                    'width' => 140,
-                    'height' => 140,
-                ],
-            ],
         ];
     }
 

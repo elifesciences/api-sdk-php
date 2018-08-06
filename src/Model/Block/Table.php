@@ -6,11 +6,12 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasAttribution;
+use eLife\ApiSdk\Model\HasId;
 
 /**
  * @SuppressWarnings(ForbiddenAbleSuffix)
  */
-final class Table implements BlockWithCaption, HasAttribution
+final class Table implements BlockWithCaption, HasAttribution, HasId
 {
     private $id;
     private $title;

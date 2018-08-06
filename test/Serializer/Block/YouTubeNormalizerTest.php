@@ -2,14 +2,19 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\YouTube;
+use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\YouTubeNormalizer;
-use PHPUnit_Framework_TestCase;
+use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use test\eLife\ApiSdk\TestCase;
 
-final class YouTubeNormalizerTest extends PHPUnit_Framework_TestCase
+final class YouTubeNormalizerTest extends TestCase
 {
     /** @var YouTubeNormalizer */
     private $normalizer;
@@ -20,6 +25,11 @@ final class YouTubeNormalizerTest extends PHPUnit_Framework_TestCase
     protected function setUpNormalizer()
     {
         $this->normalizer = new YouTubeNormalizer();
+
+        new NormalizerAwareSerializer([
+            $this->normalizer,
+            new ParagraphNormalizer(),
+        ]);
     }
 
     /**
@@ -41,7 +51,7 @@ final class YouTubeNormalizerTest extends PHPUnit_Framework_TestCase
 
     public function canNormalizeProvider() : array
     {
-        $youTube = new YouTube('foo', 300, 200);
+        $youTube = new YouTube('foo', null, new EmptySequence(), 300, 200);
 
         return [
             'youtube' => [$youTube, null, true],
@@ -52,17 +62,11 @@ final class YouTubeNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_normalize_youtubes()
+    public function it_normalize_youtubes(YouTube $youTube, array $expected)
     {
-        $expected = [
-            'type' => 'youtube',
-            'id' => 'foo',
-            'width' => 300,
-            'height' => 200,
-        ];
-
-        $this->assertSame($expected, $this->normalizer->normalize(new YouTube('foo', 300, 200)));
+        $this->assertSame($expected, $this->normalizer->normalize($youTube));
     }
 
     /**
@@ -94,16 +98,53 @@ final class YouTubeNormalizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_youtubes()
+    public function it_denormalize_youtubes(YouTube $expected, array $json)
     {
-        $json = [
-            'type' => 'youtube',
-            'id' => 'foo',
-            'width' => 300,
-            'height' => 200,
-        ];
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, YouTube::class));
+    }
 
-        $this->assertEquals(new YouTube('foo', 300, 200), $this->normalizer->denormalize($json, YouTube::class));
+    public function normalizeProvider() : array
+    {
+        return [
+            'complete' => [
+                new YouTube(
+                    'foo',
+                    'title1',
+                    new ArraySequence([new Paragraph('paragraph1')]),
+                    300,
+                    200
+                ),
+                [
+                    'type' => 'youtube',
+                    'id' => 'foo',
+                    'width' => 300,
+                    'height' => 200,
+                    'title' => 'title1',
+                    'caption' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'paragraph1',
+                        ],
+                    ],
+                ],
+            ],
+            'minimum' => [
+                new YouTube(
+                    'foo',
+                    null,
+                    new EmptySequence(),
+                    300,
+                    200
+                ),
+                [
+                    'type' => 'youtube',
+                    'id' => 'foo',
+                    'width' => 300,
+                    'height' => 200,
+                ],
+            ],
+        ];
     }
 }

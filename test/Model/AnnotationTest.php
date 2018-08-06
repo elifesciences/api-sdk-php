@@ -159,7 +159,7 @@ final class AnnotationTest extends PHPUnit_Framework_TestCase
     {
         $content = [
             new Block\Paragraph('foo'),
-            new Block\YouTube('foo', 300, 200),
+            new Block\YouTube('foo', null, new EmptySequence(), 300, 200),
         ];
 
         $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,

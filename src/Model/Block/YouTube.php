@@ -2,21 +2,32 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasId;
 
-final class YouTube implements Block, HasId
+final class YouTube implements BlockWithCaption, HasId
 {
     private $id;
+    private $title;
+    private $caption;
     private $width;
     private $height;
 
     /**
      * @internal
      */
-    public function __construct(string $id, int $width, int $height)
-    {
+    public function __construct(
+        string $id,
+        string $title = null,
+        Sequence $caption,
+        int $width,
+        int $height
+    ) {
         $this->id = $id;
+        $this->title = $title;
+        $this->caption = $caption;
         $this->width = $width;
         $this->height = $height;
     }
@@ -24,6 +35,22 @@ final class YouTube implements Block, HasId
     public function getId() : string
     {
         return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return Sequence|Block[]
+     */
+    public function getCaption() : Sequence
+    {
+        return $this->caption;
     }
 
     public function getWidth() : int

@@ -11,7 +11,6 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Annotation;
 use eLife\ApiSdk\Model\AnnotationDocument;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Serializer\AnnotationNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

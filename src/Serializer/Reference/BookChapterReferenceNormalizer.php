@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer\Reference;
 
-use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\ReferencePages;

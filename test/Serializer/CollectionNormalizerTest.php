@@ -12,7 +12,6 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;

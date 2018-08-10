@@ -9,7 +9,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
-use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
 final class CommunityTest extends ApiTestCase

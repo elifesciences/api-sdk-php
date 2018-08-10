@@ -1564,6 +1564,7 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
             'decisionLetter' => [
+                'id' => 'decision-letter-id',
                 'doi' => '10.7554/eLife.'.$id.'decisionLetter',
                 'description' => [
                     [

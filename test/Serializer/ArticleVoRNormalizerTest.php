@@ -140,7 +140,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
-                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
+                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
                     ->__invoke(),
                 [],
@@ -383,6 +383,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ],
                         ],
                         'doi' => '10.7554/eLife.09560decisionLetter',
+                        'id' => 'decision-letter-id',
                     ],
                     'authorResponse' => [
                         'content' => [
@@ -473,7 +474,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
-                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter')))
+                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse')))
                     ->__invoke(),

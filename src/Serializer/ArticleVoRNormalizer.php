@@ -131,7 +131,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $decisionLetter['content'])),
-                    $decisionLetter['doi']
+                    $decisionLetter['doi'],
+                    $decisionLetter['id'] ?? null
                 );
             });
 
@@ -297,6 +298,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         })->toArray(),
                     'doi' => $article->getDecisionLetter()->getDoi(),
                 ];
+
+                if ($article->getDecisionLetter()->getId()) {
+                    $data['decisionLetter']['id'] = $article->getDecisionLetter()->getId();
+                }
             }
 
             if ($article->getAuthorResponse()) {

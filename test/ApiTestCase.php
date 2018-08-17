@@ -1580,6 +1580,7 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
             'authorResponse' => [
+                'id' => 'author-response-id',
                 'doi' => '10.7554/eLife.'.$id.'authorResponse',
                 'content' => [
                     [

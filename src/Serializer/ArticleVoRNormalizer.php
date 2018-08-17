@@ -101,7 +101,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $authorResponse['content'])),
-                    $authorResponse['doi']
+                    $authorResponse['doi'],
+                    $authorResponse['id'] ?? null
                 );
             });
 
@@ -311,6 +312,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         })->toArray(),
                     'doi' => $article->getAuthorResponse()->getDoi(),
                 ];
+
+                if ($article->getAuthorResponse()->getId()) {
+                    $data['authorResponse']['id'] = $article->getAuthorResponse()->getId();
+                }
             }
         }
 

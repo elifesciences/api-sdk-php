@@ -4,18 +4,20 @@ namespace eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\Sequence;
 
-final class ArticleSection implements HasContent, HasDoi
+final class ArticleSection implements HasContent, HasDoi, HasId
 {
     private $content;
     private $doi;
+    private $id;
 
     /**
      * @internal
      */
-    public function __construct(Sequence $content, string $doi = null)
+    public function __construct(Sequence $content, string $doi = null, string $id = null)
     {
         $this->content = $content;
         $this->doi = $doi;
+        $this->id = $id;
     }
 
     /**
@@ -32,5 +34,13 @@ final class ArticleSection implements HasContent, HasDoi
     public function getDoi()
     {
         return $this->doi;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

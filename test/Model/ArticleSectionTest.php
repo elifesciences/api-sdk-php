@@ -7,6 +7,7 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\HasDoi;
+use eLife\ApiSdk\Model\HasId;
 use PHPUnit_Framework_TestCase;
 
 final class ArticleSectionTest extends PHPUnit_Framework_TestCase
@@ -33,5 +34,18 @@ final class ArticleSectionTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(HasDoi::class, $with);
         $this->assertSame('10.1000/182', $with->getDoi());
         $this->assertNull($withOut->getDoi());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_id()
+    {
+        $with = new ArticleSection(new EmptySequence(), null, 'id');
+        $withOut = new ArticleSection(new EmptySequence());
+
+        $this->assertInstanceOf(HasId::class, $with);
+        $this->assertSame('id', $with->getId());
+        $this->assertNull($withOut->getId());
     }
 }

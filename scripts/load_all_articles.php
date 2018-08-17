@@ -1,42 +1,13 @@
 <?php
 
-
-include __DIR__.'/../vendor/autoload.php';
-
-// Guzzle logging.
-$handler = GuzzleHttp\HandlerStack::create();
-// Push the handler onto the handler stack
-$handler->push(GuzzleHttp\Middleware::mapRequest(function (GuzzleHttp\Psr7\Request $request) {
-    echo $request->getRequestTarget()."\n";
-    // Notice that we have to return a request object
-    return $request;
-}));
-
-$count = 0;
-$handler->push(GuzzleHttp\Middleware::mapResponse(function (GuzzleHttp\Psr7\Response $response) use (&$count) {
-    ++$count;
-    echo "{$count} requests so far \n";
-    // Notice that we have to return a request object
-    return $response;
-}));
-
-$guzzle = new GuzzleHttp\Client([
-  'handler' => $handler,
-  'base_uri' => 'http://prod--gateway.elifesciences.org/',
-]);
-
-// Api SDK.
-$client = new eLife\ApiClient\HttpClient\BatchingHttpClient(
-    new eLife\ApiClient\HttpClient\Guzzle6HttpClient($guzzle),
-    20
-);
-$sdk = new eLife\ApiSdk\ApiSdk($client);
+require_once __DIR__.'/bootstrap.php';
 
 // TEST.
 $articles = $sdk->articles();
 $articlesCount = 0;
 $invalidArticles = 0;
 $articleIds = [];
+echo 'ARTICLE IDS', PHP_EOL;
 foreach ($articles as $a) {
     if (null === $a) {
         ++$invalidArticles;
@@ -50,6 +21,7 @@ foreach ($articles as $a) {
     //echo "Count: $articlesCount", PHP_EOL;
     //echo 'Memory: ', memory_get_usage(true), ' bytes', PHP_EOL;
 }
+echo 'ARTICLE VERSION NUMBERS', PHP_EOL;
 $versionsByArticle = [];
 $versionsCount = 0;
 $histories = [];
@@ -57,6 +29,7 @@ foreach ($articleIds as $id) {
     $histories[$id] = $articles->getHistory($id);
 }
 
+echo 'ARTICLE VERSIONS', PHP_EOL;
 foreach ($histories as $id => $history) {
     foreach ($history->wait()->getVersions() as $article) {
         $versionNumber = $article->getVersion();
@@ -68,9 +41,14 @@ foreach ($histories as $id => $history) {
 $totalVersions = 0;
 foreach ($versionsByArticle as $id => $versions) {
     foreach ($versions as $versionNumber => $version) {
-        $article = $version->wait();
-        echo "Authors ({$id}v{$versionNumber}): ", count($article->getAuthors()), PHP_EOL;
-        ++$totalVersions;
+        try {
+            $article = $version->wait();
+            echo "Authors ({$id}v{$versionNumber}): ", count($article->getAuthors()), PHP_EOL;
+            ++$totalVersions;
+        } catch (RuntimeException $e) {
+            echo "Failure in Authors ({$id}v{$versionNumber}): ", $e->getMessage(), PHP_EOL;
+            throw $e;
+        }
     }
 }
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;

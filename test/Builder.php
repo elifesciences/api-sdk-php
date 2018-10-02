@@ -513,6 +513,26 @@ final class Builder
                             ]));
                     },
                 ],
+                Digest::class => [
+                    'neighbourhood-watch' => function ($builder) {
+                        return $builder
+                            ->withId('2')
+                            ->withTitle('Neighborhood watch')
+                            ->withImpactStatement('Roundworms modify the chemical signals they produce to tell others whether they’re in a good or bad environment.')
+                            ->withStage('published')
+                            ->withPublished(new DateTimeImmutable('2018-07-06T09:06:01Z'))
+                            ->withUpdated(new DateTimeImmutable('2018-07-06T16:23:24Z'))
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('biophysics-structural-biology'),
+                            ]))
+                            ->withContent(new ArraySequence([new Paragraph('Digest 2 text')]))
+                            ->withRelatedContent(new ArraySequence([
+                                Builder::for(ArticleVoR::class)
+                                    ->sample('homo-naledi'),
+                            ]));
+                    },
+                ],
                 Interview::class => [
                     'controlling-traffic' => function ($builder) {
                         return $builder

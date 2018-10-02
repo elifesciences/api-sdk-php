@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Digest;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -163,6 +164,8 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withRelatedContent(new ArraySequence([
                         Builder::for(ArticlePoa::class)
                             ->sample('growth-factor'),
+                        Builder::for(Digest::class)
+                            ->sample('neighbourhood-watch'),
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
                         Builder::for(PodcastEpisode::class)
@@ -370,6 +373,36 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 ],
                             ],
                         ],
+                        1 => [
+                            'type' => 'digest',
+                            'stage' => 'published',
+                            'id' => '2',
+                            'title' => 'Neighborhood watch',
+                            'impactStatement' => 'Roundworms modify the chemical signals they produce to tell others whether they’re in a good or bad environment.',
+                            'published' => '2018-07-06T09:06:01Z',
+                            'updated' => '2018-07-06T16:23:24Z',
+                            'image' => [
+                                'thumbnail' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
+                                    ],
+                                ],
+                            ],
+                            'subjects' => [
+                                0 => [
+                                    'id' => 'biophysics-structural-biology',
+                                    'name' => 'Biophysics and Structural Biology',
+                                ],
+                            ],
+                        ],
                     ],
                     'podcastEpisodes' => [
                         0 => [
@@ -409,6 +442,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockArticleCall('09560', true, $vor = true, 1);
                     $test->mockInterviewCall('1', true);
                     $test->mockArticleCall('14107', true, false, 1);
+                    $test->mockDigestCall('2', true);
                     $test->mockPodcastEpisodeCall(29, true);
                     $test->mockSubjectCall('1', true);
                     $test->mockArticleCall('1', true, false, 1);

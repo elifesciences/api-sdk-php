@@ -55,7 +55,7 @@ final class Highlights
 
                 return new PromiseSequence($this->highlightsClient
                     ->listHighlights(
-                        ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)],
+                        ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)],
                         $this->id,
                         ($offset / $length) + 1,
                         $length,

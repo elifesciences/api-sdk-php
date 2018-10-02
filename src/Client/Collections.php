@@ -33,7 +33,7 @@ final class Collections implements Iterator, Sequence
     {
         return $this->collectionsClient
             ->getCollection(
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
                 $id
             )
             ->then(function (Result $result) {

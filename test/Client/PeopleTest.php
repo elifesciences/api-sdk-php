@@ -92,7 +92,7 @@ final class PeopleTest extends ApiTestCase
 
         $this->mockNotFound(
             'people?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)]
+            ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, People::VERSION_PERSON_LIST)]
         );
 
         $this->assertFalse(isset($this->people[5]));

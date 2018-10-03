@@ -89,7 +89,7 @@ class SearchTest extends ApiTestCase
 
         $this->mockNotFound(
             'search?for=&page=6&per-page=1&sort=relevance&order=desc&use-date=default',
-            ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
+            ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, Search::VERSION_SEARCH)]
         );
 
         $this->assertFalse(isset($this->search[5]));

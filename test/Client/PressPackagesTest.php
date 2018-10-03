@@ -91,7 +91,7 @@ final class PressPackagesTest extends ApiTestCase
 
         $this->mockNotFound(
             'press-packages?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)]
+            ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, PressPackages::VERSION_PRESS_PACKAGE_LIST)]
         );
 
         $this->assertFalse(isset($this->pressPackages[5]));

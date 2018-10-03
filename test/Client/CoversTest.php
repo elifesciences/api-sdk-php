@@ -95,7 +95,7 @@ final class CoversTest extends ApiTestCase
 
         $this->mockNotFound(
             'covers?page=6&per-page=1&sort=date&order=desc&use-date=default',
-            ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
+            ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, Covers::VERSION_COVERS_LIST)]
         );
 
         $this->assertFalse(isset($this->covers[5]));

@@ -91,7 +91,7 @@ final class EventsTest extends ApiTestCase
 
         $this->mockNotFound(
             'events?page=6&per-page=1&show=all&order=desc',
-            ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
+            ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, Events::VERSION_EVENT_LIST)]
         );
 
         $this->assertFalse(isset($this->events[5]));

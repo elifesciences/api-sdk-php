@@ -13,6 +13,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Community implements Iterator, Sequence
 {
+    const VERSION_COMMUNITY_LIST = 1;
+
     use Client;
 
     private $count;
@@ -52,7 +54,7 @@ final class Community implements Iterator, Sequence
 
         return new PromiseSequence($this->communityClient
             ->listContent(
-                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)],
+                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, self::VERSION_COMMUNITY_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

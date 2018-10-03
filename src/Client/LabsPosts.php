@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class LabsPosts implements Iterator, Sequence
 {
+    const VERSION_POST = 2;
+    const VERSION_POST_LIST = 1;
+
     use Client;
 
     private $count;
@@ -31,7 +34,7 @@ final class LabsPosts implements Iterator, Sequence
     {
         return $this->labsClient
             ->getPost(
-                ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)],
+                ['Accept' => new MediaType(LabsClient::TYPE_POST, self::VERSION_POST)],
                 $id
             )
             ->then(function (Result $result) {
@@ -51,7 +54,7 @@ final class LabsPosts implements Iterator, Sequence
 
         return new PromiseSequence($this->labsClient
             ->listPosts(
-                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)],
+                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, self::VERSION_POST_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

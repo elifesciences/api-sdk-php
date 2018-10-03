@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class People implements Iterator, Sequence
 {
+    const VERSION_PERSON = 1;
+    const VERSION_PERSON_LIST = 1;
+
     use Client;
 
     private $count;
@@ -33,7 +36,7 @@ final class People implements Iterator, Sequence
     {
         return $this->peopleClient
             ->getPerson(
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, self::VERSION_PERSON)],
                 $id
             )
             ->then(function (Result $result) {
@@ -79,7 +82,7 @@ final class People implements Iterator, Sequence
 
         return new PromiseSequence($this->peopleClient
             ->listPeople(
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)],
+                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, self::VERSION_PERSON_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

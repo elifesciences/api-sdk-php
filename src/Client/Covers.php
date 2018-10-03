@@ -15,6 +15,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Covers implements Iterator, Sequence
 {
+    const VERSION_COVERS_LIST = 1;
+
     use Client;
 
     private $count;
@@ -87,7 +89,7 @@ final class Covers implements Iterator, Sequence
 
         return new PromiseSequence($this->coversClient
             ->listCovers(
-                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
+                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, self::VERSION_COVERS_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->sort,
@@ -111,7 +113,7 @@ final class Covers implements Iterator, Sequence
     public function getCurrent() : Sequence
     {
         return new PromiseSequence($this->coversClient
-            ->listCurrentCovers(['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)])
+            ->listCurrentCovers(['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, self::VERSION_COVERS_LIST)])
             ->then(function (Result $result) {
                 $this->count = $result['total'];
 

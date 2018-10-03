@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\DigestsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Digests;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -33,7 +34,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($digestsClient) : PromiseInterface {
                 return $digestsClient->getDigest(
-                    ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, 1)],
+                    ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, Digests::VERSION_DIGEST)],
                     $id
                 );
             }

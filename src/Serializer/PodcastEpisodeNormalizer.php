@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
@@ -34,7 +35,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             },
             function (int $number) use ($podcastClient) : PromiseInterface {
                 return $podcastClient->getEpisode(
-                    ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
+                    ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, PodcastEpisodes::VERSION_PODCAST_EPISODE)],
                     $number
                 );
             }

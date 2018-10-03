@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\AccessControl;
@@ -30,7 +31,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
             },
             function (string $id) use ($profilesClient) : PromiseInterface {
                 return $profilesClient->getProfile(
-                    ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
+                    ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, Profiles::VERSION_PROFILE)],
                     $id
                 );
             }

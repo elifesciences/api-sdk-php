@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -30,7 +31,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             },
             function (string $id) use ($subjectsClient) : PromiseInterface {
                 return $subjectsClient->getSubject(
-                    ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                    ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, Subjects::VERSION_SUBJECT)],
                     $id
                 );
             }

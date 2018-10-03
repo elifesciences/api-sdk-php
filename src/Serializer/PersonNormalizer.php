@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
+use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -34,7 +35,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($peopleClient) : PromiseInterface {
                 return $peopleClient->getPerson(
-                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
                     $id
                 );
             }

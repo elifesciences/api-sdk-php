@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -35,7 +36,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             },
             function (string $id) use ($collectionsClient) : PromiseInterface {
                 return $collectionsClient->getCollection(
-                    ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                    ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, Collections::VERSION_COLLECTION)],
                     $id
                 );
             }

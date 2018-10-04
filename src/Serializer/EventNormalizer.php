@@ -8,6 +8,7 @@ use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -32,7 +33,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             },
             function (string $id) use ($eventsClient) : PromiseInterface {
                 return $eventsClient->getEvent(
-                    ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)],
+                    ['Accept' => new MediaType(EventsClient::TYPE_EVENT, Events::VERSION_EVENT)],
                     $id
                 );
             }

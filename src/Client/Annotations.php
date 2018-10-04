@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Annotations
 {
+    const VERSION_ANNOTATION_LIST = 1;
+
     private $annotationsClient;
     private $denormalizer;
 
@@ -71,7 +73,7 @@ final class Annotations
 
                 return new PromiseSequence($this->annotationsClient
                     ->listAnnotations(
-                        ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)],
+                        ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, Annotations::VERSION_ANNOTATION_LIST)],
                         $this->by,
                         ($offset / $length) + 1,
                         $length,

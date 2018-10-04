@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -32,7 +33,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             },
             function (string $id) use ($blogClient) : PromiseInterface {
                 return $blogClient->getArticle(
-                    ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)],
+                    ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, BlogArticles::VERSION_BLOG_ARTICLE)],
                     $id
                 );
             }

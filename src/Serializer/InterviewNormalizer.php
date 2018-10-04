@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -35,7 +36,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             },
             function (string $id) use ($interviewsClient) : PromiseInterface {
                 return $interviewsClient->getInterview(
-                    ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
+                    ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, Interviews::VERSION_INTERVIEW)],
                     $id
                 );
             }

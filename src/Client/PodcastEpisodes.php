@@ -15,6 +15,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PodcastEpisodes implements Iterator, Sequence
 {
+    const VERSION_PODCAST_EPISODE = 1;
+    const VERSION_PODCAST_EPISODE_LIST = 1;
+
     use Client;
     use Contains;
 
@@ -34,7 +37,7 @@ final class PodcastEpisodes implements Iterator, Sequence
     {
         return $this->podcastClient
             ->getEpisode(
-                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
+                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, self::VERSION_PODCAST_EPISODE)],
                 $number
             )
             ->then(function (Result $result) {
@@ -54,7 +57,7 @@ final class PodcastEpisodes implements Iterator, Sequence
 
         return new PromiseSequence($this->podcastClient
             ->listEpisodes(
-                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
+                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, self::VERSION_PODCAST_EPISODE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

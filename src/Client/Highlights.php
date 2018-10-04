@@ -13,6 +13,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Highlights
 {
+    const VERSION_HIGHLIGHT_LIST = 1;
+
     private $highlightsClient;
     private $denormalizer;
 
@@ -55,7 +57,7 @@ final class Highlights
 
                 return new PromiseSequence($this->highlightsClient
                     ->listHighlights(
-                        ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)],
+                        ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, Highlights::VERSION_HIGHLIGHT_LIST)],
                         $this->id,
                         ($offset / $length) + 1,
                         $length,

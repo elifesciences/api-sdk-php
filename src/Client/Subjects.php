@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Subjects implements Iterator, Sequence
 {
+    const VERSION_SUBJECT = 1;
+    const VERSION_SUBJECT_LIST = 1;
+
     use Client;
 
     private $count;
@@ -31,7 +34,7 @@ final class Subjects implements Iterator, Sequence
     {
         return $this->subjectsClient
             ->getSubject(
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, self::VERSION_SUBJECT)],
                 $id
             )
             ->then(function (Result $result) {
@@ -51,7 +54,7 @@ final class Subjects implements Iterator, Sequence
 
         return new PromiseSequence($this->subjectsClient
             ->listSubjects(
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)],
+                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, self::VERSION_SUBJECT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

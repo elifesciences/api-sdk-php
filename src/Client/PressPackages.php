@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PressPackages implements Iterator, Sequence
 {
+    const VERSION_PRESS_PACKAGE = 3;
+    const VERSION_PRESS_PACKAGE_LIST = 1;
+
     use Client;
 
     private $count;
@@ -32,7 +35,7 @@ final class PressPackages implements Iterator, Sequence
     {
         return $this->pressPackagesClient
             ->getPackage(
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, self::VERSION_PRESS_PACKAGE)],
                 $id
             )
             ->then(function (Result $result) {
@@ -65,7 +68,7 @@ final class PressPackages implements Iterator, Sequence
 
         return new PromiseSequence($this->pressPackagesClient
             ->listPackages(
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)],
+                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, self::VERSION_PRESS_PACKAGE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

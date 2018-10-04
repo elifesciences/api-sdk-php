@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Search implements Iterator, Sequence
 {
+    const VERSION_SEARCH = 1;
+
     use Client;
 
     // collaborators
@@ -145,7 +147,7 @@ final class Search implements Iterator, Sequence
 
         $resultPromise = $this->searchClient
             ->query(
-                ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)],
+                ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, self::VERSION_SEARCH)],
                 $this->query,
                 ($offset / $length) + 1,
                 $length,

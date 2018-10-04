@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -32,7 +33,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
             },
             function (string $id) use ($labsClient) : PromiseInterface {
                 return $labsClient->getPost(
-                    ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)],
+                    ['Accept' => new MediaType(LabsClient::TYPE_POST, LabsPosts::VERSION_POST)],
                     $id
                 );
             }

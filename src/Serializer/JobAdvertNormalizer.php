@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
@@ -31,7 +32,7 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
             },
             function (string $id) use ($jobAdvertsClient) : PromiseInterface {
                 return $jobAdvertsClient->getJobAdvert(
-                    ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)],
+                    ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, JobAdverts::VERSION_JOB_ADVERT)],
                     $id
                 );
             }

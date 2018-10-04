@@ -15,6 +15,9 @@ use function array_map;
 
 final class Digests implements Iterator, Sequence
 {
+    const VERSION_DIGEST = 1;
+    const VERSION_DIGEST_LIST = 1;
+
     use Client;
 
     private $count;
@@ -32,7 +35,7 @@ final class Digests implements Iterator, Sequence
     {
         return $this->digestsClient
             ->getDigest(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, 1)],
+                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, self::VERSION_DIGEST)],
                 $id
             )
             ->then(function (Result $result) {
@@ -52,7 +55,7 @@ final class Digests implements Iterator, Sequence
 
         return new PromiseSequence($this->digestsClient
             ->listDigests(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)],
+                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, self::VERSION_DIGEST_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

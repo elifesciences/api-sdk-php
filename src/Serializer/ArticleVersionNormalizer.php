@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\Articles;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticlePoA;
@@ -49,8 +50,8 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 return $articlesClient->getArticleVersion(
                     [
                         'Accept' => implode(', ', [
-                            new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
-                            new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2),
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_POA, Articles::VERSION_ARTICLE_POA),
+                            new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, Articles::VERSION_ARTICLE_VOR),
                         ]),
                     ],
                     $id,

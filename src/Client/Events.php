@@ -15,6 +15,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Events implements Iterator, Sequence
 {
+    const VERSION_EVENT = 2;
+    const VERSION_EVENT_LIST = 1;
+
     use Client;
 
     private $count;
@@ -34,7 +37,7 @@ final class Events implements Iterator, Sequence
     {
         return $this->eventsClient
             ->getEvent(
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)],
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, self::VERSION_EVENT)],
                 $id
             )
             ->then(function (Result $result) {
@@ -67,7 +70,7 @@ final class Events implements Iterator, Sequence
 
         return new PromiseSequence($this->eventsClient
             ->listEvents(
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)],
+                ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, self::VERSION_EVENT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->show,

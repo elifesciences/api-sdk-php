@@ -12,6 +12,9 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 final class Metrics
 {
+    const VERSION_METRIC_CITATIONS = 1;
+    const VERSION_METRIC_TIME_PERIOD = 1;
+
     private $metricsClient;
 
     public function __construct(MetricsClient $metricsClient)
@@ -23,7 +26,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->citations(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, self::VERSION_METRIC_CITATIONS)],
                 $identifier->getType(),
                 $identifier->getId()
             )
@@ -42,7 +45,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->pageViews(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
                 $identifier->getType(),
                 $identifier->getId()
             )
@@ -55,7 +58,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->downloads(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
                 $identifier->getType(),
                 $identifier->getId()
             )

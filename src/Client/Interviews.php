@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Interviews implements Iterator, Sequence
 {
+    const VERSION_INTERVIEW = 2;
+    const VERSION_INTERVIEW_LIST = 1;
+
     use Client;
 
     private $count;
@@ -31,7 +34,7 @@ final class Interviews implements Iterator, Sequence
     {
         return $this->interviewsClient
             ->getInterview(
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, self::VERSION_INTERVIEW)],
                 $id
             )
             ->then(function (Result $result) {
@@ -51,7 +54,7 @@ final class Interviews implements Iterator, Sequence
 
         return new PromiseSequence($this->interviewsClient
             ->listInterviews(
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)],
+                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, self::VERSION_INTERVIEW_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

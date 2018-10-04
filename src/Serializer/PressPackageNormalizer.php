@@ -7,6 +7,7 @@ use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleVersion;
@@ -33,7 +34,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             },
             function (string $id) use ($pressPackagesClient) : PromiseInterface {
                 return $pressPackagesClient->getPackage(
-                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
+                    ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, PressPackages::VERSION_PRESS_PACKAGE)],
                     $id
                 );
             }

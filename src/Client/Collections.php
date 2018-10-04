@@ -14,6 +14,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Collections implements Iterator, Sequence
 {
+    const VERSION_COLLECTION = 2;
+    const VERSION_COLLECTION_LIST = 1;
+
     use Client;
     use Contains;
 
@@ -33,7 +36,7 @@ final class Collections implements Iterator, Sequence
     {
         return $this->collectionsClient
             ->getCollection(
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, self::VERSION_COLLECTION)],
                 $id
             )
             ->then(function (Result $result) {
@@ -66,7 +69,7 @@ final class Collections implements Iterator, Sequence
 
         return new PromiseSequence($this->collectionsClient
             ->listCollections(
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)],
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, self::VERSION_COLLECTION_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

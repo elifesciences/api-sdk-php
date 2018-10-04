@@ -101,7 +101,7 @@ final class RecommendationsTest extends ApiTestCase
 
         $this->mockNotFound(
             'recommendations/article/article1?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, Recommendations::VERSION_RECOMMENDATIONS)]
+            ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
         );
 
         $this->assertFalse(isset($list[5]));

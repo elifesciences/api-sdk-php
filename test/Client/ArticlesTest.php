@@ -96,7 +96,7 @@ final class ArticlesTest extends ApiTestCase
 
         $this->mockNotFound(
             'articles?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, Articles::VERSION_ARTICLE_LIST)]
+            ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->articles[5]));

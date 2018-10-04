@@ -90,7 +90,7 @@ final class ProfilesTest extends ApiTestCase
 
         $this->mockNotFound(
             'profiles?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, Profiles::VERSION_PROFILE_LIST)]
+            ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->profiles[5]));

@@ -111,7 +111,7 @@ final class AnnotationsTest extends ApiTestCase
 
         $this->mockNotFound(
             'annotations?by=username&page=6&per-page=1&order=desc&use-date=updated&access=public',
-            ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, Annotations::VERSION_ANNOTATION_LIST)]
+            ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
         );
 
         $this->assertFalse(isset($list[5]));

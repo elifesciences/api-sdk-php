@@ -23,6 +23,7 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Digest;
+use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
@@ -138,6 +139,20 @@ final class Builder
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Digest 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
+                    ];
+                },
+                Event::class => function () {
+                    return [
+                        'id' => '1',
+                        'title' => 'Event 1 title',
+                        'impactStatement' => null,
+                        'publishedDate' => null,
+                        'updatedDate' => null,
+                        'starts' => null,
+                        'ends' => null,
+                        'timeZone' => null,
+                        'content' => new EmptySequence(),
+                        'uri' => null,
                     ];
                 },
                 ExternalArticle::class => function () {
@@ -531,6 +546,20 @@ final class Builder
                                 Builder::for(ArticleVoR::class)
                                     ->sample('homo-naledi'),
                             ]));
+                    },
+                ],
+                Event::class => [
+                    'changing-peer-review' => function ($builder) {
+                        return $builder
+                            ->withId('event1')
+                            ->withTitle('Changing peer review in cancer research: a seminar at Fred Hutch')
+                            ->withImpactStatement('How eLife is influencing the culture of peer review')
+                            ->withPublishedDate(new DateTimeImmutable('2016-08-01T00:00:00Z'))
+                            ->withUpdatedDate(new DateTimeImmutable('2016-08-02T00:00:00Z'))
+                            ->withStarts(new DateTimeImmutable('2016-04-22T20:00:00Z'))
+                            ->withEnds(new DateTimeImmutable('2016-04-22T21:00:00Z'))
+                            ->withTimeZone(new DateTimeZone('America/Los_Angeles'))
+                            ->withUri('https://crm.elifesciences.org/crm/civicrm/event/info?reset=1&id=27');
                     },
                 ],
                 Interview::class => [

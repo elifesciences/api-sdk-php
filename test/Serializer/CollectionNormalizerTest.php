@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Digest;
+use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -166,6 +167,8 @@ final class CollectionNormalizerTest extends ApiTestCase
                             ->sample('growth-factor'),
                         Builder::for(Digest::class)
                             ->sample('neighbourhood-watch'),
+                        Builder::for(Event::class)
+                            ->sample('changing-peer-review'),
                     ]))
                     ->withPodcastEpisodes(new ArraySequence([
                         Builder::for(PodcastEpisode::class)
@@ -403,6 +406,18 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 ],
                             ],
                         ],
+                        2 => [
+                            'type' => 'event',
+                            'id' => 'event1',
+                            'title' => 'Changing peer review in cancer research: a seminar at Fred Hutch',
+                            'impactStatement' => 'How eLife is influencing the culture of peer review',
+                            'published' => '2016-08-01T00:00:00Z',
+                            'updated' => '2016-08-02T00:00:00Z',
+                            'starts' => '2016-04-22T20:00:00Z',
+                            'ends' => '2016-04-22T21:00:00Z',
+                            'timezone' => 'America/Los_Angeles',
+                            'uri' => 'https://crm.elifesciences.org/crm/civicrm/event/info?reset=1&id=27',
+                        ],
                     ],
                     'podcastEpisodes' => [
                         0 => [
@@ -443,6 +458,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockInterviewCall('1', true);
                     $test->mockArticleCall('14107', true, false, 1);
                     $test->mockDigestCall('2', true);
+                    $test->mockEventCall('1', true, true);
                     $test->mockPodcastEpisodeCall(29, true);
                     $test->mockSubjectCall('1', true);
                     $test->mockArticleCall('1', true, false, 1);

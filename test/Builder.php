@@ -559,6 +559,7 @@ final class Builder
                             ->withStarts(new DateTimeImmutable('2016-04-22T20:00:00Z'))
                             ->withEnds(new DateTimeImmutable('2016-04-22T21:00:00Z'))
                             ->withTimeZone(new DateTimeZone('America/Los_Angeles'))
+                            ->withContent(new EmptySequence())
                             ->withUri('https://crm.elifesciences.org/crm/civicrm/event/info?reset=1&id=27');
                     },
                 ],

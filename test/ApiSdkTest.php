@@ -160,7 +160,7 @@ final class ApiSdkTest extends ApiTestCase
     {
         $this->assertInstanceOf(Events::class, $this->apiSdk->events());
 
-        $this->mockEventCall(7, true);
+        $this->mockEventCall('event7', true);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->events()->get('event7')->wait());
     }
@@ -197,7 +197,7 @@ final class ApiSdkTest extends ApiTestCase
     {
         $this->assertInstanceOf(JobAdverts::class, $this->apiSdk->jobAdverts());
 
-        $this->mockJobAdvertCall(7, true);
+        $this->mockJobAdvertCall('job-advert7', true);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('job-advert7')->wait());
     }

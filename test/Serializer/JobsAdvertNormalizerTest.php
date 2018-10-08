@@ -160,35 +160,35 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new JobAdvert('job-advert1', 'Job advert 1 title', 'Job advert 1 impact statement', $published, $closingDate, $updated,
-                    new ArraySequence([new Paragraph('Job advert 1 text')])),
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', 'Job advert job-advert1 impact statement', $published, $closingDate, $updated,
+                    new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'job-advert1',
-                    'title' => 'Job advert 1 title',
+                    'title' => 'Job advert job-advert1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'closingDate' => $closingDate->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
-                    'impactStatement' => 'Job advert 1 impact statement',
+                    'impactStatement' => 'Job advert job-advert1 impact statement',
                     'type' => 'job-advert',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockJobAdvertCall(1, true);
+                    $test->mockJobAdvertCall('job-advert1', true);
                 },
             ],
 
             'minimum snippet' => [
-                new JobAdvert('job-advert1', 'Job advert 1 title', null, $published, $closingDate, null,
-                    new ArraySequence([new Paragraph('Job advert 1 text')])),
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', null, $published, $closingDate, null,
+                    new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true],
                 [
                     'id' => 'job-advert1',
-                    'title' => 'Job advert 1 title',
+                    'title' => 'Job advert job-advert1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'closingDate' => $closingDate->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockJobAdvertCall(1);
+                    $test->mockJobAdvertCall('job-advert1');
                 },
             ],
         ];

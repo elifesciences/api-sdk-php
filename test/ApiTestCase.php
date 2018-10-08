@@ -487,18 +487,26 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockEventCall(int $number, bool $complete = false, bool $external = false)
+    /**
+     * @param string|int $numberOrId
+     */
+    final protected function mockEventCall($numberOrId, bool $complete = false, bool $external = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "event{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/events/event'.$number,
+                'http://api.elifesciences.org/events/'.$id,
                 ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 2)],
-                json_encode($this->createEventJson($number, false, $complete, $external))
+                json_encode($this->createEventJson($id, false, $complete, $external))
             )
         );
     }
@@ -531,18 +539,26 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockJobAdvertCall(int $number, bool $isUpdated = false)
+    /**
+     * @param string|int $numberOrId
+     */
+    final protected function mockJobAdvertCall($numberOrId, bool $isUpdated = false)
     {
+        if (is_integer($numberOrId)) {
+            $id = "job-advert{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/job-adverts/job-advert'.$number,
+                'http://api.elifesciences.org/job-adverts/'.$id,
                 ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)]
             ),
             new Response(
                 200,
                 ['Content-Type' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)],
-                json_encode($this->createJobAdvertJson($number, false, $isUpdated))
+                json_encode($this->createJobAdvertJson($id, false, $isUpdated))
             )
         );
     }

@@ -180,56 +180,56 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet with content' => [
-                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $published, $updated, $starts, $ends, $timezone, null,
-                    new ArraySequence([new Paragraph('Event 1 text')])),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null,
+                    new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
-                    'title' => 'Event 1 title',
+                    'title' => 'Event event1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
-                    'impactStatement' => 'Event 1 impact statement',
+                    'impactStatement' => 'Event event1 impact statement',
                     'timezone' => $timezone->getName(),
                     'type' => 'event',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockEventCall(1, true);
+                    $test->mockEventCall('event1', true);
                 },
             ],
             'complete snippet with uri' => [
-                new Event('event1', 'Event 1 title', 'Event 1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
-                    'title' => 'Event 1 title',
+                    'title' => 'Event event1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
-                    'impactStatement' => 'Event 1 impact statement',
+                    'impactStatement' => 'Event event1 impact statement',
                     'timezone' => $timezone->getName(),
                     'type' => 'event',
                     'uri' => 'http://www.example.com/',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockEventCall(1, true, true);
+                    $test->mockEventCall('event1', true, true);
                 },
             ],
             'minimum snippet' => [
-                new Event('event1', 'Event 1 title', null, $published, null, $starts, $ends, null, null,
-                    new ArraySequence([new Paragraph('Event 1 text')])),
+                new Event('event1', 'Event event1 title', null, $published, null, $starts, $ends, null, null,
+                    new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true],
                 [
                     'id' => 'event1',
-                    'title' => 'Event 1 title',
+                    'title' => 'Event event1 title',
                     'published' => $published->format(ApiSdk::DATE_FORMAT),
                     'starts' => $starts->format(ApiSdk::DATE_FORMAT),
                     'ends' => $ends->format(ApiSdk::DATE_FORMAT),
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockEventCall(1);
+                    $test->mockEventCall('event1');
                 },
             ],
         ];

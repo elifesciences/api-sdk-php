@@ -113,7 +113,7 @@ final class EventsTest extends ApiTestCase
      */
     public function it_gets_an_event()
     {
-        $this->mockEventCall(7);
+        $this->mockEventCall('event7');
 
         $event = $this->events->get('event7')->wait();
 
@@ -121,7 +121,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame('event7', $event->getId());
 
         $this->assertInstanceOf(Paragraph::class, $event->getContent()[0]);
-        $this->assertSame('Event 7 text', $event->getContent()[0]->getText());
+        $this->assertSame('Event event7 text', $event->getContent()[0]->getText());
     }
 
     /**

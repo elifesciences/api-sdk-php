@@ -114,7 +114,7 @@ final class JobAdvertsTest extends ApiTestCase
      */
     public function it_gets_a_job_advert()
     {
-        $this->mockJobAdvertCall(7);
+        $this->mockJobAdvertCall('job-advert7');
 
         $jobAdvert = $this->jobAdverts->get('job-advert7')->wait();
 
@@ -122,7 +122,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame('job-advert7', $jobAdvert->getId());
 
         $this->assertInstanceOf(Paragraph::class, $jobAdvert->getContent()[0]);
-        $this->assertSame('Job advert 7 text', $jobAdvert->getContent()[0]->getText());
+        $this->assertSame('Job advert job-advert7 text', $jobAdvert->getContent()[0]->getText());
     }
 
     /**

@@ -458,7 +458,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     $test->mockInterviewCall('1', true);
                     $test->mockArticleCall('14107', true, false, 1);
                     $test->mockDigestCall('2', true);
-                    $test->mockEventCall('1', true, true);
+                    $test->mockEventCall('event1', true, true);
                     $test->mockPodcastEpisodeCall(29, true);
                     $test->mockSubjectCall('1', true);
                     $test->mockArticleCall('1', true, false, 1);

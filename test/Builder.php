@@ -23,6 +23,7 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Digest;
+use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Funder;
@@ -138,6 +139,20 @@ final class Builder
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Digest 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
+                    ];
+                },
+                Event::class => function () {
+                    return [
+                        'id' => '1',
+                        'title' => 'Event 1 title',
+                        'impactStatement' => null,
+                        'publishedDate' => new DateTimeImmutable('yesterday', new DateTimeZone('Z')),
+                        'updatedDate' => null,
+                        'starts' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'ends' => new DateTimeImmutable('tomorrow', new DateTimeZone('Z')),
+                        'timeZone' => new DateTimeZone('Z'),
+                        'content' => new ArraySequence([new Paragraph('Event 1 text')]),
+                        'uri' => null,
                     ];
                 },
                 ExternalArticle::class => function () {
@@ -511,6 +526,41 @@ final class Builder
                                 Builder::for(BlogArticle::class)
                                     ->sample('slime'),
                             ]));
+                    },
+                ],
+                Digest::class => [
+                    'neighbourhood-watch' => function ($builder) {
+                        return $builder
+                            ->withId('2')
+                            ->withTitle('Neighborhood watch')
+                            ->withImpactStatement('Roundworms modify the chemical signals they produce to tell others whether they’re in a good or bad environment.')
+                            ->withStage('published')
+                            ->withPublished(new DateTimeImmutable('2018-07-06T09:06:01Z'))
+                            ->withUpdated(new DateTimeImmutable('2018-07-06T16:23:24Z'))
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('biophysics-structural-biology'),
+                            ]))
+                            ->withContent(new ArraySequence([new Paragraph('Digest 2 text')]))
+                            ->withRelatedContent(new ArraySequence([
+                                Builder::for(ArticleVoR::class)
+                                    ->sample('homo-naledi'),
+                            ]));
+                    },
+                ],
+                Event::class => [
+                    'changing-peer-review' => function ($builder) {
+                        return $builder
+                            ->withId('event1')
+                            ->withTitle('Changing peer review in cancer research: a seminar at Fred Hutch')
+                            ->withImpactStatement('How eLife is influencing the culture of peer review')
+                            ->withPublishedDate(new DateTimeImmutable('2016-08-01T00:00:00Z'))
+                            ->withUpdatedDate(new DateTimeImmutable('2016-08-02T00:00:00Z'))
+                            ->withStarts(new DateTimeImmutable('2016-04-22T20:00:00Z'))
+                            ->withEnds(new DateTimeImmutable('2016-04-22T21:00:00Z'))
+                            ->withTimeZone(new DateTimeZone('America/Los_Angeles'))
+                            ->withContent(new EmptySequence())
+                            ->withUri('https://crm.elifesciences.org/crm/civicrm/event/info?reset=1&id=27');
                     },
                 ],
                 Interview::class => [

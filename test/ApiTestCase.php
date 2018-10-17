@@ -573,11 +573,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/highlights/$id?page=$page&per-page=$perPage&order=".($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)]
+                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 1)],
+                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $highlights,
@@ -1019,11 +1019,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/collections/'.$id,
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)]
+                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 1)],
+                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
                 json_encode($this->createCollectionJson($id, false, $complete))
             )
         );

@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Collections implements Iterator, Sequence
 {
-    const VERSION_COLLECTION = 1;
+    const VERSION_COLLECTION = 2;
     const VERSION_COLLECTION_LIST = 1;
 
     use Client;

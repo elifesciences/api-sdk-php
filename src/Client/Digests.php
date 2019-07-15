@@ -35,7 +35,7 @@ final class Digests implements Iterator, Sequence
     {
         return $this->digestsClient
             ->getDigest(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, self::VERSION_DIGEST)],
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST, self::VERSION_DIGEST)],
                 $id
             )
             ->then(function (Result $result) {
@@ -55,7 +55,7 @@ final class Digests implements Iterator, Sequence
 
         return new PromiseSequence($this->digestsClient
             ->listDigests(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, self::VERSION_DIGEST_LIST)],
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST_LIST, self::VERSION_DIGEST_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

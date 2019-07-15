@@ -34,7 +34,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($digestsClient) : PromiseInterface {
                 return $digestsClient->getDigest(
-                    ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, Digests::VERSION_DIGEST)],
+                    ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST, Digests::VERSION_DIGEST)],
                     $id
                 );
             }

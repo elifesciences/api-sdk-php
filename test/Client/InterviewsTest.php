@@ -91,7 +91,7 @@ final class InterviewsTest extends ApiTestCase
 
         $this->mockNotFound(
             'interviews?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
+            ['Accept' => (string) new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->interviews[5]));

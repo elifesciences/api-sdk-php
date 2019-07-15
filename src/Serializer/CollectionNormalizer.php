@@ -36,7 +36,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             },
             function (string $id) use ($collectionsClient) : PromiseInterface {
                 return $collectionsClient->getCollection(
-                    ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, Collections::VERSION_COLLECTION)],
+                    ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, Collections::VERSION_COLLECTION)],
                     $id
                 );
             }

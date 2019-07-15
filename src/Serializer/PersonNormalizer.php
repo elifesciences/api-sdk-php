@@ -35,7 +35,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($peopleClient) : PromiseInterface {
                 return $peopleClient->getPerson(
-                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
+                    ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
                     $id
                 );
             }

@@ -35,7 +35,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             },
             function (int $number) use ($podcastClient) : PromiseInterface {
                 return $podcastClient->getEpisode(
-                    ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, PodcastEpisodes::VERSION_PODCAST_EPISODE)],
+                    ['Accept' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, PodcastEpisodes::VERSION_PODCAST_EPISODE)],
                     $number
                 );
             }

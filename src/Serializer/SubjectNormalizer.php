@@ -31,7 +31,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             },
             function (string $id) use ($subjectsClient) : PromiseInterface {
                 return $subjectsClient->getSubject(
-                    ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, Subjects::VERSION_SUBJECT)],
+                    ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, Subjects::VERSION_SUBJECT)],
                     $id
                 );
             }

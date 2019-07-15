@@ -40,7 +40,7 @@ final class MediumArticles implements Iterator, Sequence
 
         return new PromiseSequence($this->mediumArticlesClient
             ->listArticles(
-                ['Accept' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, self::VERSION_MEDIUM_ARTICLE_LIST)],
+                ['Accept' => (string) new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, self::VERSION_MEDIUM_ARTICLE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

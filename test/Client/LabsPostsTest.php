@@ -91,7 +91,7 @@ final class LabsPostsTest extends ApiTestCase
 
         $this->mockNotFound(
             'labs-posts?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)]
+            ['Accept' => (string) new MediaType(LabsClient::TYPE_POST_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->labsPosts[5]));

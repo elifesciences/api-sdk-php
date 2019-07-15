@@ -34,7 +34,7 @@ final class Subjects implements Iterator, Sequence
     {
         return $this->subjectsClient
             ->getSubject(
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, self::VERSION_SUBJECT)],
+                ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, self::VERSION_SUBJECT)],
                 $id
             )
             ->then(function (Result $result) {
@@ -54,7 +54,7 @@ final class Subjects implements Iterator, Sequence
 
         return new PromiseSequence($this->subjectsClient
             ->listSubjects(
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, self::VERSION_SUBJECT_LIST)],
+                ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, self::VERSION_SUBJECT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

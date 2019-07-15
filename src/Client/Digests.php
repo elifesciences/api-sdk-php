@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use function array_map;
 use eLife\ApiClient\ApiClient\DigestsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -11,7 +12,6 @@ use eLife\ApiSdk\Model\Digest;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function array_map;
 
 final class Digests implements Iterator, Sequence
 {

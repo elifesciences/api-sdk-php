@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use function array_merge;
 use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\DigestsClient;
 use eLife\ApiClient\MediaType;
@@ -17,7 +18,6 @@ use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function array_merge;
 
 final class DigestNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {

@@ -16,9 +16,9 @@ use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
+use function GuzzleHttp\Promise\rejection_for;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class LabsPostTest extends PHPUnit_Framework_TestCase
 {

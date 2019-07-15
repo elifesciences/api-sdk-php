@@ -15,12 +15,12 @@ use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class PersonNormalizerTest extends ApiTestCase
 {

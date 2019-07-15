@@ -2,8 +2,8 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\all;
+use GuzzleHttp\Promise\PromiseInterface;
 
 /**
  * As in http://www.martinfowler.com/eaaCatalog/identityMap.html.

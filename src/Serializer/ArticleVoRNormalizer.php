@@ -13,8 +13,8 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Reference;
-use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\promise_for;
+use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {

@@ -16,8 +16,8 @@ use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Model;
-use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit_Framework_TestCase;
 
 final class EventTest extends PHPUnit_Framework_TestCase
 {

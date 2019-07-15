@@ -12,10 +12,10 @@ use eLife\ApiSdk\Model\Annotation;
 use eLife\ApiSdk\Model\AnnotationDocument;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\AnnotationNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class AnnotationNormalizerTest extends ApiTestCase
 {

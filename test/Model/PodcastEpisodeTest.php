@@ -19,10 +19,10 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
 {

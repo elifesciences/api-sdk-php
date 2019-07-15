@@ -79,6 +79,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             case 'retraction':
             case 'registered-report':
             case 'replication-study':
+            case 'review-article':
             case 'scientific-correspondence':
             case 'short-report':
             case 'tools-resources':
@@ -430,6 +431,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'retraction',
             'registered-report',
             'replication-study',
+            'review-article',
             'scientific-correspondence',
             'short-report',
             'tools-resources',

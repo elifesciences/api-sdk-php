@@ -35,7 +35,7 @@ final class BlogArticles implements Iterator, Sequence
     {
         return $this->blogClient
             ->getArticle(
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, self::VERSION_BLOG_ARTICLE)],
+                ['Accept' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE, self::VERSION_BLOG_ARTICLE)],
                 $id
             )
             ->then(function (Result $result) {
@@ -68,7 +68,7 @@ final class BlogArticles implements Iterator, Sequence
 
         return new PromiseSequence($this->blogClient
             ->listArticles(
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, self::VERSION_BLOG_ARTICLE_LIST)],
+                ['Accept' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, self::VERSION_BLOG_ARTICLE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

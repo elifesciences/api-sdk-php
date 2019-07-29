@@ -15,11 +15,11 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PressPackageNormalizerTest extends ApiTestCase
 {

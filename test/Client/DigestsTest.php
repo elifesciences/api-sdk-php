@@ -93,7 +93,7 @@ final class DigestsTest extends ApiTestCase
 
         $this->mockNotFound(
             'digests?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(Digestsclient::TYPE_DIGEST_LIST, 1)]
+            ['Accept' => (string) new MediaType(Digestsclient::TYPE_DIGEST_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->digests[5]));

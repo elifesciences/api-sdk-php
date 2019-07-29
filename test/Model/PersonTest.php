@@ -16,10 +16,10 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Builder;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class PersonTest extends PHPUnit_Framework_TestCase
 {

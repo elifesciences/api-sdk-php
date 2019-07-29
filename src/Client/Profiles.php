@@ -34,7 +34,7 @@ final class Profiles implements Iterator, Sequence
     {
         return $this->profilesClient
             ->getProfile(
-                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, self::VERSION_PROFILE)],
+                ['Accept' => (string) new MediaType(ProfilesClient::TYPE_PROFILE, self::VERSION_PROFILE)],
                 $id
             )
             ->then(function (Result $result) {
@@ -54,7 +54,7 @@ final class Profiles implements Iterator, Sequence
 
         return new PromiseSequence($this->profilesClient
             ->listProfiles(
-                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, self::VERSION_PROFILE_LIST)],
+                ['Accept' => (string) new MediaType(ProfilesClient::TYPE_PROFILE_LIST, self::VERSION_PROFILE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

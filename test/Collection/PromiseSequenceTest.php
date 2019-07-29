@@ -9,11 +9,11 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use Exception;
 use GuzzleHttp\Promise\Promise;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
+use function GuzzleHttp\Promise\rejection_for;
 use LogicException;
 use PHPUnit_Framework_TestCase;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
 {

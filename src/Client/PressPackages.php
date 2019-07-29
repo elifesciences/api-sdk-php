@@ -35,7 +35,7 @@ final class PressPackages implements Iterator, Sequence
     {
         return $this->pressPackagesClient
             ->getPackage(
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, self::VERSION_PRESS_PACKAGE)],
+                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, self::VERSION_PRESS_PACKAGE)],
                 $id
             )
             ->then(function (Result $result) {
@@ -68,7 +68,7 @@ final class PressPackages implements Iterator, Sequence
 
         return new PromiseSequence($this->pressPackagesClient
             ->listPackages(
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, self::VERSION_PRESS_PACKAGE_LIST)],
+                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, self::VERSION_PRESS_PACKAGE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

@@ -19,9 +19,9 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\PersonDetails;
+use function GuzzleHttp\Promise\rejection_for;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class InterviewTest extends PHPUnit_Framework_TestCase
 {

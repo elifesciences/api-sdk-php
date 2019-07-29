@@ -92,7 +92,7 @@ final class JobAdvertsTest extends ApiTestCase
 
         $this->mockNotFound(
             'job-adverts?page=6&per-page=1&show=all&order=desc',
-            ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)]
+            ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->jobAdverts[5]));

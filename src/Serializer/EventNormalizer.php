@@ -33,7 +33,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             },
             function (string $id) use ($eventsClient) : PromiseInterface {
                 return $eventsClient->getEvent(
-                    ['Accept' => new MediaType(EventsClient::TYPE_EVENT, Events::VERSION_EVENT)],
+                    ['Accept' => (string) new MediaType(EventsClient::TYPE_EVENT, Events::VERSION_EVENT)],
                     $id
                 );
             }

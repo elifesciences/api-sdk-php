@@ -33,7 +33,7 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             },
             function (string $id) use ($blogClient) : PromiseInterface {
                 return $blogClient->getArticle(
-                    ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, BlogArticles::VERSION_BLOG_ARTICLE)],
+                    ['Accept' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE, BlogArticles::VERSION_BLOG_ARTICLE)],
                     $id
                 );
             }

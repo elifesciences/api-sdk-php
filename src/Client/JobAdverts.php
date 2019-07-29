@@ -35,7 +35,7 @@ final class JobAdverts implements Iterator, Sequence
     {
         return $this->jobAdvertsClient
             ->getJobAdvert(
-                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, self::VERSION_JOB_ADVERT)],
+                ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, self::VERSION_JOB_ADVERT)],
                 $id
             )
             ->then(function (Result $result) {
@@ -68,7 +68,7 @@ final class JobAdverts implements Iterator, Sequence
 
         return new PromiseSequence($this->jobAdvertsClient
             ->listJobAdverts(
-                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, self::VERSION_JOB_ADVERT_LIST)],
+                ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, self::VERSION_JOB_ADVERT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->show,

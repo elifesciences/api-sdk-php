@@ -33,7 +33,7 @@ final class AnnualReports implements Iterator, Sequence
     {
         return $this->annualReportsClient
             ->getReport(
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, self::VERSION_ANNUAL_REPORT)],
+                ['Accept' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, self::VERSION_ANNUAL_REPORT)],
                 $year
             )
             ->then(function (Result $result) {
@@ -53,7 +53,7 @@ final class AnnualReports implements Iterator, Sequence
 
         return new PromiseSequence($this->annualReportsClient
             ->listReports(
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, self::VERSION_ANNUAL_REPORT_LIST)],
+                ['Accept' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, self::VERSION_ANNUAL_REPORT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

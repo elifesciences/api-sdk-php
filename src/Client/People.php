@@ -36,7 +36,7 @@ final class People implements Iterator, Sequence
     {
         return $this->peopleClient
             ->getPerson(
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, self::VERSION_PERSON)],
+                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, self::VERSION_PERSON)],
                 $id
             )
             ->then(function (Result $result) {
@@ -82,7 +82,7 @@ final class People implements Iterator, Sequence
 
         return new PromiseSequence($this->peopleClient
             ->listPeople(
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, self::VERSION_PERSON_LIST)],
+                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON_LIST, self::VERSION_PERSON_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

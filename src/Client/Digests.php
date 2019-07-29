@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
+use function array_map;
 use eLife\ApiClient\ApiClient\DigestsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
@@ -11,7 +12,6 @@ use eLife\ApiSdk\Model\Digest;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function array_map;
 
 final class Digests implements Iterator, Sequence
 {
@@ -35,7 +35,7 @@ final class Digests implements Iterator, Sequence
     {
         return $this->digestsClient
             ->getDigest(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, self::VERSION_DIGEST)],
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST, self::VERSION_DIGEST)],
                 $id
             )
             ->then(function (Result $result) {
@@ -55,7 +55,7 @@ final class Digests implements Iterator, Sequence
 
         return new PromiseSequence($this->digestsClient
             ->listDigests(
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, self::VERSION_DIGEST_LIST)],
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST_LIST, self::VERSION_DIGEST_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

@@ -15,10 +15,10 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -35,7 +35,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($peopleClient) : PromiseInterface {
                 return $peopleClient->getPerson(
-                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
+                    ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
                     $id
                 );
             }

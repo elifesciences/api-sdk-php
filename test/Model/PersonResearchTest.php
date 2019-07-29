@@ -8,8 +8,8 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Subject;
-use PHPUnit_Framework_TestCase;
 use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit_Framework_TestCase;
 
 final class PersonResearchTest extends PHPUnit_Framework_TestCase
 {

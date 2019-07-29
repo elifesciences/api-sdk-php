@@ -26,7 +26,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->citations(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, self::VERSION_METRIC_CITATIONS)],
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, self::VERSION_METRIC_CITATIONS)],
                 $identifier->getType(),
                 $identifier->getId()
             )
@@ -45,7 +45,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->pageViews(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
                 $identifier->getType(),
                 $identifier->getId()
             )
@@ -58,7 +58,7 @@ final class Metrics
     {
         return $this->metricsClient
             ->downloads(
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, self::VERSION_METRIC_TIME_PERIOD)],
                 $identifier->getType(),
                 $identifier->getId()
             )

@@ -90,7 +90,7 @@ final class SubjectsTest extends ApiTestCase
 
         $this->mockNotFound(
             'subjects?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
+            ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->subjects[5]));

@@ -117,11 +117,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/annotations?by='.$by.'&page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.'&access='.$access,
-                ['Accept' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
+                ['Accept' => (string) new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(AnnotationsClient::TYPE_ANNOTATION_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $annotations,
@@ -140,11 +140,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/annual-reports?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)]
+                ['Accept' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)],
+                ['Content-Type' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT_LIST, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $annualReports,
@@ -159,11 +159,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/annual-reports/'.$year,
-                ['Accept' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)]
+                ['Accept' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)],
+                ['Content-Type' => (string) new MediaType(AnnualReportsClient::TYPE_ANNUAL_REPORT, 2)],
                 json_encode($this->createAnnualReportJson($year))
             )
         );
@@ -193,11 +193,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
-                ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
+                ['Accept' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $articles,
@@ -216,7 +216,7 @@ abstract class ApiTestCase extends TestCase
 
         $response = new Response(
             200,
-            ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1)],
+            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1)],
             json_encode($this->createArticleHistoryJson($id, $complete))
         );
 
@@ -226,7 +226,7 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.'/versions',
                 [
                     'Accept' => [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1),
+                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, 1),
                     ],
                 ]
             ),
@@ -244,7 +244,7 @@ abstract class ApiTestCase extends TestCase
 
         $response = new Response(
             200,
-            ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
             json_encode($this->createRelatedArticlesJson($id, $complete))
         );
 
@@ -254,7 +254,7 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.'/related',
                 [
                     'Accept' => [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
                     ],
                 ]
             ),
@@ -272,13 +272,13 @@ abstract class ApiTestCase extends TestCase
         if ($vor) {
             $response = new Response(
                 200,
-                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 2)],
                 json_encode($this->createArticleVoRJson($id, false, $complete, $version ?? 1))
             );
         } else {
             $response = new Response(
                 200,
-                ['Content-Type' => new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2)],
                 json_encode($this->createArticlePoAJson($id, false, $complete, $version ?? 1))
             );
         }
@@ -317,11 +317,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/blog-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)]
+                ['Accept' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $blogArticles,
@@ -341,11 +341,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/blog-articles/'.$id,
-                ['Accept' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)]
+                ['Accept' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)],
+                ['Content-Type' => (string) new MediaType(BlogClient::TYPE_BLOG_ARTICLE, 2)],
                 json_encode($this->createBlogArticleJson($id, false, $complete))
             )
         );
@@ -389,11 +389,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/community?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery,
-                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
+                ['Accept' => (string) new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $blogArticles,
@@ -423,11 +423,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/covers?page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,
-                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
+                ['Accept' => (string) new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $covers,
@@ -446,11 +446,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/covers/current',
-                ['Accept' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
+                ['Accept' => (string) new MediaType(CoversClient::TYPE_COVERS_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(CoversClient::TYPE_COVERS_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $covers,
@@ -474,11 +474,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/events?page='.$page.'&per-page='.$perPage.'&show='.$show.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
+                ['Accept' => (string) new MediaType(EventsClient::TYPE_EVENT_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(EventsClient::TYPE_EVENT_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $events,
@@ -501,11 +501,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/events/'.$id,
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, 2)]
+                ['Accept' => (string) new MediaType(EventsClient::TYPE_EVENT, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(EventsClient::TYPE_EVENT, 2)],
+                ['Content-Type' => (string) new MediaType(EventsClient::TYPE_EVENT, 2)],
                 json_encode($this->createEventJson($id, false, $complete, $external))
             )
         );
@@ -526,11 +526,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/job-adverts?page='.$page.'&per-page='.$perPage.'&show='.$show.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)]
+                ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $jobAdverts,
@@ -553,11 +553,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/job-adverts/'.$id,
-                ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)]
+                ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)],
+                ['Content-Type' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, 1)],
                 json_encode($this->createJobAdvertJson($id, false, $isUpdated))
             )
         );
@@ -573,11 +573,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/highlights/$id?page=$page&per-page=$perPage&order=".($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)]
+                ['Accept' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)],
+                ['Content-Type' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $highlights,
@@ -596,11 +596,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/interviews?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
+                ['Accept' => (string) new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(InterviewsClient::TYPE_INTERVIEW_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $interviews,
@@ -623,11 +623,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/interviews/'.$id,
-                ['Accept' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)]
+                ['Accept' => (string) new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
+                ['Content-Type' => (string) new MediaType(InterviewsClient::TYPE_INTERVIEW, 2)],
                 json_encode($this->createInterviewJson($id, false, $complete))
             )
         );
@@ -643,11 +643,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/labs-posts?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)]
+                ['Accept' => (string) new MediaType(LabsClient::TYPE_POST_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_POST_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(LabsClient::TYPE_POST_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $labsPosts,
@@ -662,11 +662,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/labs-posts/'.$id,
-                ['Accept' => new MediaType(LabsClient::TYPE_POST, 2)]
+                ['Accept' => (string) new MediaType(LabsClient::TYPE_POST, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(LabsClient::TYPE_POST, 2)],
+                ['Content-Type' => (string) new MediaType(LabsClient::TYPE_POST, 2)],
                 json_encode($this->createLabsPostJson($id, false, $complete))
             )
         );
@@ -682,11 +682,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/medium-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)]
+                ['Accept' => (string) new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $articles,
@@ -701,11 +701,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/citations',
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)]
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
+                ['Content-Type' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
                 json_encode([
                     [
                         'service' => 'Service',
@@ -723,11 +723,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/downloads?by=month&page=1&per-page=20&order=desc',
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                ['Content-Type' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
                 json_encode([
                     'totalPeriods' => 1,
                     'totalValue' => (int) $id,
@@ -748,11 +748,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/page-views?by=month&page=1&per-page=20&order=desc',
-                ['Accept' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
+                ['Content-Type' => (string) new MediaType(MetricsClient::TYPE_METRIC_TIME_PERIOD, 1)],
                 json_encode([
                     'totalPeriods' => 1,
                     'totalValue' => (int) $id,
@@ -791,11 +791,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/people?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typeQuery,
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)]
+                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(PeopleClient::TYPE_PERSON_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $people,
@@ -818,11 +818,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/people/'.$id,
-                ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, 1)]
+                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PeopleClient::TYPE_PERSON, 1)],
+                ['Content-Type' => (string) new MediaType(PeopleClient::TYPE_PERSON, 1)],
                 json_encode($this->createPersonJson($id, $isSnippet, $complete))
             )
         );
@@ -847,11 +847,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/podcast-episodes?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$containingQuery,
-                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)]
+                ['Accept' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $podcastEpisodes,
@@ -866,11 +866,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/podcast-episodes/'.$number,
-                ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)]
+                ['Accept' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
+                ['Content-Type' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, 1)],
                 json_encode($this->createPodcastEpisodeJson($number, false, $complete))
             )
         );
@@ -890,11 +890,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/press-packages?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)]
+                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $pressPackages,
@@ -915,11 +915,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/press-packages/$id",
-                ['Accept' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)]
+                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
+                ['Content-Type' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
                 json_encode($this->createPressPackageJson($id, false, $complete))
             )
         );
@@ -939,11 +939,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/profiles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)]
+                ['Accept' => (string) new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(ProfilesClient::TYPE_PROFILE_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $profiles,
@@ -966,11 +966,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/profiles/{$id}",
-                ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)]
+                ['Accept' => (string) new MediaType(ProfilesClient::TYPE_PROFILE, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
+                ['Content-Type' => (string) new MediaType(ProfilesClient::TYPE_PROFILE, 1)],
                 json_encode($this->createProfileJson($id, $isSnippet, $complete))
             )
         );
@@ -1000,11 +1000,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$containingQuery,
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
+                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $collections,
@@ -1019,11 +1019,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/collections/'.$id,
-                ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)]
+                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
+                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
                 json_encode($this->createCollectionJson($id, false, $complete))
             )
         );
@@ -1043,11 +1043,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/digests?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)]
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(DigestsClient::TYPE_DIGEST_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $digests,
@@ -1062,11 +1062,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/digests/'.$id,
-                ['Accept' => new MediaType(DigestsClient::TYPE_DIGEST, 1)]
+                ['Accept' => (string) new MediaType(DigestsClient::TYPE_DIGEST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(DigestsClient::TYPE_DIGEST, 1)],
+                ['Content-Type' => (string) new MediaType(DigestsClient::TYPE_DIGEST, 1)],
                 json_encode($this->createDigestJson($id, false, $complete))
             )
         );
@@ -1088,11 +1088,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
+                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)],
+                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $recommendations,
@@ -1133,11 +1133,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
-                ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, 1)]
+                ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(SearchClient::TYPE_SEARCH, 1)],
+                ['Content-Type' => (string) new MediaType(SearchClient::TYPE_SEARCH, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $results,
@@ -1189,11 +1189,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/subjects?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
+                ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT_LIST, 1)],
                 json_encode([
                     'total' => $total,
                     'items' => $subjects,
@@ -1213,11 +1213,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/subjects/'.$id,
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
+                ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                ['Content-Type' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
                 json_encode($this->createSubjectJson($id, $isSnippet, $complete))
             )
         );

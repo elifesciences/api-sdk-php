@@ -90,7 +90,7 @@ final class CommunityTest extends ApiTestCase
 
         $this->mockNotFound(
             'community?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
+            ['Accept' => (string) new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->community[5]));

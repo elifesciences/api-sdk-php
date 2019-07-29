@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use function call_user_func;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiClient\ApiClient\DigestsClient;
@@ -14,13 +15,12 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\DigestNormalizer;
+use function get_class;
+use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function call_user_func;
-use function get_class;
-use function GuzzleHttp\Promise\promise_for;
 
 final class DigestNormalizerTest extends ApiTestCase
 {

@@ -4,6 +4,7 @@ namespace eLife\ApiSdk\Client;
 
 use eLife\ApiClient\ApiClient\BioprotocolClient;
 use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\Model\Bioprotocol;
 use eLife\ApiSdk\Model\Identifier;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -33,7 +34,7 @@ final class Bioprotocols
                 $identifier->getId()
             )
             ->then(
-                function (array $result) : array {
+                function (Result $result) : array {
                     return array_reduce(
                         $result['items'],
                         function (array $carry, array $bioprotocolData) : array {

@@ -15,6 +15,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AssetFile;
+use eLife\ApiSdk\Model\Bioprotocol;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -76,6 +77,13 @@ final class Builder
                         'area' => new EmptySequence(),
                         'country' => null,
                         'postalCode' => null,
+                    ];
+                },
+                Bioprotocol::class => function () {
+                    return [
+                        'sectionId' => 's1-2-3',
+                        'status' => false,
+                        'uri' => 'https://example.com',
                     ];
                 },
                 BlogArticle::class => function () {

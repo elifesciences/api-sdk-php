@@ -23,7 +23,7 @@ final class Bioprotocol
         return $this->sectionId;
     }
 
-    public function isStatus() : bool
+    public function getStatus() : bool
     {
         return $this->status;
     }

@@ -5,6 +5,7 @@ namespace eLife\ApiSdk;
 use eLife\ApiClient\ApiClient\AnnotationsClient;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiClient\ApiClient\BioprotocolClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\CommunityClient;
@@ -29,6 +30,7 @@ use eLife\ApiClient\HttpClient\UserAgentPrependingHttpClient;
 use eLife\ApiSdk\Client\Annotations;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
+use eLife\ApiSdk\Client\Bioprotocols;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Community;
@@ -58,6 +60,7 @@ use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\AssetFileNormalizer;
+use eLife\ApiSdk\Serializer\BioprotocolNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
@@ -101,6 +104,7 @@ final class ApiSdk
     private $httpClient;
     private $annotationsClient;
     private $articlesClient;
+    private $bioprotocolClient;
     private $blogClient;
     private $collectionsClient;
     private $communityClient;
@@ -122,6 +126,7 @@ final class ApiSdk
     private $serializer;
     private $annualReports;
     private $articles;
+    private $bioprotocols;
     private $blogArticles;
     private $community;
     private $covers;
@@ -158,6 +163,7 @@ final class ApiSdk
         $this->httpClient = new UserAgentPrependingHttpClient($httpClient, 'eLifeApiSdk/'.$this->version);
         $this->annotationsClient = new AnnotationsClient($this->httpClient);
         $this->articlesClient = new ArticlesClient($this->httpClient);
+        $this->bioprotocolClient = new BioprotocolClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);
         $this->collectionsClient = new CollectionsClient($this->httpClient);
         $this->communityClient = new CommunityClient($this->httpClient);
@@ -188,6 +194,7 @@ final class ApiSdk
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
             new AssetFileNormalizer(),
+            new BioprotocolNormalizer(),
             new BlogArticleNormalizer($this->blogClient),
             new CollectionNormalizer($this->collectionsClient),
             new CoverNormalizer(),
@@ -280,6 +287,15 @@ final class ApiSdk
         }
 
         return $this->articles;
+    }
+
+    public function bioprotocols() : Bioprotocols
+    {
+        if (empty($this->bioprotocols)) {
+            $this->bioprotocols = new Bioprotocols($this->bioprotocolClient, $this->serializer);
+        }
+
+        return $this->bioprotocols;
     }
 
     public function blogArticles() : BlogArticles

@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\AnnotationsClient;
 use eLife\ApiClient\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiClient\ApiClient\BioprotocolClient;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\CommunityClient;
@@ -295,6 +296,22 @@ abstract class ApiTestCase extends TestCase
                 ]
             ),
             $response
+        );
+    }
+
+    final protected function mockBioprotocolsCall(string $type, string $id)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/bioprotocol/'.$type.'/'.$id,
+                ['Accept' => (string) new MediaType(BioprotocolClient::TYPE_BIOPROTOCOL, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(BioprotocolClient::TYPE_BIOPROTOCOL, 1)],
+                json_encode($this->createBioprotocolJson())
+            )
         );
     }
 
@@ -1644,6 +1661,27 @@ abstract class ApiTestCase extends TestCase
             'journal' => "External article $id journal",
             'authorLine' => 'Author et all',
             'uri' => "https://doi.org/10.1016/external.$id",
+        ];
+    }
+
+    private function createBioprotocolJson() : array
+    {
+        return [
+            'total' => 1,
+            'items' => [
+                [
+                    'sectionId' => 's1-2-3',
+                    'title' => 'Section title',
+                    'status' => false,
+                    'uri' => 'https://example.com/s1-2-3',
+                ],
+                [
+                    'sectionId' => 's2-3-4',
+                    'title' => 'Section title',
+                    'status' => true,
+                    'uri' => 'https://example.com/s2-3-4',
+                ],
+            ],
         ];
     }
 

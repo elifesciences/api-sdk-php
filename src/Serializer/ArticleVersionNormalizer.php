@@ -337,7 +337,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getAuthors()->notEmpty()) {
                 $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
-                    return $this->normalizer->normalize($author, $format, $context);
+                    return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
                 })->toArray();
             }
 
@@ -372,7 +372,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                                 'source' => $source,
                                 'recipients' => $award->getRecipients()
                                     ->map(function (Author $author) use ($format, $context) {
-                                        return $this->normalizer->normalize($author, $format, $context);
+                                        return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
                                     })->toArray(),
                             ];
 

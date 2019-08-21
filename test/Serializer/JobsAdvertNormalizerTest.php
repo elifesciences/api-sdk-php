@@ -20,7 +20,7 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class JobsAdvertNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var EventNormalizer */
     private $normalizer;

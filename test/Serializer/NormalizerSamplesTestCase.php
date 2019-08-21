@@ -6,7 +6,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-trait NormalizerTestCase
+trait NormalizerSamplesTestCase
 {
     /** @var NormalizerInterface&DenormalizerInterface */
     private $normalizer;
@@ -28,7 +28,7 @@ trait NormalizerTestCase
         $samples = Finder::create()->in($this->samples());
 
         foreach ($samples as $sample) {
-            yield $sample->getFilenameWithoutExtension() => [$sample->getContents()];
+            yield $sample->getRealPath() => [$sample->getContents()];
         }
     }
 

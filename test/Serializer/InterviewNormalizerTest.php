@@ -25,7 +25,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class InterviewNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var InterviewNormalizer */
     private $normalizer;

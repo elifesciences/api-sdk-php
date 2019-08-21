@@ -23,7 +23,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class PressPackageNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var PressPackageNormalizer */
     private $normalizer;

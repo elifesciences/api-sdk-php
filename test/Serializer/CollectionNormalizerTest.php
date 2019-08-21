@@ -27,7 +27,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class CollectionNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var CollectionNormalizer */
     private $normalizer;

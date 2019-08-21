@@ -18,7 +18,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var ArticlePoANormalizer */
     private $normalizer;

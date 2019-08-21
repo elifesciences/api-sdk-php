@@ -18,7 +18,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class ProfileNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var ProfileNormalizer */
     private $normalizer;

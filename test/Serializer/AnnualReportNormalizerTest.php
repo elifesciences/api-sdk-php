@@ -12,7 +12,7 @@ use test\eLife\ApiSdk\TestCase;
 
 final class AnnualReportNormalizerTest extends TestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var AnnualReportNormalizer */
     private $normalizer;

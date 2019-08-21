@@ -15,7 +15,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticleHistoryNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var ArticleHistoryNormalizer */
     private $normalizer;

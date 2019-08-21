@@ -24,7 +24,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class PersonNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var PersonNormalizer */
     private $normalizer;

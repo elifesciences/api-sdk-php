@@ -27,7 +27,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var PodcastEpisodeNormalizer */
     private $normalizer;

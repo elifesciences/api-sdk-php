@@ -24,7 +24,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class DigestNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var DigestNormalizer */
     private $normalizer;

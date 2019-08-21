@@ -22,7 +22,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
-    use NormalizerTestCase;
+    use NormalizerSamplesTestCase;
 
     /** @var ArticleVoRNormalizer */
     private $normalizer;

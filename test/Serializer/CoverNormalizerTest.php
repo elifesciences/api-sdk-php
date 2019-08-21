@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class CoverNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var CoverNormalizer */
     private $normalizer;
 
@@ -158,5 +160,15 @@ final class CoverNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Cover::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/cover-list/v1/*.json#items';
     }
 }

@@ -11,6 +11,8 @@ use test\eLife\ApiSdk\TestCase;
 
 final class BioprotocolNormalizerTest extends TestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var BioprotocolNormalizer */
     private $normalizer;
 
@@ -101,15 +103,27 @@ final class BioprotocolNormalizerTest extends TestCase
             'complete' => [
                 Builder::for(Bioprotocol::class)
                     ->withSectionId('section id')
+                    ->withTitle('title')
                     ->withStatus(true)
                     ->withUri('https://example.com')
                     ->__invoke(),
                 [
                     'sectionId' => 'section id',
+                    'title' => 'title',
                     'status' => true,
                     'uri' => 'https://example.com',
                 ],
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Bioprotocol::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/bioprotocol/v1/*.json#items';
     }
 }

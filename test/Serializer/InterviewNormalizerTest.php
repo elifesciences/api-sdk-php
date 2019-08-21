@@ -277,8 +277,11 @@ final class InterviewNormalizerTest extends ApiTestCase
         return Interview::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/interview/v2';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/interview/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/interview-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='interview']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='interview']";
     }
 }

@@ -5,15 +5,17 @@ namespace eLife\ApiSdk\Model;
 final class Bioprotocol
 {
     private $sectionId;
+    private $title;
     private $status;
     private $uri;
 
     /**
      * @internal
      */
-    public function __construct(string $sectionId, bool $status, string $uri)
+    public function __construct(string $sectionId, string $title, bool $status, string $uri)
     {
         $this->sectionId = $sectionId;
+        $this->title = $title;
         $this->status = $status;
         $this->uri = $uri;
     }
@@ -21,6 +23,11 @@ final class Bioprotocol
     public function getSectionId() : string
     {
         return $this->sectionId;
+    }
+
+    public function getTitle() : string
+    {
+        return $this->title;
     }
 
     public function getStatus() : bool

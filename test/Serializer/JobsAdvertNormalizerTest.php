@@ -201,8 +201,9 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
         return JobAdvert::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/job-advert/v1';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert-list/v1/*.json#items';
     }
 }

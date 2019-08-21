@@ -129,8 +129,9 @@ final class AnnualReportNormalizerTest extends TestCase
         return AnnualReport::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/annual-report/v2';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annual-report/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annual-report-list/v2/*.json#items';
     }
 }

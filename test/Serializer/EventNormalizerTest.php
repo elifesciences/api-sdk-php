@@ -242,8 +242,10 @@ final class EventNormalizerTest extends ApiTestCase
         return Event::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/event/v2';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/event/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/event-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='event']";
     }
 }

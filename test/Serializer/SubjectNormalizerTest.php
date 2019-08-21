@@ -240,8 +240,9 @@ final class SubjectNormalizerTest extends ApiTestCase
         return Subject::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/subject/v1';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/subject/v1/*.json';
+        yield [__DIR__.'/../../vendor/elife/api/dist/samples/subject-list/v1/*.json#items', ['snippet' => false]];
     }
 }

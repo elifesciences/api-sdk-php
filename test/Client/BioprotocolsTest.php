@@ -35,11 +35,13 @@ final class BioprotocolsTest extends ApiTestCase
             [
                 's1-2-3' => Builder::for(Bioprotocol::class)
                     ->withSectionId('s1-2-3')
+                    ->withTitle('Section title')
                     ->withStatus(false)
                     ->withUri('https://example.com/s1-2-3')
                     ->__invoke(),
                 's2-3-4' => Builder::for(Bioprotocol::class)
                     ->withSectionId('s2-3-4')
+                    ->withTitle('Section title')
                     ->withStatus(true)
                     ->withUri('https://example.com/s2-3-4')
                     ->__invoke(),

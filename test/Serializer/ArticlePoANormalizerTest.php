@@ -405,8 +405,12 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         return ArticlePoA::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v2';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='poa']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='poa']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v2/*.json';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='poa']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='poa']";
     }
 }

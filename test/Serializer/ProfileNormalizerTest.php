@@ -218,8 +218,9 @@ final class ProfileNormalizerTest extends ApiTestCase
         return Profile::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/profile/v1';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/profile/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/profile-list/v1/*.json#items';
     }
 }

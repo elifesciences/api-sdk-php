@@ -199,8 +199,8 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
         return ArticleHistory::class;
     }
 
-    protected function samples() : string
+    protected function samples()
     {
-        return __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1/*.json';
     }
 }

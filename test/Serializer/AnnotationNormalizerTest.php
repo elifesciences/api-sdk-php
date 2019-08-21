@@ -19,6 +19,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class AnnotationNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var AnnotationNormalizer */
     private $normalizer;
 
@@ -206,5 +208,15 @@ final class AnnotationNormalizerTest extends ApiTestCase
                 ],
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Annotation::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annotation-list/v1/*.json#items';
     }
 }

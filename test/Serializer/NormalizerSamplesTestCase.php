@@ -2,7 +2,12 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use Symfony\Component\Finder\Finder;
+use function file_get_contents;
+use function gettype;
+use function is_array;
+use function JmesPath\search;
+use LogicException;
+use function substr;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -15,24 +20,60 @@ trait NormalizerSamplesTestCase
      * @test
      * @dataProvider sampleProvider
      */
-    final public function it_denormalize_samples(string $original)
+    final public function it_denormalize_samples(string $original, array $context = [])
     {
-        $denormalized = $this->normalizer->denormalize(json_decode($original, true), $this->class());
-        $normalized = $this->normalizer->normalize($denormalized);
+        $denormalized = $this->normalizer->denormalize(json_decode($original, true), $this->class(), null, $context);
+        $normalized = $this->normalizer->normalize($denormalized, null, $context);
 
         $this->assertJsonStringEqualsJsonString($original, json_encode($normalized));
     }
 
     final public function sampleProvider()
     {
-        $samples = Finder::create()->in($this->samples());
+        foreach ($this->samples() as $path) {
+            if (is_array($path)) {
+                list($path, $context) = $path;
+            } else {
+                $context = [];
+            }
 
-        foreach ($samples as $sample) {
-            yield $sample->getRealPath() => [$sample->getContents()];
+            list($path, $pointer) = explode('#', $path.'#');
+
+            foreach (glob($path) as $sample) {
+                $contents = file_get_contents($sample);
+
+                if ('' === $pointer) {
+                    yield $sample => [$contents, $context];
+
+                    continue;
+                }
+
+                $values = search($pointer, json_decode($contents, true));
+
+                if ('[]' === substr($pointer, -2)) {
+                    $pointer = substr($pointer, 0, -2);
+                }
+
+                if (!is_array($values)) {
+                    throw new LogicException('Expected an array, got '.gettype($values)." for {$sample}#{$pointer}");
+                }
+
+                if (!isset($context['snippet'])) {
+                    $context['snippet'] = true;
+                }
+
+                foreach ($values as $i => $value) {
+                    if (!isset($context['type']) && isset($value['type'])) {
+                        $context['type'] = true;
+                    }
+
+                    yield "{$sample}#{$pointer}[{$i}]" => [json_encode($value), $context];
+                }
+            }
         }
     }
 
     abstract protected function class() : string;
 
-    abstract protected function samples() : string;
+    abstract protected function samples();
 }

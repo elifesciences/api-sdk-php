@@ -82,6 +82,7 @@ final class Builder
                 Bioprotocol::class => function () {
                     return [
                         'sectionId' => 's1-2-3',
+                        'title' => 'Section title',
                         'status' => false,
                         'uri' => 'https://example.com',
                     ];
@@ -223,6 +224,8 @@ final class Builder
                     return [
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
+                        'givenNames' => promise_for(null),
+                        'surname' => promise_for(null),
                         'type' => 'senior-editor',
                         'typeLabel' => 'Senior Editor',
                         'image' => null,
@@ -230,6 +233,7 @@ final class Builder
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
                         'competingInterests' => promise_for(null),
+                        'emailAddresses' => new EmptySequence(),
                     ];
                 },
                 PodcastEpisode::class => function () {

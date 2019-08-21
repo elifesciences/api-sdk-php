@@ -21,8 +21,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function json_encode;
-use function var_dump;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {

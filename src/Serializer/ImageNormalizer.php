@@ -7,7 +7,6 @@ use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function var_dump;
 
 final class ImageNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {

@@ -101,7 +101,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $authorResponse['content'])),
-                    $authorResponse['doi'],
+                    $authorResponse['doi'] ?? null,
                     $authorResponse['id'] ?? null
                 );
             });
@@ -131,7 +131,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $decisionLetter['content'])),
-                    $decisionLetter['doi'],
+                    $decisionLetter['doi'] ?? null,
                     $decisionLetter['id'] ?? null
                 );
             });
@@ -146,7 +146,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     new ArraySequence(array_map(function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     }, $digest['content'])),
-                    $digest['doi']
+                    $digest['doi'] ?? null
                 );
             });
 
@@ -250,8 +250,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     ) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray(),
-                    'doi' => $article->getDigest()->getDoi(),
                 ];
+
+                if ($article->getDigest()->getDoi()) {
+                    $data['digest']['doi'] = $article->getDigest()->getDoi();
+                }
             }
 
             $data['body'] = $article->getContent()->map(function (Block $block) use ($format, $context) {
@@ -296,8 +299,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         ) {
                             return $this->normalizer->normalize($block, $format, $context);
                         })->toArray(),
-                    'doi' => $article->getDecisionLetter()->getDoi(),
                 ];
+
+                if ($article->getDecisionLetter()->getDoi()) {
+                    $data['decisionLetter']['doi'] = $article->getDecisionLetter()->getDoi();
+                }
 
                 if ($article->getDecisionLetter()->getId()) {
                     $data['decisionLetter']['id'] = $article->getDecisionLetter()->getId();
@@ -310,8 +316,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         ->map(function (Block $block) use ($format, $context) {
                             return $this->normalizer->normalize($block, $format, $context);
                         })->toArray(),
-                    'doi' => $article->getAuthorResponse()->getDoi(),
                 ];
+
+                if ($article->getAuthorResponse()->getDoi()) {
+                    $data['authorResponse']['doi'] = $article->getAuthorResponse()->getDoi();
+                }
 
                 if ($article->getAuthorResponse()->getId()) {
                     $data['authorResponse']['id'] = $article->getAuthorResponse()->getId();

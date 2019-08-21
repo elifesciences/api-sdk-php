@@ -27,6 +27,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var PodcastEpisodeNormalizer */
     private $normalizer;
 
@@ -60,10 +62,18 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class),
+        $podcastEpisode = new PodcastEpisode(
+            1,
+            'title',
+            null,
+            new DateTimeImmutable('now', new DateTimeZone('Z')),
+            null,
+            rejection_for('No banner'),
+            Builder::dummy(Image::class),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
-            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+            new PromiseSequence(rejection_for('Chapters should not be unwrapped'))
+        );
 
         return [
             'podcast episode' => [$podcastEpisode, null, true],
@@ -140,26 +150,38 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
+                new PodcastEpisode(
+                    1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
-                            new ArraySequence([
-                                Builder::for(ArticlePoA::class)
-                                    ->withTitlePrefix('title prefix')
-                                    ->withPdf('http://www.example.com/pdf')
-                                    ->withPromiseOfXml('http://www.example.com/xml')
-                                    ->withSubjects(new ArraySequence([
-                                        Builder::for(Subject::class)
-                                            ->withId('subject1')
+                    new ArraySequence(
+                        [
+                            new PodcastEpisodeChapter(
+                                1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
+                                new ArraySequence(
+                                    [
+                                        Builder::for(ArticlePoA::class)
+                                            ->withTitlePrefix('title prefix')
+                                            ->withPdf('http://www.example.com/pdf')
+                                            ->withPromiseOfXml('http://www.example.com/xml')
+                                            ->withSubjects(
+                                                new ArraySequence(
+                                                    [
+                                                        Builder::for(Subject::class)
+                                                            ->withId('subject1')
+                                                            ->__invoke(),
+                                                    ]
+                                                )
+                                            )
+                                            ->withResearchOrganisms(['research organism'])
                                             ->__invoke(),
-                                    ]))
-                                    ->withResearchOrganisms(['research organism'])
-                                    ->__invoke(),
-                                Builder::for(Collection::class)->sample('tropical-disease'),
-                            ])),
-                    ])),
+                                        Builder::for(Collection::class)->sample('tropical-disease'),
+                                    ]
+                                )
+                            ),
+                        ]
+                    )
+                ),
                 ['complete' => true],
                 [
                     'number' => 1,
@@ -297,15 +319,18 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'https://www.example.com/episode.mp3'
                         ),
                     ],
-                    new ArraySequence([
-                        new PodcastEpisodeChapter(
-                            1,
-                            'Chapter title',
-                            null,
-                            0,
-                            null,
-                            new EmptySequence()),
-                    ])
+                    new ArraySequence(
+                        [
+                            new PodcastEpisodeChapter(
+                                1,
+                                'Chapter title',
+                                null,
+                                0,
+                                null,
+                                new EmptySequence()
+                            ),
+                        ]
+                    )
                 ),
                 [],
                 [
@@ -356,14 +381,27 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
+                new PodcastEpisode(
+                    1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
                     promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
-                            Builder::for(ArticlePoA::class)->sample('1'),
-                        ])),
-                    ])),
+                    new ArraySequence(
+                        [
+                            new PodcastEpisodeChapter(
+                                1,
+                                'Chapter title',
+                                'Long chapter title',
+                                0,
+                                'Chapter impact statement',
+                                new ArraySequence(
+                                    [
+                                        Builder::for(ArticlePoA::class)->sample('1'),
+                                    ]
+                                )
+                            ),
+                        ]
+                    )
+                ),
                 ['snippet' => true, 'complete' => true, 'type' => true],
                 [
                     'number' => 1,
@@ -399,11 +437,15 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
+                new PodcastEpisode(
+                    1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-                    new ArraySequence([
-                        new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
-                    ])),
+                    new ArraySequence(
+                        [
+                            new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
+                        ]
+                    )
+                ),
                 ['snippet' => true],
                 [
                     'number' => 1,
@@ -436,5 +478,15 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return PodcastEpisode::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/podcast-episode/v1';
     }
 }

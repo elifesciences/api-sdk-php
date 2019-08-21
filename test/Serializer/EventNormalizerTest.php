@@ -20,6 +20,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class EventNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var EventNormalizer */
     private $normalizer;
 
@@ -233,5 +235,15 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Event::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/event/v2';
     }
 }

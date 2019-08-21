@@ -24,6 +24,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class PersonNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var PersonNormalizer */
     private $normalizer;
 
@@ -257,5 +259,15 @@ final class PersonNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Person::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/person/v1';
     }
 }

@@ -25,6 +25,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class InterviewNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var InterviewNormalizer */
     private $normalizer;
 
@@ -268,5 +270,15 @@ final class InterviewNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Interview::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/interview/v2';
     }
 }

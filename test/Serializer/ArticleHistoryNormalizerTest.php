@@ -15,6 +15,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticleHistoryNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var ArticleHistoryNormalizer */
     private $normalizer;
 
@@ -190,5 +192,15 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return ArticleHistory::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1';
     }
 }

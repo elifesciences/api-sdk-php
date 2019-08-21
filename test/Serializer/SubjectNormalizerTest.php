@@ -18,6 +18,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class SubjectNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var SubjectNormalizer */
     private $normalizer;
 
@@ -231,5 +233,15 @@ final class SubjectNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Subject::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/subject/v1';
     }
 }

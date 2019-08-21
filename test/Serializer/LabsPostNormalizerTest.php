@@ -21,6 +21,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class LabsPostNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
     /** @var LabsPostNormalizer */
     private $normalizer;
 
@@ -251,5 +252,15 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return LabsPost::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/labs-post/v2';
     }
 }

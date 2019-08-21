@@ -14,8 +14,6 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -24,6 +22,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var ArticleVoRNormalizer */
     private $normalizer;
 
@@ -577,22 +577,13 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sampleProvider
-     */
-    public function it_denormalize_samples(string $original) {
-        $denormalized = $this->normalizer->denormalize(json_decode($original, true), ArticleVoR::class);
-        $normalized = $this->normalizer->normalize($denormalized);
-
-        $this->assertJsonStringEqualsJsonString($original, json_encode($normalized));
+    protected function class() : string
+    {
+        return ArticleVoR::class;
     }
 
-    public function sampleProvider() {
-        $samples = Finder::create()->in(__DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v2');
-
-        foreach($samples as $sample) {
-            yield $sample->getFilenameWithoutExtension() => [$sample->getContents()];
-        }
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v2';
     }
 }

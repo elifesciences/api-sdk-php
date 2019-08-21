@@ -18,6 +18,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var ArticlePoANormalizer */
     private $normalizer;
 
@@ -396,5 +398,15 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return ArticlePoA::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v2';
     }
 }

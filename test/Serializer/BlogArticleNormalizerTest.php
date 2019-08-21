@@ -24,6 +24,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class BlogArticleNormalizerTest extends ApiTestCase
 {
+    use NormalizerTestCase;
+
     /** @var BlogArticleNormalizer */
     private $normalizer;
 
@@ -205,5 +207,15 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return BlogArticle::class;
+    }
+
+    protected function samples() : string
+    {
+        return __DIR__.'/../../vendor/elife/api/dist/samples/blog-article/v2';
     }
 }

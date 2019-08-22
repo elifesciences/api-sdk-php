@@ -52,7 +52,7 @@ final class UnknownReferenceNormalizer implements NormalizerInterface, Denormali
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
             }, $object->getAuthors()),
             'title' => $object->getTitle(),
         ];

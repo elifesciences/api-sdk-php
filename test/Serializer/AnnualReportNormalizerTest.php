@@ -12,6 +12,8 @@ use test\eLife\ApiSdk\TestCase;
 
 final class AnnualReportNormalizerTest extends TestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var AnnualReportNormalizer */
     private $normalizer;
 
@@ -120,5 +122,16 @@ final class AnnualReportNormalizerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return AnnualReport::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annual-report/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annual-report-list/v2/*.json#items';
     }
 }

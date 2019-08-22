@@ -53,7 +53,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
             }, $object->getAuthors()),
             'title' => $object->getTitle(),
             'uri' => $object->getUri(),

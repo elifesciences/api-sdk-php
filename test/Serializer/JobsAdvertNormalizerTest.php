@@ -20,6 +20,8 @@ use test\eLife\ApiSdk\ApiTestCase;
 
 final class JobsAdvertNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var EventNormalizer */
     private $normalizer;
 
@@ -192,5 +194,16 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return JobAdvert::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert-list/v1/*.json#items';
     }
 }

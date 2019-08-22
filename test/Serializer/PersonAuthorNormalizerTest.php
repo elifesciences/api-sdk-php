@@ -110,7 +110,6 @@ final class PersonAuthorNormalizerTest extends TestCase
                             ],
                         ],
                     ],
-                    'type' => 'person',
                     'name' => [
                         'preferred' => 'preferred name',
                         'index' => 'index name',
@@ -129,7 +128,6 @@ final class PersonAuthorNormalizerTest extends TestCase
             'minimum' => [
                 new PersonAuthor(new PersonDetails('preferred name', 'index name')),
                 [
-                    'type' => 'person',
                     'name' => [
                         'preferred' => 'preferred name',
                         'index' => 'index name',

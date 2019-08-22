@@ -48,7 +48,10 @@ final class PersonAuthorNormalizer extends AuthorNormalizer
      */
     protected function normalizeAuthor(Author $object, array $data, $format = null, array $context = []) : array
     {
-        $data['type'] = 'person';
+        if ($context['type'] ?? false) {
+            $data['type'] = 'person';
+        }
+
         $data['name'] = [
             'preferred' => $object->getPreferredName(),
             'index' => $object->getIndexName(),

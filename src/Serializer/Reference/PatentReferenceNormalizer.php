@@ -58,7 +58,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'inventors' => array_map(function (AuthorEntry $inventors) use ($format, $context) {
-                return $this->normalizer->normalize($inventors, $format, $context);
+                return $this->normalizer->normalize($inventors, $format, ['type' => true] + $context);
             }, $object->getInventors()),
             'title' => $object->getTitle(),
             'patentType' => $object->getPatentType(),
@@ -75,7 +75,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
 
         if ($object->getAssignees()) {
             $data['assignees'] = array_map(function (AuthorEntry $assignees) use ($format, $context) {
-                return $this->normalizer->normalize($assignees, $format, $context);
+                return $this->normalizer->normalize($assignees, $format, ['type' => true] + $context);
             }, $object->getAssignees());
         }
 

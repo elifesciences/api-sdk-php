@@ -27,6 +27,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class CollectionNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var CollectionNormalizer */
     private $normalizer;
 
@@ -728,5 +730,18 @@ final class CollectionNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Collection::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/collection/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/collection-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='collection']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='collection']";
     }
 }

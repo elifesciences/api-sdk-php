@@ -59,7 +59,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
 
         if (count($object->getPeople())) {
             $data['people'] = $object->getPeople()->map(function (PersonAuthor $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => false] + $context);
             })->toArray();
         }
 

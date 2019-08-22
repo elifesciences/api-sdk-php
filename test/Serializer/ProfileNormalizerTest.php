@@ -18,6 +18,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class ProfileNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var ProfileNormalizer */
     private $normalizer;
 
@@ -209,5 +211,16 @@ final class ProfileNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Profile::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/profile/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/profile-list/v1/*.json#items';
     }
 }

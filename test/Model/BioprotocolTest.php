@@ -23,6 +23,18 @@ final class BioprotocolTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_has_a_title()
+    {
+        $bioprotocol = Builder::for(Bioprotocol::class)
+            ->withTitle('title')
+            ->__invoke();
+
+        $this->assertSame('title', $bioprotocol->getTitle());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_status()
     {
         $bioprotocol = Builder::for(Bioprotocol::class)

@@ -10,7 +10,7 @@ final class BioprotocolNormalizer implements NormalizerInterface, DenormalizerIn
 {
     public function denormalize($data, $class, $format = null, array $context = []) : Bioprotocol
     {
-        return new Bioprotocol($data['sectionId'], $data['status'], $data['uri']);
+        return new Bioprotocol($data['sectionId'], $data['title'], $data['status'], $data['uri']);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool
@@ -25,6 +25,7 @@ final class BioprotocolNormalizer implements NormalizerInterface, DenormalizerIn
     {
         return [
             'sectionId' => $object->getSectionId(),
+            'title' => $object->getTitle(),
             'status' => $object->getStatus(),
             'uri' => $object->getUri(),
         ];

@@ -22,6 +22,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var ArticleVoRNormalizer */
     private $normalizer;
 
@@ -573,5 +575,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return ArticleVoR::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v2/*.json';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='vor']";
     }
 }

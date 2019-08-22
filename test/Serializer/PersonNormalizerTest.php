@@ -7,6 +7,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
@@ -24,6 +25,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class PersonNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var PersonNormalizer */
     private $normalizer;
 
@@ -57,10 +60,11 @@ final class PersonNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), 'senior-editor', 'title', null,
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), rejection_for('Given names should not be unwrapped'),
+            rejection_for('Surname should not be unwrapped'), 'senior-editor', 'title', null,
             new PromiseSequence(rejection_for('Affiliations should not be unwrapped')), rejection_for('Research should not be unwrapped'),
             new PromiseSequence(rejection_for('Profile should not be unwrapped')),
-            rejection_for('Competing interests should not be unwrapped'));
+            rejection_for('Competing interests should not be unwrapped'), new PromiseSequence(rejection_for('Email addresses should not be unwrapped')));
 
         return [
             'person' => [$person, null, true],
@@ -134,15 +138,20 @@ final class PersonNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    'senior-editor', 'Senior Editor', $thumbnail,
+                    promise_for('Given names'), promise_for('Surname'), 'senior-editor', 'Senior Editor', $thumbnail,
                     new ArraySequence([new Place(['affiliation'])]), promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('Person 1 profile text')]),
-                    promise_for('Person 1 competing interests')),
+                    promise_for('Person 1 competing interests'), new ArraySequence([
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
+                    ])),
                 [],
                 [
                     'name' => [
                         'preferred' => 'Person 1 preferred',
                         'index' => 'Person 1 index',
+                        'givenNames' => 'Given names',
+                        'surname' => 'Surname',
                     ],
                     'orcid' => '0000-0002-1825-0097',
                     'id' => 'person1',
@@ -182,11 +191,22 @@ final class PersonNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'competingInterests' => 'Person 1 competing interests',
+                    'emailAddresses' => [
+                        [
+                            'value' => 'foo@example.com',
+                            'access' => 'public',
+                        ],
+                        [
+                            'value' => 'secret@example.com',
+                            'access' => 'restricted',
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [
-                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
+                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), promise_for(null),
+                    promise_for(null), 'senior-editor', 'Senior Editor', null, new EmptySequence(), promise_for(null),
+                    new EmptySequence(), promise_for(null), new EmptySequence()),
                 [],
                 [
                     'name' => [
@@ -202,11 +222,14 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    'senior-editor', 'Senior Editor', $thumbnail,
-                    new ArraySequence([new Place(['affiliation'])]),
+                    promise_for('person1 given'), promise_for('person1 surname'), 'senior-editor', 'Senior Editor',
+                    $thumbnail, new ArraySequence([new Place(['affiliation'])]),
                     promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('person1 profile text')]),
-                    promise_for('person1 competing interests')),
+                    promise_for('person1 competing interests'), new ArraySequence([
+                        new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
+                        new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
+                    ])),
                 ['snippet' => true],
                 [
                     'name' => [
@@ -238,8 +261,10 @@ final class PersonNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), 'senior-editor',
-                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null)),
+                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), promise_for(null),
+                    promise_for(null), 'senior-editor',
+                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null),
+                    new EmptySequence()),
                 ['snippet' => true],
                 [
                     'name' => [
@@ -257,5 +282,16 @@ final class PersonNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Person::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/person/v1/*.json';
+        yield [__DIR__.'/../../vendor/elife/api/dist/samples/person-list/v1/*.json#items', ['snippet' => false]];
     }
 }

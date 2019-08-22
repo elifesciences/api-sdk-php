@@ -24,6 +24,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class DigestNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var DigestNormalizer */
     private $normalizer;
 
@@ -408,5 +410,16 @@ final class DigestNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Digest::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/digest/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/digest-list/v1/*.json#items';
     }
 }

@@ -1969,6 +1969,8 @@ abstract class ApiTestCase extends TestCase
             'name' => [
                 'preferred' => $id.' preferred',
                 'index' => $id.' index',
+                'givenNames' => $id.' given',
+                'surname' => $id.' surname',
             ],
             'orcid' => '0000-0002-1825-0097',
             'affiliations' => [
@@ -2010,21 +2012,37 @@ abstract class ApiTestCase extends TestCase
                     'height' => 140,
                 ],
             ],
+            'emailAddresses' => [
+                [
+                    'value' => 'foo@example.com',
+                    'access' => 'public',
+                ],
+                [
+                    'value' => 'secret@example.com',
+                    'access' => 'restricted',
+                ],
+            ],
         ];
 
         if (!$complete) {
+            unset($person['name']['givenNames']);
+            unset($person['name']['surname']);
             unset($person['orcid']);
             unset($person['affiliations']);
             unset($person['research']);
             unset($person['profile']);
             unset($person['competingInterests']);
             unset($person['image']);
+            unset($person['emailAddresses']);
         }
 
         if ($isSnippet) {
+            unset($person['name']['givenNames']);
+            unset($person['name']['surname']);
             unset($person['research']);
             unset($person['profile']);
             unset($person['competingInterests']);
+            unset($person['emailAddresses']);
         }
 
         return $person;

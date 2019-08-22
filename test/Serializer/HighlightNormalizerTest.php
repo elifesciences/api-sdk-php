@@ -17,6 +17,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class HighlightNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var HighlightNormalizer */
     private $normalizer;
 
@@ -176,5 +178,15 @@ final class HighlightNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Highlight::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/highlight-list/v2/*.json#items';
     }
 }

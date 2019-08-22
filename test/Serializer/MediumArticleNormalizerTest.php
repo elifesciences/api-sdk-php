@@ -18,6 +18,8 @@ use test\eLife\ApiSdk\TestCase;
 
 final class MediumArticleNormalizerTest extends TestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var MediumArticleNormalizer */
     private $normalizer;
 
@@ -141,5 +143,15 @@ final class MediumArticleNormalizerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return MediumArticle::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/medium-article-list/v1/*.json#items';
     }
 }

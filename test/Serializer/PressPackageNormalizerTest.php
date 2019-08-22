@@ -23,6 +23,8 @@ use test\eLife\ApiSdk\Builder;
 
 final class PressPackageNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var PressPackageNormalizer */
     private $normalizer;
 
@@ -302,5 +304,16 @@ final class PressPackageNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return PressPackage::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package/v3/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package-list/v1/*.json#items';
     }
 }

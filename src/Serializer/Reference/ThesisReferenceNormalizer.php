@@ -50,7 +50,7 @@ final class ThesisReferenceNormalizer implements NormalizerInterface, Denormaliz
             'type' => 'thesis',
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
-            'author' => $this->normalizer->normalize($object->getAuthor(), $format, $context),
+            'author' => $this->normalizer->normalize($object->getAuthor(), $format, ['type' => true] + $context),
             'title' => $object->getTitle(),
             'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
         ];

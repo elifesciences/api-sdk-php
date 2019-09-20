@@ -19,7 +19,6 @@ use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
-use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
@@ -685,29 +684,6 @@ abstract class ApiTestCase extends TestCase
                 200,
                 ['Content-Type' => (string) new MediaType(LabsClient::TYPE_POST, 2)],
                 json_encode($this->createLabsPostJson($id, false, $complete))
-            )
-        );
-    }
-
-    final protected function mockMediumArticleListCall(int $page, int $perPage, int $total, $descendingOrder = true)
-    {
-        $articles = array_map(function (int $id) {
-            return $this->createMediumArticleJson($id);
-        }, $this->generateIdList($page, $perPage, $total));
-
-        $this->storage->save(
-            new Request(
-                'GET',
-                'http://api.elifesciences.org/medium-articles?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => (string) new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)]
-            ),
-            new Response(
-                200,
-                ['Content-Type' => (string) new MediaType(MediumClient::TYPE_MEDIUM_ARTICLE_LIST, 1)],
-                json_encode([
-                    'total' => $total,
-                    'items' => $articles,
-                ])
             )
         );
     }
@@ -1933,29 +1909,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $labsPost;
-    }
-
-    private function createMediumArticleJson(int $number)
-    {
-        return [
-            'uri' => 'http://www.example.com/mediumArticle'.$number,
-            'title' => 'Medium article '.$number.' title',
-            'impactStatement' => 'Subject '.$number.' impact statement',
-            'published' => '2000-01-01T00:00:00Z',
-            'image' => [
-                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
-                'alt' => '',
-                'source' => [
-                    'mediaType' => 'image/jpeg',
-                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                    'filename' => 'thumbnail.jpg',
-                ],
-                'size' => [
-                    'width' => 140,
-                    'height' => 140,
-                ],
-            ],
-        ];
     }
 
     private function createPersonJson(string $id, bool $isSnippet = false, bool $complete = false) : array

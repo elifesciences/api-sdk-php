@@ -18,7 +18,7 @@
         "elife/api-client": "^1.0@dev",
         "guzzlehttp/promises": "^1.0",
         "ocramius/package-versions": "^1.1",
-        "symfony/serializer": "^2.8.2 || ^3.0.2"
+        "symfony/serializer": "^2.8.2 || ^3.0.2 || ^4.2.12"
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",

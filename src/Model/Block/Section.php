@@ -23,9 +23,6 @@ final class Section implements Block, HasContent, HasId
         $this->content = $content;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle() : string
     {
         return $this->title;

@@ -15,17 +15,11 @@ final class Copyright
         $this->holder = $holder;
     }
 
-    /**
-     * @return string
-     */
     public function getLicense() : string
     {
         return $this->license;
     }
 
-    /**
-     * @return string
-     */
     public function getStatement() : string
     {
         return $this->statement;

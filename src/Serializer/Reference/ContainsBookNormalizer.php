@@ -58,7 +58,7 @@ trait ContainsBookNormalizer
 
         if ($object->getAuthors()) {
             $data['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
             }, $object->getAuthors());
         }
 
@@ -68,7 +68,7 @@ trait ContainsBookNormalizer
 
         if ($object->getEditors()) {
             $data['editors'] = array_map(function (AuthorEntry $editor) use ($format, $context) {
-                return $this->normalizer->normalize($editor, $format, $context);
+                return $this->normalizer->normalize($editor, $format, ['type' => true] + $context);
             }, $object->getEditors());
         }
 

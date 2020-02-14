@@ -13,14 +13,16 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\LabsPostNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class LabsPostNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var LabsPostNormalizer */
     private $normalizer;
 
@@ -251,5 +253,18 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return LabsPost::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='labs-post']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/labs-post/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/labs-post-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='labs-post']";
     }
 }

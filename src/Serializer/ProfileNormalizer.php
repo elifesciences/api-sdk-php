@@ -31,7 +31,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
             },
             function (string $id) use ($profilesClient) : PromiseInterface {
                 return $profilesClient->getProfile(
-                    ['Accept' => new MediaType(ProfilesClient::TYPE_PROFILE, Profiles::VERSION_PROFILE)],
+                    ['Accept' => (string) new MediaType(ProfilesClient::TYPE_PROFILE, Profiles::VERSION_PROFILE)],
                     $id
                 );
             }

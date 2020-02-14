@@ -9,6 +9,8 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
 {
     private $id;
     private $details;
+    private $givenNames;
+    private $surname;
     private $type;
     private $typeLabel;
     private $image;
@@ -16,6 +18,7 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
     private $research;
     private $profile;
     private $competingInterests;
+    private $emailAddresses;
 
     /**
      * @internal
@@ -23,16 +26,21 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
     public function __construct(
         string $id,
         PersonDetails $details,
+        PromiseInterface $givenNames,
+        PromiseInterface $surname,
         string $type,
         string $typeLabel,
         Image $image = null,
         Sequence $affiliations,
         PromiseInterface $research,
         Sequence $profile,
-        PromiseInterface $competingInterests
+        PromiseInterface $competingInterests,
+        Sequence $emailAddresses
     ) {
         $this->id = $id;
         $this->details = $details;
+        $this->givenNames = $givenNames;
+        $this->surname = $surname;
         $this->type = $type;
         $this->typeLabel = $typeLabel;
         $this->image = $image;
@@ -40,6 +48,7 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
         $this->research = $research;
         $this->profile = $profile;
         $this->competingInterests = $competingInterests;
+        $this->emailAddresses = $emailAddresses;
     }
 
     public function getIdentifier() : Identifier
@@ -55,6 +64,22 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
     public function getDetails() : PersonDetails
     {
         return $this->details;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGivenNames()
+    {
+        return $this->givenNames->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSurname()
+    {
+        return $this->surname->wait();
     }
 
     public function getType() : string
@@ -105,5 +130,13 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
     public function getCompetingInterests()
     {
         return $this->competingInterests->wait();
+    }
+
+    /**
+     * @return Sequence|AccessControl[]
+     */
+    public function getEmailAddresses() : Sequence
+    {
+        return $this->emailAddresses;
     }
 }

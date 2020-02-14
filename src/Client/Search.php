@@ -147,7 +147,7 @@ final class Search implements Iterator, Sequence
 
         $resultPromise = $this->searchClient
             ->query(
-                ['Accept' => new MediaType(SearchClient::TYPE_SEARCH, self::VERSION_SEARCH)],
+                ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, self::VERSION_SEARCH)],
                 $this->query,
                 ($offset / $length) + 1,
                 $length,

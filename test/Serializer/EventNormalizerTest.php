@@ -13,13 +13,15 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class EventNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var EventNormalizer */
     private $normalizer;
 
@@ -233,5 +235,17 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Event::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/event/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/event-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='event']";
     }
 }

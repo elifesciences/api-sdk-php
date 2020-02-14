@@ -15,14 +15,16 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PressPackageNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var PressPackageNormalizer */
     private $normalizer;
 
@@ -302,5 +304,16 @@ final class PressPackageNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return PressPackage::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package/v3/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package-list/v1/*.json#items';
     }
 }

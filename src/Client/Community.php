@@ -54,7 +54,7 @@ final class Community implements Iterator, Sequence
 
         return new PromiseSequence($this->communityClient
             ->listContent(
-                ['Accept' => new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, self::VERSION_COMMUNITY_LIST)],
+                ['Accept' => (string) new MediaType(CommunityClient::TYPE_COMMUNITY_LIST, self::VERSION_COMMUNITY_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

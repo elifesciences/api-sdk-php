@@ -53,7 +53,7 @@ final class PreprintReferenceNormalizer implements NormalizerInterface, Denormal
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
             }, $object->getAuthors()),
             'articleTitle' => $object->getArticleTitle(),
             'source' => $object->getSource(),

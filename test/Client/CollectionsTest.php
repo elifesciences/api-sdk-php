@@ -93,7 +93,7 @@ final class CollectionsTest extends ApiTestCase
 
         $this->mockNotFound(
             'collections?page=6&per-page=1&order=desc',
-            ['Accept' => new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
+            ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION_LIST, 1)]
         );
 
         $this->assertFalse(isset($this->collections[5]));

@@ -144,7 +144,6 @@ final class GroupAuthorNormalizerTest extends TestCase
                                     ],
                                 ],
                             ],
-                            'type' => 'person',
                             'name' => [
                                 'preferred' => 'preferred name',
                                 'index' => 'index name',

@@ -18,15 +18,17 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class PodcastEpisodeNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var PodcastEpisodeNormalizer */
     private $normalizer;
 
@@ -436,5 +438,18 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return PodcastEpisode::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='podcast-episode']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/podcast-episode/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/podcast-episode-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='podcast-episode']";
     }
 }

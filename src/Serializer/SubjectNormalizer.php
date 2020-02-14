@@ -11,10 +11,10 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -31,7 +31,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
             },
             function (string $id) use ($subjectsClient) : PromiseInterface {
                 return $subjectsClient->getSubject(
-                    ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, Subjects::VERSION_SUBJECT)],
+                    ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, Subjects::VERSION_SUBJECT)],
                     $id
                 );
             }

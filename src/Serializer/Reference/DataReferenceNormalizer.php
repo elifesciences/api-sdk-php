@@ -74,7 +74,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
 
         if ($object->getAuthors()) {
             $data['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {
-                return $this->normalizer->normalize($author, $format, $context);
+                return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
             }, $object->getAuthors());
         }
 
@@ -84,7 +84,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
 
         if ($object->getCompilers()) {
             $data['compilers'] = array_map(function (AuthorEntry $compiler) use ($format, $context) {
-                return $this->normalizer->normalize($compiler, $format, $context);
+                return $this->normalizer->normalize($compiler, $format, ['type' => true] + $context);
             }, $object->getCompilers());
         }
 
@@ -94,7 +94,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
 
         if ($object->getCurators()) {
             $data['curators'] = array_map(function (AuthorEntry $curator) use ($format, $context) {
-                return $this->normalizer->normalize($curator, $format, $context);
+                return $this->normalizer->normalize($curator, $format, ['type' => true] + $context);
             }, $object->getCurators());
         }
 

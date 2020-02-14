@@ -34,7 +34,7 @@ final class LabsPosts implements Iterator, Sequence
     {
         return $this->labsClient
             ->getPost(
-                ['Accept' => new MediaType(LabsClient::TYPE_POST, self::VERSION_POST)],
+                ['Accept' => (string) new MediaType(LabsClient::TYPE_POST, self::VERSION_POST)],
                 $id
             )
             ->then(function (Result $result) {
@@ -54,7 +54,7 @@ final class LabsPosts implements Iterator, Sequence
 
         return new PromiseSequence($this->labsClient
             ->listPosts(
-                ['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, self::VERSION_POST_LIST)],
+                ['Accept' => (string) new MediaType(LabsClient::TYPE_POST_LIST, self::VERSION_POST_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

@@ -26,10 +26,10 @@ use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 abstract class ArticleVersionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -79,6 +79,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             case 'retraction':
             case 'registered-report':
             case 'replication-study':
+            case 'review-article':
             case 'scientific-correspondence':
             case 'short-report':
             case 'tools-resources':
@@ -336,7 +337,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             if ($object->getAuthors()->notEmpty()) {
                 $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
-                    return $this->normalizer->normalize($author, $format, $context);
+                    return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
                 })->toArray();
             }
 
@@ -371,7 +372,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                                 'source' => $source,
                                 'recipients' => $award->getRecipients()
                                     ->map(function (Author $author) use ($format, $context) {
-                                        return $this->normalizer->normalize($author, $format, $context);
+                                        return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
                                     })->toArray(),
                             ];
 
@@ -430,6 +431,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             'retraction',
             'registered-report',
             'replication-study',
+            'review-article',
             'scientific-correspondence',
             'short-report',
             'tools-resources',

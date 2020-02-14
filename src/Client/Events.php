@@ -37,7 +37,7 @@ final class Events implements Iterator, Sequence
     {
         return $this->eventsClient
             ->getEvent(
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT, self::VERSION_EVENT)],
+                ['Accept' => (string) new MediaType(EventsClient::TYPE_EVENT, self::VERSION_EVENT)],
                 $id
             )
             ->then(function (Result $result) {
@@ -70,7 +70,7 @@ final class Events implements Iterator, Sequence
 
         return new PromiseSequence($this->eventsClient
             ->listEvents(
-                ['Accept' => new MediaType(EventsClient::TYPE_EVENT_LIST, self::VERSION_EVENT_LIST)],
+                ['Accept' => (string) new MediaType(EventsClient::TYPE_EVENT_LIST, self::VERSION_EVENT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->show,

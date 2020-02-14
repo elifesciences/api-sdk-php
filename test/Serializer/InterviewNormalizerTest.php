@@ -17,14 +17,16 @@ use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class InterviewNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var InterviewNormalizer */
     private $normalizer;
 
@@ -268,5 +270,18 @@ final class InterviewNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Interview::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/interview/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/interview-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='interview']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='interview']";
     }
 }

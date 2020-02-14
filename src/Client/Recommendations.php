@@ -60,7 +60,7 @@ final class Recommendations
 
                 return new PromiseSequence($this->recommendationsClient
                     ->list(
-                        ['Accept' => new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, Recommendations::VERSION_RECOMMENDATIONS)],
+                        ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, Recommendations::VERSION_RECOMMENDATIONS)],
                         $this->type,
                         $this->id,
                         ($offset / $length) + 1,

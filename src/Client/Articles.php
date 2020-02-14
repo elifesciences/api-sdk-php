@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 final class Articles implements Iterator, Sequence
 {
     const VERSION_ARTICLE_POA = 2;
-    const VERSION_ARTICLE_VOR = 2;
+    const VERSION_ARTICLE_VOR = 3;
     const VERSION_ARTICLE_LIST = 1;
     const VERSION_ARTICLE_HISTORY = 1;
     const VERSION_ARTICLE_RELATED = 1;
@@ -88,7 +88,7 @@ final class Articles implements Iterator, Sequence
         return $this->articlesClient
             ->getArticleHistory(
                 [
-                    'Accept' => [new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, self::VERSION_ARTICLE_HISTORY)],
+                    'Accept' => [(string) new MediaType(ArticlesClient::TYPE_ARTICLE_HISTORY, self::VERSION_ARTICLE_HISTORY)],
                 ],
                 $id
             )
@@ -102,7 +102,7 @@ final class Articles implements Iterator, Sequence
         return new PromiseSequence($this->articlesClient
             ->getRelatedArticles(
                 [
-                    'Accept' => [new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, self::VERSION_ARTICLE_RELATED)],
+                    'Accept' => [(string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, self::VERSION_ARTICLE_RELATED)],
                 ],
                 $id
             )
@@ -125,7 +125,7 @@ final class Articles implements Iterator, Sequence
 
         return new PromiseSequence($this->articlesClient
             ->listArticles(
-                ['Accept' => new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, self::VERSION_ARTICLE_LIST)],
+                ['Accept' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_LIST, self::VERSION_ARTICLE_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,

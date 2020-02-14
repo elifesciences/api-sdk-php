@@ -15,10 +15,10 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PodcastEpisodeNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -35,7 +35,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             },
             function (int $number) use ($podcastClient) : PromiseInterface {
                 return $podcastClient->getEpisode(
-                    ['Accept' => new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, PodcastEpisodes::VERSION_PODCAST_EPISODE)],
+                    ['Accept' => (string) new MediaType(PodcastClient::TYPE_PODCAST_EPISODE, PodcastEpisodes::VERSION_PODCAST_EPISODE)],
                     $number
                 );
             }

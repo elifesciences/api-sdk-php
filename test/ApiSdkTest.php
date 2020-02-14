@@ -6,6 +6,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Annotations;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Client\Articles;
+use eLife\ApiSdk\Client\Bioprotocols;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Client\Collections;
 use eLife\ApiSdk\Client\Community;
@@ -83,6 +84,18 @@ final class ApiSdkTest extends ApiTestCase
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->articles()->get('article7')->wait());
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->articles()->getHistory('article7')->wait());
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_bioprotocols()
+    {
+        $this->assertInstanceOf(Bioprotocols::class, $this->apiSdk->bioprotocols());
+
+        $this->mockBioprotocolsCall('article', '09560');
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->bioprotocols()->list(Identifier::article('09560'))->wait());
     }
 
     /**

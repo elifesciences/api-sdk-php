@@ -13,13 +13,15 @@ use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\JobAdvertNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class JobsAdvertNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var EventNormalizer */
     private $normalizer;
 
@@ -192,5 +194,16 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return JobAdvert::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert-list/v1/*.json#items';
     }
 }

@@ -15,6 +15,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AssetFile;
+use eLife\ApiSdk\Model\Bioprotocol;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\BlogArticle;
@@ -45,11 +46,11 @@ use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class Builder
 {
@@ -76,6 +77,14 @@ final class Builder
                         'area' => new EmptySequence(),
                         'country' => null,
                         'postalCode' => null,
+                    ];
+                },
+                Bioprotocol::class => function () {
+                    return [
+                        'sectionId' => 's1-2-3',
+                        'title' => 'Section title',
+                        'status' => false,
+                        'uri' => 'https://example.com',
                     ];
                 },
                 BlogArticle::class => function () {
@@ -215,6 +224,8 @@ final class Builder
                     return [
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
+                        'givenNames' => promise_for(null),
+                        'surname' => promise_for(null),
                         'type' => 'senior-editor',
                         'typeLabel' => 'Senior Editor',
                         'image' => null,
@@ -222,6 +233,7 @@ final class Builder
                         'research' => promise_for(null),
                         'profile' => new EmptySequence(),
                         'competingInterests' => promise_for(null),
+                        'emailAddresses' => new EmptySequence(),
                     ];
                 },
                 PodcastEpisode::class => function () {

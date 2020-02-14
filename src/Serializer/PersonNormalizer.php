@@ -8,6 +8,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
+use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Person;
@@ -15,10 +16,10 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use function GuzzleHttp\Promise\promise_for;
 
 final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -35,7 +36,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             },
             function (string $id) use ($peopleClient) : PromiseInterface {
                 return $peopleClient->getPerson(
-                    ['Accept' => new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
+                    ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, People::VERSION_PERSON)],
                     $id
                 );
             }
@@ -57,6 +58,21 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
                     return $person['competingInterests'] ?? null;
                 });
 
+            $data['emailAddresses'] = new PromiseSequence($person
+                ->then(function (Result $profile) {
+                    return $profile['emailAddresses'] ?? [];
+                }));
+
+            $data['name']['givenNames'] = $person
+                ->then(function (Result $person) {
+                    return $person['name']['givenNames'] ?? null;
+                });
+
+            $data['name']['surname'] = $person
+                ->then(function (Result $person) {
+                    return $person['name']['surname'] ?? null;
+                });
+
             $data['profile'] = new PromiseSequence($person
                 ->then(function (Result $person) {
                     return $person['profile'] ?? [];
@@ -71,6 +87,12 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
 
             $data['competingInterests'] = promise_for($data['competingInterests'] ?? null);
 
+            $data['emailAddresses'] = new ArraySequence($data['emailAddresses'] ?? []);
+
+            $data['name']['givenNames'] = promise_for($data['name']['givenNames'] ?? null);
+
+            $data['name']['surname'] = promise_for($data['name']['surname'] ?? null);
+
             $data['profile'] = new ArraySequence($data['profile'] ?? []);
 
             $data['research'] = promise_for($data['research'] ?? []);
@@ -80,6 +102,12 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
             unset($context['snippet']);
 
             return $this->denormalizer->denormalize($place, Place::class, $format, $context);
+        });
+
+        $data['emailAddresses'] = $data['emailAddresses']->map(function (array $accessControl) use ($format, $context) {
+            unset($context['snippet']);
+
+            return $this->denormalizer->denormalize($accessControl, AccessControl::class, $format, $context);
         });
 
         if (isset($data['image'])) {
@@ -112,13 +140,16 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         return new Person(
             $data['id'],
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
+            $data['name']['givenNames'],
+            $data['name']['surname'],
             $data['type']['id'],
             $data['type']['label'],
             $data['image'] ?? null,
             $data['affiliations'],
             $data['research'],
             $data['profile'],
-            $data['competingInterests']
+            $data['competingInterests'],
+            $data['emailAddresses']
         );
     }
 
@@ -145,9 +176,23 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         }
 
         if (empty($context['snippet'])) {
+            if ($object->getGivenNames()) {
+                $data['name']['givenNames'] = $object->getGivenNames();
+            }
+
+            if ($object->getSurname()) {
+                $data['name']['surname'] = $object->getSurname();
+            }
+
             if ($object->getAffiliations()->notEmpty()) {
                 $data['affiliations'] = $object->getAffiliations()->map(function (Place $place) use ($format, $context) {
                     return $this->normalizer->normalize($place, $format, $context);
+                })->toArray();
+            }
+
+            if ($object->getEmailAddresses()->notEmpty()) {
+                $data['emailAddresses'] = $object->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
+                    return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
 

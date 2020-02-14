@@ -15,15 +15,17 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
+use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class BlogArticleNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var BlogArticleNormalizer */
     private $normalizer;
 
@@ -205,5 +207,18 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return BlogArticle::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/blog-article/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/blog-article-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='blog-article']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='blog-article']";
     }
 }

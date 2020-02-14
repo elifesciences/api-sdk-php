@@ -32,7 +32,7 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
             },
             function (string $id) use ($jobAdvertsClient) : PromiseInterface {
                 return $jobAdvertsClient->getJobAdvert(
-                    ['Accept' => new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, JobAdverts::VERSION_JOB_ADVERT)],
+                    ['Accept' => (string) new MediaType(JobAdvertsClient::TYPE_JOB_ADVERT, JobAdverts::VERSION_JOB_ADVERT)],
                     $id
                 );
             }

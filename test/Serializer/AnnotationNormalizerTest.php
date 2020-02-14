@@ -12,13 +12,15 @@ use eLife\ApiSdk\Model\Annotation;
 use eLife\ApiSdk\Model\AnnotationDocument;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\AnnotationNormalizer;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
-use function GuzzleHttp\Promise\rejection_for;
 
 final class AnnotationNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var AnnotationNormalizer */
     private $normalizer;
 
@@ -206,5 +208,15 @@ final class AnnotationNormalizerTest extends ApiTestCase
                 ],
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Annotation::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/annotation-list/v1/*.json#items';
     }
 }

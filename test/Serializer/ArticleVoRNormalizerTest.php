@@ -14,14 +14,16 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var ArticleVoRNormalizer */
     private $normalizer;
 
@@ -573,5 +575,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return ArticleVoR::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v2/*.json';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='vor']";
     }
 }

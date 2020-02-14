@@ -10,14 +10,16 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
-use function GuzzleHttp\Promise\promise_for;
 
 final class SubjectNormalizerTest extends ApiTestCase
 {
+    use NormalizerSamplesTestCase;
+
     /** @var SubjectNormalizer */
     private $normalizer;
 
@@ -231,5 +233,16 @@ final class SubjectNormalizerTest extends ApiTestCase
                 },
             ],
         ];
+    }
+
+    protected function class() : string
+    {
+        return Subject::class;
+    }
+
+    protected function samples()
+    {
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/subject/v1/*.json';
+        yield [__DIR__.'/../../vendor/elife/api/dist/samples/subject-list/v1/*.json#items', ['snippet' => false]];
     }
 }

@@ -13,6 +13,7 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\MediaContact;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -108,7 +109,9 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-        return PressPackage::class === $type;
+        return PressPackage::class === $type
+            ||
+            is_a($type, Model::class, true) && 'press-package' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -121,6 +124,10 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             'title' => $object->getTitle(),
             'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'press-package';
+        }
 
         if ($object->getUpdatedDate()) {
             $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);

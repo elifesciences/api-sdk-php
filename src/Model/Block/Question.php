@@ -18,9 +18,6 @@ final class Question implements Block
         $this->answer = $answer;
     }
 
-    /**
-     * @return string
-     */
     public function getQuestion() : string
     {
         return $this->question;

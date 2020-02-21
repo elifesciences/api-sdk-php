@@ -57,9 +57,6 @@ final class Box implements Block, HasContent, HasDoi, HasId
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle() : string
     {
         return $this->title;

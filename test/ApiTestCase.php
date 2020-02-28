@@ -590,11 +590,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/highlights/$id?page=$page&per-page=$perPage&order=".($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)]
+                ['Accept' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 2)],
+                ['Content-Type' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 3)],
                 json_encode([
                     'total' => $total,
                     'items' => $highlights,

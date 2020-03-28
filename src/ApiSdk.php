@@ -23,6 +23,7 @@ use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
+use eLife\ApiClient\ApiClient\RegionalCollectionsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -48,6 +49,7 @@ use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Client\Recommendations;
+use eLife\ApiSdk\Client\RegionalCollections;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
@@ -89,6 +91,7 @@ use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
+use eLife\ApiSdk\Serializer\RegionalCollectionNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
@@ -121,6 +124,7 @@ final class ApiSdk
     private $pressPackagesClient;
     private $profilesClient;
     private $recommendationsClient;
+    private $regionalCollectionsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -144,6 +148,7 @@ final class ApiSdk
     private $profiles;
     private $collections;
     private $recommendations;
+    private $regionalCollections;
     private $search;
     private $subjects;
 
@@ -179,6 +184,7 @@ final class ApiSdk
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
         $this->profilesClient = new ProfilesClient($this->httpClient);
+        $this->regionalCollectionsClient = new RegionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
@@ -220,6 +226,7 @@ final class ApiSdk
             new PodcastEpisodeNormalizer($this->podcastClient),
             new PressPackageNormalizer($this->pressPackagesClient),
             new ProfileNormalizer($this->profilesClient),
+            new RegionalCollectionNormalizer($this->regionalCollectionsClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
@@ -449,6 +456,15 @@ final class ApiSdk
         }
 
         return $this->recommendations;
+    }
+
+    public function regionalCollections() : RegionalCollections
+    {
+        if (empty($this->regionalCollections)) {
+            $this->regionalCollections = new RegionalCollections($this->regionalCollectionsClient, $this->serializer);
+        }
+
+        return $this->regionalCollections;
     }
 
     public function subjects() : Subjects

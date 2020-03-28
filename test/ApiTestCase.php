@@ -26,6 +26,7 @@ use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
+use eLife\ApiClient\ApiClient\RegionalCollectionsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -1114,6 +1115,59 @@ abstract class ApiTestCase extends TestCase
                     'total' => $total,
                     'items' => $recommendations,
                 ])
+            )
+        );
+    }
+
+    final protected function mockRegionalCollectionListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        $descendingOrder = true,
+        array $subjects = [],
+        array $containing = []
+    ) {
+        $regionalCollections = array_map(function (int $id) {
+            return $this->createRegionalCollectionJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        $subjectsQuery = implode('', array_map(function (string $subjectId) {
+            return '&subject[]='.$subjectId;
+        }, $subjects));
+
+        $containingQuery = implode('', array_map(function (string $item) {
+            return '&containing[]='.$item;
+        }, $containing));
+
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/regional-collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$containingQuery,
+                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION_LIST, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $regionalCollections,
+                ])
+            )
+        );
+    }
+
+    final protected function mockRegionalCollectionCall(string $id, bool $complete = true)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/regional-collections/'.$id,
+                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION, 1)],
+                json_encode($this->createRegionalCollectionJson($id, false, $complete))
             )
         );
     }
@@ -2491,6 +2545,165 @@ abstract class ApiTestCase extends TestCase
         }
 
         return $digest;
+    }
+
+    private function createRegionalCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $regionalCollection = [
+            'id' => $id,
+            'title' => ucfirst($id),
+            'impactStatement' => ucfirst($id).' impact statement',
+            'published' => '2000-01-01T00:00:00Z',
+            'updated' => '2000-01-02T00:00:00Z',
+            'image' => [
+                'banner' => [
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
+                    ],
+                    'size' => [
+                        'width' => 1800,
+                        'height' => 900,
+                    ],
+                ],
+                'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
+                    ],
+                ],
+            ],
+            'editors' => [
+                [
+                    'id' => 'bcooper',
+                    'type' => [
+                        'id' => 'reviewing-editor',
+                        'label' => 'Reviewing Editor',
+                    ],
+                    'name' => [
+                        'preferred' => 'Ben Cooper',
+                        'index' => 'Cooper, Ben',
+                    ],
+                ],
+                [
+                    'id' => 'pjha',
+                    'type' => [
+                        'id' => 'senior-editor',
+                        'label' => 'Senior Editor',
+                    ],
+                    'name' => [
+                        'preferred' => 'Prabhat Jha',
+                        'index' => 'Jha, Prabhat',
+                    ],
+                ],
+            ],
+            'summary' => [
+                [
+                    'type' => 'paragraph',
+                    'text' => 'summary',
+                ],
+            ],
+            'content' => [
+                [
+                    'type' => 'blog-article',
+                    'id' => '359325',
+                    'title' => 'Media coverage: Slime can see',
+                    'impactStatement' => 'In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.',
+                    'published' => '2016-07-08T08:33:25Z',
+                    'subjects' => [
+                        [
+                            'id' => 'biophysics-structural-biology',
+                            'name' => 'Biophysics and Structural Biology',
+                        ],
+                    ],
+                ],
+            ],
+            'relatedContent' => [
+                [
+                    'type' => 'research-article',
+                    'status' => 'poa',
+                    'stage' => 'published',
+                    'id' => '14107',
+                    'version' => 1,
+                    'doi' => '10.7554/eLife.14107',
+                    'authorLine' => 'Yongjian Huang et al',
+                    'title' => 'Molecular basis for multimerization in the activation of the epidermal growth factor',
+                    'published' => '2016-03-28T00:00:00Z',
+                    'versionDate' => '2016-03-28T00:00:00Z',
+                    'statusDate' => '2016-03-28T00:00:00Z',
+                    'volume' => 5,
+                    'elocationId' => 'e14107',
+                    'abstract' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'podcastEpisodes' => [
+                $podcastEpisode = [
+                    'number' => 29,
+                    'title' => 'April/May 2016',
+                    'published' => '2016-05-27T13:19:42Z',
+                    'image' => [
+                        'thumbnail' => [
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'alt' => '',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
+                    'sources' => [
+                        [
+                            'mediaType' => 'audio/mpeg',
+                            'uri' => 'https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3',
+                        ],
+                    ],
+                ],
+            ],
+            'subjects' => [$this->createSubjectJson(1, true)],
+        ];
+
+        if (!$complete) {
+            unset($regionalCollection['impactStatement']);
+            unset($regionalCollection['updated']);
+            unset($regionalCollection['selectedCurator']['etAl']);
+            unset($regionalCollection['summary']);
+            unset($regionalCollection['relatedContent']);
+            unset($regionalCollection['podcastEpisodes']);
+            unset($regionalCollection['subjects']);
+        }
+
+        if ($isSnippet) {
+            unset($regionalCollection['image']['banner']);
+            unset($regionalCollection['editors']);
+            unset($regionalCollection['summary']);
+            unset($regionalCollection['content']);
+            unset($regionalCollection['relatedContent']);
+            unset($regionalCollection['podcastEpisodes']);
+        }
+
+        return $regionalCollection;
     }
 
     private function createSearchResultJson(string $id) : array

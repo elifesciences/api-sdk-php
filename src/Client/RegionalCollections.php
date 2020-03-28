@@ -44,7 +44,7 @@ final class RegionalCollections implements Iterator, Sequence
             });
     }
 
-    public function forSubject(string ...$subjectId) : self
+    public function forSubject(string ...$subjectId) : RegionalCollections
     {
         $clone = clone $this;
 

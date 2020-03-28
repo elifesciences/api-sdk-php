@@ -18,6 +18,7 @@ final class BlogArticles implements Iterator, Sequence
     const VERSION_BLOG_ARTICLE_LIST = 1;
 
     use Client;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;
@@ -41,19 +42,6 @@ final class BlogArticles implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), BlogArticle::class);
             });
-    }
-
-    public function forSubject(string ...$subjectId) : BlogArticles
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence

@@ -18,6 +18,7 @@ final class People implements Iterator, Sequence
     const VERSION_PERSON_LIST = 1;
 
     use Client;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;
@@ -42,19 +43,6 @@ final class People implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), Person::class);
             });
-    }
-
-    public function forSubject(string ...$subjectId) : People
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function forType(string ...$type) : People

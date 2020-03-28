@@ -23,6 +23,7 @@ final class Articles implements Iterator, Sequence
     const VERSION_ARTICLE_RELATED = 1;
 
     use Client;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;
@@ -34,19 +35,6 @@ final class Articles implements Iterator, Sequence
     {
         $this->articlesClient = $articlesClient;
         $this->denormalizer = $denormalizer;
-    }
-
-    public function forSubject(string ...$subjectId) : Articles
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function get(string $id, int $version = null) : PromiseInterface

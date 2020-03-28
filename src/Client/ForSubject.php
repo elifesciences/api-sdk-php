@@ -4,10 +4,9 @@ namespace eLife\ApiSdk\Client;
 
 trait ForSubject
 {
-    private $count;
     private $subjectsQuery = [];
 
-    public function forSubject(string ...$subjectId) : self
+    final public function forSubject(string ...$subjectId) : self
     {
         $clone = clone $this;
 

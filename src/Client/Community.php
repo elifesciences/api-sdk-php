@@ -69,4 +69,11 @@ final class Community implements Iterator, Sequence
 
         return $clone;
     }
+
+    protected function invalidateDataIfDifferent(string $field, self $another)
+    {
+        if ($this->$field != $another->$field) {
+            $this->count = null;
+        }
+    }
 }

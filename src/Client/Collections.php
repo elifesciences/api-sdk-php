@@ -23,7 +23,6 @@ final class Collections implements Iterator, Sequence
 
     private $count;
     private $descendingOrder = true;
-    private $subjectsQuery = [];
     private $collectionsClient;
     private $denormalizer;
 
@@ -84,5 +83,12 @@ final class Collections implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
+    }
+
+    protected function invalidateDataIfDifferent(string $field, self $another)
+    {
+        if ($this->$field != $another->$field) {
+            $this->count = null;
+        }
     }
 }

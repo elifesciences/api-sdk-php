@@ -20,6 +20,7 @@ final class Search implements Iterator, Sequence
     const VERSION_SEARCH = 1;
 
     use Client;
+    use ForSubject;
 
     // collaborators
     private $searchClient;
@@ -64,17 +65,6 @@ final class Search implements Iterator, Sequence
         $clone->query = $query;
 
         $clone->invalidateDataIfDifferent('query', $this);
-
-        return $clone;
-    }
-
-    public function forSubject(string ...$subjectId) : self
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        $clone->invalidateDataIfDifferent('subjectsQuery', $this);
 
         return $clone;
     }
@@ -211,7 +201,7 @@ final class Search implements Iterator, Sequence
         return $this->subjects->wait();
     }
 
-    private function invalidateDataIfDifferent(string $field, self $another)
+    protected function invalidateDataIfDifferent(string $field, self $another)
     {
         if ($this->$field != $another->$field) {
             $this->count = null;

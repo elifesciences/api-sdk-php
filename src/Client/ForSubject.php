@@ -4,6 +4,8 @@ namespace eLife\ApiSdk\Client;
 
 trait ForSubject
 {
+    use InvalidateDataIfDifferent;
+
     private $subjectsQuery = [];
 
     final public function forSubject(string ...$subjectId) : self
@@ -12,9 +14,7 @@ trait ForSubject
 
         $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
 
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
+        $clone->invalidateDataIfDifferent('subjectsQuery', $this);
 
         return $clone;
     }

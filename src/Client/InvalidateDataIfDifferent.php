@@ -4,5 +4,5 @@ namespace eLife\ApiSdk\Client;
 
 trait InvalidateDataIfDifferent
 {
-    protected abstract function invalidateDataIfDifferent(string $field, self $another);
+    abstract protected function invalidateDataIfDifferent(string $field, self $another);
 }

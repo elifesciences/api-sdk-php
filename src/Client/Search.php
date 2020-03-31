@@ -68,7 +68,7 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
 
-    final public function forSubject(string ...$subjectId) : self
+    public function forSubject(string ...$subjectId) : self
     {
         $clone = clone $this;
 

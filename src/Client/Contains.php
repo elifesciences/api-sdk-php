@@ -6,7 +6,7 @@ use eLife\ApiSdk\Model\Identifier;
 
 trait Contains
 {
-    use InvalidateDataIfDifferent;
+    use InvalidateData;
 
     private $containingQuery = [];
 
@@ -16,7 +16,9 @@ trait Contains
 
         $clone->containingQuery = array_unique(array_merge($this->containingQuery, array_map('strval', $items)));
 
-        $clone->invalidateDataIfDifferent('containingQuery', $this);
+        if ($clone->containingQuery !== $this->containingQuery) {
+            $clone->invalidateData();
+        }
 
         return $clone;
     }

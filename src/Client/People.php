@@ -99,10 +99,8 @@ final class People implements Iterator, Sequence
         return $clone;
     }
 
-    protected function invalidateDataIfDifferent(string $field, self $another)
+    protected function invalidateData()
     {
-        if ($this->$field != $another->$field) {
-            $this->count = null;
-        }
+        $this->count = null;
     }
 }

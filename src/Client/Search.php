@@ -201,12 +201,17 @@ final class Search implements Iterator, Sequence
         return $this->subjects->wait();
     }
 
-    protected function invalidateDataIfDifferent(string $field, self $another)
+    private function invalidateDataIfDifferent(string $field, self $another)
     {
         if ($this->$field != $another->$field) {
-            $this->count = null;
-            $this->types = null;
-            $this->subjects = null;
+            $this->invalidateData();
         }
+    }
+
+    protected function invalidateData()
+    {
+        $this->count = null;
+        $this->types = null;
+        $this->subjects = null;
     }
 }

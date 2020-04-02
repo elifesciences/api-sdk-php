@@ -2,20 +2,20 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\RegionalCollectionsClient;
+use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\RegionalCollection;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class RegionalCollections implements Iterator, Sequence
+final class PromotionalCollections implements Iterator, Sequence
 {
-    const VERSION_REGIONAL_COLLECTION = 1;
-    const VERSION_REGIONAL_COLLECTION_LIST = 1;
+    const VERSION_PROMOTIONAL_COLLECTION = 1;
+    const VERSION_PROMOTIONAL_COLLECTION_LIST = 1;
 
     use Client;
     use Contains;
@@ -23,28 +23,28 @@ final class RegionalCollections implements Iterator, Sequence
     private $count;
     private $descendingOrder = true;
     private $subjectsQuery = [];
-    private $regionalCollectionsClient;
+    private $promotionalCollectionsClient;
     private $denormalizer;
 
-    public function __construct(RegionalCollectionsClient $regionalCollectionsClient, DenormalizerInterface $denormalizer)
+    public function __construct(PromotionalCollectionsClient $promotionalCollectionsClient, DenormalizerInterface $denormalizer)
     {
-        $this->regionalCollectionsClient = $regionalCollectionsClient;
+        $this->promotionalCollectionsClient = $promotionalCollectionsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        return $this->regionalCollectionsClient
-            ->getRegionalCollection(
-                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION, self::VERSION_REGIONAL_COLLECTION)],
+        return $this->promotionalCollectionsClient
+            ->getPromotionalCollection(
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, self::VERSION_PROMOTIONAL_COLLECTION)],
                 $id
             )
             ->then(function (Result $result) {
-                return $this->denormalizer->denormalize($result->toArray(), RegionalCollection::class);
+                return $this->denormalizer->denormalize($result->toArray(), PromotionalCollection::class);
             });
     }
 
-    public function forSubject(string ...$subjectId) : RegionalCollections
+    public function forSubject(string ...$subjectId) : PromotionalCollections
     {
         $clone = clone $this;
 
@@ -67,9 +67,9 @@ final class RegionalCollections implements Iterator, Sequence
             );
         }
 
-        return new PromiseSequence($this->regionalCollectionsClient
-            ->listRegionalCollections(
-                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION_LIST, self::VERSION_REGIONAL_COLLECTION_LIST)],
+        return new PromiseSequence($this->promotionalCollectionsClient
+            ->listPromotionalCollections(
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION_LIST, self::VERSION_PROMOTIONAL_COLLECTION_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,
@@ -82,8 +82,8 @@ final class RegionalCollections implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                return array_map(function (array $regionalCollection) {
-                    return $this->denormalizer->denormalize($regionalCollection, RegionalCollection::class, null, ['snippet' => true]);
+                return array_map(function (array $promotionalCollection) {
+                    return $this->denormalizer->denormalize($promotionalCollection, PromotionalCollection::class, null, ['snippet' => true]);
                 }, $result['items']);
             })
         );

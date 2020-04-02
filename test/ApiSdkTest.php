@@ -23,8 +23,8 @@ use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Profiles;
+use eLife\ApiSdk\Client\PromotionalCollections;
 use eLife\ApiSdk\Client\Recommendations;
-use eLife\ApiSdk\Client\RegionalCollections;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
@@ -307,6 +307,18 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_creates_promotional_collections()
+    {
+        $this->assertInstanceOf(PromotionalCollections::class, $this->apiSdk->promotionalCollections());
+
+        $this->mockPromotionalCollectionCall('1');
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->promotionalCollections()->get('1')->wait());
+    }
+
+    /**
+     * @test
+     */
     public function it_creates_recommendations()
     {
         $this->assertInstanceOf(Recommendations::class, $this->apiSdk->recommendations());
@@ -315,18 +327,6 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockRecommendationsCall('article', '12345', 1, 100, 10);
 
         $this->assertCount(10, $this->apiSdk->recommendations()->list(Identifier::article('12345'))->toArray());
-    }
-
-    /**
-     * @test
-     */
-    public function it_creates_regional_collections()
-    {
-        $this->assertInstanceOf(RegionalCollections::class, $this->apiSdk->regionalCollections());
-
-        $this->mockRegionalCollectionCall('1');
-
-        $this->apiSdk->getSerializer()->normalize($this->apiSdk->regionalCollections()->get('1')->wait());
     }
 
     /**

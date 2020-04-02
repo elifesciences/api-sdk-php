@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\RegionalCollectionsClient;
+use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
@@ -17,19 +17,19 @@ use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Model\RegionalCollection;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\RegionalCollectionNormalizer;
+use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class RegionalCollectionNormalizerTest extends ApiTestCase
+final class PromotionalCollectionNormalizerTest extends ApiTestCase
 {
     use NormalizerSamplesTestCase;
 
-    /** @var RegionalCollectionNormalizer */
+    /** @var PromotionalCollectionNormalizer */
     private $normalizer;
 
     /**
@@ -38,7 +38,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
     protected function setUpNormalizer()
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->normalizer = new RegionalCollectionNormalizer(new RegionalCollectionsClient($this->getHttpClient()));
+        $this->normalizer = new PromotionalCollectionNormalizer(new PromotionalCollectionsClient($this->getHttpClient()));
         $this->normalizer->setNormalizer($apiSdk->getSerializer());
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
@@ -55,19 +55,19 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canNormalizeProvider
      */
-    public function it_can_normalize_regional_collections($data, $format, bool $expected)
+    public function it_can_normalize_promotional_collections($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
     public function canNormalizeProvider() : array
     {
-        $regionalCollection = Builder::for(RegionalCollection::class)->__invoke();
+        $promotionalCollection = Builder::for(PromotionalCollection::class)->__invoke();
 
         return [
-            'regional-collection' => [$regionalCollection, null, true],
-            'regional-collection with format' => [$regionalCollection, 'foo', true],
-            'non-regional-collection' => [$this, null, false],
+            'promotional-collection' => [$promotionalCollection, null, true],
+            'promotional-collection with format' => [$promotionalCollection, 'foo', true],
+            'non-promotional-collection' => [$this, null, false],
         ];
     }
 
@@ -75,9 +75,9 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_normalizes_regional_collections(RegionalCollection $regionalCollection, array $context, array $expected)
+    public function it_normalizes_promotional_collections(PromotionalCollection $promotionalCollection, array $context, array $expected)
     {
-        $this->assertEquals($expected, $this->normalizer->normalize($regionalCollection, null, $context));
+        $this->assertEquals($expected, $this->normalizer->normalize($promotionalCollection, null, $context));
     }
 
     /**
@@ -92,7 +92,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canDenormalizeProvider
      */
-    public function it_can_denormalize_regional_collections($data, $format, array $context, bool $expected)
+    public function it_can_denormalize_promotional_collections($data, $format, array $context, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
     }
@@ -100,9 +100,9 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
     public function canDenormalizeProvider() : array
     {
         return [
-            'regional-collection' => [[], RegionalCollection::class, [], true],
-            'regional-collection by type' => [['type' => 'regional-collection'], Model::class, [], true],
-            'non-regional-collection' => [[], get_class($this), [], false],
+            'promotional-collection' => [[], PromotionalCollection::class, [], true],
+            'promotional-collection by type' => [['type' => 'promotional-collection'], Model::class, [], true],
+            'non-promotional-collection' => [[], get_class($this), [], false],
         ];
     }
 
@@ -110,8 +110,8 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider normalizeProvider
      */
-    public function it_denormalizes_regional_collections(
-        RegionalCollection $expected,
+    public function it_denormalizes_promotional_collections(
+        PromotionalCollection $expected,
         array $context,
         array $json,
         callable $extra = null
@@ -122,7 +122,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
         $this->mockPersonCall('pjha', $complete = false, $isSnippet = true);
         $this->mockPersonCall('bcooper', $complete = false, $isSnippet = true);
 
-        $actual = $this->normalizer->denormalize($json, RegionalCollection::class, null, $context);
+        $actual = $this->normalizer->denormalize($json, PromotionalCollection::class, null, $context);
 
         $this->assertObjectsAreEqual($expected, $actual);
     }
@@ -131,7 +131,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
     {
         return [
             'complete' => [
-                Builder::for(RegionalCollection::class)
+                Builder::for(PromotionalCollection::class)
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withImpactStatement('eLife has published papers on many...')
@@ -451,7 +451,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum' => [
-                Builder::for(RegionalCollection::class)
+                Builder::for(PromotionalCollection::class)
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
@@ -543,7 +543,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'complete snippet' => [
-                Builder::for(RegionalCollection::class)
+                Builder::for(PromotionalCollection::class)
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withImpactStatement('eLife has published papers on many...')
@@ -609,10 +609,10 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
                             'name' => 'Microbiology and Infectious Disease',
                         ],
                     ],
-                    'type' => 'regional-collection',
+                    'type' => 'promotional-collection',
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockRegionalCollectionCall('1', true);
+                    $test->mockPromotionalCollectionCall('1', true);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockSubjectCall('epidemiology-global-health', true);
                     $test->mockSubjectCall('microbiology-infectious-disease');
@@ -624,7 +624,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                Builder::for(RegionalCollection::class)
+                Builder::for(PromotionalCollection::class)
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
@@ -662,7 +662,7 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
                     ],
                 ],
                 function (ApiTestCase $test) {
-                    $test->mockRegionalCollectionCall('1', false);
+                    $test->mockPromotionalCollectionCall('1', false);
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockBlogArticleCall('359325');
                     $test->mockArticleCall('14107', true);
@@ -673,12 +673,12 @@ final class RegionalCollectionNormalizerTest extends ApiTestCase
 
     protected function class() : string
     {
-        return RegionalCollection::class;
+        return PromotionalCollection::class;
     }
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/regional-collection/v1/*.json';
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/regional-collection-list/v1/*.json#items';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection-list/v1/*.json#items';
     }
 }

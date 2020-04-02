@@ -22,18 +22,18 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Model\RegionalCollection;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
+final class PromotionalCollectionTest extends PHPUnit_Framework_TestCase
 {
     private $builder;
 
     public function setUp()
     {
-        $this->builder = Builder::for(RegionalCollection::class);
+        $this->builder = Builder::for(PromotionalCollection::class);
     }
 
     /**
@@ -41,9 +41,9 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $regionalCollection = $this->builder->__invoke();
+        $promotionalCollection = $this->builder->__invoke();
 
-        $this->assertInstanceOf(Model::class, $regionalCollection);
+        $this->assertInstanceOf(Model::class, $promotionalCollection);
     }
 
     /**
@@ -51,12 +51,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_identifier()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withId('highlights-from-japan')
             ->__invoke();
 
-        $this->assertInstanceOf(HasIdentifier::class, $regionalCollection);
-        $this->assertEquals(Identifier::regionalCollection('highlights-from-japan'), $regionalCollection->getIdentifier());
+        $this->assertInstanceOf(HasIdentifier::class, $promotionalCollection);
+        $this->assertEquals(Identifier::promotionalCollection('highlights-from-japan'), $promotionalCollection->getIdentifier());
     }
 
     /**
@@ -64,12 +64,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withId('highlights-from-japan')
             ->__invoke();
 
-        $this->assertInstanceOf(HasId::class, $regionalCollection);
-        $this->assertSame('highlights-from-japan', $regionalCollection->getId());
+        $this->assertInstanceOf(HasId::class, $promotionalCollection);
+        $this->assertSame('highlights-from-japan', $promotionalCollection->getId());
     }
 
     /**
@@ -77,10 +77,10 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withTitle('Highlights from Japan')
             ->__invoke();
-        $this->assertSame('Highlights from Japan', $regionalCollection->getTitle());
+        $this->assertSame('Highlights from Japan', $promotionalCollection->getTitle());
     }
 
     /**
@@ -105,12 +105,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withPublishedDate($publishedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
             ->__invoke();
 
-        $this->assertInstanceOf(HasPublishedDate::class, $regionalCollection);
-        $this->assertEquals($publishedDate, $regionalCollection->getPublishedDate());
+        $this->assertInstanceOf(HasPublishedDate::class, $promotionalCollection);
+        $this->assertEquals($publishedDate, $promotionalCollection->getPublishedDate());
     }
 
     /**
@@ -135,12 +135,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_banner()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withPromiseOfBanner($image = Builder::for(Image::class)->sample('banner'))
             ->__invoke();
 
-        $this->assertInstanceOf(HasBanner::class, $regionalCollection);
-        $this->assertEquals($image, $regionalCollection->getBanner());
+        $this->assertInstanceOf(HasBanner::class, $promotionalCollection);
+        $this->assertEquals($image, $promotionalCollection->getBanner());
     }
 
     /**
@@ -148,12 +148,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_thumbnail()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withThumbnail($image = Builder::for(Image::class)->sample('thumbnail'))
             ->__invoke();
 
-        $this->assertInstanceOf(HasThumbnail::class, $regionalCollection);
-        $this->assertEquals($image, $regionalCollection->getThumbnail());
+        $this->assertInstanceOf(HasThumbnail::class, $promotionalCollection);
+        $this->assertEquals($image, $promotionalCollection->getThumbnail());
     }
 
     /**
@@ -162,12 +162,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withSubjects($subjects)
             ->__invoke();
 
-        $this->assertInstanceOf(HasSubjects::class, $regionalCollection);
-        $this->assertEquals($expected, $regionalCollection->getSubjects()->toArray());
+        $this->assertInstanceOf(HasSubjects::class, $promotionalCollection);
+        $this->assertEquals($expected, $promotionalCollection->getSubjects()->toArray());
     }
 
     public function subjectsProvider() : array
@@ -186,7 +186,7 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
                 new EmptySequence(),
                 [],
             ],
-            'regional-collection' => [
+            'promotional-collection' => [
                 new ArraySequence($subjects),
                 $subjects,
             ],
@@ -198,11 +198,11 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_editors()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withEditors($editors = new ArraySequence([Builder::dummy(Person::class)]))
             ->__invoke();
 
-        $this->assertEquals($editors, $regionalCollection->getEditors());
+        $this->assertEquals($editors, $promotionalCollection->getEditors());
     }
 
     /**
@@ -210,13 +210,13 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_summary()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withSummary($summary = new ArraySequence([
                 new Paragraph('summary'),
             ]))
             ->__invoke();
 
-        $this->assertEquals($summary, $regionalCollection->getSummary());
+        $this->assertEquals($summary, $promotionalCollection->getSummary());
     }
 
     /**
@@ -224,13 +224,13 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_content()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withContent($content = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
             ->__invoke();
 
-        $this->assertEquals($content, $regionalCollection->getContent());
+        $this->assertEquals($content, $promotionalCollection->getContent());
     }
 
     /**
@@ -238,13 +238,13 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_related_content()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withRelatedContent($relatedContent = new ArraySequence([
                 Builder::dummy(BlogArticle::class),
             ]))
             ->__invoke();
 
-        $this->assertEquals($relatedContent, $regionalCollection->getRelatedContent());
+        $this->assertEquals($relatedContent, $promotionalCollection->getRelatedContent());
     }
 
     /**
@@ -252,12 +252,12 @@ final class RegionalCollectionTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_podcast_episodes()
     {
-        $regionalCollection = $this->builder
+        $promotionalCollection = $this->builder
             ->withPodcastEpisodes($podcastEpisodes = new ArraySequence([
                 Builder::dummy(PodcastEpisode::class),
             ]))
             ->__invoke();
 
-        $this->assertEquals($podcastEpisodes, $regionalCollection->getPodcastEpisodes());
+        $this->assertEquals($podcastEpisodes, $promotionalCollection->getPodcastEpisodes());
     }
 }

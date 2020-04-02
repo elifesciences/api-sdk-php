@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class RegionalCollection implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class PromotionalCollection implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -57,7 +57,7 @@ final class RegionalCollection implements Model, HasBanner, HasId, HasIdentifier
 
     public function getIdentifier() : Identifier
     {
-        return Identifier::regionalCollection($this->id);
+        return Identifier::promotionalCollection($this->id);
     }
 
     public function getId() : string

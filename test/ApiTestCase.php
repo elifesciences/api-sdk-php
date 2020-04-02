@@ -25,8 +25,8 @@ use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
+use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
-use eLife\ApiClient\ApiClient\RegionalCollectionsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -1119,7 +1119,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockRegionalCollectionListCall(
+    final protected function mockPromotionalCollectionListCall(
         int $page,
         int $perPage,
         int $total,
@@ -1127,8 +1127,8 @@ abstract class ApiTestCase extends TestCase
         array $subjects = [],
         array $containing = []
     ) {
-        $regionalCollections = array_map(function (int $id) {
-            return $this->createRegionalCollectionJson($id, true);
+        $promotionalCollections = array_map(function (int $id) {
+            return $this->createPromotionalCollectionJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
@@ -1142,32 +1142,32 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/regional-collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$containingQuery,
-                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION_LIST, 1)]
+                'http://api.elifesciences.org/promotional-collections?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$containingQuery,
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION_LIST, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION_LIST, 1)],
+                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION_LIST, 1)],
                 json_encode([
                     'total' => $total,
-                    'items' => $regionalCollections,
+                    'items' => $promotionalCollections,
                 ])
             )
         );
     }
 
-    final protected function mockRegionalCollectionCall(string $id, bool $complete = true)
+    final protected function mockPromotionalCollectionCall(string $id, bool $complete = true)
     {
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/regional-collections/'.$id,
-                ['Accept' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION, 1)]
+                'http://api.elifesciences.org/promotional-collections/'.$id,
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(RegionalCollectionsClient::TYPE_REGIONAL_COLLECTION, 1)],
-                json_encode($this->createRegionalCollectionJson($id, false, $complete))
+                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)],
+                json_encode($this->createPromotionalCollectionJson($id, false, $complete))
             )
         );
     }
@@ -2547,9 +2547,9 @@ abstract class ApiTestCase extends TestCase
         return $digest;
     }
 
-    private function createRegionalCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    private function createPromotionalCollectionJson(string $id, bool $isSnippet = false, bool $complete = false) : array
     {
-        $regionalCollection = [
+        $promotionalCollection = [
             'id' => $id,
             'title' => ucfirst($id),
             'impactStatement' => ucfirst($id).' impact statement',
@@ -2685,25 +2685,25 @@ abstract class ApiTestCase extends TestCase
         ];
 
         if (!$complete) {
-            unset($regionalCollection['impactStatement']);
-            unset($regionalCollection['updated']);
-            unset($regionalCollection['selectedCurator']['etAl']);
-            unset($regionalCollection['summary']);
-            unset($regionalCollection['relatedContent']);
-            unset($regionalCollection['podcastEpisodes']);
-            unset($regionalCollection['subjects']);
+            unset($promotionalCollection['impactStatement']);
+            unset($promotionalCollection['updated']);
+            unset($promotionalCollection['editors']);
+            unset($promotionalCollection['summary']);
+            unset($promotionalCollection['relatedContent']);
+            unset($promotionalCollection['podcastEpisodes']);
+            unset($promotionalCollection['subjects']);
         }
 
         if ($isSnippet) {
-            unset($regionalCollection['image']['banner']);
-            unset($regionalCollection['editors']);
-            unset($regionalCollection['summary']);
-            unset($regionalCollection['content']);
-            unset($regionalCollection['relatedContent']);
-            unset($regionalCollection['podcastEpisodes']);
+            unset($promotionalCollection['image']['banner']);
+            unset($promotionalCollection['editors']);
+            unset($promotionalCollection['summary']);
+            unset($promotionalCollection['content']);
+            unset($promotionalCollection['relatedContent']);
+            unset($promotionalCollection['podcastEpisodes']);
         }
 
-        return $regionalCollection;
+        return $promotionalCollection;
     }
 
     private function createSearchResultJson(string $id) : array

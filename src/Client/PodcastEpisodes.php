@@ -90,4 +90,9 @@ final class PodcastEpisodes implements Iterator, Sequence
 
         return $clone;
     }
+
+    protected function invalidateData()
+    {
+        $this->count = null;
+    }
 }

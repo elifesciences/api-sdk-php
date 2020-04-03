@@ -43,8 +43,8 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Profile;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use eLife\ApiSdk\Model\RegionalCollection;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
@@ -124,7 +124,7 @@ final class Builder
                         'podcastEpisodes' => new EmptySequence(),
                     ];
                 },
-                RegionalCollection::class => function () {
+                PromotionalCollection::class => function () {
                     return [
                         'id' => 'highlights-from-japan',
                         'title' => 'Highlights from Japan',
@@ -138,7 +138,7 @@ final class Builder
                             self::dummy(Person::class),
                         ]),
                         'summary' => new ArraySequence([
-                            new Paragraph('regional collection highlights-from-japan summary'),
+                            new Paragraph('promotional collection highlights-from-japan summary'),
                         ]),
                         'content' => new EmptySequence(),
                         'relatedContent' => new EmptySequence(),
@@ -562,7 +562,7 @@ final class Builder
                             ]));
                     },
                 ],
-                RegionalCollection::class => [
+                PromotionalCollection::class => [
                     'highlights-from-japan' => function ($builder) {
                         return $builder
                             ->withId('highlights-from-japan')

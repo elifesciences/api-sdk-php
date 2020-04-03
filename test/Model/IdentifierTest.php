@@ -57,7 +57,7 @@ final class IdentifierTest extends PHPUnit_Framework_TestCase
             'podcast-episode' => 7,
             'press-package' => '1234-5678',
             'profile' => '1234-5678',
-            'regional-collection' => '1234-5678',
+            'promotional-collection' => '1234-5678',
             'subject' => '1234-5678',
         ];
 

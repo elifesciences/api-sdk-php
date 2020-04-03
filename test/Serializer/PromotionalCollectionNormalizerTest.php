@@ -455,11 +455,8 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
-                    ->withEditors(new ArraySequence([
-                        Builder::for(Person::class)
-                            ->sample('pjha', ['snippet' => false]),
-                    ]))
                     ->withSummary(new EmptySequence())
+                    ->withEditors(new EmptySequence())
                     ->withContent(new ArraySequence([
                         Builder::for(ArticlePoA::class)
                             ->sample('growth-factor'),
@@ -495,19 +492,6 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
-                            ],
-                        ],
-                    ],
-                    'editors' => [
-                        0 => [
-                            'id' => 'pjha',
-                            'type' => [
-                                'id' => 'senior-editor',
-                                'label' => 'Senior Editor',
-                            ],
-                            'name' => [
-                                'preferred' => 'Prabhat Jha',
-                                'index' => 'Jha, Prabhat',
                             ],
                         ],
                     ],
@@ -628,13 +612,8 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
-                    ->withEditors(new ArraySequence([
-                        Builder::for(Person::class)
-                            ->sample('bcooper', ['snippet' => false]),
-                        Builder::for(Person::class)
-                            ->sample('pjha', ['snippet' => false]),
-                    ]))
                     ->withSummary(new EmptySequence())
+                    ->withEditors(new EmptySequence())
                     ->withContent(new ArraySequence([
                         Builder::for(BlogArticle::class)
                             ->sample('slime'),

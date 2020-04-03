@@ -19,6 +19,7 @@ final class PromotionalCollections implements Iterator, Sequence
 
     use Client;
     use Contains;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;
@@ -42,19 +43,6 @@ final class PromotionalCollections implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), PromotionalCollection::class);
             });
-    }
-
-    public function forSubject(string ...$subjectId) : PromotionalCollections
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -96,5 +84,10 @@ final class PromotionalCollections implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
+    }
+
+    protected function invalidateData()
+    {
+        $this->count = null;
     }
 }

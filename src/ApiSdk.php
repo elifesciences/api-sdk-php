@@ -22,6 +22,7 @@ use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
+use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
@@ -47,6 +48,7 @@ use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Profiles;
+use eLife\ApiSdk\Client\PromotionalCollections;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
@@ -88,6 +90,7 @@ use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
+use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
@@ -120,6 +123,7 @@ final class ApiSdk
     private $podcastClient;
     private $pressPackagesClient;
     private $profilesClient;
+    private $promotionalCollectionsClient;
     private $recommendationsClient;
     private $searchClient;
     private $subjectsClient;
@@ -142,6 +146,7 @@ final class ApiSdk
     private $podcastEpisodes;
     private $pressPackages;
     private $profiles;
+    private $promotionalCollections;
     private $collections;
     private $recommendations;
     private $search;
@@ -179,6 +184,7 @@ final class ApiSdk
         $this->podcastClient = new PodcastClient($this->httpClient);
         $this->pressPackagesClient = new PressPackagesClient($this->httpClient);
         $this->profilesClient = new ProfilesClient($this->httpClient);
+        $this->promotionalCollectionsClient = new PromotionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
@@ -220,6 +226,7 @@ final class ApiSdk
             new PodcastEpisodeNormalizer($this->podcastClient),
             new PressPackageNormalizer($this->pressPackagesClient),
             new ProfileNormalizer($this->profilesClient),
+            new PromotionalCollectionNormalizer($this->promotionalCollectionsClient),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
@@ -440,6 +447,15 @@ final class ApiSdk
         }
 
         return $this->collections;
+    }
+
+    public function promotionalCollections() : PromotionalCollections
+    {
+        if (empty($this->promotionalCollections)) {
+            $this->promotionalCollections = new PromotionalCollections($this->promotionalCollectionsClient, $this->serializer);
+        }
+
+        return $this->promotionalCollections;
     }
 
     public function recommendations() : Recommendations

@@ -244,6 +244,7 @@ final class ApiSdk
             new Block\QuoteNormalizer(),
             new Block\SectionNormalizer(),
             new Block\TableNormalizer(),
+            new Block\TweetNormalizer(),
             new Block\VideoNormalizer(),
             new Block\YouTubeNormalizer(),
             new Reference\BookReferenceNormalizer(),

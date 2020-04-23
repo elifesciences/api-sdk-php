@@ -7,7 +7,6 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Tweet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasId;
-use eLife\ApiSdk\Model\HasPublishedDate;
 use PHPUnit_Framework_TestCase;
 
 final class TweetTest extends PHPUnit_Framework_TestCase
@@ -40,7 +39,6 @@ final class TweetTest extends PHPUnit_Framework_TestCase
     {
         $tweet = new Tweet('foo', new Date(2020, 4, 23), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
-        $this->assertInstanceOf(HasPublishedDate::class, $tweet);
         $this->assertEquals(new Date(2020, 4, 23), $tweet->getDate());
     }
 
@@ -49,7 +47,7 @@ final class TweetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_text()
     {
-        $tweet = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $tweet = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
         $this->assertEquals([new Paragraph('tweet')], $tweet->getText());
     }

@@ -2,12 +2,10 @@
 
 namespace test\eLife\ApiSdk\Serializer\Block;
 
-use DateTimeImmutable;
-use DateTimeZone;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Tweet;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TweetNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
@@ -52,7 +50,7 @@ final class TweetNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $tweet = new Tweet('foo', new DateTimeImmutable('now', new DateTimeZone('Z')), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $tweet = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
         return [
             'tweet' => [$tweet, null, true],
@@ -108,12 +106,11 @@ final class TweetNormalizerTest extends TestCase
 
     public function normalizeProvider() : array
     {
-        $date = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         return [
             'complete' => [
                 new Tweet(
                     'foo',
-                    $date,
+                    Date::fromString('2000-01-01'),
                     [
                         [
                             'type' => 'paragraph',
@@ -128,7 +125,7 @@ final class TweetNormalizerTest extends TestCase
                 [
                     'type' => 'tweet',
                     'id' => 'foo',
-                    'date' => $date->format(ApiSdk::DATE_FORMAT),
+                    'date' => '2000-01-01',
                     'text' => [
                         [
                             'type' => 'paragraph',
@@ -144,7 +141,7 @@ final class TweetNormalizerTest extends TestCase
             'minimum' => [
                 new Tweet(
                     'foo',
-                    $date,
+                    Date::fromString('2000-01-01'),
                     [
                         [
                             'type' => 'paragraph',
@@ -157,7 +154,7 @@ final class TweetNormalizerTest extends TestCase
                 [
                     'type' => 'tweet',
                     'id' => 'foo',
-                    'date' => $date->format(ApiSdk::DATE_FORMAT),
+                    'date' => '2000-01-01',
                     'text' => [
                         [
                             'type' => 'paragraph',

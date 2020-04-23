@@ -2,8 +2,8 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
-use DateTimeImmutable;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasId;
 
 final class Tweet implements HasId
@@ -21,7 +21,7 @@ final class Tweet implements HasId
      */
     public function __construct(
         string $id,
-        DateTimeImmutable $date,
+        Date $date,
         array $text,
         string $accountId,
         string $accountLabel,
@@ -42,7 +42,7 @@ final class Tweet implements HasId
         return $this->id;
     }
 
-    public function getDate() : DateTimeImmutable
+    public function getDate() : Date
     {
         return $this->date;
     }

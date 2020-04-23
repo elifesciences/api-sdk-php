@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Tweet;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
@@ -48,7 +47,7 @@ final class TweetNormalizer implements NormalizerInterface, DenormalizerInterfac
         $data = [
             'type' => 'tweet',
             'id' => $object->getId(),
-            'date' => $object->getDate()->format(ApiSdk::DATE_FORMAT),
+            'date' => $object->getDate()->toString(),
             'text' => array_map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             }, $object->getText()),

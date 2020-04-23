@@ -111,12 +111,7 @@ final class TweetNormalizerTest extends TestCase
                 new Tweet(
                     'foo',
                     Date::fromString('2000-01-01'),
-                    [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'tweet',
-                        ],
-                    ],
+                    [new Paragraph('tweet')],
                     'accountId',
                     'accountLabel',
                     true,
@@ -142,12 +137,7 @@ final class TweetNormalizerTest extends TestCase
                 new Tweet(
                     'foo',
                     Date::fromString('2000-01-01'),
-                    [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'tweet',
-                        ],
-                    ],
+                    [new Paragraph('tweet')],
                     'accountId',
                     'accountLabel'
                 ),
@@ -163,6 +153,8 @@ final class TweetNormalizerTest extends TestCase
                     ],
                     'accountId' => 'accountId',
                     'accountLabel' => 'accountLabel',
+                    'conversation' => false,
+                    'mediaCard' => false,
                 ],
             ],
         ];

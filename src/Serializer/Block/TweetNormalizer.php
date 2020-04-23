@@ -54,8 +54,8 @@ final class TweetNormalizer implements NormalizerInterface, DenormalizerInterfac
             }, $object->getText()),
             'accountId' => $object->getAccountId(),
             'accountLabel' => $object->getAccountLabel(),
-            $data['conversation'] ?? false,
-            $data['mediaCard'] ?? false,
+            'conversation' => $object->isConversation(),
+            'mediaCard' => $object->isMediaCard(),
         ];
 
         return $data;

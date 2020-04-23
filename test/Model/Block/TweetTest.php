@@ -57,7 +57,7 @@ final class TweetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_account_id()
     {
-        $tweet = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $tweet = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
         $this->assertEquals('accountId', $tweet->getAccountId());
     }
@@ -67,7 +67,7 @@ final class TweetTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_account_label()
     {
-        $tweet = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $tweet = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
         $this->assertEquals('accountLabel', $tweet->getAccountLabel());
     }
@@ -77,8 +77,8 @@ final class TweetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_be_a_conversation()
     {
-        $true = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', true);
-        $false = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $true = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', true);
+        $false = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
 
         $this->assertTrue($true->isConversation());
         $this->assertFalse($false->isConversation());
@@ -89,8 +89,8 @@ final class TweetTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_contain_a_media_card()
     {
-        $true = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', false, true);
-        $false = new Tweet('foo',  new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', false);
+        $true = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', false, true);
+        $false = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel', false);
 
         $this->assertTrue($true->isMediaCard());
         $this->assertFalse($false->isMediaCard());

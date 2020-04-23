@@ -4,6 +4,7 @@ namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Tweet;
+use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
 use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
 use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
@@ -20,7 +21,7 @@ final class TweetNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         return new Tweet(
             $data['id'],
-            $data['date'],
+            Date::fromString($data['date']),
             array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
             }, $data['text']),

@@ -387,6 +387,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Code::class,
             Block\Excerpt::class,
             Block\Figure::class,
+            Block\GoogleMap::class,
             Block\Image::class,
             Block\Listing::class,
             Block\MathML::class,

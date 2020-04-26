@@ -235,6 +235,7 @@ final class ApiSdk
             new Block\CodeNormalizer(),
             new Block\ExcerptNormalizer(),
             new Block\FigureNormalizer(),
+            new Block\GoogleMapNormalizer(),
             new Block\ImageNormalizer(),
             new Block\ListingNormalizer(),
             new Block\MathMLNormalizer(),

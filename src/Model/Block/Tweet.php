@@ -6,7 +6,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasId;
 
-final class Tweet implements HasId
+final class Tweet implements Block, HasId
 {
     private $id;
     private $date;

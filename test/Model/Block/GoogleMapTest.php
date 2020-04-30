@@ -7,7 +7,6 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\GoogleMap;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Model\Block\YouTube;
 use eLife\ApiSdk\Model\HasId;
 use PHPUnit_Framework_TestCase;
 
@@ -74,7 +73,7 @@ final class GoogleMapTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_height()
     {
-        $googleMap = new YouTube('foo', null, new EmptySequence(), 300, 200);
+        $googleMap = new GoogleMap('foo', null, new EmptySequence(), 300, 200);
 
         $this->assertSame(200, $googleMap->getHeight());
     }

@@ -7,6 +7,7 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\GoogleMap;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Serializer\Block\GoogleMapNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

@@ -44,7 +44,7 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
-            'type' => 'google-map',
+            'type' => 'figshare',
             'id' => $object->getId(),
             'width' => $object->getWidth(),
             'height' => $object->getHeight(),

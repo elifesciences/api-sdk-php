@@ -22,9 +22,7 @@ final class TweetNormalizer implements NormalizerInterface, DenormalizerInterfac
         return new Tweet(
             $data['id'],
             Date::fromString($data['date']),
-            array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['text']),
+            $data['text'],
             $data['accountId'],
             $data['accountLabel'],
             $data['conversation'] ?? false,
@@ -49,9 +47,7 @@ final class TweetNormalizer implements NormalizerInterface, DenormalizerInterfac
             'type' => 'tweet',
             'id' => $object->getId(),
             'date' => $object->getDate()->toString(),
-            'text' => array_map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            }, $object->getText()),
+            'text' => $object->getText(),
             'accountId' => $object->getAccountId(),
             'accountLabel' => $object->getAccountLabel(),
             'conversation' => $object->isConversation(),

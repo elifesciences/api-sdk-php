@@ -3,10 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Tweet;
 use eLife\ApiSdk\Model\Date;
-use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\TweetNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -27,7 +25,6 @@ final class TweetNormalizerTest extends TestCase
 
         new NormalizerAwareSerializer([
             $this->normalizer,
-            new ParagraphNormalizer(),
         ]);
     }
 
@@ -50,7 +47,7 @@ final class TweetNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $tweet = new Tweet('foo', new Date(2000), [new Paragraph('tweet')], 'accountId', 'accountLabel');
+        $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
 
         return [
             'tweet' => [$tweet, null, true],
@@ -111,7 +108,7 @@ final class TweetNormalizerTest extends TestCase
                 new Tweet(
                     'foo',
                     Date::fromString('2000-01-01'),
-                    [new Paragraph('tweet')],
+                    'tweet',
                     'accountId',
                     'accountLabel',
                     true,
@@ -121,12 +118,7 @@ final class TweetNormalizerTest extends TestCase
                     'type' => 'tweet',
                     'id' => 'foo',
                     'date' => '2000-01-01',
-                    'text' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'tweet',
-                        ],
-                    ],
+                    'text' => 'tweet',
                     'accountId' => 'accountId',
                     'accountLabel' => 'accountLabel',
                     'conversation' => true,
@@ -137,7 +129,7 @@ final class TweetNormalizerTest extends TestCase
                 new Tweet(
                     'foo',
                     Date::fromString('2000-01-01'),
-                    [new Paragraph('tweet')],
+                    'tweet',
                     'accountId',
                     'accountLabel'
                 ),
@@ -145,12 +137,7 @@ final class TweetNormalizerTest extends TestCase
                     'type' => 'tweet',
                     'id' => 'foo',
                     'date' => '2000-01-01',
-                    'text' => [
-                        [
-                            'type' => 'paragraph',
-                            'text' => 'tweet',
-                        ],
-                    ],
+                    'text' => 'tweet',
                     'accountId' => 'accountId',
                     'accountLabel' => 'accountLabel',
                     'conversation' => false,

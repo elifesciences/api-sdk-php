@@ -22,7 +22,7 @@ final class Tweet implements Block, HasId
     public function __construct(
         string $id,
         Date $date,
-        array $text,
+        string $text,
         string $accountId,
         string $accountLabel,
         bool $conversation = false,
@@ -47,10 +47,7 @@ final class Tweet implements Block, HasId
         return $this->date;
     }
 
-    /**
-     * @return Block[]
-     */
-    public function getText() : array
+    public function getText() : string
     {
         return $this->text;
     }

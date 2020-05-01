@@ -24,9 +24,7 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
             $data['title'] ?? null,
             new ArraySequence(array_map(function (array $block) {
                 return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])),
-            $data['width'],
-            $data['height']
+            }, $data['caption'] ?? []))
         );
     }
 
@@ -46,8 +44,6 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
         $data = [
             'type' => 'google-map',
             'id' => $object->getId(),
-            'width' => $object->getWidth(),
-            'height' => $object->getHeight(),
         ];
 
         if ($object->getTitle()) {

@@ -57,24 +57,4 @@ final class GoogleMapTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($caption, $with->getCaption());
         $this->assertEmpty($withOut->getCaption());
     }
-
-    /**
-     * @test
-     */
-    public function it_has_a_width()
-    {
-        $googleMap = new GoogleMap('foo', null, new EmptySequence(), 300, 200);
-
-        $this->assertSame(300, $googleMap->getWidth());
-    }
-
-    /**
-     * @test
-     */
-    public function it_has_a_height()
-    {
-        $googleMap = new GoogleMap('foo', null, new EmptySequence(), 300, 200);
-
-        $this->assertSame(200, $googleMap->getHeight());
-    }
 }

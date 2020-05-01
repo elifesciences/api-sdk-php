@@ -51,7 +51,7 @@ final class GoogleMapNormalizerTest extends TestCase
 
     public function canNormalizeProvider() : array
     {
-        $youTube = new GoogleMap('foo', null, new EmptySequence(), 300, 200);
+        $youTube = new GoogleMap('foo', null, new EmptySequence());
 
         return [
             'google-map' => [$youTube, null, true],
@@ -112,15 +112,11 @@ final class GoogleMapNormalizerTest extends TestCase
                 new GoogleMap(
                     'foo',
                     'title1',
-                    new ArraySequence([new Paragraph('paragraph1')]),
-                    300,
-                    200
+                    new ArraySequence([new Paragraph('paragraph1')])
                 ),
                 [
                     'type' => 'google-map',
                     'id' => 'foo',
-                    'width' => 300,
-                    'height' => 200,
                     'title' => 'title1',
                     'caption' => [
                         [
@@ -134,15 +130,11 @@ final class GoogleMapNormalizerTest extends TestCase
                 new GoogleMap(
                     'foo',
                     null,
-                    new EmptySequence(),
-                    300,
-                    200
+                    new EmptySequence()
                 ),
                 [
                     'type' => 'google-map',
                     'id' => 'foo',
-                    'width' => 300,
-                    'height' => 200,
                 ],
             ],
         ];

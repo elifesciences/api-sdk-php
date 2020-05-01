@@ -12,8 +12,6 @@ final class GoogleMap implements BlockWithCaption, HasId
     private $id;
     private $title;
     private $caption;
-    private $width;
-    private $height;
 
     /**
      * @internal
@@ -21,15 +19,11 @@ final class GoogleMap implements BlockWithCaption, HasId
     public function __construct(
         string $id,
         string $title = null,
-        Sequence $caption,
-        int $width,
-        int $height
+        Sequence $caption
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->caption = $caption;
-        $this->width = $width;
-        $this->height = $height;
     }
 
     public function getId() : string
@@ -51,15 +45,5 @@ final class GoogleMap implements BlockWithCaption, HasId
     public function getCaption() : Sequence
     {
         return $this->caption;
-    }
-
-    public function getWidth() : int
-    {
-        return $this->width;
-    }
-
-    public function getHeight() : int
-    {
-        return $this->height;
     }
 }

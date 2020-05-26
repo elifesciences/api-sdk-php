@@ -246,6 +246,6 @@ final class EventNormalizerTest extends ApiTestCase
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/event/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/event-list/v1/*.json#items';
-        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='event']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v2/*.json#items[?type=='event']";
     }
 }

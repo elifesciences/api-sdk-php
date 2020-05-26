@@ -201,6 +201,6 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v2/*.json';
     }
 }

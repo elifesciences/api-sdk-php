@@ -187,6 +187,6 @@ final class HighlightNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/highlight-list/v3/*.json#items';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/highlight-list/v4/*.json#items';
     }
 }

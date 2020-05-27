@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PressPackages implements Iterator, Sequence
 {
-    const VERSION_PRESS_PACKAGE = 3;
+    const VERSION_PRESS_PACKAGE = 4;
     const VERSION_PRESS_PACKAGE_LIST = 1;
 
     use Client;

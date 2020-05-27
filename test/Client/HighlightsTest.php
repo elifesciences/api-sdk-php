@@ -90,7 +90,7 @@ final class HighlightsTest extends ApiTestCase
 
         $this->mockNotFound(
             'highlights/foo?page=6&per-page=1&order=desc',
-            ['Accept' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 3)]
+            ['Accept' => (string) new MediaType(HighlightsClient::TYPE_HIGHLIGHT_LIST, 4)]
         );
 
         $this->assertFalse(isset($list[5]));

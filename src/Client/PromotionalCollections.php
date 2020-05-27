@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PromotionalCollections implements Iterator, Sequence
 {
-    const VERSION_PROMOTIONAL_COLLECTION = 1;
+    const VERSION_PROMOTIONAL_COLLECTION = 2;
     const VERSION_PROMOTIONAL_COLLECTION_LIST = 1;
 
     use Client;

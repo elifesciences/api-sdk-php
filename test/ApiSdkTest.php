@@ -396,6 +396,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Quote::class,
             Block\Section::class,
             Block\Table::class,
+            Block\Tweet::class,
             Block\Video::class,
             Block\YouTube::class
         );

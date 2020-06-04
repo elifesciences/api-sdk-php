@@ -17,7 +17,7 @@ final class Identifier
 
     public static function fromString(string $string) : Identifier
     {
-        preg_match('~^(annual-report|article|blog-article|collection|digest|event|interview|labs-post|person|podcast-episode|press-package|profile|subject)/([a-z0-9-]+)$~', $string, $matches);
+        preg_match('~^(annual-report|article|blog-article|collection|digest|event|interview|labs-post|person|podcast-episode|press-package|profile|promotional-collection|subject)/([a-z0-9-]+)$~', $string, $matches);
 
         if (empty($matches[1]) || empty($matches[2])) {
             throw new InvalidArgumentException("Invalid identifier '$string'");
@@ -94,6 +94,11 @@ final class Identifier
     public static function profile(string $id) : Identifier
     {
         return new self('profile', $id);
+    }
+
+    public static function promotionalCollection(string $id) : Identifier
+    {
+        return new self('promotional-collection', $id);
     }
 
     public static function subject(string $id) : Identifier

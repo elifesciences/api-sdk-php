@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediaContact;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
@@ -97,6 +98,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
     {
         return [
             'press package' => [[], PressPackage::class, [], true],
+            'press package by type' => [['type' => 'press-package'], Model::class, [], true],
             'non-press package' => [[], get_class($this), [], false],
         ];
     }
@@ -315,5 +317,6 @@ final class PressPackageNormalizerTest extends ApiTestCase
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package/v3/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/highlight-list/v3/*.json#items[?type=='press-package']";
     }
 }

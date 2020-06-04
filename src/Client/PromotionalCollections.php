@@ -2,60 +2,47 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\PeopleClient;
+use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Person;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-final class People implements Iterator, Sequence
+final class PromotionalCollections implements Iterator, Sequence
 {
-    const VERSION_PERSON = 1;
-    const VERSION_PERSON_LIST = 1;
+    const VERSION_PROMOTIONAL_COLLECTION = 1;
+    const VERSION_PROMOTIONAL_COLLECTION_LIST = 1;
 
     use Client;
+    use Contains;
     use ForSubject;
 
     private $count;
     private $descendingOrder = true;
     private $subjectsQuery = [];
-    private $typeQuery = [];
-    private $peopleClient;
+    private $promotionalCollectionsClient;
     private $denormalizer;
 
-    public function __construct(PeopleClient $peopleClient, DenormalizerInterface $denormalizer)
+    public function __construct(PromotionalCollectionsClient $promotionalCollectionsClient, DenormalizerInterface $denormalizer)
     {
-        $this->peopleClient = $peopleClient;
+        $this->promotionalCollectionsClient = $promotionalCollectionsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function get(string $id) : PromiseInterface
     {
-        return $this->peopleClient
-            ->getPerson(
-                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON, self::VERSION_PERSON)],
+        return $this->promotionalCollectionsClient
+            ->getPromotionalCollection(
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, self::VERSION_PROMOTIONAL_COLLECTION)],
                 $id
             )
             ->then(function (Result $result) {
-                return $this->denormalizer->denormalize($result->toArray(), Person::class);
+                return $this->denormalizer->denormalize($result->toArray(), PromotionalCollection::class);
             });
-    }
-
-    public function forType(string ...$type) : People
-    {
-        $clone = clone $this;
-
-        $clone->typeQuery = array_unique(array_merge($this->typeQuery, $type));
-
-        if ($clone->typeQuery !== $this->typeQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -68,14 +55,14 @@ final class People implements Iterator, Sequence
             );
         }
 
-        return new PromiseSequence($this->peopleClient
-            ->listPeople(
-                ['Accept' => (string) new MediaType(PeopleClient::TYPE_PERSON_LIST, self::VERSION_PERSON_LIST)],
+        return new PromiseSequence($this->promotionalCollectionsClient
+            ->listPromotionalCollections(
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION_LIST, self::VERSION_PROMOTIONAL_COLLECTION_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder,
                 $this->subjectsQuery,
-                $this->typeQuery
+                $this->containingQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -83,8 +70,8 @@ final class People implements Iterator, Sequence
                 return $result;
             })
             ->then(function (Result $result) {
-                return array_map(function (array $person) {
-                    return $this->denormalizer->denormalize($person, Person::class);
+                return array_map(function (array $promotionalCollection) {
+                    return $this->denormalizer->denormalize($promotionalCollection, PromotionalCollection::class, null, ['snippet' => true]);
                 }, $result['items']);
             })
         );

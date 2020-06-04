@@ -19,10 +19,10 @@ final class Collections implements Iterator, Sequence
 
     use Client;
     use Contains;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;
-    private $subjectsQuery = [];
     private $collectionsClient;
     private $denormalizer;
 
@@ -42,19 +42,6 @@ final class Collections implements Iterator, Sequence
             ->then(function (Result $result) {
                 return $this->denormalizer->denormalize($result->toArray(), Collection::class);
             });
-    }
-
-    public function forSubject(string ...$subjectId) : self
-    {
-        $clone = clone $this;
-
-        $clone->subjectsQuery = array_unique(array_merge($this->subjectsQuery, $subjectId));
-
-        if ($clone->subjectsQuery !== $this->subjectsQuery) {
-            $clone->count = null;
-        }
-
-        return $clone;
     }
 
     public function slice(int $offset, int $length = null) : Sequence
@@ -96,5 +83,10 @@ final class Collections implements Iterator, Sequence
         $clone->descendingOrder = !$this->descendingOrder;
 
         return $clone;
+    }
+
+    protected function invalidateData()
+    {
+        $this->count = null;
     }
 }

@@ -22,6 +22,7 @@ use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
 use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Profiles;
+use eLife\ApiSdk\Client\PromotionalCollections;
 use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
@@ -290,6 +291,18 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_creates_promotional_collections()
+    {
+        $this->assertInstanceOf(PromotionalCollections::class, $this->apiSdk->promotionalCollections());
+
+        $this->mockPromotionalCollectionCall('1');
+
+        $this->apiSdk->getSerializer()->normalize($this->apiSdk->promotionalCollections()->get('1')->wait());
+    }
+
+    /**
+     * @test
+     */
     public function it_creates_recommendations()
     {
         $this->assertInstanceOf(Recommendations::class, $this->apiSdk->recommendations());
@@ -367,6 +380,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Quote::class,
             Block\Section::class,
             Block\Table::class,
+            Block\Tweet::class,
             Block\Video::class,
             Block\YouTube::class
         );

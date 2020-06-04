@@ -43,6 +43,7 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Profile;
+use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
@@ -117,6 +118,27 @@ final class Builder
                         ]),
                         'summary' => new ArraySequence([
                             new Paragraph('collection tropical-disease summary'),
+                        ]),
+                        'content' => new EmptySequence(),
+                        'relatedContent' => new EmptySequence(),
+                        'podcastEpisodes' => new EmptySequence(),
+                    ];
+                },
+                PromotionalCollection::class => function () {
+                    return [
+                        'id' => 'highlights-from-japan',
+                        'title' => 'Highlights from Japan',
+                        'impactStatement' => null,
+                        'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
+                        'updatedDate' => null,
+                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'subjects' => new EmptySequence(),
+                        'editors' => new ArraySequence([
+                            self::dummy(Person::class),
+                        ]),
+                        'summary' => new ArraySequence([
+                            new Paragraph('promotional collection highlights-from-japan summary'),
                         ]),
                         'content' => new EmptySequence(),
                         'relatedContent' => new EmptySequence(),
@@ -532,6 +554,24 @@ final class Builder
                             ->withCurators(new ArraySequence([
                                 Builder::for(Person::class)->sample('bcooper'),
                                 $pjha,
+                            ]))
+                            ->withSummary(new EmptySequence())
+                            ->withContent(new ArraySequence([
+                                Builder::for(BlogArticle::class)
+                                    ->sample('slime'),
+                            ]));
+                    },
+                ],
+                PromotionalCollection::class => [
+                    'highlights-from-japan' => function ($builder) {
+                        return $builder
+                            ->withId('highlights-from-japan')
+                            ->withTitle('Highlights from Japan')
+                            ->withPublishedDate(new DateTimeImmutable('2000-01-01T00:00:00Z'))
+                            ->withThumbnail(Builder::for(Image::class)->sample('thumbnail'))
+                            ->withEditors(new ArraySequence([
+                                Builder::for(Person::class)->sample('bcooper'),
+                                Builder::for(Person::class)->sample('pjha'),
                             ]))
                             ->withSummary(new EmptySequence())
                             ->withContent(new ArraySequence([

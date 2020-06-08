@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\GoogleMap;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
@@ -21,10 +20,7 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
     {
         return new GoogleMap(
             $data['id'],
-            $data['title'] ?? null,
-            new ArraySequence(array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? []))
+            $data['title']
         );
     }
 
@@ -44,17 +40,8 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
         $data = [
             'type' => 'google-map',
             'id' => $object->getId(),
+            'title' => $object->getTitle(),
         ];
-
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
-        }
-
-        if ($object->getCaption()->notEmpty()) {
-            $data['caption'] = $object->getCaption()->map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            })->toArray();
-        }
 
         return $data;
     }

@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer\Block;
 
-use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Figshare;
 use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
@@ -21,10 +20,7 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
     {
         return new Figshare(
             $data['id'],
-            $data['title'] ?? null,
-            new ArraySequence(array_map(function (array $block) {
-                return $this->denormalizer->denormalize($block, Block::class);
-            }, $data['caption'] ?? [])),
+            $data['title'],
             $data['width'],
             $data['height']
         );
@@ -46,19 +42,10 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
         $data = [
             'type' => 'figshare',
             'id' => $object->getId(),
+            'title' => $object->getTitle(),
             'width' => $object->getWidth(),
             'height' => $object->getHeight(),
         ];
-
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
-        }
-
-        if ($object->getCaption()->notEmpty()) {
-            $data['caption'] = $object->getCaption()->map(function (Block $block) {
-                return $this->normalizer->normalize($block);
-            })->toArray();
-        }
 
         return $data;
     }

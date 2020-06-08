@@ -2,28 +2,23 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
-use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasId;
 
-final class GoogleMap implements BlockWithCaption, HasId
+final class GoogleMap implements Block, HasId
 {
     private $id;
     private $title;
-    private $caption;
 
     /**
      * @internal
      */
     public function __construct(
         string $id,
-        string $title = null,
-        Sequence $caption
+        string $title
     ) {
         $this->id = $id;
         $this->title = $title;
-        $this->caption = $caption;
     }
 
     public function getId() : string
@@ -32,18 +27,10 @@ final class GoogleMap implements BlockWithCaption, HasId
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @return Sequence|Block[]
-     */
-    public function getCaption() : Sequence
-    {
-        return $this->caption;
     }
 }

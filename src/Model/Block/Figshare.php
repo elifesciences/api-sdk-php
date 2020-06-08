@@ -2,16 +2,13 @@
 
 namespace eLife\ApiSdk\Model\Block;
 
-use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasId;
 
-final class Figshare implements BlockWithCaption, HasId
+final class Figshare implements Block, HasId
 {
     private $id;
     private $title;
-    private $caption;
     private $width;
     private $height;
 
@@ -20,14 +17,12 @@ final class Figshare implements BlockWithCaption, HasId
      */
     public function __construct(
         string $id,
-        string $title = null,
-        Sequence $caption,
+        string $title,
         int $width,
         int $height
     ) {
         $this->id = $id;
         $this->title = $title;
-        $this->caption = $caption;
         $this->width = $width;
         $this->height = $height;
     }
@@ -38,19 +33,11 @@ final class Figshare implements BlockWithCaption, HasId
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @return Sequence|Block[]
-     */
-    public function getCaption() : Sequence
-    {
-        return $this->caption;
     }
 
     public function getWidth() : int

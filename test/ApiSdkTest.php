@@ -17,7 +17,6 @@ use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Client\LabsPosts;
-use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
@@ -226,21 +225,6 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockLabsPostCall(1);
 
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsPosts()->get(1)->wait());
-    }
-
-    /**
-     * @test
-     */
-    public function it_creates_medium_articles()
-    {
-        $this->assertInstanceOf(MediumArticles::class, $this->apiSdk->mediumArticles());
-
-        $this->mockMediumArticleListCall(1, 1, 1);
-        $this->mockMediumArticleListCall(1, 100, 1);
-
-        foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
-            $this->apiSdk->getSerializer()->normalize($mediumArticle);
-        }
     }
 
     /**

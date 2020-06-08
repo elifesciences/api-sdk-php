@@ -16,7 +16,6 @@ use eLife\ApiClient\ApiClient\HighlightsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
-use eLife\ApiClient\ApiClient\MediumClient;
 use eLife\ApiClient\ApiClient\MetricsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\PodcastClient;
@@ -42,7 +41,6 @@ use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Client\LabsPosts;
-use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
@@ -79,7 +77,6 @@ use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\ApiSdk\Serializer\JobAdvertNormalizer;
 use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\ApiSdk\Serializer\MediaContactNormalizer;
-use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
@@ -140,7 +137,6 @@ final class ApiSdk
     private $interviews;
     private $jobAdverts;
     private $labsPosts;
-    private $mediumArticles;
     private $metrics;
     private $people;
     private $podcastEpisodes;
@@ -216,7 +212,6 @@ final class ApiSdk
             new JobAdvertNormalizer($this->jobAdvertsClient),
             new LabsPostNormalizer($this->labsClient),
             new MediaContactNormalizer(),
-            new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
             new PersonDetailsNormalizer(),
@@ -385,15 +380,6 @@ final class ApiSdk
         }
 
         return $this->labsPosts;
-    }
-
-    public function mediumArticles() : MediumArticles
-    {
-        if (empty($this->mediumArticles)) {
-            $this->mediumArticles = new MediumArticles(new MediumClient($this->httpClient), $this->serializer);
-        }
-
-        return $this->mediumArticles;
     }
 
     public function metrics() : Metrics

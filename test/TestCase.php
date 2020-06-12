@@ -9,7 +9,6 @@ use eLife\ApiSdk\Model\AnnualReport;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\ApiSdk\Model\MediumArticle;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectionException;
@@ -94,8 +93,6 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
             } elseif ($value instanceof Cover) {
                 return $value->getTitle();
             } elseif ($value instanceof LabsPost) {
-                return $value->getTitle();
-            } elseif ($value instanceof MediumArticle) {
                 return $value->getTitle();
             } elseif ($value instanceof PodcastEpisode) {
                 return $value->getTitle();

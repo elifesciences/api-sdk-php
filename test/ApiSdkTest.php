@@ -17,7 +17,6 @@ use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Client\LabsPosts;
-use eLife\ApiSdk\Client\MediumArticles;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Client\People;
 use eLife\ApiSdk\Client\PodcastEpisodes;
@@ -231,21 +230,6 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_creates_medium_articles()
-    {
-        $this->assertInstanceOf(MediumArticles::class, $this->apiSdk->mediumArticles());
-
-        $this->mockMediumArticleListCall(1, 1, 1);
-        $this->mockMediumArticleListCall(1, 100, 1);
-
-        foreach ($this->apiSdk->mediumArticles() as $mediumArticle) {
-            $this->apiSdk->getSerializer()->normalize($mediumArticle);
-        }
-    }
-
-    /**
-     * @test
-     */
     public function it_creates_metrics()
     {
         $this->assertInstanceOf(Metrics::class, $this->apiSdk->metrics());
@@ -386,7 +370,9 @@ final class ApiSdkTest extends ApiTestCase
             Block\Button::class,
             Block\Code::class,
             Block\Excerpt::class,
+            Block\Figshare::class,
             Block\Figure::class,
+            Block\GoogleMap::class,
             Block\Image::class,
             Block\Listing::class,
             Block\MathML::class,
@@ -396,6 +382,7 @@ final class ApiSdkTest extends ApiTestCase
             Block\Quote::class,
             Block\Section::class,
             Block\Table::class,
+            Block\Tweet::class,
             Block\Video::class,
             Block\YouTube::class
         );

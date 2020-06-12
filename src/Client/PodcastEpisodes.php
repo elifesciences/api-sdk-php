@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PodcastEpisodes implements Iterator, Sequence
 {
-    const VERSION_PODCAST_EPISODE = 2;
+    const VERSION_PODCAST_EPISODE = 1;
     const VERSION_PODCAST_EPISODE_LIST = 1;
 
     use Client;

@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Digests implements Iterator, Sequence
 {
-    const VERSION_DIGEST = 2;
+    const VERSION_DIGEST = 1;
     const VERSION_DIGEST_LIST = 1;
 
     use Client;

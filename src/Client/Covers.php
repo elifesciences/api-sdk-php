@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Covers implements Iterator, Sequence
 {
-    const VERSION_COVERS_LIST = 2;
+    const VERSION_COVERS_LIST = 1;
 
     use Client;
 

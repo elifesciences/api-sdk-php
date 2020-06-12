@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Highlights
 {
-    const VERSION_HIGHLIGHT_LIST = 4;
+    const VERSION_HIGHLIGHT_LIST = 3;
 
     private $highlightsClient;
     private $denormalizer;

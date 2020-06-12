@@ -657,7 +657,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection-list/v1/*.json#items';
     }
 }

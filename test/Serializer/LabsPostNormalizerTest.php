@@ -262,9 +262,9 @@ final class LabsPostNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v2/*.json#items[?type=='labs-post']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='labs-post']";
         yield __DIR__.'/../../vendor/elife/api/dist/samples/labs-post/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/labs-post-list/v1/*.json#items';
-        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?type=='labs-post']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?type=='labs-post']";
     }
 }

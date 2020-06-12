@@ -419,7 +419,7 @@ final class DigestNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/digest/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/digest/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/digest-list/v1/*.json#items';
     }
 }

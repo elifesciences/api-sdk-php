@@ -169,6 +169,6 @@ final class CoverNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/cover-list/v2/*.json#items';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/cover-list/v1/*.json#items';
     }
 }

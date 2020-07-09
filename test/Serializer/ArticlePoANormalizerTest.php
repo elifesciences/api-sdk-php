@@ -409,7 +409,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='poa']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v3/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='poa']";
     }

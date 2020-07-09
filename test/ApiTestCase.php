@@ -273,13 +273,13 @@ abstract class ApiTestCase extends TestCase
         if ($vor) {
             $response = new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 3)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 4)],
                 json_encode($this->createArticleVoRJson($id, false, $complete, $version ?? 1))
             );
         } else {
             $response = new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 3)],
                 json_encode($this->createArticlePoAJson($id, false, $complete, $version ?? 1))
             );
         }
@@ -290,8 +290,8 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.($version ? '/versions/'.$version : ''),
                 [
                     'Accept' => implode(', ', [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 2),
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 3),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 3),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 4),
                     ]),
                 ]
             ),

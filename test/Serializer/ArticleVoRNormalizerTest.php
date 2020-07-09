@@ -10,6 +10,7 @@ use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
@@ -137,7 +138,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
+                    ->withAbstract(new ArticleSection(new ArraySequence([new Section('Article 09560 abstract section title', null, new ArraySequence([new Paragraph('Article 09560 abstract text')]))]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
@@ -165,8 +166,14 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'abstract' => [
                         'content' => [
                             [
-                                'type' => 'paragraph',
-                                'text' => 'Article 09560 abstract text',
+                                'type' => 'section',
+                                'title' => 'Article 09560 abstract section title',
+                                'content' => [
+                                    [
+                                        'type' => 'paragraph',
+                                        'text' => 'Article 09560 abstract text',
+                                    ],
+                                ],
                             ],
                         ],
                         'doi' => '10.7554/eLife.09560abstract',
@@ -586,7 +593,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v2/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v4/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='vor']";
     }

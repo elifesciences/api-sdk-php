@@ -1082,11 +1082,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)]
+                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 1)],
+                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $recommendations,

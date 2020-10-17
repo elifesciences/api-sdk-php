@@ -60,6 +60,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            promise_for(null),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -138,7 +139,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', promise_for(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('text')]),
                     new ArraySequence([$subject])),
                 [],
                 [
@@ -147,6 +148,21 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                     'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updatedDate->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -159,7 +175,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new BlogArticle('id', 'title', $date, null, null, new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, null, null, promise_for(null), new ArraySequence([new Paragraph('text')]),
                     new EmptySequence()),
                 [],
                 [
@@ -176,7 +192,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new BlogArticle('blog-article-1', 'Blog article 1 title', $date, $updatedDate, 'Blog article 1 impact statement',
-                    new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
+                    promise_for(null), new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'blog-article-1',
@@ -194,7 +210,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null, null,
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null, null, promise_for(null),
                     new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new EmptySequence()),
                 ['snippet' => true],
                 [

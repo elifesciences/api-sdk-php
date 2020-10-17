@@ -95,6 +95,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
+                        'socialImage' => promise_for(null),
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
                         ]),

@@ -12,8 +12,10 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -49,8 +51,14 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
                 ->then(function (Result $article) {
                     return $article['content'];
                 }));
+
+            $data['image']['social'] = $article
+                ->then(function (Result $article) {
+                    return $article['image']['social'] ?? null;
+                });
         } else {
             $data['content'] = new ArraySequence($data['content']);
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
@@ -65,12 +73,18 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
+
         return new BlogArticle(
             $data['id'],
             $data['title'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
+            $data['image']['social'],
             $data['content'],
             $data['subjects']
         );
@@ -119,6 +133,10 @@ final class BlogArticleNormalizer implements NormalizerInterface, DenormalizerIn
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
         }
 
         return $data;

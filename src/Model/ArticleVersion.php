@@ -58,7 +58,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
-        PromiseInterface $socialImage = null,
+        PromiseInterface $socialImage,
         string $pdf = null,
         PromiseInterface $xml,
         Sequence $subjects,

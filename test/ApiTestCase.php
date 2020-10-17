@@ -1489,6 +1489,21 @@ abstract class ApiTestCase extends TestCase
                     'filename' => 'image.jpeg',
                 ],
             ],
+            'image' => [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ],
         ];
 
         if (!$complete) {
@@ -1520,6 +1535,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
+            unset($article['image']);
         }
 
         return $article;
@@ -1537,18 +1553,18 @@ abstract class ApiTestCase extends TestCase
 
         $article += [
             'impactStatement' => 'Article '.$id.' impact statement',
-            'image' => [
-                'thumbnail' => [
-                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+            'image' => ($article['image'] ?? []) + [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
                     'alt' => '',
                     'source' => [
                         'mediaType' => 'image/jpeg',
-                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                        'filename' => 'thumbnail.jpg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
                     ],
                     'size' => [
-                        'width' => 140,
-                        'height' => 140,
+                        'width' => 600,
+                        'height' => 600,
                     ],
                 ],
             ],
@@ -1657,7 +1673,10 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($article['impactStatement']);
-            unset($article['image']);
+            unset($article['image']['thumbnail']);
+            if (empty($article['image'])) {
+                unset($article['image']);
+            }
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['appendices']);

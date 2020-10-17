@@ -38,6 +38,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
+        PromiseInterface $socialImage = null,
         string $pdf = null,
         string $figuresPdf = null,
         PromiseInterface $xml,
@@ -67,8 +68,8 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $authorResponse
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
-            $volume, $elocationId, $pdf, $xml, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers,
-            $ethics, $funding, $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
+            $volume, $elocationId, $socialImage, $pdf, $xml, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors,
+            $reviewers, $ethics, $funding, $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;

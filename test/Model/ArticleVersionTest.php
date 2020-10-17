@@ -22,8 +22,10 @@ use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\HasSocialImage;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\Identifier;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -252,6 +254,23 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($date, $with->getStatusDate());
         $this->assertNull($withOut->getStatusDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_social_image()
+    {
+        $with = $this->builder
+            ->withPromiseOfSocialImage($socialImage = Builder::for(Image::class)->sample('social'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfSocialImage(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasSocialImage::class, $with);
+        $this->assertEquals($socialImage, $with->getSocialImage());
+        $this->assertNull($withOut->getSocialImage());
     }
 
     /**

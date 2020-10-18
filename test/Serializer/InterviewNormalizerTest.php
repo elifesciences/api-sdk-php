@@ -226,7 +226,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $published, $updated,
-                    'Interview 1 impact statement', $thumbnail, promise_for(null), new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 impact statement', $thumbnail, promise_for($socialImage), new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true, 'type' => true],
                 [

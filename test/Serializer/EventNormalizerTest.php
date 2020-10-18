@@ -218,7 +218,7 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet with content' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null, promise_for(null),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null, promise_for(Builder::for(Image::class)->sample('social')),
                     new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
@@ -237,7 +237,7 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
             'complete snippet with uri' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', promise_for(null), new EmptySequence()),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', promise_for(Builder::for(Image::class)->sample('social')), new EmptySequence()),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',

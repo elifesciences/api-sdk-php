@@ -192,7 +192,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new BlogArticle('blog-article-1', 'Blog article 1 title', $date, $updatedDate, 'Blog article 1 impact statement',
-                    promise_for(null), new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
+                    promise_for(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'blog-article-1',

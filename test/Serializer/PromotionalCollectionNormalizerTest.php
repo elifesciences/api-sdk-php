@@ -546,6 +546,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Highlights from Japan')
                     ->withImpactStatement('eLife has published papers on many...')
+                    ->withPromiseOfSocialImage(Builder::for(Image::class)->sample('social'))
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([

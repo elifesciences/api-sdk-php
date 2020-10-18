@@ -11,8 +11,10 @@ use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Model\Model;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -48,18 +50,31 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
                 ->then(function (Result $jobAdvert) {
                     return $jobAdvert['content'];
                 }));
+
+            $data['image']['social'] = $jobAdvert
+                ->then(function (Result $jobAdvert) {
+                    return $article['image']['social'] ?? null;
+                });
         } else {
             $data['content'] = new ArraySequence($data['content'] ?? []);
+
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
         });
 
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
+
         return new JobAdvert(
             $data['id'],
             $data['title'],
             $data['impactStatement'] ?? null,
+            $data['image']['social'],
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['closingDate']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
@@ -99,10 +114,16 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
             $data['impactStatement'] = $object->getImpactStatement();
         }
 
-        if (empty($context['snippet']) && $object->getContent()->notEmpty()) {
-            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
-                return $this->normalizer->normalize($block, $format, $context);
-            })->toArray();
+        if (empty($context['snippet'])) {
+            if ($object->getContent()->notEmpty()) {
+                $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+                    return $this->normalizer->normalize($block, $format, $context);
+                })->toArray();
+            }
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
         }
 
         return $data;

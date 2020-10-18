@@ -1674,9 +1674,7 @@ abstract class ApiTestCase extends TestCase
         if (!$complete) {
             unset($article['impactStatement']);
             unset($article['image']['thumbnail']);
-            if (empty($article['image'])) {
-                unset($article['image']);
-            }
+            unset($article['image']['social']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['appendices']);
@@ -1688,6 +1686,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
+            unset($article['image']['social']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
@@ -1697,6 +1696,9 @@ abstract class ApiTestCase extends TestCase
             unset($article['ethics']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
+        }
+        if (empty($article['image'])) {
+            unset($article['image']);
         }
 
         return $article;

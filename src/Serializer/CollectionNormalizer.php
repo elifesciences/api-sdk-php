@@ -51,6 +51,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $collection = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['image']['banner'] = $normalizationHelper->selectField($collection, 'image.banner');
+            $data['image']['social'] = $normalizationHelper->selectField($collection, 'image.social');
             $data['curators'] = new PromiseSequence($normalizationHelper->selectField($collection, 'curators'));
             $data['summary'] = new PromiseSequence($normalizationHelper->selectField($collection, 'summary'));
             $data['content'] = new PromiseSequence($normalizationHelper->selectField($collection, 'content'));
@@ -58,6 +59,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['podcastEpisodes'] = new PromiseSequence($normalizationHelper->selectField($collection, 'podcastEpisodes'));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
             $data['curators'] = new ArraySequence($data['curators']);
             $data['summary'] = new ArraySequence($data['summary'] ?? []);
             $data['content'] = new ArraySequence($data['content']);
@@ -66,6 +68,11 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
         }
 
         $data['image']['banner'] = $normalizationHelper->denormalizePromise($data['image']['banner'], Image::class, $context);
+
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
 
         $data['curators'] = $normalizationHelper->denormalizeSequence($data['curators'], Person::class, $context + ['snippet' => true]);
 
@@ -98,6 +105,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             promise_for($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
+            $data['image']['social'],
             $data['subjects'],
             $data['selectedCurator'],
             $selectedCuratorEtAl,
@@ -142,6 +150,10 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
 
         if (empty($context['snippet'])) {
             $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
 
             $typeContext = array_merge($context, ['type' => true]);
 

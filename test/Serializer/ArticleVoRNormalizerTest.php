@@ -493,7 +493,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withPromiseOfSocialImage(null)
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))

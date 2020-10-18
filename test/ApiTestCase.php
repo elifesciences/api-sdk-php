@@ -1508,6 +1508,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             $article['stage'] = 'preview';
+            unset($article['image']);
             unset($article['titlePrefix']);
             unset($article['published']);
             unset($article['versionDate']);
@@ -1526,6 +1527,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
+            unset($article['image']);
             unset($article['issue']);
             unset($article['xml']);
             unset($article['copyright']);
@@ -1535,7 +1537,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['funding']);
             unset($article['dataSets']);
             unset($article['additionalFiles']);
-            unset($article['image']);
         }
 
         return $article;
@@ -1554,17 +1555,17 @@ abstract class ApiTestCase extends TestCase
         $article += [
             'impactStatement' => 'Article '.$id.' impact statement',
             'image' => ($article['image'] ?? []) + [
-                'social' => [
-                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
                     'source' => [
                         'mediaType' => 'image/jpeg',
-                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
-                        'filename' => 'social.jpg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
                     ],
                     'size' => [
-                        'width' => 600,
-                        'height' => 600,
+                        'width' => 140,
+                        'height' => 140,
                     ],
                 ],
             ],
@@ -1673,8 +1674,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($article['impactStatement']);
-            unset($article['image']['thumbnail']);
-            unset($article['image']['social']);
+            unset($article['image']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['appendices']);
@@ -1686,7 +1686,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            unset($article['image']['social']);
             unset($article['keywords']);
             unset($article['digest']);
             unset($article['body']);
@@ -1696,9 +1695,6 @@ abstract class ApiTestCase extends TestCase
             unset($article['ethics']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
-        }
-        if (empty($article['image'])) {
-            unset($article['image']);
         }
 
         return $article;

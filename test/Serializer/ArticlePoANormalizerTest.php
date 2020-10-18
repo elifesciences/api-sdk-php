@@ -344,7 +344,6 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                             ->__invoke(),
                     ]))
                     ->withResearchOrganisms(['research organism'])
-                    ->withPromiseOfSocialImage(null)
                     ->__invoke(),
                 ['snippet' => true],
                 [

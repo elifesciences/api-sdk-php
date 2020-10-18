@@ -187,6 +187,7 @@ final class Builder
                         'timeZone' => new DateTimeZone('Z'),
                         'content' => new ArraySequence([new Paragraph('Event 1 text')]),
                         'uri' => null,
+                        'socialImage' => promise_for(null),
                     ];
                 },
                 ExternalArticle::class => function () {

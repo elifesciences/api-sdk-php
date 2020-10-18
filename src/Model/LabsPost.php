@@ -4,8 +4,9 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
-final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasSocialImage, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -13,6 +14,7 @@ final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpa
     private $updated;
     private $impactStatement;
     private $thumbnail;
+    private $socialImage;
     private $content;
 
     /**
@@ -25,6 +27,7 @@ final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpa
         DateTimeImmutable $updated = null,
         string $impactStatement = null,
         Image $thumbnail,
+        PromiseInterface $socialImage,
         Sequence $content
     ) {
         $this->id = $id;
@@ -33,6 +36,7 @@ final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpa
         $this->updated = $updated;
         $this->impactStatement = $impactStatement;
         $this->thumbnail = $thumbnail;
+        $this->socialImage = $socialImage;
         $this->content = $content;
     }
 
@@ -75,6 +79,14 @@ final class LabsPost implements Model, HasContent, HasId, HasIdentifier, HasImpa
     public function getThumbnail() : Image
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     /**

@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\LabsPostNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -57,8 +58,9 @@ final class LabsPostNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
         $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            $thumbnail, new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
+            $thumbnail, promise_for($socialImage), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
         return [
@@ -127,10 +129,11 @@ final class LabsPostNormalizerTest extends ApiTestCase
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
 
         return [
             'complete' => [
-                new LabsPost('80000001', 'title', $published, $updated, 'impact statement', $thumbnail,
+                new LabsPost('80000001', 'title', $published, $updated, 'impact statement', $thumbnail, promise_for($socialImage),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -152,6 +155,19 @@ final class LabsPostNormalizerTest extends ApiTestCase
                                 'height' => 140,
                             ],
                         ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
                     ],
                     'impactStatement' => 'impact statement',
                     'content' => [
@@ -163,7 +179,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsPost('80000001', 'title', $published, null, null, $thumbnail,
+                new LabsPost('80000001', 'title', $published, null, null, $thumbnail, promise_for(null),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -195,7 +211,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new LabsPost('80000001', 'Labs post 1 title', $published, $updated, 'Labs post 1 impact statement',
-                    $thumbnail, new ArraySequence([new Paragraph('Labs post 80000001 text')])),
+                    $thumbnail, promise_for(null), new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => '80000001',
@@ -225,7 +241,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new LabsPost('80000001', 'Labs post 1 title', $published, null, null, $thumbnail,
+                new LabsPost('80000001', 'Labs post 1 title', $published, null, null, $thumbnail, promise_for(null),
                     new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true],
                 [

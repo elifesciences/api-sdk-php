@@ -135,6 +135,7 @@ final class Builder
                         'updatedDate' => null,
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'socialImage' => promise_for(null),
                         'subjects' => new EmptySequence(),
                         'editors' => new ArraySequence([
                             self::dummy(Person::class),

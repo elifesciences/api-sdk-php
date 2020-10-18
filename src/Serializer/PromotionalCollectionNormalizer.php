@@ -51,6 +51,7 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
             $promotionalCollection = $this->snippetDenormalizer->denormalizeSnippet($data);
 
             $data['image']['banner'] = $normalizationHelper->selectField($promotionalCollection, 'image.banner');
+            $data['image']['social'] = $normalizationHelper->selectField($promotionalCollection, 'image.social');
             $data['editors'] = new PromiseSequence($normalizationHelper->selectField($promotionalCollection, 'editors'));
             $data['summary'] = new PromiseSequence($normalizationHelper->selectField($promotionalCollection, 'summary'));
             $data['content'] = new PromiseSequence($normalizationHelper->selectField($promotionalCollection, 'content'));
@@ -58,6 +59,7 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
             $data['podcastEpisodes'] = new PromiseSequence($normalizationHelper->selectField($promotionalCollection, 'podcastEpisodes'));
         } else {
             $data['image']['banner'] = promise_for($data['image']['banner']);
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
             $data['editors'] = new ArraySequence($data['editors'] ?? []);
             $data['summary'] = new ArraySequence($data['summary'] ?? []);
             $data['content'] = new ArraySequence($data['content']);
@@ -66,6 +68,11 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
         }
 
         $data['image']['banner'] = $normalizationHelper->denormalizePromise($data['image']['banner'], Image::class, $context);
+
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
 
         $data['editors'] = $normalizationHelper->denormalizeSequence($data['editors'], Person::class, $context + ['snippet' => true]);
 
@@ -96,6 +103,7 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             promise_for($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
+            $data['image']['social'],
             $data['subjects'],
             $data['editors'],
             $data['summary'],
@@ -133,6 +141,10 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
 
         if (empty($context['snippet'])) {
             $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
 
             $typeContext = array_merge($context, ['type' => true]);
 

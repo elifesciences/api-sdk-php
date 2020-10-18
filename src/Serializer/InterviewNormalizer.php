@@ -17,6 +17,7 @@ use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -57,10 +58,17 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
                 ->then(function (Result $interview) {
                     return $interview['interviewee']['cv'] ?? [];
                 }));
+
+            $data['image']['social'] = $interview
+                ->then(function (Result $interview) {
+                    return $interview['image']['social'] ?? null;
+                });
         } else {
             $data['content'] = new ArraySequence($data['content']);
 
             $data['interviewee']['cv'] = new ArraySequence($data['interviewee']['cv'] ?? []);
+
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
@@ -76,6 +84,11 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
                 $format, $context);
         }
 
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
+
         return new Interview(
             $data['id'],
             new Interviewee(
@@ -87,6 +100,7 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['image']['thumbnail'] ?? null,
+            $data['image']['social'],
             $data['content']
         );
     }
@@ -128,6 +142,10 @@ final class InterviewNormalizer implements NormalizerInterface, DenormalizerInte
         }
 
         if (empty($context['snippet'])) {
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
+
             if (!$object->getInterviewee()->getCvLines()->isEmpty()) {
                 $data['interviewee']['cv'] = $object->getInterviewee()->getCvLines()
                     ->map(function (IntervieweeCvLine $cvLine) {

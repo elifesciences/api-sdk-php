@@ -17,6 +17,7 @@ use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -63,7 +64,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null,
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -131,6 +132,7 @@ final class InterviewNormalizerTest extends ApiTestCase
     public function normalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
 
@@ -139,7 +141,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $published, $updated, 'impact statement', $thumbnail, new ArraySequence([new Paragraph('text')])
+                    $published, $updated, 'impact statement', $thumbnail, promise_for($socialImage), new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [
@@ -175,6 +177,19 @@ final class InterviewNormalizerTest extends ApiTestCase
                                 'height' => 140,
                             ],
                         ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
                     ],
                     'content' => [
                         [
@@ -187,7 +202,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum' => [
                 new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'title', $published, null, null, null, new ArraySequence([new Paragraph('text')])),
+                    'title', $published, null, null, null, promise_for(null), new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -211,7 +226,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $published, $updated,
-                    'Interview 1 impact statement', $thumbnail, new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 impact statement', $thumbnail, promise_for(null), new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true, 'type' => true],
                 [
@@ -251,7 +266,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'Interview 1 title', $published, null, null, null, new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 title', $published, null, null, null, promise_for(null), new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [

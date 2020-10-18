@@ -226,6 +226,7 @@ final class Builder
                         'updated' => null,
                         'impactStatement' => null,
                         'thumbnail' => null,
+                        'socialImage' => promise_for(null),
                         'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },

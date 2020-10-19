@@ -17,6 +17,7 @@ use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use function GuzzleHttp\Promise\promise_for;
+use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -128,10 +129,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
     {
         $date = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $banner = Builder::for(Image::class)->sample('banner');
-        $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            new ArraySequence([new Paragraph('Aims and scope text')]), promise_for($banner), promise_for($thumbnail));
+        $socialImage = Builder::for(Image::class)->sample('social');
 
         return [
             'complete' => [
@@ -141,6 +139,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     ->withPublished($date)
                     ->withUpdated($updatedDate)
                     ->withImpactStatement('impact statement')
+                    ->withPromiseOfSocialImage($socialImage)
                     ->withSequenceOfSubjects()
                     ->withSequenceOfContent(new Paragraph('Press package id text'))
                     ->withSequenceOfRelatedContent(
@@ -173,6 +172,21 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     'published' => $date->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updatedDate->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -217,6 +231,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     ->withTitle('title')
                     ->withPublished($date)
                     ->withImpactStatement(null)
+                    ->withPromiseOfSocialImage(null)
                     ->withSequenceOfSubjects()
                     ->withSequenceOfContent(new Paragraph('Press package id text'))
                     ->withSequenceOfRelatedContent()
@@ -246,6 +261,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
                     ->withPublished($date)
                     ->withUpdated($updatedDate)
                     ->withImpactStatement('impact statement')
+                    ->withPromiseOfSocialImage($socialImage)
                     ->withSequenceOfSubjects()
                     ->withSequenceOfContent(new Paragraph('Press package id text'))
                     ->withSequenceOfRelatedContent(

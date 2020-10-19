@@ -134,8 +134,9 @@ final class BlogArticleNormalizerTest extends ApiTestCase
         $updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            new EmptySequence(), promise_for($banner), promise_for($thumbnail));
+            new EmptySequence(), promise_for($banner), promise_for($thumbnail), promise_for($socialImage));
 
         return [
             'complete' => [

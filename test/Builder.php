@@ -272,6 +272,7 @@ final class Builder
                         'updated' => null,
                         'banner' => rejection_for('No banner'),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'socialImage' => promise_for(null),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
@@ -288,6 +289,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
+                        'socialImage' => promise_for(null),
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Press package 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
@@ -691,6 +693,7 @@ final class Builder
                             ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42Z'))
                             ->withPromiseOfBanner(self::for(Image::class)->sample('banner'))
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withPromiseOfSocialImage(null)
                             ->withSources([
                                 new PodcastEpisodeSource(
                                     'audio/mpeg',

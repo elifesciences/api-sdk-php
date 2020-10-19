@@ -4,14 +4,16 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
-final class PressPackage implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasUpdatedDate
+final class PressPackage implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasSocialImage, HasPublishedDate, HasSubjects, HasUpdatedDate
 {
     private $id;
     private $title;
     private $published;
     private $updated;
     private $impactStatement;
+    private $socialImage;
     private $subjects;
     private $content;
     private $relatedContent;
@@ -27,6 +29,7 @@ final class PressPackage implements Model, HasContent, HasId, HasIdentifier, Has
         DateTimeImmutable $published,
         DateTimeImmutable $updated = null,
         string $impactStatement = null,
+        PromiseInterface $socialImage,
         Sequence $subjects,
         Sequence $content,
         Sequence $relatedContent,
@@ -38,6 +41,7 @@ final class PressPackage implements Model, HasContent, HasId, HasIdentifier, Has
         $this->published = $published;
         $this->updated = $updated;
         $this->impactStatement = $impactStatement;
+        $this->socialImage = $socialImage;
         $this->subjects = $subjects;
         $this->content = $content;
         $this->relatedContent = $relatedContent;
@@ -76,6 +80,14 @@ final class PressPackage implements Model, HasContent, HasId, HasIdentifier, Has
     public function getImpactStatement()
     {
         return $this->impactStatement;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     /**

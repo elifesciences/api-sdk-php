@@ -12,10 +12,12 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -66,12 +68,23 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
                 ->then(function (Result $article) {
                     return $article['about'] ?? [];
                 }));
+
+            $data['image']['social'] = $article
+                ->then(function (Result $article) {
+                    return $article['image']['social'];
+                });
         } else {
             $data['content'] = new ArraySequence($data['content']);
             $data['relatedContent'] = new ArraySequence($data['relatedContent'] ?? []);
             $data['mediaContacts'] = new ArraySequence($data['mediaContacts'] ?? []);
             $data['about'] = new ArraySequence($data['about'] ?? []);
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
+
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
 
         $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
             return $this->denormalizer->denormalize($subject, Subject::class, $format, ['snippet' => true] + $context);
@@ -99,6 +112,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
+            $data['image']['social'],
             $data['subjects'],
             $data['content'],
             $data['relatedContent'],
@@ -144,6 +158,10 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
         }
 
         if (empty($context['snippet'])) {
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
+
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();

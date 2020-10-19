@@ -35,7 +35,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_is_a_model()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -49,7 +49,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_an_identifier()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -64,7 +64,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_an_id()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -79,7 +79,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_title()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -93,12 +93,12 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_impact_statement()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(Builder::for(Image::class)->sample('social')),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -135,7 +135,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_has_a_published_date()
     {
         $blogArticle = new BlogArticle('id', 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -150,12 +150,12 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_may_have_an_updated_date()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
@@ -172,7 +172,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
         );
 
@@ -214,7 +214,7 @@ final class BlogArticleTest extends PHPUnit_Framework_TestCase
             new Block\YouTube('foo', null, new EmptySequence(), 300, 200),
         ];
 
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null), new ArraySequence($content),
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'), new ArraySequence($content),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );
 

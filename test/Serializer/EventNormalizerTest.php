@@ -59,7 +59,7 @@ final class EventNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(Builder::for(Image::class)->sample('social')),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         return [

@@ -64,7 +64,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 

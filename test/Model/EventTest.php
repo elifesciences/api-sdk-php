@@ -30,7 +30,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_is_a_model()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(Model::class, $event);
@@ -41,7 +41,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_identifier()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(HasIdentifier::class, $event);
@@ -53,7 +53,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_id()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(HasId::class, $event);
@@ -65,7 +65,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_title()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertSame('title', $event->getTitle());
@@ -76,9 +76,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_impact_statement()
     {
-        $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(HasImpactStatement::class, $with);
@@ -91,7 +91,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_published_date()
     {
-        $event = new Event('id', 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, $published = new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(HasPublishedDate::class, $event);
@@ -103,9 +103,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_an_updated_date()
     {
-        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), $updated = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
@@ -118,7 +118,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_a_start_date()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, $starts = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, $starts = new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertEquals($starts, $event->getStarts());
@@ -129,7 +129,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_has_an_end_date()
     {
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), $ends = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), $ends = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertEquals($ends, $event->getEnds());
@@ -141,9 +141,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_timezone()
     {
         $with = new Event('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
-            $timeZone = new DateTimeZone('Europe/London'), null, promise_for(null),
+            $timeZone = new DateTimeZone('Europe/London'), null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertEquals($timeZone, $with->getTimeZone());
@@ -155,9 +155,9 @@ final class EventTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_a_uri()
     {
-        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'http://www.example.com/', promise_for(null),
+        $with = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'http://www.example.com/', rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
-        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $withOut = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         $this->assertEquals('http://www.example.com/', $with->getUri());
@@ -187,7 +187,7 @@ final class EventTest extends PHPUnit_Framework_TestCase
     {
         $content = [new Block\Paragraph('foo')];
 
-        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new ArraySequence($content));
 
         $this->assertInstanceOf(HasContent::class, $event);

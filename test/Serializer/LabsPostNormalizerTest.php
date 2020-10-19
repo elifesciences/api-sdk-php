@@ -58,9 +58,8 @@ final class LabsPostNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $socialImage = Builder::for(Image::class)->sample('social');
         $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            $thumbnail, promise_for($socialImage), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
+            $thumbnail, rejection_for('No social image'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
         );
 
         return [

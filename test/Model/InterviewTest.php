@@ -35,7 +35,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -51,7 +51,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -67,7 +67,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -82,7 +82,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -100,10 +100,10 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $intervieweeWithOut = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
-        $with = new Interview('id', $intervieweeWith, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement', null, promise_for(null),
+        $with = new Interview('id', $intervieweeWith, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement', null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
-        $withOut = new Interview('id', $intervieweeWithOut, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $withOut = new Interview('id', $intervieweeWithOut, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -121,10 +121,10 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
-        $with = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, $image = Builder::for(Image::class)->sample('thumbnail'), promise_for(null),
+        $with = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, $image = Builder::for(Image::class)->sample('thumbnail'), rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
-        $withOut = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $withOut = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -162,7 +162,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -178,10 +178,10 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $with = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, promise_for(null),
+        $with = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
-        $withOut = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $withOut = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
         );
 
@@ -201,7 +201,7 @@ final class InterviewTest extends PHPUnit_Framework_TestCase
         $interviewee = new Interviewee($person,
             new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
 
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, promise_for(null),
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
             new ArraySequence($content)
         );
 

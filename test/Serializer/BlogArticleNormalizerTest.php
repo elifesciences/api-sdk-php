@@ -60,7 +60,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
             new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
         );

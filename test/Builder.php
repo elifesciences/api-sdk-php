@@ -620,6 +620,7 @@ final class Builder
                             ->withId('event1')
                             ->withTitle('Changing peer review in cancer research: a seminar at Fred Hutch')
                             ->withImpactStatement('How eLife is influencing the culture of peer review')
+                            ->withPromiseOfSocialImage(Builder::for(Image::class)->sample('social'))
                             ->withPublishedDate(new DateTimeImmutable('2016-08-01T00:00:00Z'))
                             ->withUpdatedDate(new DateTimeImmutable('2016-08-02T00:00:00Z'))
                             ->withStarts(new DateTimeImmutable('2016-04-22T20:00:00Z'))
@@ -642,6 +643,7 @@ final class Builder
                             ))
                             ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28Z'))
                             ->withContent(new ArraySequence([new Paragraph('Interview 1 text')]));
                     },
@@ -693,7 +695,7 @@ final class Builder
                             ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42Z'))
                             ->withPromiseOfBanner(self::for(Image::class)->sample('banner'))
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
-                            ->withPromiseOfSocialImage(null)
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withSources([
                                 new PodcastEpisodeSource(
                                     'audio/mpeg',

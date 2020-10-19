@@ -57,9 +57,9 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                     return $podcastEpisode['image']['banner'];
                 });
 
-            $data['image']['social'] = $data['image']['social']
-                ->then(function ($socialImage) use ($format, $context) {
-                    return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            $data['image']['social'] = $podcastEpisode
+                ->then(function (Result $podcastEpisode) {
+                    return $podcastEpisode['image']['social'] ?? null;
                 });
         } else {
             $data['chapters'] = new ArraySequence($data['chapters']);

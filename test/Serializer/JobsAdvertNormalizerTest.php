@@ -9,14 +9,17 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\JobAdvertNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class JobsAdvertNormalizerTest extends ApiTestCase
 {
@@ -55,7 +58,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', rejection_for('No social image'), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
             new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
 
         return [
@@ -127,7 +130,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new JobAdvert('id', 'title', 'impact statement', $published, $closingDate, $updated,
+                new JobAdvert('id', 'title', 'impact statement', promise_for(Builder::for(Image::class)->sample('social')), $published, $closingDate, $updated,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -137,6 +140,21 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                     'closingDate' => $closingDate->format(ApiSdk::DATE_FORMAT),
                     'updated' => $updated->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -146,7 +164,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new JobAdvert('id', 'title', null, $published, $closingDate, null, new ArraySequence([new Paragraph('text')])),
+                new JobAdvert('id', 'title', null, promise_for(null), $published, $closingDate, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -162,7 +180,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new JobAdvert('job-advert1', 'Job advert job-advert1 title', 'Job advert job-advert1 impact statement', $published, $closingDate, $updated,
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', 'Job advert job-advert1 impact statement', promise_for(null), $published, $closingDate, $updated,
                     new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
@@ -178,9 +196,8 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                     $test->mockJobAdvertCall('job-advert1', true);
                 },
             ],
-
             'minimum snippet' => [
-                new JobAdvert('job-advert1', 'Job advert job-advert1 title', null, $published, $closingDate, null,
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', null, promise_for(null), $published, $closingDate, null,
                     new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true],
                 [

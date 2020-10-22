@@ -1489,10 +1489,26 @@ abstract class ApiTestCase extends TestCase
                     'filename' => 'image.jpeg',
                 ],
             ],
+            'image' => [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ],
         ];
 
         if (!$complete) {
             $article['stage'] = 'preview';
+            unset($article['image']);
             unset($article['titlePrefix']);
             unset($article['published']);
             unset($article['versionDate']);
@@ -1511,6 +1527,7 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
+            unset($article['image']);
             unset($article['issue']);
             unset($article['xml']);
             unset($article['copyright']);
@@ -1537,7 +1554,7 @@ abstract class ApiTestCase extends TestCase
 
         $article += [
             'impactStatement' => 'Article '.$id.' impact statement',
-            'image' => [
+            'image' => ($article['image'] ?? []) + [
                 'thumbnail' => [
                     'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                     'alt' => '',
@@ -1732,10 +1749,26 @@ abstract class ApiTestCase extends TestCase
         if ($complete) {
             $blogArticle['updated'] = '2000-01-01T00:00:00Z';
             $blogArticle['impactStatement'] = 'Blog article '.$id.' impact statement';
+            $blogArticle['image'] = [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ];
             $blogArticle['subjects'][] = $this->createSubjectJson(1, true);
         }
 
         if ($isSnippet) {
+            unset($blogArticle['image']);
             unset($blogArticle['content']);
         }
 
@@ -1789,6 +1822,21 @@ abstract class ApiTestCase extends TestCase
         if ($complete) {
             $event['updated'] = '2000-01-01T00:00:00Z';
             $event['timezone'] = 'Europe/London';
+            $event['image'] = [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ];
         }
 
         if ($external) {
@@ -1830,6 +1878,21 @@ abstract class ApiTestCase extends TestCase
 
         if ($complete) {
             $jobAdvert['impactStatement'] = 'Job advert '.$number.' impact statement';
+            $jobAdvert['image'] = [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ];
             $jobAdvert['updated'] = '2000-01-01T00:00:00Z';
         }
 
@@ -1896,6 +1959,19 @@ abstract class ApiTestCase extends TestCase
                         'height' => 140,
                     ],
                 ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
             ],
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-02T00:00:00Z',
@@ -1909,13 +1985,14 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($interview['content']);
+            unset($interview['image']['social']);
             unset($interview['interviewee']['cv']);
         }
 
         if (!$complete) {
             unset($interview['updated']);
             unset($interview['impactStatement']);
-            unset($interview['image']);
+            unset($interview['image']['social']);
             unset($interview['interviewee']['cv']);
         }
 
@@ -1944,6 +2021,19 @@ abstract class ApiTestCase extends TestCase
                         'height' => 140,
                     ],
                 ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
             ],
             'content' => [
                 [
@@ -1955,11 +2045,13 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($labsPost['content']);
+            unset($labsPost['image']['social']);
         }
 
         if (!$complete) {
             unset($labsPost['updated']);
             unset($labsPost['impactStatement']);
+            unset($labsPost['image']['social']);
         }
 
         return $labsPost;
@@ -2090,6 +2182,19 @@ abstract class ApiTestCase extends TestCase
                         'height' => 140,
                     ],
                 ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
             ],
             'sources' => [
                 [
@@ -2111,6 +2216,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($podcastEpisode['impactStatement']);
+            unset($podcastEpisode['image']['social']);
             unset($podcastEpisode['updated']);
             unset($podcastEpisode['chapters'][0]['longTitle']);
             unset($podcastEpisode['chapters'][0]['impactStatement']);
@@ -2119,6 +2225,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($podcastEpisode['image']['banner']);
+            unset($podcastEpisode['image']['social']);
             unset($podcastEpisode['chapters']);
         }
 
@@ -2133,6 +2240,21 @@ abstract class ApiTestCase extends TestCase
             'impactStatement' => "Press package $id impact statement",
             'published' => '2000-01-01T00:00:00Z',
             'updated' => '2000-01-02T00:00:00Z',
+            'image' => [
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
+            ],
             'content' => [
                 [
                     'type' => 'paragraph',
@@ -2170,6 +2292,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$isComplete) {
             unset($package['impactStatement']);
+            unset($package['image']);
             unset($package['updated']);
             unset($package['relatedContent']);
             unset($package['mediaContacts']);
@@ -2178,6 +2301,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($package['impactStatement']);
+            unset($package['image']);
             unset($package['content']);
             unset($package['relatedContent']);
             unset($package['mediaContacts']);
@@ -2263,6 +2387,19 @@ abstract class ApiTestCase extends TestCase
                     'size' => [
                         'width' => 140,
                         'height' => 140,
+                    ],
+                ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
                     ],
                 ],
             ],
@@ -2381,6 +2518,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($collection['impactStatement']);
+            unset($collection['image']['social']);
             unset($collection['updated']);
             unset($collection['selectedCurator']['etAl']);
             unset($collection['summary']);
@@ -2391,6 +2529,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($collection['image']['banner']);
+            unset($collection['image']['social']);
             unset($collection['curators']);
             unset($collection['summary']);
             unset($collection['content']);
@@ -2535,6 +2674,19 @@ abstract class ApiTestCase extends TestCase
                         'height' => 140,
                     ],
                 ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
             ],
             'editors' => [
                 [
@@ -2639,6 +2791,7 @@ abstract class ApiTestCase extends TestCase
 
         if (!$complete) {
             unset($promotionalCollection['impactStatement']);
+            unset($promotionalCollection['image']['social']);
             unset($promotionalCollection['updated']);
             unset($promotionalCollection['editors']);
             unset($promotionalCollection['summary']);
@@ -2649,6 +2802,7 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($promotionalCollection['image']['banner']);
+            unset($promotionalCollection['image']['social']);
             unset($promotionalCollection['editors']);
             unset($promotionalCollection['summary']);
             unset($promotionalCollection['content']);
@@ -2719,11 +2873,25 @@ abstract class ApiTestCase extends TestCase
                         'height' => 140,
                     ],
                 ],
+                'social' => [
+                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                        'filename' => 'social.jpg',
+                    ],
+                    'size' => [
+                        'width' => 600,
+                        'height' => 600,
+                    ],
+                ],
             ],
         ];
 
         if (!$complete) {
             unset($subject['aimsAndScope']);
+            unset($subject['image']['social']);
         }
 
         if ($isSnippet) {

@@ -179,6 +179,34 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
                     'xml' => 'http://www.example.com/xml',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -291,21 +319,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'status' => 'vor',
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
-                    'image' => [
-                        'thumbnail' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
-                                'filename' => 'thumbnail.jpg',
-                            ],
-                            'size' => [
-                                'width' => 140,
-                                'height' => 140,
-                            ],
-                        ],
-                    ],
                     'keywords' => ['Article 09560 keyword'],
                     'digest' => [
                         'content' => [
@@ -422,6 +435,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
+                    ->withPromiseOfSocialImage(null)
                     ->withThumbnail(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
@@ -549,6 +563,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
+                    ->withPromiseOfSocialImage(null)
                     ->withThumbnail(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)

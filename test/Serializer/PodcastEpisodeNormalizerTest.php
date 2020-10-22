@@ -62,7 +62,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class), rejection_for('No social image'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
             new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
             new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
@@ -139,11 +139,12 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
 
         return [
             'complete' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
-                    promise_for($banner), $thumbnail,
+                    promise_for($banner), $thumbnail, promise_for($socialImage),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
@@ -193,6 +194,19 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 1800,
                                 'height' => 900,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],
@@ -293,6 +307,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     null,
                     promise_for($banner),
                     $thumbnail,
+                    promise_for(null),
                     [
                         new PodcastEpisodeSource(
                             'audio/mpeg',
@@ -359,7 +374,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
-                    promise_for($banner), $thumbnail,
+                    promise_for($banner), $thumbnail, promise_for($socialImage),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
@@ -401,7 +416,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail,
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail, promise_for(null),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),

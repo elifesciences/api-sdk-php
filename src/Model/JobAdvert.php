@@ -4,12 +4,14 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
-final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate
+final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasSocialImage, HasPublishedDate, HasUpdatedDate
 {
     private $id;
     private $title;
     private $impactStatement;
+    private $socialImage;
     private $closingDate;
     private $publishedDate;
     private $updatedDate;
@@ -22,6 +24,7 @@ final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImp
         string $id,
         string $title,
         string $impactStatement = null,
+        PromiseInterface $socialImage,
         DateTimeImmutable $publishedDate,
         DateTimeImmutable $closingDate,
         DateTimeImmutable $updatedDate = null,
@@ -30,6 +33,7 @@ final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImp
         $this->id = $id;
         $this->title = $title;
         $this->impactStatement = $impactStatement;
+        $this->socialImage = $socialImage;
         $this->publishedDate = $publishedDate;
         $this->updatedDate = $updatedDate;
         $this->closingDate = $closingDate;
@@ -57,6 +61,14 @@ final class JobAdvert implements Model, HasContent, HasId, HasIdentifier, HasImp
     public function getImpactStatement()
     {
         return $this->impactStatement;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     public function getPublishedDate() : DateTimeImmutable

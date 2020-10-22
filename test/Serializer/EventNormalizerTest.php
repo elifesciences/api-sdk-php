@@ -11,12 +11,15 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
+use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class EventNormalizerTest extends ApiTestCase
 {
@@ -56,6 +59,7 @@ final class EventNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
+            rejection_for('No social image'),
             new PromiseSequence(rejection_for('Event content should not be unwrapped')));
 
         return [
@@ -130,6 +134,7 @@ final class EventNormalizerTest extends ApiTestCase
         return [
             'complete with content' => [
                 new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, null,
+                    promise_for(Builder::for(Image::class)->sample('social')),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -141,6 +146,21 @@ final class EventNormalizerTest extends ApiTestCase
                     'updated' => $published->format(ApiSdk::DATE_FORMAT),
                     'impactStatement' => 'impact statement',
                     'timezone' => $timezone->getName(),
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                     'content' => [
                         [
                             'type' => 'paragraph',
@@ -150,7 +170,8 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete with uri' => [
-                new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
+                new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/',
+                    promise_for(Builder::for(Image::class)->sample('social')), new EmptySequence()),
                 [],
                 [
                     'id' => 'id',
@@ -162,10 +183,25 @@ final class EventNormalizerTest extends ApiTestCase
                     'impactStatement' => 'impact statement',
                     'timezone' => $timezone->getName(),
                     'uri' => 'http://www.example.com/',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'minimum' => [
-                new Event('id', 'title', null, $published, null, $starts, $ends, null, null, new ArraySequence([new Paragraph('text')])),
+                new Event('id', 'title', null, $published, null, $starts, $ends, null, null, promise_for(null), new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -182,7 +218,7 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet with content' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null,
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null, promise_for(Builder::for(Image::class)->sample('social')),
                     new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
@@ -201,7 +237,7 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
             'complete snippet with uri' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', new EmptySequence()),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', promise_for(Builder::for(Image::class)->sample('social')), new EmptySequence()),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
@@ -220,7 +256,7 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new Event('event1', 'Event event1 title', null, $published, null, $starts, $ends, null, null,
+                new Event('event1', 'Event event1 title', null, $published, null, $starts, $ends, null, null, promise_for(null),
                     new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true],
                 [

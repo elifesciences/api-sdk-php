@@ -174,6 +174,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['statusDate'],
             $data['volume'],
             $data['elocationId'],
+            $data['image']['social'] ?? null,
             $data['pdf'] ?? null,
             $data['figuresPdf'] ?? null,
             $data['xml'] ?? null,

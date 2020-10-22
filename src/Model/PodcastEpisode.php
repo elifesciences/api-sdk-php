@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpactStatement, HasPublishedDate, HasThumbnail, HasSocialImage, HasUpdatedDate
 {
     private $number;
     private $title;
@@ -15,6 +15,7 @@ final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpact
     private $updated;
     private $banner;
     private $thumbnail;
+    private $socialImage;
     private $sources;
     private $chapters;
 
@@ -29,6 +30,7 @@ final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpact
         DateTimeImmutable $updated = null,
         PromiseInterface $banner,
         Image $thumbnail,
+        PromiseInterface $socialImage,
         array $sources,
         Sequence $chapters
     ) {
@@ -39,6 +41,7 @@ final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpact
         $this->updated = $updated;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
+        $this->socialImage = $socialImage;
         $this->sources = $sources;
         $this->chapters = $chapters;
     }
@@ -87,6 +90,14 @@ final class PodcastEpisode implements Model, HasBanner, HasIdentifier, HasImpact
     public function getThumbnail() : Image
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     /**

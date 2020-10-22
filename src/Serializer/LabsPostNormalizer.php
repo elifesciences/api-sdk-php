@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -49,8 +50,15 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
                 ->then(function (Result $post) {
                     return $post['content'];
                 }));
+
+            $data['image']['social'] = $post
+                ->then(function (Result $post) {
+                    return $article['image']['social'] ?? null;
+                });
         } else {
             $data['content'] = new ArraySequence($data['content']);
+
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
@@ -60,6 +68,11 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
         $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
             $format, $context);
 
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
+
         return new LabsPost(
             $data['id'],
             $data['title'],
@@ -67,6 +80,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['impactStatement'] ?? null,
             $data['image']['thumbnail'],
+            $data['image']['social'],
             $data['content']
         );
     }
@@ -109,6 +123,10 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
             $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
         }
 
         return $data;

@@ -56,10 +56,17 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
                 ->then(function (Result $podcastEpisode) {
                     return $podcastEpisode['image']['banner'];
                 });
+
+            $data['image']['social'] = $podcastEpisode
+                ->then(function (Result $podcastEpisode) {
+                    return $podcastEpisode['image']['social'] ?? null;
+                });
         } else {
             $data['chapters'] = new ArraySequence($data['chapters']);
 
             $data['image']['banner'] = promise_for($data['image']['banner']);
+
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['chapters'] = $data['chapters']
@@ -81,6 +88,11 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
         $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
             $format, $context);
 
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
+
         $data['sources'] = array_map(function (array $source) {
             return new PodcastEpisodeSource($source['mediaType'], $source['uri']);
         }, $data['sources']);
@@ -93,6 +105,7 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $data['image']['banner'],
             $data['image']['thumbnail'],
+            $data['image']['social'],
             $data['sources'],
             $data['chapters']
         );
@@ -140,6 +153,10 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
 
         if (empty($context['snippet'])) {
             $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
 
             $data['chapters'] = $object->getChapters()->map(function (PodcastEpisodeChapter $chapter) use (
                 $format,

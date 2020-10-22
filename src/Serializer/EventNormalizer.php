@@ -13,7 +13,9 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
+use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -49,13 +51,24 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
                 ->then(function (Result $event) {
                     return $event['content'];
                 }));
+
+            $data['image']['social'] = $event
+                ->then(function (Result $event) {
+                    return $event['image']['social'] ?? null;
+                });
         } else {
             $data['content'] = new ArraySequence($data['content'] ?? []);
+            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
+
+        $data['image']['social'] = $data['image']['social']
+            ->then(function ($socialImage) use ($format, $context) {
+                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
+            });
 
         return new Event(
             $data['id'],
@@ -67,6 +80,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['ends']),
             !empty($data['timezone']) ? new DateTimeZone($data['timezone']) : null,
             $data['uri'] ?? null,
+            $data['image']['social'],
             $data['content']
         );
     }
@@ -112,10 +126,16 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             $data['uri'] = $object->getUri();
         }
 
-        if (empty($context['snippet']) && $object->getContent()->notEmpty()) {
-            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
-                return $this->normalizer->normalize($block, $format, $context);
-            })->toArray();
+        if (empty($context['snippet'])) {
+            if ($object->getContent()->notEmpty()) {
+                $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+                    return $this->normalizer->normalize($block, $format, $context);
+                })->toArray();
+            }
+
+            if ($object->getSocialImage()) {
+                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            }
         }
 
         return $data;

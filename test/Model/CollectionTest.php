@@ -15,6 +15,7 @@ use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\HasSocialImage;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\HasUpdatedDate;
@@ -154,6 +155,23 @@ final class CollectionTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(HasThumbnail::class, $collection);
         $this->assertEquals($image, $collection->getThumbnail());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_social_image()
+    {
+        $with = $this->builder
+            ->withPromiseOfSocialImage($image = Builder::for(Image::class)->sample('social'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfSocialImage(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasSocialImage::class, $with);
+        $this->assertSame($image, $with->getSocialImage());
+        $this->assertNull($withOut->getSocialImage());
     }
 
     /**

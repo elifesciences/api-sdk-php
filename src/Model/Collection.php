@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasUpdatedDate
+final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImpactStatement, HasSubjects, HasPublishedDate, HasThumbnail, HasSocialImage, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -15,6 +15,7 @@ final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImp
     private $updatedDate;
     private $banner;
     private $thumbnail;
+    private $socialImage;
     private $subjects;
     private $selectedCurator;
     private $selectedCuratorEtAl;
@@ -35,6 +36,7 @@ final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImp
         DateTimeImmutable $updatedDate = null,
         PromiseInterface $banner,
         Image $thumbnail,
+        PromiseInterface $socialImage,
         Sequence $subjects,
         Person $selectedCurator,
         bool $selectedCuratorEtAl,
@@ -51,6 +53,7 @@ final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImp
         $this->updatedDate = $updatedDate;
         $this->banner = $banner;
         $this->thumbnail = $thumbnail;
+        $this->socialImage = $socialImage;
         $this->subjects = $subjects;
         $this->selectedCurator = $selectedCurator;
         $this->selectedCuratorEtAl = $selectedCuratorEtAl;
@@ -105,6 +108,14 @@ final class Collection implements Model, HasBanner, HasId, HasIdentifier, HasImp
     public function getThumbnail() : Image
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     /**

@@ -95,6 +95,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
+                        'socialImage' => promise_for(null),
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
                         ]),
@@ -110,6 +111,7 @@ final class Builder
                         'updatedDate' => null,
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'socialImage' => promise_for(null),
                         'subjects' => new EmptySequence(),
                         'selectedCurator' => self::dummy(Person::class),
                         'selectedCuratorEtAl' => false,
@@ -133,6 +135,7 @@ final class Builder
                         'updatedDate' => null,
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'socialImage' => promise_for(null),
                         'subjects' => new EmptySequence(),
                         'editors' => new ArraySequence([
                             self::dummy(Person::class),
@@ -184,6 +187,7 @@ final class Builder
                         'timeZone' => new DateTimeZone('Z'),
                         'content' => new ArraySequence([new Paragraph('Event 1 text')]),
                         'uri' => null,
+                        'socialImage' => promise_for(null),
                     ];
                 },
                 ExternalArticle::class => function () {
@@ -222,6 +226,7 @@ final class Builder
                         'updated' => null,
                         'impactStatement' => null,
                         'thumbnail' => null,
+                        'socialImage' => promise_for(null),
                         'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },
@@ -267,6 +272,7 @@ final class Builder
                         'updated' => null,
                         'banner' => rejection_for('No banner'),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'socialImage' => promise_for(null),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
@@ -283,6 +289,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
+                        'socialImage' => promise_for(null),
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Press package 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
@@ -313,6 +320,7 @@ final class Builder
                         'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
                         'volume' => 5,
                         'elocationId' => 'e14107',
+                        'socialImage' => promise_for(self::for(Image::class)->sample('social')),
                         'pdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
@@ -355,6 +363,7 @@ final class Builder
                         'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'volume' => 4,
                         'elocationId' => 'e09560',
+                        'socialImage' => promise_for(self::for(Image::class)->sample('social')),
                         'pdf' => null,
                         'figuresPdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
@@ -457,6 +466,9 @@ final class Builder
                     'thumbnail' => function () {
                         return new Image('', 'https://iiif.elifesciences.org/thumbnail.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg', 'thumbnail.jpg'), 140, 140, 50, 50);
                     },
+                    'social' => function () {
+                        return new Image('', 'https://iiif.elifesciences.org/social.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg', 'social.jpg'), 600, 600, 50, 50);
+                    },
                 ],
                 ArticlePoA::class => [
                     'growth-factor' => function ($builder) {
@@ -468,6 +480,7 @@ final class Builder
                             ->withAuthorLine('Yongjian Huang et al')
                             ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
                             ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withVolume(5)
@@ -520,6 +533,7 @@ final class Builder
                             ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
                             ->withAcknowledgements(new ArraySequence([new Paragraph('acknowledgements')]))
                             ->withEthics(new ArraySequence([new Paragraph('ethics')]))
@@ -606,6 +620,7 @@ final class Builder
                             ->withId('event1')
                             ->withTitle('Changing peer review in cancer research: a seminar at Fred Hutch')
                             ->withImpactStatement('How eLife is influencing the culture of peer review')
+                            ->withPromiseOfSocialImage(Builder::for(Image::class)->sample('social'))
                             ->withPublishedDate(new DateTimeImmutable('2016-08-01T00:00:00Z'))
                             ->withUpdatedDate(new DateTimeImmutable('2016-08-02T00:00:00Z'))
                             ->withStarts(new DateTimeImmutable('2016-04-22T20:00:00Z'))
@@ -628,6 +643,7 @@ final class Builder
                             ))
                             ->withImpactStatement('Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withPublished(new DateTimeImmutable('2016-01-29T16:22:28Z'))
                             ->withContent(new ArraySequence([new Paragraph('Interview 1 text')]));
                     },
@@ -679,6 +695,7 @@ final class Builder
                             ->withPublished(new DateTimeImmutable('2016-05-27T13:19:42Z'))
                             ->withPromiseOfBanner(self::for(Image::class)->sample('banner'))
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
                             ->withSources([
                                 new PodcastEpisodeSource(
                                     'audio/mpeg',

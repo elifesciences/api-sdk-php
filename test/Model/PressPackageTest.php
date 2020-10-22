@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSubjects;
 use eLife\ApiSdk\Model\Identifier;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
@@ -125,6 +126,23 @@ final class PressPackageTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('impact statement', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_social_image()
+    {
+        $with = $this->builder
+            ->withPromiseOfSocialImage($image = Builder::for(Image::class)->sample('social'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfSocialImage(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasImpactStatement::class, $with);
+        $this->assertSame($image, $with->getSocialImage());
+        $this->assertNull($withOut->getSocialImage());
     }
 
     /**

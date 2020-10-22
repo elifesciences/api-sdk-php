@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Digest;
 use eLife\ApiSdk\Model\Event;
+use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
@@ -137,6 +138,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withImpactStatement('eLife has published papers on many...')
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
+                    ->withPromiseOfSocialImage(Builder::for(Image::class)->sample('social'))
                     ->withSubjects(new ArraySequence([
                         Builder::for(Subject::class)
                             ->sample('epidemiology-global-health'),
@@ -209,6 +211,19 @@ final class CollectionNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],
@@ -577,6 +592,7 @@ final class CollectionNormalizerTest extends ApiTestCase
                     ->withId('1')
                     ->withTitle('Tropical disease')
                     ->withImpactStatement('eLife has published papers on many...')
+                    ->withPromiseOfSocialImage(Builder::for(Image::class)->sample('social'))
                     ->withPublishedDate(new DateTimeImmutable('2015-09-16T11:19:26Z'))
                     ->withUpdatedDate(new DateTimeImmutable('2015-09-17T11:19:26Z'))
                     ->withSubjects(new ArraySequence([

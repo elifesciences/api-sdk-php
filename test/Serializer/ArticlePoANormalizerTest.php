@@ -163,6 +163,21 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ],
                     ],
                     'xml' => 'http://www.example.com/xml',
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                     'copyright' => [
                         'license' => 'CC-BY-4.0',
                         'statement' => 'Statement',
@@ -286,6 +301,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withPromiseOfSocialImage(null)
                     ->withAuthorLine(null)
                     ->withSequenceOfAuthors()
                     ->withPromiseOfXml(null)
@@ -369,6 +385,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withPromiseOfSocialImage(null)
                     ->withAuthorLine(null)
                     ->withPromiseOfXml(null)
                     ->withPromiseOfIssue(null)

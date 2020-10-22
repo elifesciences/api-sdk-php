@@ -5,8 +5,9 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
-final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate
+final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasUpdatedDate, HasSocialImage
 {
     private $id;
     private $title;
@@ -17,6 +18,7 @@ final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactS
     private $ends;
     private $timeZone;
     private $uri;
+    private $socialImage;
     private $content;
 
     /**
@@ -32,6 +34,7 @@ final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactS
         DateTimeImmutable $ends,
         DateTimeZone $timeZone = null,
         string $uri = null,
+        PromiseInterface $socialImage,
         Sequence $content
     ) {
         $this->id = $id;
@@ -43,6 +46,7 @@ final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactS
         $this->ends = $ends;
         $this->timeZone = $timeZone;
         $this->uri = $uri;
+        $this->socialImage = $socialImage;
         $this->content = $content;
     }
 
@@ -106,6 +110,14 @@ final class Event implements Model, HasContent, HasId, HasIdentifier, HasImpactS
     public function getUri()
     {
         return $this->uri;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage->wait();
     }
 
     public function getContent() : Sequence

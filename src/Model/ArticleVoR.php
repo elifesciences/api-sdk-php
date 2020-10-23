@@ -38,7 +38,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
-        PromiseInterface $socialImage = null,
+        PromiseInterface $socialImage,
         string $pdf = null,
         string $figuresPdf = null,
         PromiseInterface $xml,

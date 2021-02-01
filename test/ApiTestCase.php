@@ -1527,7 +1527,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            unset($article['image']);
             unset($article['issue']);
             unset($article['xml']);
             unset($article['copyright']);

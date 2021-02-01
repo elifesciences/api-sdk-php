@@ -58,7 +58,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
-        PromiseInterface $socialImage,
+        Image $socialImage = null,
         string $pdf = null,
         PromiseInterface $xml,
         Sequence $subjects,
@@ -215,7 +215,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
      */
     final public function getSocialImage()
     {
-        return $this->socialImage->wait();
+        return $this->socialImage;
     }
 
     /**

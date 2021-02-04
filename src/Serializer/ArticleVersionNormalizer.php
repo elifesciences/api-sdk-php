@@ -145,11 +145,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 ->then(function (Result $article) {
                     return $article['xml'] ?? null;
                 });
-
-            $data['image']['social'] = $complete
-                ->then(function (Result $article) {
-                    return $article['image']['social'] ?? null;
-                });
         } else {
             $complete = null;
 
@@ -170,8 +165,6 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
 
             $data['xml'] = promise_for($data['xml'] ?? null);
-
-            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
         }
 
         if (!empty($data['abstract'])) {
@@ -255,10 +248,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
-        $data['image']['social'] = $data['image']['social']
-            ->then(function ($socialImage) use ($format, $context) {
-                return false === empty($socialImage) ? $this->denormalizer->denormalize($socialImage, Image::class, $format, $context) : null;
-            });
+        if (false === empty($data['image']['social'])) {
+            $data['image']['social'] = $this->denormalizer->denormalize($data['image']['social'], Image::class,
+                $format, $context);
+        }
 
         $data['published'] = !empty($data['published']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']) : null;
         $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
@@ -334,13 +327,13 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             }
         }
 
+        if ($object->getSocialImage()) {
+            $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+        }
+
         if (empty($context['snippet'])) {
             if ($object->getXml()) {
                 $data['xml'] = $object->getXml();
-            }
-
-            if ($object->getSocialImage()) {
-                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
             }
 
             $data['copyright'] = [

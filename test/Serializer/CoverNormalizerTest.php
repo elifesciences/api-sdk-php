@@ -152,6 +152,21 @@ final class CoverNormalizerTest extends ApiTestCase
                                 ],
                             ],
                         ],
+                        'image' => [
+                            'social' => [
+                                'alt' => '',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                                'source' => [
+                                    'mediaType' => 'image/jpeg',
+                                    'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                    'filename' => 'social.jpg',
+                                ],
+                                'size' => [
+                                    'width' => 600,
+                                    'height' => 600,
+                                ],
+                            ],
+                        ],
                         'status' => 'poa',
                     ],
                 ],

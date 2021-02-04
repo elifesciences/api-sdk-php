@@ -262,10 +262,10 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
     public function it_may_have_a_social_image()
     {
         $with = $this->builder
-            ->withPromiseOfSocialImage($socialImage = Builder::for(Image::class)->sample('social'))
+            ->withSocialImage($socialImage = Builder::for(Image::class)->sample('social'))
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfSocialImage(null)
+            ->withSocialImage(null)
             ->__invoke();
 
         $this->assertInstanceOf(HasSocialImage::class, $with);

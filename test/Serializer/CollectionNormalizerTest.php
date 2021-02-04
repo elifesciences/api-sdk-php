@@ -312,6 +312,19 @@ final class CollectionNormalizerTest extends ApiTestCase
                                 'doi' => '10.7554/eLife.09560abstract',
                             ],
                             'image' => [
+                                'social' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                        'filename' => 'social.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 600,
+                                        'height' => 600,
+                                    ],
+                                ],
                                 'thumbnail' => [
                                     'alt' => '',
                                     'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -389,6 +402,21 @@ final class CollectionNormalizerTest extends ApiTestCase
                                     [
                                         'type' => 'paragraph',
                                         'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
+                            'image' => [
+                                'social' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                        'filename' => 'social.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 600,
+                                        'height' => 600,
                                     ],
                                 ],
                             ],
@@ -576,6 +604,21 @@ final class CollectionNormalizerTest extends ApiTestCase
                                     [
                                         'type' => 'paragraph',
                                         'text' => 'Article 14107 abstract text',
+                                    ],
+                                ],
+                            ],
+                            'image' => [
+                                'social' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                        'filename' => 'social.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 600,
+                                        'height' => 600,
                                     ],
                                 ],
                             ],

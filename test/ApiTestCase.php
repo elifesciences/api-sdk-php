@@ -2482,6 +2482,21 @@ abstract class ApiTestCase extends TestCase
                             ],
                         ],
                     ],
+                    'image' => [
+                        'social' => [
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'alt' => '',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'podcastEpisodes' => [

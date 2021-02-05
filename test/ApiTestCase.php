@@ -1527,7 +1527,6 @@ abstract class ApiTestCase extends TestCase
         }
 
         if ($isSnippet) {
-            unset($article['image']);
             unset($article['issue']);
             unset($article['xml']);
             unset($article['copyright']);
@@ -2483,6 +2482,21 @@ abstract class ApiTestCase extends TestCase
                             ],
                         ],
                     ],
+                    'image' => [
+                        'social' => [
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'alt' => '',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'podcastEpisodes' => [
@@ -2604,6 +2618,19 @@ abstract class ApiTestCase extends TestCase
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
                     'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
+                            ],
+                        ],
                         'thumbnail' => [
                             'alt' => '',
                             'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -2753,6 +2780,21 @@ abstract class ApiTestCase extends TestCase
                             [
                                 'type' => 'paragraph',
                                 'text' => 'Article 14107 abstract text',
+                            ],
+                        ],
+                    ],
+                    'image' => [
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],

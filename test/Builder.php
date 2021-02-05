@@ -320,7 +320,7 @@ final class Builder
                         'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
                         'volume' => 5,
                         'elocationId' => 'e14107',
-                        'socialImage' => promise_for(self::for(Image::class)->sample('social')),
+                        'socialImage' => self::for(Image::class)->sample('social'),
                         'pdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
@@ -363,7 +363,7 @@ final class Builder
                         'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'volume' => 4,
                         'elocationId' => 'e09560',
-                        'socialImage' => promise_for(self::for(Image::class)->sample('social')),
+                        'socialImage' => self::for(Image::class)->sample('social'),
                         'pdf' => null,
                         'figuresPdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
@@ -480,7 +480,7 @@ final class Builder
                             ->withAuthorLine('Yongjian Huang et al')
                             ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
                             ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
-                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
+                            ->withSocialImage(self::for(Image::class)->sample('social'))
                             ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withVolume(5)
@@ -533,7 +533,7 @@ final class Builder
                             ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                             ->withImpactStatement('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.')
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
-                            ->withPromiseOfSocialImage(self::for(Image::class)->sample('social'))
+                            ->withSocialImage(self::for(Image::class)->sample('social'))
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
                             ->withAcknowledgements(new ArraySequence([new Paragraph('acknowledgements')]))
                             ->withEthics(new ArraySequence([new Paragraph('ethics')]))

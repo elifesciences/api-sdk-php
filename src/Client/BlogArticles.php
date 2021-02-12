@@ -14,11 +14,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class BlogArticles implements Iterator, Sequence
 {
-    const VERSION_BLOG_ARTICLE = 2;
-    const VERSION_BLOG_ARTICLE_LIST = 1;
-
     use Client;
     use ForSubject;
+
+    const VERSION_BLOG_ARTICLE = 2;
+    const VERSION_BLOG_ARTICLE_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

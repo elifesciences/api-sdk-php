@@ -14,11 +14,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PressPackages implements Iterator, Sequence
 {
-    const VERSION_PRESS_PACKAGE = 3;
-    const VERSION_PRESS_PACKAGE_LIST = 1;
-
     use Client;
     use ForSubject;
+
+    const VERSION_PRESS_PACKAGE = 3;
+    const VERSION_PRESS_PACKAGE_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

@@ -15,10 +15,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Digests implements Iterator, Sequence
 {
+    use Client;
+
     const VERSION_DIGEST = 1;
     const VERSION_DIGEST_LIST = 1;
-
-    use Client;
 
     private $count;
     private $descendingOrder = true;

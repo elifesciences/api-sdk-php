@@ -16,14 +16,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Articles implements Iterator, Sequence
 {
+    use Client;
+    use ForSubject;
+
     const VERSION_ARTICLE_POA = 3;
     const VERSION_ARTICLE_VOR = 4;
     const VERSION_ARTICLE_LIST = 1;
     const VERSION_ARTICLE_HISTORY = 1;
     const VERSION_ARTICLE_RELATED = 1;
-
-    use Client;
-    use ForSubject;
 
     private $count;
     private $descendingOrder = true;

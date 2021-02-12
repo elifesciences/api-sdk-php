@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class JobAdverts implements Iterator, Sequence
 {
+    use Client;
+
     const VERSION_JOB_ADVERT = 1;
     const VERSION_JOB_ADVERT_LIST = 1;
-
-    use Client;
 
     private $count;
     private $descendingOrder = true;

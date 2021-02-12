@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class LabsPosts implements Iterator, Sequence
 {
+    use Client;
+
     const VERSION_POST = 2;
     const VERSION_POST_LIST = 1;
-
-    use Client;
 
     private $count;
     private $descendingOrder = true;

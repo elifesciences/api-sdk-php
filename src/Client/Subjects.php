@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Subjects implements Iterator, Sequence
 {
+    use Client;
+
     const VERSION_SUBJECT = 1;
     const VERSION_SUBJECT_LIST = 1;
-
-    use Client;
 
     private $count;
     private $descendingOrder = true;

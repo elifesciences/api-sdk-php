@@ -14,12 +14,12 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PromotionalCollections implements Iterator, Sequence
 {
-    const VERSION_PROMOTIONAL_COLLECTION = 1;
-    const VERSION_PROMOTIONAL_COLLECTION_LIST = 1;
-
     use Client;
     use Contains;
     use ForSubject;
+
+    const VERSION_PROMOTIONAL_COLLECTION = 1;
+    const VERSION_PROMOTIONAL_COLLECTION_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

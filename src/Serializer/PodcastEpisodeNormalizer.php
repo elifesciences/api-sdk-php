@@ -159,7 +159,6 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
             }
 
             $data['chapters'] = $object->getChapters()->map(function (PodcastEpisodeChapter $chapter) use (
-                $format,
                 $context,
                 $normalizationHelper
             ) {

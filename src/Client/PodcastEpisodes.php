@@ -15,11 +15,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class PodcastEpisodes implements Iterator, Sequence
 {
-    const VERSION_PODCAST_EPISODE = 1;
-    const VERSION_PODCAST_EPISODE_LIST = 1;
-
     use Client;
     use Contains;
+
+    const VERSION_PODCAST_EPISODE = 1;
+    const VERSION_PODCAST_EPISODE_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

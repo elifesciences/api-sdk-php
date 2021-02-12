@@ -60,6 +60,11 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         $data['content'] = $normalizationHelper->denormalizeSequence($data['content'], Block::class, $context + ['snippet' => false]);
         $data['relatedContent'] = $normalizationHelper->denormalizeSequence($data['relatedContent'], Model::class, $context + ['snippet' => true]);
 
+        if (false === empty($data['image']['social'])) {
+            $data['image']['social'] = $this->denormalizer->denormalize($data['image']['social'], Image::class,
+                $format, $context);
+        }
+
         return new Digest(
             $data['id'],
             $data['title'],
@@ -68,6 +73,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
             !empty($data['published']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']) : null,
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
             $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context + ['snippet' => false]),
+            $data['image']['social'] ?? null,
             $data['subjects'],
             $data['content'],
             $data['relatedContent']
@@ -99,6 +105,10 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         }
 
         $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+
+        if ($object->getSocialImage()) {
+            $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+        }
         if (!$object->getSubjects()->isEmpty()) {
             $data['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($object->getSubjects(), $context);
         }

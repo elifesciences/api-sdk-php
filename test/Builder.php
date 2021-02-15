@@ -605,6 +605,7 @@ final class Builder
                             ->withPublished(new DateTimeImmutable('2018-07-06T09:06:01Z'))
                             ->withUpdated(new DateTimeImmutable('2018-07-06T16:23:24Z'))
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withSocialImage(self::for(Image::class)->sample('social'))
                             ->withSubjects(new ArraySequence([
                                 self::for(Subject::class)->sample('biophysics-structural-biology'),
                             ]))

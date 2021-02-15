@@ -170,7 +170,7 @@ final class Builder
                         'published' => null,
                         'updated' => null,
                         'thumbnail' => Builder::for(Image::class)->sample('thumbnail'),
-                        'social' => Builder::for(Image::class)->sample('social'),
+                        'socialImage' => null,
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Digest 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),

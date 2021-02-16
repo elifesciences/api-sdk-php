@@ -50,7 +50,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
                 ->then(function (Result $subject) {
                     return $subject['aimsAndScope'] ?? [];
                 }));
-            $data['image'] = $subject->then(function (Result $subject) {
+            $data['image'] = $subject->then(function (Result $subject) use ($format, $context) {
                 return $subject['image'];
             });
         } else {

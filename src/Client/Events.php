@@ -15,10 +15,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Events implements Iterator, Sequence
 {
-    use Client;
-
     const VERSION_EVENT = 2;
     const VERSION_EVENT_LIST = 1;
+
+    use Client;
 
     private $count;
     private $descendingOrder = true;

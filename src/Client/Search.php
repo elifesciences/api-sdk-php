@@ -17,10 +17,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Search implements Iterator, Sequence
 {
+    const VERSION_SEARCH = 1;
+
     use Client;
     use ForSubject;
-
-    const VERSION_SEARCH = 1;
 
     // collaborators
     private $searchClient;

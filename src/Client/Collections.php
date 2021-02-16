@@ -14,12 +14,12 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Collections implements Iterator, Sequence
 {
+    const VERSION_COLLECTION = 2;
+    const VERSION_COLLECTION_LIST = 1;
+
     use Client;
     use Contains;
     use ForSubject;
-
-    const VERSION_COLLECTION = 2;
-    const VERSION_COLLECTION_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

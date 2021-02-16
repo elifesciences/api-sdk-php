@@ -15,9 +15,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Covers implements Iterator, Sequence
 {
-    use Client;
-
     const VERSION_COVERS_LIST = 1;
+
+    use Client;
 
     private $count;
     private $sort = 'date';

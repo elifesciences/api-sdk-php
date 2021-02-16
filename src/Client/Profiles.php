@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Profiles implements Iterator, Sequence
 {
-    use Client;
-
     const VERSION_PROFILE = 1;
     const VERSION_PROFILE_LIST = 1;
+
+    use Client;
 
     private $count;
     private $descendingOrder = true;

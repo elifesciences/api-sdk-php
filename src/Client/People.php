@@ -14,11 +14,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class People implements Iterator, Sequence
 {
-    use Client;
-    use ForSubject;
-
     const VERSION_PERSON = 1;
     const VERSION_PERSON_LIST = 1;
+
+    use Client;
+    use ForSubject;
 
     private $count;
     private $descendingOrder = true;

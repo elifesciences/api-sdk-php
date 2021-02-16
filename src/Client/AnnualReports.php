@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class AnnualReports implements Iterator, Sequence
 {
-    use Client;
-
     const VERSION_ANNUAL_REPORT = 2;
     const VERSION_ANNUAL_REPORT_LIST = 2;
+
+    use Client;
 
     private $descendingOrder = true;
     private $annualReportsClient;

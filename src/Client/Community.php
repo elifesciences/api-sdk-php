@@ -13,10 +13,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Community implements Iterator, Sequence
 {
+    const VERSION_COMMUNITY_LIST = 1;
+
     use Client;
     use ForSubject;
-
-    const VERSION_COMMUNITY_LIST = 1;
 
     private $count;
     private $descendingOrder = true;

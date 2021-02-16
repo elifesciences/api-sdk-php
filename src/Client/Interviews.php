@@ -14,10 +14,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Interviews implements Iterator, Sequence
 {
-    use Client;
-
     const VERSION_INTERVIEW = 2;
     const VERSION_INTERVIEW_LIST = 1;
+
+    use Client;
 
     private $count;
     private $descendingOrder = true;

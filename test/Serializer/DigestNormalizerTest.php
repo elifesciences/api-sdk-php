@@ -130,6 +130,7 @@ final class DigestNormalizerTest extends ApiTestCase
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
+        $socialImage = Builder::for(Image::class)->sample('social');
         $content = new Paragraph('Digest 1 text');
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             new EmptySequence(), promise_for($banner), promise_for($thumbnail));
@@ -145,6 +146,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     ->withPublished($published)
                     ->withUpdated($updated)
                     ->withThumbnail($thumbnail)
+                    ->withSocialImage($socialImage)
                     ->withSequenceOfSubjects($subject)
                     ->withSequenceOfContent($content)
                     ->withSequenceOfRelatedContent($article)
@@ -178,6 +180,19 @@ final class DigestNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],
@@ -361,6 +376,7 @@ final class DigestNormalizerTest extends ApiTestCase
                     ->withPublished($published)
                     ->withUpdated($updated)
                     ->withThumbnail($thumbnail)
+                    ->withSocialImage($socialImage)
                     ->withSequenceOfSubjects($subject)
                     ->withSequenceOfContent($content)
                     ->withSequenceOfRelatedContent($article)
@@ -389,6 +405,19 @@ final class DigestNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],

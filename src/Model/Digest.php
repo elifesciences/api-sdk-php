@@ -5,7 +5,7 @@ namespace eLife\ApiSdk\Model;
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 
-final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasThumbnail, HasUpdatedDate
+final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpactStatement, HasPublishedDate, HasSubjects, HasThumbnail, HasSocialImage, HasUpdatedDate
 {
     private $id;
     private $title;
@@ -14,6 +14,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
     private $published;
     private $updated;
     private $thumbnail;
+    private $socialImage;
     private $subjects;
     private $content;
     private $relatedContent;
@@ -29,6 +30,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
         DateTimeImmutable $published = null,
         DateTimeImmutable $updated = null,
         Image $thumbnail,
+        Image $socialImage = null,
         Sequence $subjects,
         Sequence $content,
         Sequence $relatedContent
@@ -40,6 +42,7 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
         $this->published = $published;
         $this->updated = $updated;
         $this->thumbnail = $thumbnail;
+        $this->socialImage = $socialImage;
         $this->subjects = $subjects;
         $this->content = $content;
         $this->relatedContent = $relatedContent;
@@ -92,6 +95,14 @@ final class Digest implements Model, HasContent, HasId, HasIdentifier, HasImpact
     public function getThumbnail() : Image
     {
         return $this->thumbnail;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getSocialImage()
+    {
+        return $this->socialImage;
     }
 
     /**

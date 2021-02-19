@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 final class Articles implements Iterator, Sequence
 {
     const VERSION_ARTICLE_POA = 3;
-    const VERSION_ARTICLE_VOR = 4;
+    const VERSION_ARTICLE_VOR = 5;
     const VERSION_ARTICLE_LIST = 1;
     const VERSION_ARTICLE_HISTORY = 1;
     const VERSION_ARTICLE_RELATED = 1;

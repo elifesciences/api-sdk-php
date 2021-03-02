@@ -122,13 +122,17 @@ final class JournalReferenceTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_pages()
+    public function it_may_have_pages()
     {
-        $reference = new JournalReference('id', new Date(2000), null,
+        $with = new JournalReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
             'journal', $pages = new StringReferencePage('pages'));
+        $withOut = new JournalReference('id', new Date(2000), null,
+            [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
+            'journal');
 
-        $this->assertEquals($pages, $reference->getPages());
+        $this->assertEquals($pages, $with->getPages());
+        $this->assertNull($withOut->getPages());
     }
 
     /**

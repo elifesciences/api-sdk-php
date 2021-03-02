@@ -32,7 +32,7 @@ final class JournalReference implements Reference, HasDoi
         bool $authorsEtAl,
         string $articleTitle,
         string $journal,
-        ReferencePages $pages,
+        ReferencePages $pages = null,
         string $volume = null,
         string $doi = null,
         int $pmid = null
@@ -88,7 +88,10 @@ final class JournalReference implements Reference, HasDoi
         return $this->journal;
     }
 
-    public function getPages() : ReferencePages
+    /**
+     * @return ReferencePages|null
+     */
+    public function getPages()
     {
         return $this->pages;
     }

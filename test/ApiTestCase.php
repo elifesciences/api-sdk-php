@@ -273,7 +273,7 @@ abstract class ApiTestCase extends TestCase
         if ($vor) {
             $response = new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 4)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 5)],
                 json_encode($this->createArticleVoRJson($id, false, $complete, $version ?? 1))
             );
         } else {
@@ -291,7 +291,7 @@ abstract class ApiTestCase extends TestCase
                 [
                     'Accept' => implode(', ', [
                         new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 3),
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 4),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 5),
                     ]),
                 ]
             ),

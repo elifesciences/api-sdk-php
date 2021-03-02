@@ -61,7 +61,7 @@ final class JournalReferenceNormalizerTest extends TestCase
     {
         $reference = new JournalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-            'journal', new StringReferencePage('foo'));
+            'journal');
 
         return [
             'journal reference' => [$reference, null, true],
@@ -117,7 +117,7 @@ final class JournalReferenceNormalizerTest extends TestCase
             'minimum' => [
                 new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    'journal', new StringReferencePage('pages')),
+                    'journal'),
                 [
                     'type' => 'journal',
                     'id' => 'id',
@@ -133,7 +133,6 @@ final class JournalReferenceNormalizerTest extends TestCase
                     ],
                     'articleTitle' => 'article title',
                     'journal' => 'journal',
-                    'pages' => 'pages',
                 ],
             ],
         ];
@@ -226,11 +225,10 @@ final class JournalReferenceNormalizerTest extends TestCase
                     ],
                     'articleTitle' => 'article title',
                     'journal' => 'journal',
-                    'pages' => 'pages',
                 ],
                 new JournalReference('id', Date::fromString('2000'), null,
                     [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
-                    'journal', new StringReferencePage('pages')),
+                    'journal'),
             ],
         ];
     }

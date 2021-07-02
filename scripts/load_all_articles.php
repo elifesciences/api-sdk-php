@@ -51,6 +51,7 @@ foreach ($articles as $a) {
 }
 $versionsByArticle = [];
 $versionsCount = 0;
+$preprintsCount = 0;
 $histories = [];
 foreach ($articleIds as $id) {
     $histories[$id] = $articles->getHistory($id);
@@ -58,9 +59,13 @@ foreach ($articleIds as $id) {
 
 foreach ($histories as $id => $history) {
     foreach ($history->wait()->getVersions() as $article) {
-        $versionNumber = $article->getVersion();
-        $versionsByArticle[$id][$versionNumber] = $articles->get($id, $versionNumber);
-        ++$versionsCount;
+        if ($article instanceof eLife\ApiSdk\Model\ArticleVersion) {
+            $versionNumber = $article->getVersion();
+            $versionsByArticle[$id][$versionNumber] = $articles->get($id, $versionNumber);
+            ++$versionsCount;
+        } elseif ($article instanceof eLife\ApiSdk\Model\ArticlePreprint) {
+            ++$preprintsCount;
+        }
     }
 }
 
@@ -75,6 +80,7 @@ foreach ($versionsByArticle as $id => $versions) {
 echo "Invalid articles (not served): $invalidArticles", PHP_EOL;
 echo "Valid articles (served): $articlesCount", PHP_EOL;
 echo "Valid versions (served): $versionsCount", PHP_EOL;
+echo "Preprints: $preprintsCount", PHP_EOL;
 echo '$articleIds: ', count($articleIds), PHP_EOL;
 echo '$versions (indexed by article): ', count($versionsByArticle), PHP_EOL;
 echo "Total versions (served): $totalVersions", PHP_EOL;

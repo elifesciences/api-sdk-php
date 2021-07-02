@@ -6,6 +6,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -25,10 +26,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
-        $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ArticleHistoryNormalizer();
-        $this->normalizer->setNormalizer($apiSdk->getSerializer());
-        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -50,7 +48,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articleHistory = new ArticleHistory(null, null, new ArraySequence([Builder::dummy(ArticlePoA::class)]));
+        $articleHistory = new ArticleHistory(null, null, new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));
 
         return [
             'article history' => [$articleHistory, null, true],
@@ -116,11 +114,18 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                     Date::fromString('2014-01-01'),
                     Date::fromString('2014-02-01'),
                     new ArraySequence([
+                        Builder::dummy(ArticlePreprint::class),
                         Builder::dummy(ArticlePoA::class),
                     ])
                 ),
                 [
                     'versions' => [
+                        [
+                            'status' => 'preprint',
+                            'description' => 'This manuscript was published as a pre-print at bioRxiv.',
+                            'uri' => 'https://doi.org/10.1101/2019.08.22',
+                            'date' => '2019-02-15T00:00:00Z',
+                        ],
                         [
                             'id' => '14107',
                             'stage' => 'published',
@@ -232,5 +237,6 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
     protected function samples()
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v2/*.json';
     }
 }

@@ -58,6 +58,7 @@ use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AppendixNormalizer;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
+use eLife\ApiSdk\Serializer\ArticlePreprintNormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\BioprotocolNormalizer;
@@ -195,6 +196,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),
             new BlogArticleNormalizer($this->blogClient),

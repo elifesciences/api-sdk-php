@@ -6,6 +6,7 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\Date;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -39,9 +40,9 @@ final class ArticleHistoryTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_as_versions()
+    public function it_has_versions()
     {
-        $history = new ArticleHistory(null, null, $versions = new ArraySequence([Builder::dummy(ArticlePoA::class)]));
+        $history = new ArticleHistory(null, null, $versions = new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));
 
         $this->assertEquals($versions, $history->getVersions());
     }

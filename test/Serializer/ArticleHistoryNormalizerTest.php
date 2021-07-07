@@ -26,7 +26,10 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
      */
     protected function setUpNormalizer()
     {
+        $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ArticleHistoryNormalizer();
+        $this->normalizer->setNormalizer($apiSdk->getSerializer());
+        $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**

@@ -163,6 +163,19 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ],
                     ],
                     'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
                         'social' => [
                             'alt' => '',
                             'uri' => 'https://iiif.elifesciences.org/social.jpg',
@@ -301,6 +314,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withThumbnail(null)
                     ->withSocialImage(null)
                     ->withAuthorLine(null)
                     ->withSequenceOfAuthors()
@@ -374,6 +388,19 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                         ],
                     ],
                     'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
                         'social' => [
                             'alt' => '',
                             'uri' => 'https://iiif.elifesciences.org/social.jpg',
@@ -400,6 +427,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withThumbnail(null)
                     ->withSocialImage(null)
                     ->withAuthorLine(null)
                     ->withPromiseOfXml(null)
@@ -439,7 +467,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='poa']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/first-page.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='poa']";
         yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v3/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='poa']";

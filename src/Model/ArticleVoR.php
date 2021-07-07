@@ -6,11 +6,10 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasThumbnail
+final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences
 {
     private $figuresPdf;
     private $impactStatement;
-    private $thumbnail;
     private $keywords;
     private $digest;
     private $content;
@@ -38,6 +37,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
+        Image $thumbnail = null,
         Image $socialImage = null,
         string $pdf = null,
         string $figuresPdf = null,
@@ -50,7 +50,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $authors,
         Sequence $reviewers,
         string $impactStatement = null,
-        Image $thumbnail = null,
         Sequence $keywords,
         PromiseInterface $digest,
         Sequence $content,
@@ -67,13 +66,13 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
     ) {
-        parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published, $versionDate, $statusDate,
-            $volume, $elocationId, $socialImage, $pdf, $xml, $subjects, $researchOrganisms, $abstract, $issue, $copyright, $authors,
-            $reviewers, $ethics, $funding, $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
+        parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
+            $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
+            $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $ethics, $funding,
+            $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
 
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
-        $this->thumbnail = $thumbnail;
         $this->keywords = $keywords;
         $this->digest = $digest;
         $this->content = $content;
@@ -99,14 +98,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getImpactStatement()
     {
         return $this->impactStatement;
-    }
-
-    /**
-     * @return Image|null
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
     }
 
     public function getKeywords() : Sequence

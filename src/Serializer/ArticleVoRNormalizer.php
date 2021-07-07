@@ -150,11 +150,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
-        if (false === empty($data['image']['thumbnail'])) {
-            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
-                $format, $context);
-        }
-
         $data['references'] = $data['references']
             ->map(function (array $reference) use ($format, $context) {
                 return $this->denormalizer->denormalize($reference, Reference::class, $format, $context);
@@ -174,6 +169,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['statusDate'],
             $data['volume'],
             $data['elocationId'],
+            $data['image']['thumbnail'] ?? null,
             $data['image']['social'] ?? null,
             $data['pdf'] ?? null,
             $data['figuresPdf'] ?? null,
@@ -186,7 +182,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['authors'],
             $data['reviewers'],
             $data['impactStatement'] ?? null,
-            $data['image']['thumbnail'] ?? null,
             $data['keywords'],
             $data['digest'],
             $data['body'],
@@ -232,10 +227,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if ($article->getImpactStatement()) {
             $data['impactStatement'] = $article->getImpactStatement();
-        }
-
-        if ($article->getThumbnail()) {
-            $data['image']['thumbnail'] = $this->normalizer->normalize($article->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {

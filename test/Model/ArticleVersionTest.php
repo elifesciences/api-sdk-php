@@ -24,6 +24,7 @@ use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\HasSocialImage;
 use eLife\ApiSdk\Model\HasSubjects;
+use eLife\ApiSdk\Model\HasThumbnail;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\PersonAuthor;
@@ -254,6 +255,23 @@ abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($date, $with->getStatusDate());
         $this->assertNull($withOut->getStatusDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_thumbnail()
+    {
+        $with = $this->builder
+            ->withThumbnail($thumbnail = Builder::for(Image::class)->sample('thumbnail'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withThumbnail(null)
+            ->__invoke();
+
+        $this->assertInstanceOf(HasThumbnail::class, $with);
+        $this->assertEquals($thumbnail, $with->getThumbnail());
+        $this->assertNull($withOut->getThumbnail());
     }
 
     /**

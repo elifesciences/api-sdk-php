@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifier, HasPdf, HasPublishedDate, HasSubjects, HasSocialImage
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifier, HasPdf, HasPublishedDate, HasSubjects, HasThumbnail, HasSocialImage
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -24,6 +24,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     private $statusDate;
     private $volume;
     private $elocationId;
+    private $thumbnail;
     private $socialImage;
     private $pdf;
     private $xml;
@@ -58,6 +59,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         DateTimeImmutable $statusDate = null,
         int $volume,
         string $elocationId,
+        Image $thumbnail = null,
         Image $socialImage = null,
         string $pdf = null,
         PromiseInterface $xml,
@@ -88,6 +90,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         $this->statusDate = $statusDate;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
+        $this->thumbnail = $thumbnail;
         $this->socialImage = $socialImage;
         $this->pdf = $pdf;
         $this->xml = $xml;
@@ -208,6 +211,14 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     final public function getElocationId() : string
     {
         return $this->elocationId;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 
     /**

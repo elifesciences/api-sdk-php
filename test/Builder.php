@@ -482,6 +482,7 @@ final class Builder
                             ->withAuthorLine('Yongjian Huang et al')
                             ->withTitle('Molecular basis for multimerization in the activation of the epidermal growth factor')
                             ->withPublished(new DateTimeImmutable('2016-03-28T00:00:00Z'))
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
                             ->withSocialImage(self::for(Image::class)->sample('social'))
                             ->withVersionDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))
                             ->withStatusDate(new DateTimeImmutable('2016-03-28T00:00:00Z'))

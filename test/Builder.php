@@ -306,7 +306,7 @@ final class Builder
                         'emailAddresses' => new EmptySequence(),
                     ];
                 },
-                ArticlePoA::class => function () {
+                ArticlePoA::class => $articlePoA = function () {
                     return [
                         'id' => '14107',
                         'stage' => 'published',
@@ -321,7 +321,7 @@ final class Builder
                         'statusDate' => new DateTimeImmutable('2016-03-28T00:00:00Z'),
                         'volume' => 5,
                         'elocationId' => 'e14107',
-                        'thumbnail' => null,
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'socialImage' => self::for(Image::class)->sample('social'),
                         'pdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),

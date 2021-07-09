@@ -403,6 +403,19 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                                         'height' => 600,
                                     ],
                                 ],
+                                'thumbnail' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
+                                    ],
+                                ],
                             ],
                         ],
                         1 => [
@@ -551,7 +564,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                             ],
                         ],
                     ],
-                    'content' => $minimumContent = [
+                    'content' => [
                         0 => [
                             'type' => 'research-article',
                             'status' => 'poa',
@@ -586,6 +599,19 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                                     'size' => [
                                         'width' => 600,
                                         'height' => 600,
+                                    ],
+                                ],
+                                'thumbnail' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
                                     ],
                                 ],
                             ],

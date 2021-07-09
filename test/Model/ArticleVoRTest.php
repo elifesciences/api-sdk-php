@@ -12,8 +12,6 @@ use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasReferences;
-use eLife\ApiSdk\Model\HasThumbnail;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -58,23 +56,6 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertInstanceOf(HasImpactStatement::class, $with);
         $this->assertSame('A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.', $with->getImpactStatement());
         $this->assertNull($withOut->getImpactStatement());
-    }
-
-    /**
-     * @test
-     */
-    public function it_may_have_a_thumbnail()
-    {
-        $with = $this->builder
-            ->withThumbnail($thumbnail = Builder::for(Image::class)->sample('thumbnail'))
-            ->__invoke();
-        $withOut = $this->builder
-            ->withThumbnail(null)
-            ->__invoke();
-
-        $this->assertInstanceOf(HasThumbnail::class, $with);
-        $this->assertEquals($thumbnail, $with->getThumbnail());
-        $this->assertNull($withOut->getThumbnail());
     }
 
     /**

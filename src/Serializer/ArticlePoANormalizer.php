@@ -30,6 +30,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
             $data['statusDate'],
             $data['volume'],
             $data['elocationId'],
+            $data['image']['thumbnail'] ?? null,
             $data['image']['social'] ?? null,
             $data['pdf'] ?? null,
             $data['xml'] ?? null,

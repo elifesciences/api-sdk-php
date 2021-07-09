@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\AccessControl;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\AssetFile;
@@ -306,6 +307,13 @@ final class Builder
                         'emailAddresses' => new EmptySequence(),
                     ];
                 },
+                ArticlePreprint::class => function () {
+                    return [
+                        'description' => 'This manuscript was published as a pre-print at bioRxiv.',
+                        'uri' => 'https://doi.org/10.1101/2019.08.22',
+                        'date' => new DateTimeImmutable('2019-02-15T00:00:00Z'),
+                    ];
+                },
                 ArticlePoA::class => $articlePoA = function () {
                     return [
                         'id' => '14107',
@@ -470,6 +478,14 @@ final class Builder
                     },
                     'social' => function () {
                         return new Image('', 'https://iiif.elifesciences.org/social.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg', 'social.jpg'), 600, 600, 50, 50);
+                    },
+                ],
+                ArticlePreprint::class => [
+                    '1' => function ($builder) {
+                        return $builder
+                            ->withDescription('Article preprint 1')
+                            ->withUri('https://doi.org/10.1101/2019.08.22')
+                            ->withDate(new DateTimeImmutable('2019-02-15T00:00:00Z'));
                     },
                 ],
                 ArticlePoA::class => [

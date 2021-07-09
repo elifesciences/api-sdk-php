@@ -36,9 +36,6 @@ final class ArticleHistory
         return $this->accepted;
     }
 
-    /**
-     * @return Sequence|ArticleVersion[]
-     */
     public function getVersions() : Sequence
     {
         return $this->versions;

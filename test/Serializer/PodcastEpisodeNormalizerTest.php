@@ -264,6 +264,19 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                                                 'height' => 600,
                                             ],
                                         ],
+                                        'thumbnail' => [
+                                            'alt' => '',
+                                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                            'source' => [
+                                                'mediaType' => 'image/jpeg',
+                                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                                'filename' => 'thumbnail.jpg',
+                                            ],
+                                            'size' => [
+                                                'width' => 140,
+                                                'height' => 140,
+                                            ],
+                                        ],
                                     ],
                                     'status' => 'poa',
                                 ],

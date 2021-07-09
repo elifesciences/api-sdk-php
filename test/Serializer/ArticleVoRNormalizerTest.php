@@ -179,19 +179,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
                     'image' => [
-                        'social' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
-                                'filename' => 'social.jpg',
-                            ],
-                            'size' => [
-                                'width' => 600,
-                                'height' => 600,
-                            ],
-                        ],
                         'thumbnail' => [
                             'alt' => '',
                             'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -203,6 +190,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],
@@ -435,8 +435,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
-                    ->withSocialImage(null)
                     ->withThumbnail(null)
+                    ->withSocialImage(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())
@@ -529,19 +529,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'doi' => '10.7554/eLife.09560abstract',
                     ],
                     'image' => [
-                        'social' => [
-                            'alt' => '',
-                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
-                            'source' => [
-                                'mediaType' => 'image/jpeg',
-                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
-                                'filename' => 'social.jpg',
-                            ],
-                            'size' => [
-                                'width' => 600,
-                                'height' => 600,
-                            ],
-                        ],
                         'thumbnail' => [
                             'alt' => '',
                             'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
@@ -553,6 +540,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'size' => [
                                 'width' => 140,
                                 'height' => 140,
+                            ],
+                        ],
+                        'social' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/social.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/social.jpg/full/full/0/default.jpg',
+                                'filename' => 'social.jpg',
+                            ],
+                            'size' => [
+                                'width' => 600,
+                                'height' => 600,
                             ],
                         ],
                     ],
@@ -576,8 +576,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfXml(null)
                     ->withAbstract(null)
                     ->withImpactStatement(null)
-                    ->withSocialImage(null)
                     ->withThumbnail(null)
+                    ->withSocialImage(null)
                     ->withKeywords(new EmptySequence())
                     ->withPromiseOfDigest(null)
                     ->withAppendices(new EmptySequence())

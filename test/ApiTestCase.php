@@ -1503,6 +1503,19 @@ abstract class ApiTestCase extends TestCase
                         'height' => 600,
                     ],
                 ],
+                'thumbnail' => [
+                    'alt' => '',
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
+                    ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
+                    ],
+                ],
             ],
         ];
 
@@ -2496,6 +2509,19 @@ abstract class ApiTestCase extends TestCase
                                 'height' => 600,
                             ],
                         ],
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -2795,6 +2821,19 @@ abstract class ApiTestCase extends TestCase
                             'size' => [
                                 'width' => 600,
                                 'height' => 600,
+                            ],
+                        ],
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
                             ],
                         ],
                     ],

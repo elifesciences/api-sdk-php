@@ -248,6 +248,11 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
+        if (false === empty($data['image']['thumbnail'])) {
+            $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class,
+                $format, $context);
+        }
+
         if (false === empty($data['image']['social'])) {
             $data['image']['social'] = $this->denormalizer->denormalize($data['image']['social'], Image::class,
                 $format, $context);
@@ -325,6 +330,10 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
             if ($object->getAbstract()->getDoi()) {
                 $data['abstract']['doi'] = $object->getAbstract()->getDoi();
             }
+        }
+
+        if ($object->getThumbnail()) {
+            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
         }
 
         if ($object->getSocialImage()) {

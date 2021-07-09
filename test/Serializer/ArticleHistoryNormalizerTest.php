@@ -151,6 +151,19 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                                 ],
                             ],
                             'image' => [
+                                'thumbnail' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
+                                    ],
+                                ],
                                 'social' => [
                                     'alt' => '',
                                     'uri' => 'https://iiif.elifesciences.org/social.jpg',
@@ -207,6 +220,19 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                                 ],
                             ],
                             'image' => [
+                                'thumbnail' => [
+                                    'alt' => '',
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140,
+                                    ],
+                                ],
                                 'social' => [
                                     'alt' => '',
                                     'uri' => 'https://iiif.elifesciences.org/social.jpg',

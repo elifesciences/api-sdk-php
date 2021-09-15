@@ -1656,6 +1656,16 @@ abstract class ApiTestCase extends TestCase
                     'text' => 'ethics',
                 ],
             ],
+            'editorEvaluation' => [
+                'id' => 'editor-evaluation-id',
+                'doi' => '10.7554/eLife.'.$id.'editorEvaluation',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$id.' editor evaluation text',
+                    ],
+                ],
+            ],
             'decisionLetter' => [
                 'id' => 'decision-letter-id',
                 'doi' => '10.7554/eLife.'.$id.'decisionLetter',
@@ -1693,6 +1703,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['references']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
+            unset($article['editorEvaluation']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }
@@ -1705,6 +1716,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['references']);
             unset($article['acknowledgements']);
             unset($article['ethics']);
+            unset($article['editorEvaluation']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
         }

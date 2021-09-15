@@ -16,6 +16,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $appendices;
     private $references;
     private $acknowledgements;
+    private $editorEvaluation;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -62,6 +63,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $acknowledgements,
         Sequence $ethics,
         PromiseInterface $funding,
+        PromiseInterface $editorEvaluation,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
@@ -79,6 +81,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->appendices = $appendices;
         $this->references = $references;
         $this->acknowledgements = $acknowledgements;
+        $this->editorEvaluation = $editorEvaluation;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -137,6 +140,14 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAcknowledgements() : Sequence
     {
         return $this->acknowledgements;
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getEditorEvaluation()
+    {
+        return $this->editorEvaluation->wait();
     }
 
     /**

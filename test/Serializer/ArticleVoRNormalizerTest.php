@@ -140,6 +140,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Section('Article 09560 abstract section title', null, new ArraySequence([new Paragraph('Article 09560 abstract text')]))]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
+                    ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                     ->__invoke(),
@@ -388,6 +389,16 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                             'text' => 'acknowledgements',
                         ],
                     ],
+                    'editorEvaluation' => [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 editor evaluation text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560editorEvaluation',
+                        'id' => 'editor-evaluation-id',
+                    ],
                     'decisionLetter' => [
                         'description' => [
                             [
@@ -448,6 +459,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAcknowledgements(new EmptySequence())
                     ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
+                    ->withPromiseOfEditorEvaluation(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
@@ -495,6 +507,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
+                    ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor letter text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
@@ -589,6 +602,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAcknowledgements(new EmptySequence())
                     ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
+                    ->withPromiseOfEditorEvaluation(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)

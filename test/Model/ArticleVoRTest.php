@@ -173,6 +173,22 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
+    public function it_may_have_an_editor_evaluation()
+    {
+        $with = $this->builder
+            ->withPromiseOfEditorEvaluation($editorEvaluation = new ArticleSection(new ArraySequence([new Paragraph('Editor evaluation')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfEditorEvaluation(null)
+            ->__invoke();
+
+        $this->assertEquals($editorEvaluation, $with->getEditorEvaluation());
+        $this->assertNull($withOut->getEditorEvaluation());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_a_decision_letter()
     {
         $with = $this->builder

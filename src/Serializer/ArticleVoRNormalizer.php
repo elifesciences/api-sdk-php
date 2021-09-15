@@ -46,6 +46,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['body'];
                 }));
 
+            $data['editorEvaluation'] = $article
+                ->then(function (Result $article) {
+                    return $article['editorEvaluation'] ?? null;
+                });
+
             $data['decisionLetter'] = $article
                 ->then(function (Result $article) {
                     return $article['decisionLetter'] ?? null;
@@ -73,6 +78,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
 
             $data['body'] = new ArraySequence($data['body']);
+
+            $data['editorEvaluation'] = promise_for($data['editorEvaluation'] ?? null);
 
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
@@ -109,6 +116,21 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         $data['body'] = $data['body']->map(function (array $block) use ($format, $context) {
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
+
+        $data['editorEvaluation'] = $data['editorEvaluation']
+            ->then(function (array $editorEvaluation = null) use ($format, $context) {
+                if (empty($editorEvaluation)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $editorEvaluation['content'])),
+                    $editorEvaluation['doi'] ?? null,
+                    $editorEvaluation['id'] ?? null
+                );
+            });
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
@@ -194,6 +216,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['acknowledgements'],
             $data['ethics'],
             $data['funding'],
+            $data['editorEvaluation'],
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse']
@@ -276,6 +299,26 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
+            }
+
+            if ($article->getEditorEvaluation()) {
+                $data['editorEvaluation'] = [
+                    'content' => $article->getEditorEvaluation()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                ];
+
+                if ($article->getEditorEvaluation()->getDoi()) {
+                    $data['editorEvaluation']['doi'] = $article->getEditorEvaluation()->getDoi();
+                }
+
+                if ($article->getEditorEvaluation()->getId()) {
+                    $data['editorEvaluation']['id'] = $article->getEditorEvaluation()->getId();
+                }
             }
 
             if ($article->getDecisionLetter()) {

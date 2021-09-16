@@ -10,7 +10,6 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
-use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Reference;
 use function GuzzleHttp\Promise\promise_for;
@@ -117,6 +116,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 
+        $editorEvaluationUri = $data['editorEvaluation']
+            ->then(function (array $editorEvaluation = null) {
+                if (empty($editorEvaluation)) {
+                    return null;
+                }
+
+                return $editorEvaluation['uri'] ?? null;
+            });
+
         $data['editorEvaluation'] = $data['editorEvaluation']
             ->then(function (array $editorEvaluation = null) use ($format, $context) {
                 if (empty($editorEvaluation)) {
@@ -177,6 +185,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $this->denormalizer->denormalize($reference, Reference::class, $format, $context);
             });
 
+        if (is_null($editorEvaluationUri)) {
+            var_dump('wtf');
+        }
+
         return new ArticleVoR(
             $data['id'],
             $data['stage'],
@@ -217,6 +229,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['ethics'],
             $data['funding'],
             $data['editorEvaluation'],
+            $editorEvaluationUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse']
@@ -311,6 +324,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                             return $this->normalizer->normalize($block, $format, $context);
                         })->toArray(),
                 ];
+
+                if ($article->getEditorEvaluationUri()) {
+                    $data['editorEvaluation']['uri'] = $article->getEditorEvaluationUri();
+                }
 
                 if ($article->getEditorEvaluation()->getDoi()) {
                     $data['editorEvaluation']['doi'] = $article->getEditorEvaluation()->getDoi();

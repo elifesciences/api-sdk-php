@@ -17,6 +17,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $references;
     private $acknowledgements;
     private $editorEvaluation;
+    private $editorEvaluationUri;
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
@@ -64,6 +65,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $ethics,
         PromiseInterface $funding,
         PromiseInterface $editorEvaluation,
+        PromiseInterface $editorEvaluationUri,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse
@@ -82,6 +84,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->references = $references;
         $this->acknowledgements = $acknowledgements;
         $this->editorEvaluation = $editorEvaluation;
+        $this->editorEvaluationUri = $editorEvaluationUri;
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
@@ -148,6 +151,14 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getEditorEvaluation()
     {
         return $this->editorEvaluation->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEditorEvaluationUri()
+    {
+        return $this->editorEvaluationUri->wait();
     }
 
     /**

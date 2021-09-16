@@ -1665,6 +1665,7 @@ abstract class ApiTestCase extends TestCase
                         'text' => 'Article '.$id.' editor evaluation text',
                     ],
                 ],
+                'uri' => 'https://editor-evaluation-'.$id.'.com',
             ],
             'decisionLetter' => [
                 'id' => 'decision-letter-id',

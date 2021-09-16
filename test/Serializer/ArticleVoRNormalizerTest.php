@@ -396,6 +396,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'text' => 'Article 09560 editor evaluation text',
                             ],
                         ],
+                        'uri' => 'https://editor-evaluation.com',
                         'doi' => '10.7554/eLife.09560editorEvaluation',
                         'id' => 'editor-evaluation-id',
                     ],
@@ -460,6 +461,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
                     ->withPromiseOfEditorEvaluation(null)
+                    ->withPromiseOfEditorEvaluationUri(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
@@ -508,6 +510,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
+                    ->withEditorEvaluationUri(promise_for('https://editor-evaluation-09560.com'))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
@@ -603,6 +606,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEthics(new EmptySequence())
                     ->withPromiseOfFunding(null)
                     ->withPromiseOfEditorEvaluation(null)
+                    ->withPromiseOfEditorEvaluationUri(null)
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
@@ -635,7 +639,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v5/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v6/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='vor']";
     }

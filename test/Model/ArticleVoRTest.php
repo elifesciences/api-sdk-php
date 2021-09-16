@@ -189,6 +189,22 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
+    public function it_may_have_an_editor_evaluation_uri()
+    {
+        $with = $this->builder
+            ->withPromiseOfEditorEvaluationUri($editorEvaluationUri = 'https://editor-evaluation.com')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfEditorEvaluationUri(null)
+            ->__invoke();
+
+        $this->assertEquals($editorEvaluationUri, $with->getEditorEvaluationUri());
+        $this->assertNull($withOut->getEditorEvaluationUri());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_a_decision_letter()
     {
         $with = $this->builder

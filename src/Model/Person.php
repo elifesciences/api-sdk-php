@@ -14,7 +14,7 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
     private $type;
     private $typeLabel;
     private $image;
-    private $affilitations;
+    private $affiliations;
     private $research;
     private $profile;
     private $competingInterests;
@@ -44,7 +44,7 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
         $this->type = $type;
         $this->typeLabel = $typeLabel;
         $this->image = $image;
-        $this->affilitations = $affiliations;
+        $this->affiliations = $affiliations;
         $this->research = $research;
         $this->profile = $profile;
         $this->competingInterests = $competingInterests;
@@ -105,7 +105,7 @@ final class Person implements Model, HasId, HasIdentifier, HasThumbnail
      */
     public function getAffiliations() : Sequence
     {
-        return $this->affilitations;
+        return $this->affiliations;
     }
 
     /**

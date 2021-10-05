@@ -396,7 +396,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'text' => 'Article 09560 editor evaluation text',
                             ],
                         ],
-                        'uri' => 'https://editor-evaluation.com',
+                        'scietyUri' => 'https://editor-evaluation.com',
                         'doi' => '10.7554/eLife.09560editorEvaluation',
                         'id' => 'editor-evaluation-id',
                     ],
@@ -510,7 +510,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
-                    ->withEditorEvaluatioScietynUri(promise_for('https://editor-evaluation-09560.com'))
+                    ->withEditorEvaluationScietyUri(promise_for('https://editor-evaluation-09560.com'))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))

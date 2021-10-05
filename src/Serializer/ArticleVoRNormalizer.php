@@ -322,7 +322,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 ];
 
                 if ($article->getEditorEvaluationScietyUri()) {
-                    $data['editorEvaluation']['uri'] = $article->getEditorEvaluationScietyUri();
+                    $data['editorEvaluation']['scietyUri'] = $article->getEditorEvaluationScietyUri();
                 }
 
                 if ($article->getEditorEvaluation()->getDoi()) {

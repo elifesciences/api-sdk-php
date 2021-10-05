@@ -192,14 +192,14 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_an_editor_evaluation_uri()
     {
         $with = $this->builder
-            ->withPromiseOfEditorEvaluationUri($editorEvaluationUri = 'https://editor-evaluation.com')
+            ->withPromiseOfEditorEvaluationScietyUri($editorEvaluationScietyUri = 'https://editor-evaluation.com')
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfEditorEvaluationUri(null)
+            ->withPromiseOfEditorEvaluationScietyUri(null)
             ->__invoke();
 
-        $this->assertEquals($editorEvaluationUri, $with->getEditorEvaluationUri());
-        $this->assertNull($withOut->getEditorEvaluationUri());
+        $this->assertEquals($editorEvaluationScietyUri, $with->getEditorEvaluationScietyUri());
+        $this->assertNull($withOut->getEditorEvaluationScietyUri());
     }
 
     /**

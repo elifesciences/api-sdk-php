@@ -116,13 +116,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             return $this->denormalizer->denormalize($block, Block::class, $format, $context);
         });
 
-        $editorEvaluationUri = $data['editorEvaluation']
+        $editorEvaluationScietyUri = $data['editorEvaluation']
             ->then(function (array $editorEvaluation = null) {
                 if (empty($editorEvaluation)) {
                     return null;
                 }
 
-                return $editorEvaluation['uri'] ?? null;
+                return $editorEvaluation['scietyUri'] ?? null;
             });
 
         $data['editorEvaluation'] = $data['editorEvaluation']
@@ -185,10 +185,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $this->denormalizer->denormalize($reference, Reference::class, $format, $context);
             });
 
-        if (is_null($editorEvaluationUri)) {
-            var_dump('wtf');
-        }
-
         return new ArticleVoR(
             $data['id'],
             $data['stage'],
@@ -229,7 +225,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['ethics'],
             $data['funding'],
             $data['editorEvaluation'],
-            $editorEvaluationUri,
+            $editorEvaluationScietyUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse']
@@ -325,8 +321,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         })->toArray(),
                 ];
 
-                if ($article->getEditorEvaluationUri()) {
-                    $data['editorEvaluation']['uri'] = $article->getEditorEvaluationUri();
+                if ($article->getEditorEvaluationScietyUri()) {
+                    $data['editorEvaluation']['scietyUri'] = $article->getEditorEvaluationScietyUri();
                 }
 
                 if ($article->getEditorEvaluation()->getDoi()) {

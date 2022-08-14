@@ -90,6 +90,7 @@ use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
 use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
+use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
@@ -196,6 +197,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new ReviewedPreprintNormalizer(),
             new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),

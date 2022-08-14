@@ -25,6 +25,7 @@ use eLife\ApiSdk\Model\Funding;
 use eLife\ApiSdk\Model\FundingAward;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
@@ -91,6 +92,9 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 }
 
                 return $class;
+            case 'reviewed-preprint':
+
+                return ReviewedPreprint::class;
         }
 
         return null;

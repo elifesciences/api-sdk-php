@@ -25,13 +25,13 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['title'],
             $data['title'],
             null,
-            null,null,
+            null,
+            null,
             $data['volume'],
             $data['elocationId'],
             new ArraySequence($data['subjects']),
             new ArraySequence($data['curationLabels'])
         );
-
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

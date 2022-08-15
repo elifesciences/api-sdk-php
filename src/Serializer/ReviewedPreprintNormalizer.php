@@ -3,7 +3,6 @@
 namespace eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

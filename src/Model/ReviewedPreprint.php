@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects
+class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, HasPublishedDate
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -176,5 +176,13 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects
     final public function getCurationLabels() : Sequence
     {
         return $this->curationLabels;
+    }
+
+    /**
+     * TODO: is this okay?
+     */
+    final public function getPublishedDate()
+    {
+        return $this->reviewedDate;
     }
 }

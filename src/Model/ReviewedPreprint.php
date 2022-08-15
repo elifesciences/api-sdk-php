@@ -19,78 +19,102 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     private $authorLine;
     private $titlePrefix;
     private $title;
-    private $versionDate;
     private $statusDate;
     private $reviewedDate;
     private $volume;
     private $elocationId;
     private $subjects;
-    private $authors;
     private $curationLabels;
+    private $status;
+    private $published;
+    private $pdf;
+    private $image;
+
     /**
      * @internal
      */
     public function __construct(
         string $id,
+        string $title,
+        string $status,
         string $stage,
-        int $version,
-        string $type,
-        string $doi,
+        string $doi = null,
         string $authorLine = null,
         string $titlePrefix = null,
-        string $title,
+        DateTimeImmutable $published = null,
         DateTimeImmutable $reviewedDate = null,
-        DateTimeImmutable $versionDate = null,
         DateTimeImmutable $statusDate = null,
-        int $volume,
-        string $elocationId,
-        Sequence $subjects,
-        Sequence $curationLabels
-    ) {
+        int $volume = null,
+        string $elocationId = null,
+        int $version = null,
+        string $pdf = null,
+        string $type = null,
+        Sequence $subjects = null,
+        Sequence $curationLabels = null,
+        Sequence $image = null
+    )
+    {
         $this->id = $id;
+        $this->title = $title;
+        $this->status = $status;
         $this->stage = $stage;
-        $this->version = $version;
-        $this->type = $type;
         $this->doi = $doi;
         $this->authorLine = $authorLine;
         $this->titlePrefix = $titlePrefix;
-        $this->title = $title;
+        $this->published = $published;
         $this->reviewedDate = $reviewedDate;
-        $this->versionDate = $versionDate;
         $this->statusDate = $statusDate;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
+        $this->version = $version;
+        $this->pdf = $pdf;
+        $this->type = $type;
         $this->subjects = $subjects;
         $this->curationLabels = $curationLabels;
+        $this->image = $image;
     }
 
-    final public function getIdentifier() : Identifier
+    final public function getIdentifier(): Identifier
     {
         return Identifier::article($this->id);
     }
 
-    final public function getId() : string
+    /**
+     * @return string
+     */
+    public function getId(): string
     {
         return $this->id;
     }
 
-    final public function getStage() : string
+    /**
+     * @return string
+     */
+    public function getStage(): string
     {
         return $this->stage;
     }
 
-    final public function getVersion() : int
+    /**
+     * @return int|null
+     */
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    final public function getType() : string
+    /**
+     * @return string|null
+     */
+    public function getType(): string
     {
         return $this->type;
     }
 
-
-    final public function getDoi() : string
+    /**
+     * @return string|null
+     */
+    public function getDoi(): string
     {
         return $this->doi;
     }
@@ -98,7 +122,7 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     /**
      * @return string|null
      */
-    final public function getAuthorLine()
+    public function getAuthorLine(): string
     {
         return $this->authorLine;
     }
@@ -106,83 +130,96 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     /**
      * @return string|null
      */
-    final public function getTitlePrefix()
+    public function getTitlePrefix(): string
     {
         return $this->titlePrefix;
     }
 
-    final public function getTitle() : string
+    /**
+     * @return string
+     */
+    public function getTitle(): string
     {
         return $this->title;
-    }
-
-    final public function getFullTitle() : string
-    {
-        return implode(': ', array_filter([$this->titlePrefix, $this->title]));
-    }
-
-    final public function isPublished() : bool
-    {
-        return null !== $this->published;
     }
 
     /**
      * @return DateTimeImmutable|null
      */
-    final public function getReviewedDate()
+    public function getStatusDate(): DateTimeImmutable
+    {
+        return $this->statusDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getReviewedDate(): DateTimeImmutable
     {
         return $this->reviewedDate;
     }
 
     /**
-     * @return DateTimeImmutable|null
+     * @return int|null
      */
-    final public function getVersionDate()
-    {
-        return $this->versionDate;
-    }
-
-    /**
-     * @return DateTimeImmutable|null
-     */
-    final public function getStatusDate()
-    {
-        return $this->statusDate;
-    }
-
-    final public function getVolume() : int
+    public function getVolume(): int
     {
         return $this->volume;
     }
 
-    final public function getElocationId() : string
+    /**
+     * @return string|null
+     */
+    public function getElocationId(): string
     {
         return $this->elocationId;
     }
 
     /**
-     * @return Sequence|Subject[]
+     * @return Sequence|null
      */
-    final public function getSubjects() : Sequence
+    public function getSubjects(): Sequence
     {
         return $this->subjects;
     }
 
-    final public function getAuthors() : Sequence
-    {
-        return $this->authors;
-    }
-
-    final public function getCurationLabels() : Sequence
+    /**
+     * @return Sequence|null
+     */
+    public function getCurationLabels(): Sequence
     {
         return $this->curationLabels;
     }
 
     /**
-     * TODO: is this okay?
+     * @return string
      */
-    final public function getPublishedDate()
+    public function getStatus(): string
     {
-        return $this->reviewedDate;
+        return $this->status;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getPublished(): DateTimeImmutable
+    {
+        return $this->published;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPdf(): string
+    {
+        return $this->pdf;
+    }
+
+    /**
+     * @return Sequence|null
+     */
+    public function getImage(): Sequence
+    {
+        return $this->image;
     }
 }

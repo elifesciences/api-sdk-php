@@ -17,20 +17,23 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     {
         return new ReviewedPreprint(
             $data['id'],
+            $data['title'],
+            $data['status'],
             $data['stage'],
-            $data['version'],
-            $data['type'],
             $data['doi'],
             $data['authorLine'],
-            $data['title'],
-            $data['title'],
-            null,
-            null,
-            null,
+            $data['titlePrefix'],
+            new \DateTimeImmutable($data['published']),
+            new \DateTimeImmutable($data['reviewedDate']),
+            new \DateTimeImmutable($data['statusDate']),
             $data['volume'],
             $data['elocationId'],
+            $data['version'],
+            $data['pdf'],
+            $data['type'],
             new ArraySequence($data['subjects']),
-            new ArraySequence($data['curationLabels'])
+            new ArraySequence($data['curationLabels']),
+            $data['image']
         );
     }
 

@@ -32,7 +32,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['type'],
             new ArraySequence($data['subjects']),
             new ArraySequence($data['curationLabels']),
-            $data['image']
+            new ArraySequence($data['image'])
         );
     }
 

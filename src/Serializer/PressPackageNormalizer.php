@@ -71,7 +71,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
 
             $data['image']['social'] = $article
                 ->then(function (Result $article) {
-                    return $article['image']['social'];
+                    return $article['image']['social'] ?? null;
                 });
         } else {
             $data['content'] = new ArraySequence($data['content']);

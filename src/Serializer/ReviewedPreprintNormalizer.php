@@ -28,7 +28,6 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             new \DateTimeImmutable($data['statusDate']),
             $data['volume'],
             $data['elocationId'],
-            $data['version'],
             $data['pdf'],
             $data['type'],
             new ArraySequence($data['subjects']),

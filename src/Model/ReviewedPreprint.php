@@ -13,7 +13,6 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
 
     private $id;
     private $stage;
-    private $version;
     private $type;
     private $doi;
     private $authorLine;
@@ -46,7 +45,6 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         DateTimeImmutable $statusDate = null,
         int $volume = null,
         string $elocationId = null,
-        int $version = null,
         string $pdf = null,
         string $type = null,
         Sequence $subjects = null,
@@ -66,7 +64,6 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         $this->statusDate = $statusDate;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
-        $this->version = $version;
         $this->pdf = $pdf;
         $this->type = $type;
         $this->subjects = $subjects;
@@ -93,14 +90,6 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     public function getStage(): string
     {
         return $this->stage;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getVersion(): int
-    {
-        return $this->version;
     }
 
     /**
@@ -202,7 +191,7 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     /**
      * @return DateTimeImmutable|null
      */
-    public function getPublished(): DateTimeImmutable
+    public function getPublishedDate(): DateTimeImmutable
     {
         return $this->published;
     }

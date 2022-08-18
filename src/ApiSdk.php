@@ -23,7 +23,7 @@ use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
-use eLife\ApiClient\ApiClient\ReviewedPreprintClient;
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -190,7 +190,7 @@ final class ApiSdk
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
-        $this->reviewedPreprintClient = new ReviewedPreprintClient($this->httpClient);
+        $this->reviewedPreprintsClient = new ReviewedPreprintsClient($this->httpClient);
 
         $this->serializer = new NormalizerAwareSerializer([
             new AccessControlNormalizer(),
@@ -488,10 +488,10 @@ final class ApiSdk
         return $this->serializer;
     }
 
-    public function reviewedPreprint(): ReviewedPreprints
+    public function reviewedPreprints(): ReviewedPreprints
     {
         if (empty($this->reviewedPreprints)) {
-            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintClient, $this->serializer);
+            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintsClient, $this->serializer);
         }
 
         return $this->reviewedPreprints;

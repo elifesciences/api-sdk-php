@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -23,9 +24,9 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['doi'],
             $data['authorLine'],
             $data['titlePrefix'],
-            new \DateTimeImmutable($data['published']),
-            new \DateTimeImmutable($data['reviewedDate']),
-            new \DateTimeImmutable($data['statusDate']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['reviewedDate']),
+            DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']),
             $data['volume'],
             $data['elocationId'],
             $data['pdf'],
@@ -38,7 +39,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
 
     public function supportsDenormalization($data, $type, $format = null) : bool
     {
-         return (isset($data['type']) && $data['type'] == 'reviewed-preprint');
+         return
+             ReviewedPreprint::class === $type
+             ||
+             'reviewed-preprint' === ($data['type'] ?? 'unknown');
     }
 
     /**

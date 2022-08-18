@@ -126,6 +126,7 @@ final class ApiSdk
     private $profilesClient;
     private $promotionalCollectionsClient;
     private $recommendationsClient;
+    private $reviewedPreprintsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -149,10 +150,9 @@ final class ApiSdk
     private $promotionalCollections;
     private $collections;
     private $recommendations;
+    private $reviewedPreprints;
     private $search;
     private $subjects;
-    private $reviewedPreprintClient;
-    private $reviewedPreprints;
 
     public function __construct(HttpClient $httpClient)
     {
@@ -188,9 +188,9 @@ final class ApiSdk
         $this->profilesClient = new ProfilesClient($this->httpClient);
         $this->promotionalCollectionsClient = new PromotionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
+        $this->reviewedPreprintsClient = new ReviewedPreprintsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
-        $this->reviewedPreprintsClient = new ReviewedPreprintsClient($this->httpClient);
 
         $this->serializer = new NormalizerAwareSerializer([
             new AccessControlNormalizer(),

@@ -149,10 +149,10 @@ final class ApiSdk
     private $promotionalCollections;
     private $collections;
     private $recommendations;
+    private $reviewedPreprints;
     private $search;
     private $subjects;
     private $reviewedPreprintClient;
-    private $reviewedPreprints;
 
     public function __construct(HttpClient $httpClient)
     {
@@ -188,9 +188,9 @@ final class ApiSdk
         $this->profilesClient = new ProfilesClient($this->httpClient);
         $this->promotionalCollectionsClient = new PromotionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
+        $this->reviewedPreprintClient = new ReviewedPreprintClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
-        $this->reviewedPreprintClient = new ReviewedPreprintClient($this->httpClient);
 
         $this->serializer = new NormalizerAwareSerializer([
             new AccessControlNormalizer(),
@@ -202,7 +202,6 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
-            new ReviewedPreprintNormalizer(),
             new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),
@@ -232,6 +231,7 @@ final class ApiSdk
             new ProfileNormalizer($this->profilesClient),
             new PromotionalCollectionNormalizer($this->promotionalCollectionsClient),
             new ReviewerNormalizer(),
+            new ReviewedPreprintNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
@@ -464,6 +464,15 @@ final class ApiSdk
 
         return $this->recommendations;
     }
+    
+    public function reviewedPreprint(): ReviewedPreprints
+    {
+        if (empty($this->reviewedPreprints)) {
+            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintClient, $this->serializer);
+        }
+
+        return $this->reviewedPreprints;
+    }
 
     public function subjects() : Subjects
     {
@@ -486,14 +495,5 @@ final class ApiSdk
     public function getSerializer() : Serializer
     {
         return $this->serializer;
-    }
-
-    public function reviewedPreprint(): ReviewedPreprints
-    {
-        if (empty($this->reviewedPreprints)) {
-            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintClient, $this->serializer);
-        }
-
-        return $this->reviewedPreprints;
     }
 }

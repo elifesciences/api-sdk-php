@@ -6,28 +6,28 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, HasPublishedDate
+class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
 
-    private $id;
-    private $stage;
-    private $type;
-    private $doi;
     private $authorLine;
-    private $titlePrefix;
-    private $title;
-    private $statusDate;
-    private $reviewedDate;
-    private $volume;
-    private $elocationId;
-    private $subjects;
     private $curationLabels;
-    private $status;
+    private $doi;
+    private $elocationId;
+    private $id;
+    private $indexContent;
     private $published;
     private $pdf;
+    private $reviewedDate;
+    private $stage;
+    private $status;
+    private $subjects;
+    private $statusDate;
+    private $titlePrefix;
+    private $title;
     private $image;
+    private $volume;
 
     /**
      * @internal
@@ -37,6 +37,7 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         string $title,
         string $status,
         string $stage,
+        string $indexContent = null,
         string $doi = null,
         string $authorLine = null,
         string $titlePrefix = null,
@@ -46,10 +47,9 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         int $volume = null,
         string $elocationId = null,
         string $pdf = null,
-        string $type = null,
         Sequence $subjects = null,
         Sequence $curationLabels = null,
-        Sequence $image = null
+        Image $image = null
     )
     {
         $this->id = $id;
@@ -57,6 +57,7 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         $this->status = $status;
         $this->stage = $stage;
         $this->doi = $doi;
+        $this->indexContent = $indexContent;
         $this->authorLine = $authorLine;
         $this->titlePrefix = $titlePrefix;
         $this->published = $published;
@@ -65,7 +66,6 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
         $this->volume = $volume;
         $this->elocationId = $elocationId;
         $this->pdf = $pdf;
-        $this->type = $type;
         $this->subjects = $subjects;
         $this->curationLabels = $curationLabels;
         $this->image = $image;
@@ -73,37 +73,29 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
 
     final public function getIdentifier(): Identifier
     {
-        return Identifier::article($this->id);
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStage(): string
-    {
-        return $this->stage;
+        return Identifier::reviewedPreprint($this->id);
     }
 
     /**
      * @return string|null
      */
-    public function getType(): string
+    public function getAuthorLine()
     {
-        return $this->type;
+        return $this->authorLine;
+    }
+
+    /**
+     * @return Sequence|null
+     */
+    public function getCurationLabels()
+    {
+        return $this->curationLabels;
     }
 
     /**
      * @return string|null
      */
-    public function getDoi(): string
+    public function getDoi()
     {
         return $this->doi;
     }
@@ -111,87 +103,31 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     /**
      * @return string|null
      */
-    public function getAuthorLine(): string
-    {
-        return $this->authorLine;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTitlePrefix(): string
-    {
-        return $this->titlePrefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return DateTimeImmutable|null
-     */
-    public function getStatusDate(): DateTimeImmutable
-    {
-        return $this->statusDate;
-    }
-
-    /**
-     * @return DateTimeImmutable|null
-     */
-    public function getReviewedDate(): DateTimeImmutable
-    {
-        return $this->reviewedDate;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getVolume(): int
-    {
-        return $this->volume;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getElocationId(): string
+    public function getElocationId()
     {
         return $this->elocationId;
     }
 
     /**
-     * @return Sequence|null
-     */
-    public function getSubjects(): Sequence
-    {
-        return $this->subjects;
-    }
-
-    /**
-     * @return Sequence|null
-     */
-    public function getCurationLabels(): Sequence
-    {
-        return $this->curationLabels;
-    }
-
-    /**
      * @return string
      */
-    public function getStatus(): string
+    public function getId()
     {
-        return $this->status;
+        return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIndexContent()
+    {
+        return $this->indexContent;
     }
 
     /**
      * @return DateTimeImmutable|null
      */
-    public function getPublishedDate(): DateTimeImmutable
+    public function getPublishedDate()
     {
         return $this->published;
     }
@@ -199,16 +135,80 @@ class ReviewedPreprint implements Article, HasDoi, HasIdentifier, HasSubjects, H
     /**
      * @return string|null
      */
-    public function getPdf(): string
+    public function getPdf()
     {
         return $this->pdf;
     }
 
     /**
+     * @return DateTimeImmutable|null
+     */
+    public function getReviewedDate()
+    {
+        return $this->reviewedDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStage()
+    {
+        return $this->stage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * @return Sequence|null
      */
-    public function getImage(): Sequence
+    public function getSubjects()
+    {
+        return $this->subjects;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getStatusDate()
+    {
+        return $this->statusDate;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTitlePrefix()
+    {
+        return $this->titlePrefix;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return Image|null
+     */
+    public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getVolume()
+    {
+        return $this->volume;
     }
 }

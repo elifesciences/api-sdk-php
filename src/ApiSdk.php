@@ -126,6 +126,7 @@ final class ApiSdk
     private $profilesClient;
     private $promotionalCollectionsClient;
     private $recommendationsClient;
+    private $reviewedPreprintsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -152,7 +153,6 @@ final class ApiSdk
     private $reviewedPreprints;
     private $search;
     private $subjects;
-    private $reviewedPreprintClient;
 
     public function __construct(HttpClient $httpClient)
     {
@@ -188,7 +188,7 @@ final class ApiSdk
         $this->profilesClient = new ProfilesClient($this->httpClient);
         $this->promotionalCollectionsClient = new PromotionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
-        $this->reviewedPreprintClient = new ReviewedPreprintClient($this->httpClient);
+        $this->reviewedPreprintsClient = new ReviewedPreprintsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
@@ -202,6 +202,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new ReviewedPreprintNormalizer(),
             new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),
@@ -231,7 +232,6 @@ final class ApiSdk
             new ProfileNormalizer($this->profilesClient),
             new PromotionalCollectionNormalizer($this->promotionalCollectionsClient),
             new ReviewerNormalizer(),
-            new ReviewedPreprintNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),
             new Block\BoxNormalizer(),
@@ -464,7 +464,7 @@ final class ApiSdk
 
         return $this->recommendations;
     }
-    
+
     public function reviewedPreprint(): ReviewedPreprints
     {
         if (empty($this->reviewedPreprints)) {

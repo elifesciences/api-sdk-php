@@ -2,7 +2,6 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ReviewedPreprint;

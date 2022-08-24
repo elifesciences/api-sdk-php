@@ -2,4 +2,3 @@
 /build export-ignore
 /Jenkinsfile* export-ignore
 /scripts export-ignore
-/test export-ignore

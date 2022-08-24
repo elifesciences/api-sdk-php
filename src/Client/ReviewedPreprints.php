@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\ReviewedPreprintClient;
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\Sequence;
@@ -14,21 +14,21 @@ class ReviewedPreprints implements Iterator, Sequence
 {
     use Client;
 
-    private $reviewedPreprintClient;
+    private $reviewedPreprintsClient;
     private $denormalizer;
     private $descendingOrder;
 
-    public function __construct(ReviewedPreprintClient $reviewedPreprintClient, DenormalizerInterface $denormalizer)
+    public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient, DenormalizerInterface $denormalizer)
     {
-        $this->reviewedPreprintClient = $reviewedPreprintClient;
+        $this->reviewedPreprintsClient = $reviewedPreprintsClient;
         $this->denormalizer = $denormalizer;
     }
 
     public function slice(int $offset, int $length = null): Sequence
     {
 
-        return new Collection\PromiseSequence($this->reviewedPreprintClient
-            ->listReviewedPreprint()
+        return new Collection\PromiseSequence($this->reviewedPreprintsClient
+            ->listReviewedPreprints()
             ->then(function (Result $result) {
                 $this->count = $result['total'];
 

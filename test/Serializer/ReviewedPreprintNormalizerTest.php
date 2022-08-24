@@ -125,7 +125,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-//        yield __DIR__."/../../vendor/elife/api/dist/samples/reviewed-preprint/v1/*.json";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/reviewed-preprint/v1/*.json";
         yield __DIR__."/../../vendor/elife/api/dist/samples/reviewed-preprint-list/v1/*.json#items";
     }
 }

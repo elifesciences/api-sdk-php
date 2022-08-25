@@ -23,7 +23,7 @@ use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
-use eLife\ApiClient\ApiClient\ReviewedPreprintClient;
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -468,7 +468,7 @@ final class ApiSdk
     public function reviewedPreprint(): ReviewedPreprints
     {
         if (empty($this->reviewedPreprints)) {
-            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintClient, $this->serializer);
+            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintsClient, $this->serializer);
         }
 
         return $this->reviewedPreprints;

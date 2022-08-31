@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate
+class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate, HasThumbnail
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -210,5 +210,10 @@ class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate
     public function getVolume()
     {
         return $this->volume;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->image;
     }
 }

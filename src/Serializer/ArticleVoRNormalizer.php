@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use DateTimeImmutable;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -228,7 +229,9 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $editorEvaluationScietyUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse']
+            $data['authorResponse'],
+            $data['curationLabels'] ?? [],
+            $data['reviewedDate'] ?? null
         );
     }
 
@@ -372,6 +375,14 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getAuthorResponse()->getId()) {
                     $data['authorResponse']['id'] = $article->getAuthorResponse()->getId();
+                }
+
+                if ($article->getCurationLabels()) {
+                    $data['curationLabels'] = $article->getCurationLabels();
+                }
+
+                if ($article->getReviewedDate()) {
+                    $data['reviewedDate'] = $article->getReviewedDate();
                 }
             }
         }

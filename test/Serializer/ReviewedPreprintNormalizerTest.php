@@ -2,14 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
-use DateTimeZone;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use eLife\ApiSdk\Model\Subject;
-use eLife\ApiSdk\Serializer\ArticlePreprintNormalizer;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

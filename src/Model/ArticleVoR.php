@@ -21,6 +21,8 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
+    private $curationLabels;
+    private $reviewedDate;
 
     /**
      * @internal
@@ -68,7 +70,9 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $editorEvaluationScietyUri,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
-        PromiseInterface $authorResponse
+        PromiseInterface $authorResponse,
+        array $curationLabels = [],
+        string $reviewedDate = null
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
@@ -88,6 +92,8 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
+        $this->curationLabels = $curationLabels;
+        $this->reviewedDate = $reviewedDate;
     }
 
     /**
@@ -183,5 +189,21 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAuthorResponse()
     {
         return $this->authorResponse->wait();
+    }
+
+    /**
+     * @return array
+     */
+    public function getCurationLabels(): array
+    {
+        return $this->curationLabels;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getReviewedDate()
+    {
+        return $this->reviewedDate;
     }
 }

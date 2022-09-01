@@ -443,6 +443,8 @@ final class Builder
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                        'curationLabels' => [],
+                        'reviewedDate' => null
                     ];
                 },
             ];

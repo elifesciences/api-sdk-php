@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ReviewedPreprint;
@@ -147,7 +148,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         }
 
         if (null !== $object->getImage()) {
-            $data['image']['thumbnail'] = $object->getImage();
+            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getImage(), $format, $context);
         }
 
         return $data;

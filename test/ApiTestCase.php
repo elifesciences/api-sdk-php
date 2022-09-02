@@ -26,6 +26,7 @@ use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -205,6 +206,38 @@ abstract class ApiTestCase extends TestCase
                 ])
             )
         );
+    }
+
+    final protected function mockReviewedPreprintListCall(
+        int $page,
+        int $perPage,
+        int $total,
+        bool $descendingOrder = true
+    ) {
+        $reviewedPreprints = array_map(function (int $id) {
+            return $this->createReviewedPreprintJson($id, true);
+        }, $this->generateIdList($page, $perPage, $total));
+
+        print_r($reviewedPreprints);
+        print_r($this->generateIdList($page, $perPage, $total));
+
+        $request = new Request(
+            'GET',
+            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+            ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)]
+        );
+        $this->storage->save(
+            $request,
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)],
+                json_encode([
+                    'total' => $total,
+                    'items' => $reviewedPreprints,
+                ])
+            )
+        );
+        //print_r($this->storage->getU);
     }
 
     final protected function mockArticleHistoryCall($numberOrId, bool $complete = false)
@@ -2994,6 +3027,57 @@ abstract class ApiTestCase extends TestCase
             unset($subject['aimsAndScope']);
             unset($subject['image']);
         }
+
+        return $subject;
+    }
+
+    private function createReviewedPreprintJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    {
+        $subject = [
+            'id' => $id,
+            'doi' => '10.7554/eLife.'.$id,
+            'status' => 'reviewed',
+            'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+            'indexContent' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+            'titlePrefix' => 'Title prefix',
+            'stage' => 'published',
+            'published' => '2022-08-01T00:00:00Z',
+            'reviewedDate' => '2022-08-01T00:00:00Z',
+            'statusDate' => '2022-08-01T00:00:00Z',
+            'volume' => 4,
+            'elocationId' => 'e'.$id,
+            'pdf' => 'https://elifesciences.org/content/4/e'.$id.'.pdf',
+            'subjects' => [
+                0 => [
+                    'id' => 'genomics-evolutionary-biology',
+                    'name' => 'Genomics and Evolutionary Biology',
+                ],
+            ],
+            'curationLabels' => [
+                0 => 'Ground-breaking',
+                1 => 'Convincing',
+            ],
+            'image' => [
+                'thumbnail' => [
+                    'uri' => 'https://iiif.elifesciences.org/lax/'.$id.'%2Felife-'.$id.'-fig1-v1.tif',
+                    'alt' => '',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/lax/'.$id.'%2Felife-'.$id.'-fig1-v1.tif/full/full/0/default.jpg',
+                        'filename' => 'an-image.jpg',
+                    ],
+                    'size' => [
+                        'width' => 4194,
+                        'height' => 4714,
+                    ],
+                    'focalPoint' => [
+                        'x' => 25,
+                        'y' => 75,
+                    ],
+                ],
+            ],
+        ];
 
         return $subject;
     }

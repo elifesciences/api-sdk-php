@@ -218,9 +218,6 @@ abstract class ApiTestCase extends TestCase
             return $this->createReviewedPreprintJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
-        print_r($reviewedPreprints);
-        print_r($this->generateIdList($page, $perPage, $total));
-
         $request = new Request(
             'GET',
             'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
@@ -237,7 +234,6 @@ abstract class ApiTestCase extends TestCase
                 ])
             )
         );
-        //print_r($this->storage->getU);
     }
 
     final protected function mockArticleHistoryCall($numberOrId, bool $complete = false)
@@ -3038,7 +3034,7 @@ abstract class ApiTestCase extends TestCase
             'doi' => '10.7554/eLife.'.$id,
             'status' => 'reviewed',
             'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
-            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+            'title' => 'reviewed preprint '.$id,
             'indexContent' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
             'titlePrefix' => 'Title prefix',
             'stage' => 'published',

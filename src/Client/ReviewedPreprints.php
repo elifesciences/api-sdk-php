@@ -3,8 +3,10 @@
 namespace eLife\ApiSdk\Client;
 
 use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
+use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use Iterator;
@@ -16,7 +18,7 @@ class ReviewedPreprints implements Iterator, Sequence
 
     private $reviewedPreprintsClient;
     private $denormalizer;
-    private $descendingOrder;
+    private $descendingOrder = true;
 
     public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient, DenormalizerInterface $denormalizer)
     {
@@ -26,9 +28,21 @@ class ReviewedPreprints implements Iterator, Sequence
 
     public function slice(int $offset, int $length = null): Sequence
     {
+        if (null === $length) {
+            return new PromiseSequence($this->all()
+                ->then(function (Sequence $sequence) use ($offset) {
+                    return $sequence->slice($offset);
+                })
+            );
+        }
 
         return new Collection\PromiseSequence($this->reviewedPreprintsClient
-            ->listReviewedPreprints()
+            ->listReviewedPreprints(
+                ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)],
+                ($offset / $length) + 1,
+                $length,
+                $this->descendingOrder
+            )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
 

@@ -82,10 +82,6 @@ final class ReviewedPreprintTest extends ApiTestCase
     }
 
     /**
-     * 
-     * 
-     * 
-     * 
      * @test
      */
     public function it_can_be_accessed_like_an_array()
@@ -218,9 +214,6 @@ final class ReviewedPreprintTest extends ApiTestCase
     }
 
     /**
-     * 
-     * 
-     * 
      * @test
      */
     public function it_can_be_filtered()
@@ -238,9 +231,6 @@ final class ReviewedPreprintTest extends ApiTestCase
     }
 
     /**
-     * 
-     * 
-     * 
      * @test
      */
     public function it_can_be_reduced()
@@ -264,9 +254,6 @@ final class ReviewedPreprintTest extends ApiTestCase
     }
 
     /**
-     * 
-     * 
-     * 
      * @test
      */
     public function it_can_be_sorted()

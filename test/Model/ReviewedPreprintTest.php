@@ -51,7 +51,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_id()
+    public function it_have_id()
     {
         $this->assertEquals('id', $this->reviewedPreprint->getId());
     }
@@ -59,7 +59,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_title()
+    public function it_may_have_title()
     {
         $this->assertEquals('title', $this->reviewedPreprint->getTitle());
     }
@@ -67,7 +67,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_status()
+    public function it_have_status()
     {
         $this->assertEquals('status', $this->reviewedPreprint->getStatus());
     }
@@ -75,7 +75,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_has_stage()
+    public function it_have_stage()
     {
         $this->assertEquals('stage', $this->reviewedPreprint->getStage());
     }
@@ -83,7 +83,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_index_content()
+    public function it_may_have_index_content()
     {
         $this->assertEquals('indexContent', $this->reviewedPreprint->getIndexContent());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getIndexContent());
@@ -92,7 +92,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_doi()
+    public function it_may_have_doi()
     {
         $this->assertEquals('doi', $this->reviewedPreprint->getDoi());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getDoi());
@@ -101,7 +101,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_author_line()
+    public function it_may_have_author_line()
     {
         $this->assertEquals('authorLine', $this->reviewedPreprint->getAuthorLine());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getAuthorLine());
@@ -110,7 +110,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_title_prefix()
+    public function it_may_have_title_prefix()
     {
         $this->assertEquals('titlePrefix', $this->reviewedPreprint->getTitlePrefix());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getTitlePrefix());
@@ -119,7 +119,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_published()
+    public function it_may_have_published()
     {
         $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getPublishedDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getPublishedDate());
@@ -128,7 +128,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_reviewed_date()
+    public function it_may_have_reviewed_date()
     {
         $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getReviewedDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getReviewedDate());
@@ -137,7 +137,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_status_date()
+    public function it_may_have_status_date()
     {
         $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getStatusDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getStatusDate());
@@ -146,7 +146,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_volume()
+    public function it_may_have_volume()
     {
         $this->assertEquals(1, $this->reviewedPreprint->getVolume());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getVolume());
@@ -155,7 +155,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_elocation_id()
+    public function it_may_have_elocation_id()
     {
         $this->assertEquals('elocationId', $this->reviewedPreprint->getElocationId());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getElocationId());
@@ -164,7 +164,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_pdf()
+    public function it_may_have_pdf()
     {
         $this->assertEquals('pdf', $this->reviewedPreprint->getPdf());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getPdf());
@@ -173,7 +173,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_subjects()
+    public function it_may_have_subjects()
     {
         $this->assertEquals(['subject'], $this->reviewedPreprint->getSubjects()->toArray());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getSubjects());
@@ -182,7 +182,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_curation_labels()
+    public function it_may_have_curation_labels()
     {
         $this->assertEquals(['curation-label'], $this->reviewedPreprint->getCurationLabels()->toArray());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getCurationLabels());
@@ -191,7 +191,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_may_has_image()
+    public function it_may_have_image()
     {
         $this->assertEquals('altText', $this->reviewedPreprint->getImage()->getAltText());
         $this->assertEquals('uri', $this->reviewedPreprint->getImage()->getUri());

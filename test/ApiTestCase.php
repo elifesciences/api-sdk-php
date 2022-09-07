@@ -3027,9 +3027,9 @@ abstract class ApiTestCase extends TestCase
         return $subject;
     }
 
-    private function createReviewedPreprintJson(string $id, bool $isSnippet = false, bool $complete = false) : array
+    private function createReviewedPreprintJson(string $id) : array
     {
-        $subject = [
+        return [
             'id' => $id,
             'doi' => '10.7554/eLife.'.$id,
             'status' => 'reviewed',
@@ -3074,7 +3074,5 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
-
-        return $subject;
     }
 }

@@ -9,6 +9,7 @@ use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use DateTimeImmutable;
 
 final class ReviewedPreprintNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -19,15 +20,15 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     public function denormalize($data, $class, $format = null, array $context = []): ReviewedPreprint
     {
         if (!empty($data['published'])) {
-            $data['published'] = new \DateTimeImmutable($data['published']);
+            $data['published'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']);
         }
 
         if (!empty($data['reviewedDate'])) {
-            $data['reviewedDate'] = new \DateTimeImmutable($data['reviewedDate']);
+            $data['reviewedDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['reviewedDate']);
         }
 
         if (!empty($data['statusDate'])) {
-            $data['statusDate'] = new \DateTimeImmutable($data['statusDate']);
+            $data['statusDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']);
         }
 
         if (!empty($data['subjects'])) {

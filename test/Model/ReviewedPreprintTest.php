@@ -4,11 +4,11 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
-use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use PHPUnit_Framework_TestCase;
+use DateTimeImmutable;
 
 final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
 {
@@ -29,9 +29,9 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
             'doi',
             'authorLine',
             'titlePrefix',
-            new \DateTimeImmutable('2022-08-31'),
-            new \DateTimeImmutable('2022-08-31'),
-            new \DateTimeImmutable('2022-08-31'),
+            new DateTimeImmutable('2016-09-16T12:34:56Z'),
+            new DateTimeImmutable('2016-09-16T12:34:56Z'),
+            new DateTimeImmutable('2016-09-16T12:34:56Z'),
             1,
             'elocationId',
             'pdf',
@@ -121,7 +121,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_has_published()
     {
-        $this->assertEquals(new \DateTimeImmutable('2022-08-31'), $this->reviewedPreprint->getPublishedDate());
+        $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getPublishedDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getPublishedDate());
     }
 
@@ -130,7 +130,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_has_reviewed_date()
     {
-        $this->assertEquals(new \DateTimeImmutable('2022-08-31'), $this->reviewedPreprint->getReviewedDate());
+        $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getReviewedDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getReviewedDate());
     }
 
@@ -139,7 +139,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_has_status_date()
     {
-        $this->assertEquals(new \DateTimeImmutable('2022-08-31'), $this->reviewedPreprint->getStatusDate());
+        $this->assertEquals(new DateTimeImmutable('2016-09-16T12:34:56Z'), $this->reviewedPreprint->getStatusDate());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getStatusDate());
     }
 

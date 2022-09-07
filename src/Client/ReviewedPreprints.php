@@ -19,6 +19,7 @@ class ReviewedPreprints implements Iterator, Sequence
     private $reviewedPreprintsClient;
     private $denormalizer;
     private $descendingOrder = true;
+    const VERSION_REVIEWED_PREPRINT_LIST = 1;
 
     public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient, DenormalizerInterface $denormalizer)
     {
@@ -38,7 +39,8 @@ class ReviewedPreprints implements Iterator, Sequence
 
         return new Collection\PromiseSequence($this->reviewedPreprintsClient
             ->listReviewedPreprints(
-                ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)],
+                ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST,
+                    self::VERSION_REVIEWED_PREPRINT_LIST)],
                 ($offset / $length) + 1,
                 $length,
                 $this->descendingOrder

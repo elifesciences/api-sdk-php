@@ -13,23 +13,6 @@ use PHPUnit_Framework_TestCase;
 final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
 {
     /**
-     *         string $id,
-    string $title,
-    string $status,
-    string $stage,
-    string $indexContent = null,
-    string $doi = null,
-    string $authorLine = null,
-    string $titlePrefix = null,
-    DateTimeImmutable $published = null,
-    DateTimeImmutable $reviewedDate = null,
-    DateTimeImmutable $statusDate = null,
-    int $volume = null,
-    string $elocationId = null,
-    string $pdf = null,
-    Sequence $subjects = null,
-    Sequence $curationLabels = null,
-    Image $image = null
      * @test
      */
     private $reviewedPreprint;

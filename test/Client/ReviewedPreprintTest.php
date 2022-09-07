@@ -26,7 +26,7 @@ final class ReviewedPreprintTest extends ApiTestCase
      */
     protected function setUpReviewedPreprints()
     {
-        $this->reviewedPreprints = (new ApiSdk($this->getHttpClient()))->reviewedPreprint();
+        $this->reviewedPreprints = (new ApiSdk($this->getHttpClient()))->reviewedPreprints();
     }
 
     /**

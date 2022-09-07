@@ -465,7 +465,7 @@ final class ApiSdk
         return $this->recommendations;
     }
 
-    public function reviewedPreprint(): ReviewedPreprints
+    public function reviewedPreprints(): ReviewedPreprints
     {
         if (empty($this->reviewedPreprints)) {
             $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintsClient, $this->serializer);

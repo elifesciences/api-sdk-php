@@ -61,12 +61,12 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
     public function it_normalize_preprints()
     {
         $expected = [
-            "id" => "1",
+            'id' => '1',
             'title' => 'title',
             'status' => 'reviewed',
             'stage' => 'published',
         ];
-        $res = $this->normalizer->normalize(new ReviewedPreprint("1", 'title', 'reviewed', 'published'));
+        $res = $this->normalizer->normalize(new ReviewedPreprint('1', 'title', 'reviewed', 'published'));
         $this->assertSame($expected, $res);
     }
 
@@ -107,7 +107,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'stage' => 'published',
         ];
 
-        $expected = new ReviewedPreprint("1", "title", 'reviewed', 'published');
+        $expected = new ReviewedPreprint('1', 'title', 'reviewed', 'published');
 
         $this->assertEquals($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
     }
@@ -119,7 +119,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__."/../../vendor/elife/api/dist/samples/reviewed-preprint/v1/*.json";
-        yield __DIR__."/../../vendor/elife/api/dist/samples/reviewed-preprint-list/v1/*.json#items";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/reviewed-preprint/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/reviewed-preprint-list/v1/*.json#items';
     }
 }

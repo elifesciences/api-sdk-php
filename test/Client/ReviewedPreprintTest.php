@@ -48,7 +48,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         foreach ($this->reviewedPreprints as $i => $reviewedPreprint) {
             $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
-            $this->assertSame($i, (int) $reviewedPreprint->getId());
+            $this->assertSame((string) $i, $reviewedPreprint->getId());
         }
     }
 
@@ -279,7 +279,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $this->mockReviewedPreprintListCall(1, 100, 5, false);
 
         foreach ($this->reviewedPreprints->reverse() as $i => $reviewedPreprint) {
-            $this->assertSame($i, (int) $reviewedPreprint->getId());
+            $this->assertSame((string) $i, $reviewedPreprint->getId());
         }
     }
 

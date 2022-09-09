@@ -31,17 +31,14 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['statusDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']);
         }
 
-        if (!empty($data['subjects'])) {
-            $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
-                $context['snippet'] = true;
+        $data['subjects'] = new ArraySequence(array_map(function (array $subject) use ($format, $context) {
+            $context['snippet'] = true;
 
-                return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
-            }, $data['subjects']));
-        }
+            return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
+        }, $data['subjects'] ?? []));
 
-        if (!empty($data['curationLabels'])) {
-            $data['curationLabels'] = new ArraySequence($data['curationLabels'] ?? []);
-        }
+
+        $data['curationLabels'] = new ArraySequence($data['curationLabels'] ?? []);
 
         if (isset($data['image'])) {
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context);
@@ -62,8 +59,8 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['volume'] ?? null,
             $data['elocationId'] ?? null,
             $data['pdf'] ?? null,
-            $data['subjects'] ?? null,
-            $data['curationLabels'] ?? null,
+            $data['subjects'],
+            $data['curationLabels'],
             $data['image']['thumbnail'] ?? null
         );
     }

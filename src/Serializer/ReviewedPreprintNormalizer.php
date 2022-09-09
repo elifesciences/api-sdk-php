@@ -133,7 +133,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['pdf'] = $object->getPdf();
         }
 
-        if (null != $object->getSubjects()) {
+        if (!$object->getSubjects()->isEmpty()) {
             $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 
@@ -141,7 +141,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             })->toArray();
         }
 
-        if (null != $object->getCurationLabels()) {
+        if (!$object->getCurationLabels()->isEmpty()) {
             $data['curationLabels'] = $object->getCurationLabels()->toArray();
         }
 

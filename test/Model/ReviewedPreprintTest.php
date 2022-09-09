@@ -39,7 +39,23 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
             new ArraySequence(["curation-label"]),
             new Image('altText', 'uri', new EmptySequence(), new File('', '', ''), '1', '2', '3', '4')
         );
-        $this->emptyReviewedPreprint = new ReviewedPreprint('id', 'title', 'status', 'stage');
+        $this->emptyReviewedPreprint = new ReviewedPreprint(
+            '1',
+            'title',
+            'reviewed',
+            'published',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new EmptySequence(),
+            new EmptySequence());
     }
 
     public function it_is_a_model()
@@ -176,7 +192,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     public function it_may_have_subjects()
     {
         $this->assertEquals(['subject'], $this->reviewedPreprint->getSubjects()->toArray());
-        $this->assertEquals(null, $this->emptyReviewedPreprint->getSubjects());
+        $this->assertEquals(new EmptySequence(), $this->emptyReviewedPreprint->getSubjects());
     }
 
     /**
@@ -185,7 +201,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     public function it_may_have_curation_labels()
     {
         $this->assertEquals(['curation-label'], $this->reviewedPreprint->getCurationLabels()->toArray());
-        $this->assertEquals(null, $this->emptyReviewedPreprint->getCurationLabels());
+        $this->assertEquals(new EmptySequence(), $this->emptyReviewedPreprint->getCurationLabels());
     }
 
     /**

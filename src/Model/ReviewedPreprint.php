@@ -87,7 +87,7 @@ class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate, HasTh
     /**
      * @return Sequence|string[]
      */
-    public function getCurationLabels()
+    public function getCurationLabels(): Sequence
     {
         return $this->curationLabels;
     }
@@ -167,7 +167,7 @@ class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate, HasTh
     /**
      * @return Sequence|Subject[]
      */
-    public function getSubjects()
+    public function getSubjects() : Sequence
     {
         return $this->subjects;
     }

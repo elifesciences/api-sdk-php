@@ -3,6 +3,8 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -66,7 +68,26 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'status' => 'reviewed',
             'stage' => 'published',
         ];
-        $res = $this->normalizer->normalize(new ReviewedPreprint('1', 'title', 'reviewed', 'published'));
+
+        $reviewedPreprint = new ReviewedPreprint(
+            '1',
+            'title',
+            'reviewed',
+            'published',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new EmptySequence(),
+            new EmptySequence()
+        );
+        $res = $this->normalizer->normalize($reviewedPreprint);
         $this->assertSame($expected, $res);
     }
 
@@ -107,7 +128,24 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'stage' => 'published',
         ];
 
-        $expected = new ReviewedPreprint('1', 'title', 'reviewed', 'published');
+        $expected = new ReviewedPreprint(
+            '1',
+            'title',
+            'reviewed',
+            'published',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            new ArraySequence([]),
+            new ArraySequence([])
+        );
 
         $this->assertEquals($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
     }

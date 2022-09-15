@@ -1180,11 +1180,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
-                ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, 1)]
+                ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(SearchClient::TYPE_SEARCH, 1)],
+                ['Content-Type' => (string) new MediaType(SearchClient::TYPE_SEARCH, 2)],
                 json_encode([
                     'total' => $total,
                     'items' => $results,
@@ -1220,6 +1220,7 @@ abstract class ApiTestCase extends TestCase
                         'interview' => 0,
                         'labs-post' => 0,
                         'podcast-episode' => 0,
+                        'reviewed-preprint' => 0,
                     ],
                 ])
             )

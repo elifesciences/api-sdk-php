@@ -46,6 +46,7 @@ use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Reference\BookReference;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
@@ -237,6 +238,27 @@ final class Builder
                         'person' => new PersonDetails('Josiah Carberry', 'Carberry, Josiah', '0000-0002-1825-0097'),
                         'role' => 'Reviewing editor',
                         'affiliations' => [],
+                    ];
+                },
+                ReviewedPreprint::class => function() {
+                    return [
+                        'id' => '1',
+                        'title' => 'Reviewed preprint',
+                        'status' => 'reviewed',
+                        'stage' => 'published',
+                        'doi' => '10.7554/eLife.19560',
+                        'indexContent' => 'Reviewed preprint',
+                        'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+                        'titlePrefix' => 'Title prefix',
+                        'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'reviewedDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'statusDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'volume' => null,
+                        'elocationId' => null,
+                        'pdf' => null,
+                        'subjects' => new EmptySequence(),
+                        'curationLabels' => [],
+                        'image' => self::for(Image::class)->sample('thumbnail'),
                     ];
                 },
                 Subject::class => function () {
@@ -734,6 +756,28 @@ final class Builder
                                 ])),
                             ]));
                     },
+                ],
+                ReviewedPreprint::class => [
+                    'minimum' => function($builder) {
+                        return $builder
+                            ->withId('1')
+                            ->withTitle('title')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi(null)
+                            ->withIndexContent(null)
+                            ->withAuthorLine(null)
+                            ->withPublished(null)
+                            ->withReviewedDate(null)
+                            ->withTitlePrefix(null)
+                            ->withStatusDate(null)
+                            ->withVolume(null)
+                            ->withElocationId(null)
+                            ->withPdf(null)
+                            ->withSubjects(new ArraySequence([]))
+                            ->withCurationLabels([])
+                            ->withImage(null);
+                    }
                 ],
                 Subject::class => [
                     '1' => function ($builder) {

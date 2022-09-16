@@ -38,7 +38,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         }, $data['subjects'] ?? []));
 
 
-        $data['curationLabels'] = new ArraySequence($data['curationLabels'] ?? []);
+        $data['curationLabels'] = $data['curationLabels'] ?? [];
 
         if (isset($data['image'])) {
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context);
@@ -141,8 +141,8 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             })->toArray();
         }
 
-        if (!$object->getCurationLabels()->isEmpty()) {
-            $data['curationLabels'] = $object->getCurationLabels()->toArray();
+        if (!empty($object->getCurationLabels())) {
+            $data['curationLabels'] = $object->getCurationLabels();
         }
 
         if (null !== $object->getImage()) {

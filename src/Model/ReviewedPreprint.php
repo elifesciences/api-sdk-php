@@ -48,7 +48,7 @@ class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate, HasTh
         string $elocationId = null,
         string $pdf = null,
         Sequence $subjects = null,
-        Sequence $curationLabels = null,
+        array $curationLabels = null,
         Image $image = null
     )
     {
@@ -85,9 +85,9 @@ class ReviewedPreprint implements HasDoi, HasIdentifier, HasPublishedDate, HasTh
     }
 
     /**
-     * @return Sequence|string[]
+     * @return string[]
      */
-    public function getCurationLabels(): Sequence
+    public function getCurationLabels(): array
     {
         return $this->curationLabels;
     }

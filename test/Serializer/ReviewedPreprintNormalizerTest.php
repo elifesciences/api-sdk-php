@@ -10,6 +10,7 @@ use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class ReviewedPreprintNormalizerTest extends ApiTestCase
 {
@@ -17,6 +18,8 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
 
     /** @var ReviewedPreprintNormalizer */
     private $normalizer;
+
+    private $builder;
 
     /**
      * @before
@@ -48,11 +51,10 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $reviewedPreprint = new ReviewedPreprint(1, 'title', 'reviewed', 'published');
+        $reviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('minimum');
 
         return [
             'preprint' => [$reviewedPreprint, null, true],
-            'preprint with format' => [$reviewedPreprint, 'foo', true],
             'non-preprint' => [$this, null, false],
         ];
     }
@@ -69,24 +71,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'stage' => 'published',
         ];
 
-        $reviewedPreprint = new ReviewedPreprint(
-            '1',
-            'title',
-            'reviewed',
-            'published',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new EmptySequence(),
-            new EmptySequence()
-        );
+        $reviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('minimum');
         $res = $this->normalizer->normalize($reviewedPreprint);
         $this->assertSame($expected, $res);
     }
@@ -127,25 +112,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'title' => 'title',
             'stage' => 'published',
         ];
-
-        $expected = new ReviewedPreprint(
-            '1',
-            'title',
-            'reviewed',
-            'published',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new ArraySequence([]),
-            new ArraySequence([])
-        );
+        $expected = Builder::for(ReviewedPreprint::class)->sample('minimum');
 
         $this->assertEquals($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
     }

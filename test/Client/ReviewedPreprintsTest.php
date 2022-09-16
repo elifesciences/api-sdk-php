@@ -14,7 +14,7 @@ use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
-final class ReviewedPreprintTest extends ApiTestCase
+final class ReviewedPreprintsTest extends ApiTestCase
 {
     use SlicingTestCase;
 
@@ -48,7 +48,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         foreach ($this->reviewedPreprints as $i => $reviewedPreprint) {
             $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
-            $this->assertSame((string) $i, $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.$i, $reviewedPreprint->getId());
         }
     }
 
@@ -77,7 +77,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         foreach ($array as $i => $reviewedPreprint) {
             $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
-            $this->assertSame(($i + 1), (int) $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.($i + 1), $reviewedPreprint->getId());
         }
     }
 
@@ -89,7 +89,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $this->mockReviewedPreprintListCall(1, 1, 1);
 
         $this->assertTrue(isset($this->reviewedPreprints[0]));
-        $this->assertSame('1', $this->reviewedPreprints[0]->getId());
+        $this->assertSame('reviewed-preprint-1', $this->reviewedPreprints[0]->getId());
 
         $this->mockNotFound(
             'reviewed-preprints?page=6&per-page=1&order=desc',
@@ -120,7 +120,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         $values = $this->reviewedPreprints->prepend(0, 1)->map($this->tidyValue());
 
-        $this->assertSame([0, 1, 'reviewed preprint 1', 'reviewed preprint 2', 'reviewed preprint 3', 'reviewed preprint 4', 'reviewed preprint 5'], $values->toArray());
+        $this->assertSame([0, 1, 'reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5'], $values->toArray());
     }
 
     /**
@@ -133,7 +133,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         $values = $this->reviewedPreprints->append(0, 1)->map($this->tidyValue());
 
-        $this->assertSame(['reviewed preprint 1', 'reviewed preprint 2', 'reviewed preprint 3', 'reviewed preprint 4', 'reviewed preprint 5', 0, 1], $values->toArray());
+        $this->assertSame(['reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5', 0, 1], $values->toArray());
     }
 
     /**
@@ -147,7 +147,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $values = $this->reviewedPreprints->drop(2)->map($this->tidyValue());
 
         $this->assertSame([
-            'reviewed preprint 1', 'reviewed preprint 2', 'reviewed preprint 4', 'reviewed preprint 5'
+            'reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-4', 'reviewed-preprint-5'
         ], $values->toArray());
     }
 
@@ -162,7 +162,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $values = $this->reviewedPreprints->insert(2, 2)->map($this->tidyValue());
 
         $this->assertSame([
-            'reviewed preprint 1', 'reviewed preprint 2', 2, 'reviewed preprint 3', 'reviewed preprint 4', 'reviewed preprint 5'
+            'reviewed-preprint-1', 'reviewed-preprint-2', 2, 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5'
         ], $values->toArray());
     }
 
@@ -177,7 +177,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $values = $this->reviewedPreprints->set(2, 2)->map($this->tidyValue());
 
         $this->assertSame([
-            'reviewed preprint 1', 'reviewed preprint 2', 2, 'reviewed preprint 4', 'reviewed preprint 5'
+            'reviewed-preprint-1', 'reviewed-preprint-2', 2, 'reviewed-preprint-4', 'reviewed-preprint-5'
         ], $values->toArray());
     }
 
@@ -193,7 +193,7 @@ final class ReviewedPreprintTest extends ApiTestCase
 
         foreach ($this->reviewedPreprints->slice($offset, $length) as $i => $reviewedPreprint) {
             $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
-            $this->assertSame(($expected[$i]), (int) $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.($expected[$i]), $reviewedPreprint->getId());
         }
     }
 
@@ -210,7 +210,7 @@ final class ReviewedPreprintTest extends ApiTestCase
             return $reviewedPreprint->getId();
         };
 
-        $this->assertSame(['1', '2', '3'], $this->reviewedPreprints->map($map)->toArray());
+        $this->assertSame(['reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3'], $this->reviewedPreprints->map($map)->toArray());
     }
 
     /**
@@ -226,7 +226,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         };
 
         foreach ($this->reviewedPreprints->filter($filter) as $i => $reviewedPreprint) {
-            $this->assertSame(($i + 4), (int) $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.($i + 4), $reviewedPreprint->getId());
         }
     }
 
@@ -266,7 +266,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         };
 
         foreach ($this->reviewedPreprints->sort($sort) as $i => $reviewedPreprint) {
-            $this->assertSame((5 - $i), (int) $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.(5 - $i), $reviewedPreprint->getId());
         }
     }
 
@@ -279,7 +279,7 @@ final class ReviewedPreprintTest extends ApiTestCase
         $this->mockReviewedPreprintListCall(1, 100, 5, false);
 
         foreach ($this->reviewedPreprints->reverse() as $i => $reviewedPreprint) {
-            $this->assertSame((string) $i, $reviewedPreprint->getId());
+            $this->assertSame('reviewed-preprint-'.$i, $reviewedPreprint->getId());
         }
     }
 

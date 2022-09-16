@@ -101,11 +101,6 @@ final class Identifier
         return new self('promotional-collection', $id);
     }
 
-    public static function reviewedPreprint(string $id) : Identifier
-    {
-        return new self('reviewed-preprint', $id);
-    }
-
     public static function subject(string $id) : Identifier
     {
         return new self('subject', $id);

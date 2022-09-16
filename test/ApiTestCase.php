@@ -215,7 +215,7 @@ abstract class ApiTestCase extends TestCase
         bool $descendingOrder = true
     ) {
         $reviewedPreprints = array_map(function (int $id) {
-            return $this->createReviewedPreprintJson($id, true);
+            return $this->createReviewedPreprintJson($id);
         }, $this->generateIdList($page, $perPage, $total));
 
         $request = new Request(
@@ -3030,7 +3030,7 @@ abstract class ApiTestCase extends TestCase
     private function createReviewedPreprintJson(string $id) : array
     {
         return [
-            'id' => $id,
+            'id' => 'reviewed-preprint-'.$id,
             'doi' => '10.7554/eLife.'.$id,
             'status' => 'reviewed',
             'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',

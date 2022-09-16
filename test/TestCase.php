@@ -97,8 +97,6 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
                 return $value->getTitle();
             } elseif ($value instanceof PodcastEpisode) {
                 return $value->getTitle();
-            } elseif ($value instanceof ReviewedPreprint) {
-                return $value->getTitle();
             }
 
             return $value;

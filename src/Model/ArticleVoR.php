@@ -6,9 +6,11 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences
+final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasReviewedDate, HasCurationLabels
 {
+    private $reviewedDate;
     private $figuresPdf;
+    private $curationLabels;
     private $impactStatement;
     private $keywords;
     private $digest;
@@ -39,6 +41,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         DateTimeImmutable $published = null,
         DateTimeImmutable $versionDate = null,
         DateTimeImmutable $statusDate = null,
+        DateTimeImmutable $reviewedDate = null,
         int $volume,
         string $elocationId,
         Image $thumbnail = null,
@@ -47,6 +50,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         string $figuresPdf = null,
         PromiseInterface $xml,
         Sequence $subjects,
+        array $curationLabels,
         array $researchOrganisms,
         ArticleSection $abstract = null,
         PromiseInterface $issue,
@@ -79,6 +83,8 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
             $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $ethics, $funding,
             $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
 
+        $this->reviewedDate = $reviewedDate;
+        $this->curationLabels = $curationLabels;
         $this->figuresPdf = $figuresPdf;
         $this->impactStatement = $impactStatement;
         $this->keywords = $keywords;
@@ -94,6 +100,22 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->authorResponse = $authorResponse;
         $this->curationLabels = $curationLabels;
         $this->reviewedDate = $reviewedDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getReviewedDate()
+    {
+        return $this->reviewedDate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCurationLabels() : array
+    {
+        return $this->curationLabels;
     }
 
     /**

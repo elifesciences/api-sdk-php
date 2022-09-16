@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
@@ -244,5 +245,37 @@ final class ArticleVoRTest extends ArticleVersionTest
 
         $this->assertEquals($authorResponse, $with->getAuthorResponse());
         $this->assertNull($withOut->getAuthorResponse());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_reviewed_date()
+    {
+        $with = $this->builder
+            ->withReviewedDate($date = new DateTimeImmutable('2022-09-15'))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withReviewedDate(null)
+            ->__invoke();
+
+        $this->assertEquals($date, $with->getReviewedDate());
+        $this->assertNull($withOut->getReviewedDate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_curation_labels()
+    {
+        $with = $this->builder
+            ->withCurationLabels(['Landmark', 'Exceptional'])
+            ->__invoke();
+        $withOut = $this->builder
+            ->withCurationLabels([])
+            ->__invoke();
+
+        $this->assertEquals(['Landmark', 'Exceptional'], $with->getCurationLabels());
+        $this->assertEmpty($withOut->getCurationLabels());
     }
 }

@@ -49,7 +49,6 @@ use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
-use GuzzleHttp\Promise\Create;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use InvalidArgumentException;
@@ -248,7 +247,7 @@ final class Builder
                         'status' => 'reviewed',
                         'stage' => 'published',
                         'doi' => '10.7554/eLife.19560',
-                        'indexContent' => Create::promiseFor('Reviewed preprint'),
+                        'indexContent' => promise_for('Reviewed preprint'),
                         'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
                         'titlePrefix' => 'Title prefix',
                         'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),

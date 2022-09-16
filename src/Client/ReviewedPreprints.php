@@ -14,12 +14,13 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class ReviewedPreprints implements Iterator, Sequence
 {
+    const VERSION_REVIEWED_PREPRINT_LIST = 1;
+
     use Client;
 
     private $reviewedPreprintsClient;
     private $denormalizer;
     private $descendingOrder = true;
-    const VERSION_REVIEWED_PREPRINT_LIST = 1;
 
     public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient, DenormalizerInterface $denormalizer)
     {

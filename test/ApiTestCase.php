@@ -215,7 +215,7 @@ abstract class ApiTestCase extends TestCase
         bool $descendingOrder = true
     ) {
         $reviewedPreprints = array_map(function (int $id) {
-            return $this->createReviewedPreprintJson($id);
+            return $this->createReviewedPreprintJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
 
         $request = new Request(
@@ -232,6 +232,27 @@ abstract class ApiTestCase extends TestCase
                     'total' => $total,
                     'items' => $reviewedPreprints,
                 ])
+            )
+        );
+    }
+
+    final protected function mockReviewedPreprintCall($numberOrId, bool $complete = false)
+    {
+        if (is_integer($numberOrId)) {
+            $id = "reviewed-preprint-{$numberOrId}";
+        } else {
+            $id = (string) $numberOrId;
+        }
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/reviewed-preprints/'.$id,
+                ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT, 1)],
+                json_encode($this->createReviewedPreprintJson($id, false, $complete))
             )
         );
     }
@@ -3027,14 +3048,20 @@ abstract class ApiTestCase extends TestCase
         return $subject;
     }
 
-    private function createReviewedPreprintJson(string $id) : array
+    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false) : array
     {
-        return [
-            'id' => 'reviewed-preprint-'.$id,
+        if (is_int($number)) {
+            $id = 'reviewed-preprint-'.$number;
+        } else {
+            $id = $number;
+        }
+
+        $reviewedPreprint = [
+            'id' => $id,
             'doi' => '10.7554/eLife.'.$id,
             'status' => 'reviewed',
             'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
-            'title' => 'reviewed preprint '.$id,
+            'title' => 'reviewed preprint '.$number,
             'indexContent' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
             'titlePrefix' => 'Title prefix',
             'stage' => 'published',
@@ -3044,12 +3071,7 @@ abstract class ApiTestCase extends TestCase
             'volume' => 4,
             'elocationId' => 'e'.$id,
             'pdf' => 'https://elifesciences.org/content/4/e'.$id.'.pdf',
-            'subjects' => [
-                0 => [
-                    'id' => 'genomics-evolutionary-biology',
-                    'name' => 'Genomics and Evolutionary Biology',
-                ],
-            ],
+            'subjects' => [$this->createSubjectJson('1', true)],
             'curationLabels' => [
                 0 => 'Ground-breaking',
                 1 => 'Convincing',
@@ -3074,5 +3096,27 @@ abstract class ApiTestCase extends TestCase
                 ],
             ],
         ];
+
+        if (!$complete) {
+            unset($reviewedPreprint['doi']);
+            unset($reviewedPreprint['authorLine']);
+            unset($reviewedPreprint['titlePrefix']);
+            unset($reviewedPreprint['published']);
+            unset($reviewedPreprint['statusDate']);
+            unset($reviewedPreprint['reviewedDate']);
+            unset($reviewedPreprint['volume']);
+            unset($reviewedPreprint['elocationId']);
+            unset($reviewedPreprint['pdf']);
+            unset($reviewedPreprint['subjects']);
+            unset($reviewedPreprint['curationLabels']);
+            unset($reviewedPreprint['image']);
+            unset($reviewedPreprint['indexContent']);
+        }
+
+        if ($isSnippet) {
+            unset($reviewedPreprint['indexContent']);
+        }
+
+        return $reviewedPreprint;
     }
 }

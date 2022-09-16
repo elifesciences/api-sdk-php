@@ -49,6 +49,7 @@ use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
+use GuzzleHttp\Promise\Create;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
 use InvalidArgumentException;
@@ -247,7 +248,7 @@ final class Builder
                         'status' => 'reviewed',
                         'stage' => 'published',
                         'doi' => '10.7554/eLife.19560',
-                        'indexContent' => 'Reviewed preprint',
+                        'indexContent' => Create::promiseFor('Reviewed preprint'),
                         'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
                         'titlePrefix' => 'Title prefix',
                         'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
@@ -258,7 +259,7 @@ final class Builder
                         'pdf' => null,
                         'subjects' => new EmptySequence(),
                         'curationLabels' => [],
-                        'image' => self::for(Image::class)->sample('thumbnail'),
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                     ];
                 },
                 Subject::class => function () {
@@ -767,7 +768,7 @@ final class Builder
                             ->withStage('published')
                             ->withStatus('reviewed')
                             ->withDoi(null)
-                            ->withIndexContent(null)
+                            ->withPromiseOfIndexContent(null)
                             ->withAuthorLine(null)
                             ->withPublished(null)
                             ->withReviewedDate(null)
@@ -778,7 +779,7 @@ final class Builder
                             ->withPdf(null)
                             ->withSubjects(new EmptySequence())
                             ->withCurationLabels([])
-                            ->withImage(null);
+                            ->withThumbnail(null);
                     },
                     'complete' => function($builder) {
                         return $builder
@@ -788,7 +789,7 @@ final class Builder
                             ->withStatus('reviewed')
                             ->withDoi('doi')
                             ->withTitlePrefix('title prefix')
-                            ->withIndexContent('indexContent')
+                            ->withPromiseOfIndexContent('indexContent')
                             ->withAuthorLine('authorLine')
                             ->withPublished(new DateTimeImmutable('2016-09-16T12:34:56Z'))
                             ->withReviewedDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
@@ -800,7 +801,7 @@ final class Builder
                                 self::for(Subject::class)->sample('biophysics-structural-biology'),
                             ]))
                             ->withCurationLabels(['curation-label'])
-                            ->withImage(self::for(Image::class)->sample('thumbnail'));
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
                     }
                 ],
                 Subject::class => [

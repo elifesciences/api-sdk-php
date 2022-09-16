@@ -9,11 +9,13 @@ use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class ReviewedPreprints implements Iterator, Sequence
 {
+    const VERSION_REVIEWED_PREPRINT = 1;
     const VERSION_REVIEWED_PREPRINT_LIST = 1;
 
     use Client;
@@ -26,6 +28,18 @@ class ReviewedPreprints implements Iterator, Sequence
     {
         $this->reviewedPreprintsClient = $reviewedPreprintsClient;
         $this->denormalizer = $denormalizer;
+    }
+
+    public function get(string $id) : PromiseInterface
+    {
+        return $this->reviewedPreprintsClient
+            ->getReviewedPreprint(
+                ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT, self::VERSION_REVIEWED_PREPRINT)],
+                $id
+            )
+            ->then(function (Result $result) {
+                return $this->denormalizer->denormalize($result->toArray(), ReviewedPreprint::class);
+            });
     }
 
     public function slice(int $offset, int $length = null): Sequence

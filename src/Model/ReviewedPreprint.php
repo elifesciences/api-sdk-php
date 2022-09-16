@@ -4,91 +4,86 @@ namespace eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
+use GuzzleHttp\Promise\PromiseInterface;
 
-class ReviewedPreprint implements Model, HasId, HasDoi, HasPublishedDate, HasThumbnail, HasReviewedDate, HasCurationLabels
+class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublishedDate, HasThumbnail, HasReviewedDate, HasCurationLabels
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
 
-    private $authorLine;
-    private $curationLabels;
-    private $doi;
-    private $elocationId;
     private $id;
-    private $indexContent;
-    private $published;
-    private $pdf;
-    private $reviewedDate;
     private $stage;
-    private $status;
-    private $subjects;
-    private $statusDate;
+    private $doi;
+    private $authorLine;
     private $titlePrefix;
     private $title;
-    private $image;
+    private $published;
+    private $statusDate;
+    private $reviewedDate;
+    private $status;
     private $volume;
+    private $elocationId;
+    private $pdf;
+    private $subjects;
+    private $curationLabels;
+    private $thumbnail;
+    private $indexContent;
 
     /**
      * @internal
      */
     public function __construct(
         string $id,
-        string $title,
-        string $status,
         string $stage,
-        string $indexContent = null,
         string $doi = null,
         string $authorLine = null,
         string $titlePrefix = null,
+        string $title,
         DateTimeImmutable $published = null,
-        DateTimeImmutable $reviewedDate = null,
         DateTimeImmutable $statusDate = null,
+        DateTimeImmutable $reviewedDate = null,
+        string $status,
         int $volume = null,
         string $elocationId = null,
         string $pdf = null,
-        Sequence $subjects = null,
-        array $curationLabels = null,
-        Image $image = null
+        Sequence $subjects,
+        array $curationLabels,
+        Image $thumbnail = null,
+        PromiseInterface $indexContent
     )
     {
         $this->id = $id;
-        $this->title = $title;
-        $this->status = $status;
         $this->stage = $stage;
         $this->doi = $doi;
-        $this->indexContent = $indexContent;
         $this->authorLine = $authorLine;
         $this->titlePrefix = $titlePrefix;
+        $this->title = $title;
         $this->published = $published;
-        $this->reviewedDate = $reviewedDate;
         $this->statusDate = $statusDate;
+        $this->reviewedDate = $reviewedDate;
+        $this->status = $status;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
         $this->pdf = $pdf;
         $this->subjects = $subjects;
         $this->curationLabels = $curationLabels;
-        $this->image = $image;
+        $this->thumbnail = $thumbnail;
+        $this->indexContent = $indexContent;
     }
 
-    final public function getIdentifier(): Identifier
+    public function getId() : string
+    {
+        return $this->id;
+    }
+
+    public function getIdentifier() : Identifier
     {
         return Identifier::reviewedPreprint($this->id);
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAuthorLine()
+    public function getStage() : string
     {
-        return $this->authorLine;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getCurationLabels(): array
-    {
-        return $this->curationLabels;
+        return $this->stage;
     }
 
     /**
@@ -102,25 +97,22 @@ class ReviewedPreprint implements Model, HasId, HasDoi, HasPublishedDate, HasThu
     /**
      * @return string|null
      */
-    public function getElocationId()
+    public function getAuthorLine()
     {
-        return $this->elocationId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
+        return $this->authorLine;
     }
 
     /**
      * @return string|null
      */
-    public function getIndexContent()
+    public function getTitlePrefix()
     {
-        return $this->indexContent;
+        return $this->titlePrefix;
+    }
+
+    public function getTitle() : string
+    {
+        return $this->title;
     }
 
     /**
@@ -132,11 +124,11 @@ class ReviewedPreprint implements Model, HasId, HasDoi, HasPublishedDate, HasThu
     }
 
     /**
-     * @return string|null
+     * @return DateTimeImmutable|null
      */
-    public function getPdf()
+    public function getStatusDate()
     {
-        return $this->pdf;
+        return $this->statusDate;
     }
 
     /**
@@ -147,60 +139,9 @@ class ReviewedPreprint implements Model, HasId, HasDoi, HasPublishedDate, HasThu
         return $this->reviewedDate;
     }
 
-    /**
-     * @return string
-     */
-    public function getStage()
-    {
-        return $this->stage;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus() : string
     {
         return $this->status;
-    }
-
-    /**
-     * @return Sequence|Subject[]
-     */
-    public function getSubjects() : Sequence
-    {
-        return $this->subjects;
-    }
-
-    /**
-     * @return DateTimeImmutable|null
-     */
-    public function getStatusDate()
-    {
-        return $this->statusDate;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTitlePrefix()
-    {
-        return $this->titlePrefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return Image|null
-     */
-    public function getImage()
-    {
-        return $this->image;
     }
 
     /**
@@ -211,8 +152,48 @@ class ReviewedPreprint implements Model, HasId, HasDoi, HasPublishedDate, HasThu
         return $this->volume;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getElocationId()
+    {
+        return $this->elocationId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPdf()
+    {
+        return $this->pdf;
+    }
+
+    /**
+     * @return Sequence
+     */
+    public function getSubjects() : Sequence
+    {
+        return $this->subjects;
+    }
+
+    public function getCurationLabels() : array
+    {
+        return $this->curationLabels;
+    }
+
+    /**
+     * @return Image|null
+     */
     public function getThumbnail()
     {
-        return $this->image;
+        return $this->thumbnail;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIndexContent()
+    {
+        return $this->indexContent->wait();
     }
 }

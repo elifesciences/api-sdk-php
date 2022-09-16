@@ -8,8 +8,6 @@ use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Collection\Sequence;
-use eLife\ApiSdk\Model\Block\Paragraph;
-use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -79,6 +77,27 @@ final class ReviewedPreprintsTest extends ApiTestCase
             $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
             $this->assertSame('reviewed-preprint-'.($i + 1), $reviewedPreprint->getId());
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_a_reviewed_preprint()
+    {
+        $this->mockReviewedPreprintCall('reviewed-preprint-7', true);
+
+        $reviewedPreprint = $this->reviewedPreprints->get('reviewed-preprint-7')->wait();
+
+        $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
+        $this->assertSame('reviewed-preprint-7', $reviewedPreprint->getId());
+
+        $this->assertInstanceOf(Subject::class, $reviewedPreprint->getSubjects()[0]);
+        $this->assertSame('Subject 1 name', $reviewedPreprint->getSubjects()[0]->getName());
+
+        $this->mockSubjectCall('1');
+
+        $this->assertSame('Subject 1 impact statement',
+            $reviewedPreprint->getSubjects()[0]->getImpactStatement());
     }
 
     /**

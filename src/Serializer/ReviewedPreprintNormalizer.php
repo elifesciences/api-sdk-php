@@ -2,11 +2,18 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
+use eLife\ApiClient\MediaType;
+use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
+use function GuzzleHttp\Promise\promise_for;
+use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use DateTimeImmutable;
@@ -17,8 +24,36 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
+    private $snippetDenormalizer;
+
+    public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient)
+    {
+        $this->snippetDenormalizer = new SnippetDenormalizer(
+            function (array $article) : string {
+                return $article['id'];
+            },
+            function (string $id) use ($reviewedPreprintsClient) : PromiseInterface {
+                return $reviewedPreprintsClient->getReviewedPreprint(
+                    ['Accept' => (string) new MediaType($reviewedPreprintsClient::TYPE_REVIEWED_PREPRINT, ReviewedPreprints::VERSION_REVIEWED_PREPRINT_LIST)],
+                    $id
+                );
+            }
+        );
+    }
+
     public function denormalize($data, $class, $format = null, array $context = []): ReviewedPreprint
     {
+        if (!empty($context['snippet'])) {
+            $reviewedPreprint = $this->snippetDenormalizer->denormalizeSnippet($data);
+
+            $data['indexContent'] = new PromiseSequence($reviewedPreprint
+                ->then(function (Result $reviewedPreprint) {
+                    return $reviewedPreprint['indexContent'] ?? null;
+                }));
+        } else {
+            $data['indexContent'] = promise_for($data['indexContent'] ?? null);
+        }
+
         if (!empty($data['published'])) {
             $data['published'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']);
         }
@@ -37,7 +72,6 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             return $this->denormalizer->denormalize($subject, Subject::class, $format, $context);
         }, $data['subjects'] ?? []));
 
-
         $data['curationLabels'] = $data['curationLabels'] ?? [];
 
         if (isset($data['image'])) {
@@ -46,22 +80,22 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
 
         return new ReviewedPreprint(
             $data['id'],
-            $data['title'],
-            $data['status'],
             $data['stage'],
-            $data['indexContent'] ?? null,
             $data['doi'] ?? null,
             $data['authorLine'] ?? null,
             $data['titlePrefix'] ?? null,
+            $data['title'],
             $data['published'] ?? null,
-            $data['reviewedDate'] ?? null,
             $data['statusDate'] ?? null,
+            $data['reviewedDate'] ?? null,
+            $data['status'],
             $data['volume'] ?? null,
             $data['elocationId'] ?? null,
             $data['pdf'] ?? null,
             $data['subjects'],
             $data['curationLabels'],
-            $data['image']['thumbnail'] ?? null
+            $data['image']['thumbnail'] ?? null,
+            $data['indexContent']
         );
     }
 
@@ -91,10 +125,6 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
 
         if ($object->getStage()) {
             $data['stage'] = $object->getStage();
-        }
-
-        if ($object->getIndexContent()) {
-            $data['indexContent'] = $object->getIndexContent();
         }
 
         if ($object->getDoi()) {
@@ -145,8 +175,14 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['curationLabels'] = $object->getCurationLabels();
         }
 
-        if (null !== $object->getImage()) {
-            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getImage(), $format, $context);
+        if (null !== $object->getThumbnail()) {
+            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        }
+
+        if (empty($context['snippet'])) {
+            if ($object->getIndexContent()) {
+                $data['indexContent'] = $object->getIndexContent();
+            }
         }
 
         return $data;

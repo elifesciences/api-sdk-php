@@ -202,7 +202,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
-            new ReviewedPreprintNormalizer(),
+            new ReviewedPreprintNormalizer($this->reviewedPreprintsClient),
             new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),

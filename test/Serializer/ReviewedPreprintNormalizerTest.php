@@ -2,9 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -27,7 +26,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
     protected function setUpNormalizer()
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->normalizer = new ReviewedPreprintNormalizer();
+        $this->normalizer = new ReviewedPreprintNormalizer(new ReviewedPreprintsClient($this->getHttpClient()));
         $this->normalizer->setNormalizer($apiSdk->getSerializer());
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
@@ -44,7 +43,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canNormalizeProvider
      */
-    public function it_can_normalize_article_preprints($data, $format, bool $expected)
+    public function it_can_normalize_reviewed_preprints($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
@@ -62,7 +61,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_normalize_preprints()
+    public function it_normalize_reviewed_preprints()
     {
         $expected = [
             'id' => '1',
@@ -88,7 +87,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
      * @test
      * @dataProvider canDenormalizeProvider
      */
-    public function it_can_denormalize_preprints($data, $format, array $context, bool $expected)
+    public function it_can_denormalize_reviewed_preprints($data, $format, array $context, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
     }
@@ -104,7 +103,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_denormalize_preprints()
+    public function it_denormalize_reviewed_preprints()
     {
         $json = [
             'id'=> '1',

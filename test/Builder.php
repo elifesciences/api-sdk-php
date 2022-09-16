@@ -776,9 +776,31 @@ final class Builder
                             ->withVolume(null)
                             ->withElocationId(null)
                             ->withPdf(null)
-                            ->withSubjects(new ArraySequence([]))
+                            ->withSubjects(new EmptySequence())
                             ->withCurationLabels([])
                             ->withImage(null);
+                    },
+                    'complete' => function($builder) {
+                        return $builder
+                            ->withId('1')
+                            ->withTitle('title')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi('doi')
+                            ->withTitlePrefix('title prefix')
+                            ->withIndexContent('indexContent')
+                            ->withAuthorLine('authorLine')
+                            ->withPublished(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withReviewedDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withStatusDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withVolume(4)
+                            ->withElocationId('elocationId')
+                            ->withPdf('pdf')
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('biophysics-structural-biology'),
+                            ]))
+                            ->withCurationLabels(['curation-label'])
+                            ->withImage(self::for(Image::class)->sample('thumbnail'));
                     }
                 ],
                 Subject::class => [

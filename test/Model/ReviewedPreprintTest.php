@@ -7,8 +7,10 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use DateTimeImmutable;
+use test\eLife\ApiSdk\Builder;
 
 final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
 {
@@ -20,42 +22,27 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->reviewedPreprint = new ReviewedPreprint(
-            'id',
-            'title',
-            'status',
-            'stage',
-            'indexContent',
-            'doi',
-            'authorLine',
-            'titlePrefix',
-            new DateTimeImmutable('2016-09-16T12:34:56Z'),
-            new DateTimeImmutable('2016-09-16T12:34:56Z'),
-            new DateTimeImmutable('2016-09-16T12:34:56Z'),
-            1,
-            'elocationId',
-            'pdf',
-            new ArraySequence(["subject"]),
-            new ArraySequence(["curation-label"]),
-            new Image('altText', 'uri', new EmptySequence(), new File('', '', ''), '1', '2', '3', '4')
-        );
-        $this->emptyReviewedPreprint = new ReviewedPreprint(
-            '1',
-            'title',
-            'reviewed',
-            'published',
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new EmptySequence(),
-            new EmptySequence());
+//        $this->reviewedPreprint = new ReviewedPreprint(
+//            'id',
+//            'title',
+//            'status',
+//            'stage',
+//            'indexContent',
+//            'doi',
+//            'authorLine',
+//            'titlePrefix',
+//            new DateTimeImmutable('2016-09-16T12:34:56Z'),
+//            new DateTimeImmutable('2016-09-16T12:34:56Z'),
+//            new DateTimeImmutable('2016-09-16T12:34:56Z'),
+//            1,
+//            'elocationId',
+//            'pdf',
+//            new ArraySequence(["subject"]),
+//            new ArraySequence(["curation-label"]),
+//            new Image('altText', 'uri', new EmptySequence(), new File('', '', ''), '1', '2', '3', '4')
+//        );
+        $this->reviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('complete');
+        $this->emptyReviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('minimum');
     }
 
     public function it_is_a_model()
@@ -69,7 +56,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_have_id()
     {
-        $this->assertEquals('id', $this->reviewedPreprint->getId());
+        $this->assertEquals('1', $this->reviewedPreprint->getId());
     }
 
     /**
@@ -85,7 +72,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_have_status()
     {
-        $this->assertEquals('status', $this->reviewedPreprint->getStatus());
+        $this->assertEquals('reviewed', $this->reviewedPreprint->getStatus());
     }
 
     /**
@@ -93,7 +80,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_have_stage()
     {
-        $this->assertEquals('stage', $this->reviewedPreprint->getStage());
+        $this->assertEquals('published', $this->reviewedPreprint->getStage());
     }
 
     /**
@@ -128,7 +115,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_title_prefix()
     {
-        $this->assertEquals('titlePrefix', $this->reviewedPreprint->getTitlePrefix());
+        $this->assertEquals('title prefix', $this->reviewedPreprint->getTitlePrefix());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getTitlePrefix());
     }
 
@@ -164,7 +151,7 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_volume()
     {
-        $this->assertEquals(1, $this->reviewedPreprint->getVolume());
+        $this->assertEquals(4, $this->reviewedPreprint->getVolume());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getVolume());
     }
 
@@ -191,7 +178,10 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_subjects()
     {
-        $this->assertEquals(['subject'], $this->reviewedPreprint->getSubjects()->toArray());
+        $this->assertEquals(
+            [Builder::for(Subject::class)->sample('biophysics-structural-biology')],
+            $this->reviewedPreprint->getSubjects()->toArray()
+        );
         $this->assertEquals(new EmptySequence(), $this->emptyReviewedPreprint->getSubjects());
     }
 
@@ -200,8 +190,8 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_curation_labels()
     {
-        $this->assertEquals(['curation-label'], $this->reviewedPreprint->getCurationLabels()->toArray());
-        $this->assertEquals(new EmptySequence(), $this->emptyReviewedPreprint->getCurationLabels());
+        $this->assertEquals(['curation-label'], $this->reviewedPreprint->getCurationLabels());
+        $this->assertEquals([], $this->emptyReviewedPreprint->getCurationLabels());
     }
 
     /**
@@ -209,12 +199,12 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
      */
     public function it_may_have_image()
     {
-        $this->assertEquals('altText', $this->reviewedPreprint->getImage()->getAltText());
-        $this->assertEquals('uri', $this->reviewedPreprint->getImage()->getUri());
-        $this->assertEquals('1', $this->reviewedPreprint->getImage()->getWidth());
-        $this->assertEquals('2', $this->reviewedPreprint->getImage()->getHeight());
-        $this->assertEquals('3', $this->reviewedPreprint->getImage()->getFocalPointX());
-        $this->assertEquals('4', $this->reviewedPreprint->getImage()->getFocalPointY());
+        $this->assertEquals('', $this->reviewedPreprint->getImage()->getAltText());
+        $this->assertEquals('https://iiif.elifesciences.org/thumbnail.jpg', $this->reviewedPreprint->getImage()->getUri());
+        $this->assertEquals('140', $this->reviewedPreprint->getImage()->getWidth());
+        $this->assertEquals('140', $this->reviewedPreprint->getImage()->getHeight());
+        $this->assertEquals('50', $this->reviewedPreprint->getImage()->getFocalPointX());
+        $this->assertEquals('50', $this->reviewedPreprint->getImage()->getFocalPointY());
         $this->assertEquals(null, $this->emptyReviewedPreprint->getImage());
     }
 }

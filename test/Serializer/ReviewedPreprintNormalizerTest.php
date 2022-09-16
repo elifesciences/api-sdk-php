@@ -114,7 +114,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
         ];
         $expected = Builder::for(ReviewedPreprint::class)->sample('minimum');
 
-        $this->assertEquals($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
+        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
     }
 
     protected function class() : string

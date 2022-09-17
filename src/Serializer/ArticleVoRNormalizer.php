@@ -234,9 +234,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $editorEvaluationScietyUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse'],
-            $data['curationLabels'] ?? [],
-            $data['reviewedDate'] ?? null
+            $data['authorResponse']
         );
     }
 
@@ -392,10 +390,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getCurationLabels()) {
                     $data['curationLabels'] = $article->getCurationLabels();
-                }
-
-                if ($article->getReviewedDate()) {
-                    $data['reviewedDate'] = $article->getReviewedDate();
                 }
             }
         }

@@ -169,13 +169,16 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
     }
 
     /**
-     * @return Sequence
+     * @return Sequence|Subject[]
      */
     public function getSubjects() : Sequence
     {
         return $this->subjects;
     }
 
+    /**
+     * @return string[]
+     */
     public function getCurationLabels() : array
     {
         return $this->curationLabels;

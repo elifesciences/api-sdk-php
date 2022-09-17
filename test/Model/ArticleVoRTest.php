@@ -11,8 +11,10 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasContent;
+use eLife\ApiSdk\Model\HasCurationLabels;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasReferences;
+use eLife\ApiSdk\Model\HasReviewedDate;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
@@ -259,6 +261,7 @@ final class ArticleVoRTest extends ArticleVersionTest
             ->withReviewedDate(null)
             ->__invoke();
 
+        $this->assertInstanceOf(HasReviewedDate::class, $with);
         $this->assertEquals($date, $with->getReviewedDate());
         $this->assertNull($withOut->getReviewedDate());
     }
@@ -275,6 +278,7 @@ final class ArticleVoRTest extends ArticleVersionTest
             ->withCurationLabels([])
             ->__invoke();
 
+        $this->assertInstanceOf(HasCurationLabels::class, $with);
         $this->assertEquals(['Landmark', 'Exceptional'], $with->getCurationLabels());
         $this->assertEmpty($withOut->getCurationLabels());
     }

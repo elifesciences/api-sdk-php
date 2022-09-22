@@ -2,9 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use DateTimeImmutable;
 use eLife\ApiClient\Result;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Appendix;
@@ -187,8 +185,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $this->denormalizer->denormalize($reference, Reference::class, $format, $context);
             });
 
-        $data['reviewedDate'] = !empty($data['reviewedDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['reviewedDate']) : null;
-
         return new ArticleVoR(
             $data['id'],
             $data['stage'],
@@ -201,7 +197,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['published'],
             $data['versionDate'],
             $data['statusDate'],
-            $data['reviewedDate'],
             $data['volume'],
             $data['elocationId'],
             $data['image']['thumbnail'] ?? null,
@@ -210,7 +205,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['figuresPdf'] ?? null,
             $data['xml'] ?? null,
             $data['subjects'],
-            $data['curationLabels'] ?? [],
             $data['researchOrganisms'] ?? [],
             $data['abstract'] ?? null,
             $data['issue'],
@@ -258,14 +252,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : array {
         $data['status'] = 'vor';
-
-        if ($article->getReviewedDate()) {
-            $data['reviewedDate'] = $article->getReviewedDate()->format(ApiSdk::DATE_FORMAT);
-        }
-
-        if (!empty($article->getCurationLabels())) {
-            $data['curationLabels'] = $article->getCurationLabels();
-        }
 
         if ($article->getFiguresPdf()) {
             $data['figuresPdf'] = $article->getFiguresPdf();
@@ -386,10 +372,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getAuthorResponse()->getId()) {
                     $data['authorResponse']['id'] = $article->getAuthorResponse()->getId();
-                }
-
-                if ($article->getCurationLabels()) {
-                    $data['curationLabels'] = $article->getCurationLabels();
                 }
             }
         }

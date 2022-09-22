@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Search implements Iterator, Sequence
 {
-    const VERSION_SEARCH = 2;
+    const VERSION_SEARCH = 1;
 
     use Client;
     use ForSubject;

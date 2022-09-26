@@ -23,6 +23,7 @@ use eLife\ApiClient\ApiClient\PressPackagesClient;
 use eLife\ApiClient\ApiClient\ProfilesClient;
 use eLife\ApiClient\ApiClient\PromotionalCollectionsClient;
 use eLife\ApiClient\ApiClient\RecommendationsClient;
+use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\ApiClient\SearchClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
@@ -48,6 +49,7 @@ use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Client\PromotionalCollections;
 use eLife\ApiSdk\Client\Recommendations;
+use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
@@ -90,6 +92,7 @@ use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
 use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
+use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
@@ -123,6 +126,7 @@ final class ApiSdk
     private $profilesClient;
     private $promotionalCollectionsClient;
     private $recommendationsClient;
+    private $reviewedPreprintsClient;
     private $searchClient;
     private $subjectsClient;
     private $serializer;
@@ -146,6 +150,7 @@ final class ApiSdk
     private $promotionalCollections;
     private $collections;
     private $recommendations;
+    private $reviewedPreprints;
     private $search;
     private $subjects;
 
@@ -183,6 +188,7 @@ final class ApiSdk
         $this->profilesClient = new ProfilesClient($this->httpClient);
         $this->promotionalCollectionsClient = new PromotionalCollectionsClient($this->httpClient);
         $this->recommendationsClient = new RecommendationsClient($this->httpClient);
+        $this->reviewedPreprintsClient = new ReviewedPreprintsClient($this->httpClient);
         $this->searchClient = new SearchClient($this->httpClient);
         $this->subjectsClient = new SubjectsClient($this->httpClient);
 
@@ -196,6 +202,7 @@ final class ApiSdk
             new ArticleHistoryNormalizer(),
             new ArticlePoANormalizer($this->articlesClient),
             new ArticleVoRNormalizer($this->articlesClient),
+            new ReviewedPreprintNormalizer($this->reviewedPreprintsClient),
             new ArticlePreprintNormalizer(),
             new AssetFileNormalizer(),
             new BioprotocolNormalizer(),
@@ -456,6 +463,15 @@ final class ApiSdk
         }
 
         return $this->recommendations;
+    }
+
+    public function reviewedPreprints(): ReviewedPreprints
+    {
+        if (empty($this->reviewedPreprints)) {
+            $this->reviewedPreprints = new ReviewedPreprints($this->reviewedPreprintsClient, $this->serializer);
+        }
+
+        return $this->reviewedPreprints;
     }
 
     public function subjects() : Subjects

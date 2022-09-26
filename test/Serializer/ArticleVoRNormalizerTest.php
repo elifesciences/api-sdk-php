@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
@@ -130,6 +131,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
+                    ->withReviewedDate(new DateTimeImmutable('2022-09-15T00:00:00Z'))
+                    ->withCurationLabels(['Landmark', 'Exceptional'])
                     ->withPdf('http://www.example.com/pdf')
                     ->withFiguresPdf('http://www.example.com/figures')
                     ->withPromiseOfXml('http://www.example.com/xml')
@@ -318,6 +321,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'reviewedDate' => '2022-09-15T00:00:00Z',
+                    'curationLabels' => ['Landmark', 'Exceptional'],
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'keywords' => ['Article 09560 keyword'],
@@ -439,12 +444,14 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withReviewedDate(null)
                     ->withAuthorLine(null)
                     ->withSequenceOfAuthors()
                     ->withSequenceOfReviewers()
                     ->withPromiseOfCopyright(new Copyright('license', 'statement'))
                     ->withPromiseOfIssue(null)
                     ->withPromiseOfXml(null)
+                    ->withCurationLabels([])
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
@@ -499,6 +506,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
+                    ->withReviewedDate(new DateTimeImmutable('2022-09-15T00:00:00Z'))
+                    ->withCurationLabels(['Landmark', 'Exceptional'])
                     ->withPdf('http://www.example.com/pdf')
                     ->withFiguresPdf('http://www.example.com/figures')
                     ->withPromiseOfXml('http://www.example.com/xml')
@@ -573,6 +582,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'reviewedDate' => '2022-09-15T00:00:00Z',
+                    'curationLabels' => ['Landmark', 'Exceptional'],
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                 ],
@@ -586,10 +597,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPublished(null)
                     ->withVersionDate(null)
                     ->withStatusDate(null)
+                    ->withReviewedDate(null)
                     ->withAuthorLine(null)
                     ->withSequenceOfReviewers()
                     ->withPromiseOfIssue(null)
                     ->withPromiseOfXml(null)
+                    ->withCurationLabels([])
                     ->withAbstract(null)
                     ->withImpactStatement(null)
                     ->withThumbnail(null)
@@ -641,6 +654,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
         yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v6/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
-        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='vor']";
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?status=='vor']";
     }
 }

@@ -46,6 +46,7 @@ use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Reference\BookReference;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
@@ -239,6 +240,27 @@ final class Builder
                         'affiliations' => [],
                     ];
                 },
+                ReviewedPreprint::class => function() {
+                    return [
+                        'id' => '1',
+                        'title' => 'Reviewed preprint',
+                        'status' => 'reviewed',
+                        'stage' => 'published',
+                        'doi' => '10.7554/eLife.19560',
+                        'indexContent' => promise_for('Reviewed preprint'),
+                        'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+                        'titlePrefix' => 'Title prefix',
+                        'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'reviewedDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'statusDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'volume' => null,
+                        'elocationId' => null,
+                        'pdf' => null,
+                        'subjects' => new EmptySequence(),
+                        'curationLabels' => [],
+                        'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                    ];
+                },
                 Subject::class => function () {
                     return [
                         'id' => 'subject1',
@@ -371,6 +393,7 @@ final class Builder
                         'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'versionDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
+                        'reviewedDate' => null,
                         'volume' => 4,
                         'elocationId' => 'e09560',
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
@@ -379,6 +402,7 @@ final class Builder
                         'figuresPdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
+                        'curationLabels' => [],
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
                         'issue' => promise_for(1),
@@ -443,6 +467,8 @@ final class Builder
                         'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                        'curationLabels' => [],
+                        'reviewedDate' => null
                     ];
                 },
             ];
@@ -732,6 +758,50 @@ final class Builder
                                 ])),
                             ]));
                     },
+                ],
+                ReviewedPreprint::class => [
+                    'minimum' => function($builder) {
+                        return $builder
+                            ->withId('1')
+                            ->withTitle('title')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi(null)
+                            ->withPromiseOfIndexContent(null)
+                            ->withAuthorLine(null)
+                            ->withPublished(null)
+                            ->withReviewedDate(null)
+                            ->withTitlePrefix(null)
+                            ->withStatusDate(null)
+                            ->withVolume(null)
+                            ->withElocationId(null)
+                            ->withPdf(null)
+                            ->withSubjects(new EmptySequence())
+                            ->withCurationLabels([])
+                            ->withThumbnail(null);
+                    },
+                    'complete' => function($builder) {
+                        return $builder
+                            ->withId('1')
+                            ->withTitle('title')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi('doi')
+                            ->withTitlePrefix('title prefix')
+                            ->withPromiseOfIndexContent('indexContent')
+                            ->withAuthorLine('authorLine')
+                            ->withPublished(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withReviewedDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withStatusDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withVolume(4)
+                            ->withElocationId('elocationId')
+                            ->withPdf('pdf')
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('biophysics-structural-biology'),
+                            ]))
+                            ->withCurationLabels(['curation-label'])
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
+                    }
                 ],
                 Subject::class => [
                     '1' => function ($builder) {

@@ -10,6 +10,7 @@ use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
@@ -46,10 +47,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         if (!empty($context['snippet'])) {
             $reviewedPreprint = $this->snippetDenormalizer->denormalizeSnippet($data);
 
-            $data['indexContent'] = new PromiseSequence($reviewedPreprint
+            $data['indexContent'] = $reviewedPreprint
                 ->then(function (Result $reviewedPreprint) {
                     return $reviewedPreprint['indexContent'] ?? null;
-                }));
+                });
         } else {
             $data['indexContent'] = promise_for($data['indexContent'] ?? null);
         }
@@ -103,7 +104,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     {
         return ReviewedPreprint::class === $type
             ||
-            (isset($data['type']) && $data['type'] == 'reviewed-preprint');
+            Model::class === $type && 'reviewed-preprint' === ($data['type'] ?? 'unknown');
     }
 
     /**
@@ -114,6 +115,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         $data = [
             'id' => $object->getId(),
         ];
+
+        if (!empty($context['type'])) {
+            $data['type'] = 'reviewed-preprint';
+        }
 
         if ($object->getTitle()) {
             $data['title'] = $object->getTitle();

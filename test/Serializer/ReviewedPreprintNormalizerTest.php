@@ -4,7 +4,9 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -53,26 +55,19 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
         $reviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('minimum');
 
         return [
-            'preprint' => [$reviewedPreprint, null, true],
-            'non-preprint' => [$this, null, false],
+            'reviewed preprint' => [$reviewedPreprint, null, true],
+            'reviewed preprint with format' => [$reviewedPreprint, 'foo', true],
+            'non reviewed preprint' => [$this, null, false],
         ];
     }
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_normalize_reviewed_preprints()
+    public function it_normalize_reviewed_preprints(ReviewedPreprint $reviewedPreprint, array $context, array $expected)
     {
-        $expected = [
-            'id' => '1',
-            'title' => 'title',
-            'status' => 'reviewed',
-            'stage' => 'published',
-        ];
-
-        $reviewedPreprint = Builder::for(ReviewedPreprint::class)->sample('minimum');
-        $res = $this->normalizer->normalize($reviewedPreprint);
-        $this->assertSame($expected, $res);
+        $this->assertEquals($expected, $this->normalizer->normalize($reviewedPreprint, null, $context));
     }
 
     /**
@@ -102,18 +97,184 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
 
     /**
      * @test
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_reviewed_preprints()
+    public function it_denormalize_reviewed_preprints(
+        ReviewedPreprint $expected,
+        array $context,
+        array $json,
+        callable $extra = null
+    )
     {
-        $json = [
-            'id'=> '1',
-            'status' => 'reviewed',
-            'title' => 'title',
-            'stage' => 'published',
-        ];
-        $expected = Builder::for(ReviewedPreprint::class)->sample('minimum');
+        if ($extra) {
+            call_user_func($extra, $this);
+        }
 
-        $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, ReviewedPreprint::class));
+        $actual = $this->normalizer->denormalize($json, ReviewedPreprint::class, null, $context);
+
+        $this->assertObjectsAreEqual($expected, $actual);
+    }
+
+    public function normalizeProvider() : array
+    {
+        return [
+            'complete' => [
+                Builder::for(ReviewedPreprint::class)
+                    ->withVolume(4)
+                    ->withElocationId('e19560')
+                    ->withPdf('http://www.example.com/pdf')
+                    ->withCurationLabels(['one', 'two'])
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->__invoke(),
+                [],
+                [
+                    'id'=> '1',
+                    'status' => 'reviewed',
+                    'title' => 'Reviewed preprint',
+                    'stage' => 'published',
+                    'doi' => '10.7554/eLife.19560',
+                    'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+                    'titlePrefix' => 'Title prefix',
+                    'published' => '2022-08-01T00:00:00Z',
+                    'reviewedDate' => '2022-08-01T00:00:00Z',
+                    'statusDate' => '2022-08-01T00:00:00Z',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
+                    'indexContent' => 'Reviewed preprint',
+                    'volume' => 4,
+                    'elocationId' => 'e19560',
+                    'pdf' => 'http://www.example.com/pdf',
+                    'curationLabels' => [
+                        'one',
+                        'two',
+                    ],
+                    'subjects' => [
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
+                    ],
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockSubjectCall('subject1');
+                },
+            ],
+            'minimum' => [
+                Builder::for(ReviewedPreprint::class)
+                    ->withDoi(null)
+                    ->withAuthorLine(null)
+                    ->withTitlePrefix(null)
+                    ->withPublished(null)
+                    ->withReviewedDate(null)
+                    ->withStatusDate(null)
+                    ->withThumbnail(null)
+                    ->withPromiseOfIndexContent(null)
+                    ->__invoke(),
+                [],
+                [
+                    'id'=> '1',
+                    'status' => 'reviewed',
+                    'title' => 'Reviewed preprint',
+                    'stage' => 'published',
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockReviewedPreprintCall('1', false, true);
+                },
+            ],
+            'complete snippet' => [
+                Builder::for(ReviewedPreprint::class)
+                    ->withVolume(4)
+                    ->withElocationId('e19560')
+                    ->withPdf('http://www.example.com/pdf')
+                    ->withCurationLabels(['one', 'two'])
+                    ->withSubjects(new ArraySequence([
+                        Builder::for(Subject::class)
+                            ->withId('subject1')
+                            ->__invoke(),
+                    ]))
+                    ->withPromiseOfIndexContent(null)
+                    ->__invoke(),
+                ['snippet' => true, 'type' => true],
+                [
+                    'id'=> '1',
+                    'type' => 'reviewed-preprint',
+                    'status' => 'reviewed',
+                    'title' => 'Reviewed preprint',
+                    'stage' => 'published',
+                    'doi' => '10.7554/eLife.19560',
+                    'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+                    'titlePrefix' => 'Title prefix',
+                    'published' => '2022-08-01T00:00:00Z',
+                    'reviewedDate' => '2022-08-01T00:00:00Z',
+                    'statusDate' => '2022-08-01T00:00:00Z',
+                    'image' => [
+                        'thumbnail' => [
+                            'alt' => '',
+                            'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                            'source' => [
+                                'mediaType' => 'image/jpeg',
+                                'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                'filename' => 'thumbnail.jpg',
+                            ],
+                            'size' => [
+                                'width' => 140,
+                                'height' => 140,
+                            ],
+                        ],
+                    ],
+                    'volume' => 4,
+                    'elocationId' => 'e19560',
+                    'pdf' => 'http://www.example.com/pdf',
+                    'curationLabels' => [
+                        'one',
+                        'two',
+                    ],
+                    'subjects' => [
+                        ['id' => 'subject1', 'name' => 'Subject 1'],
+                    ],
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockReviewedPreprintCall('1', true, true);
+                    $test->mockSubjectCall('subject1');
+                },
+            ],
+            'minimum snippet' => [
+                Builder::for(ReviewedPreprint::class)
+                    ->withDoi(null)
+                    ->withAuthorLine(null)
+                    ->withTitlePrefix(null)
+                    ->withPublished(null)
+                    ->withReviewedDate(null)
+                    ->withStatusDate(null)
+                    ->withThumbnail(null)
+                    ->withPromiseOfIndexContent(null)
+                    ->__invoke(),
+                ['snippet' => true],
+                [
+                    'id'=> '1',
+                    'status' => 'reviewed',
+                    'title' => 'Reviewed preprint',
+                    'stage' => 'published',
+                ],
+                function (ApiTestCase $test) {
+                    $test->mockReviewedPreprintCall('1', false, true);
+                },
+            ],
+        ];
     }
 
     protected function class() : string
@@ -125,5 +286,6 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/reviewed-preprint/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/reviewed-preprint-list/v1/*.json#items';
+        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?type=='reviewed-prerint']";
     }
 }

@@ -236,7 +236,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    final protected function mockReviewedPreprintCall($numberOrId, bool $complete = false)
+    final protected function mockReviewedPreprintCall($numberOrId, bool $complete = false, bool $isSnippet = false)
     {
         if (is_integer($numberOrId)) {
             $id = "reviewed-preprint-{$numberOrId}";
@@ -252,7 +252,7 @@ abstract class ApiTestCase extends TestCase
             new Response(
                 200,
                 ['Content-Type' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT, 1)],
-                json_encode($this->createReviewedPreprintJson($id, false, $complete))
+                json_encode($this->createReviewedPreprintJson($id, $isSnippet, $complete))
             )
         );
     }

@@ -252,6 +252,7 @@ final class Builder
                         'titlePrefix' => 'Title prefix',
                         'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
                         'reviewedDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
+                        'versionDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
                         'statusDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
                         'volume' => null,
                         'elocationId' => null,
@@ -771,6 +772,7 @@ final class Builder
                             ->withAuthorLine(null)
                             ->withPublished(null)
                             ->withReviewedDate(null)
+                            ->withVersionDate(null)
                             ->withTitlePrefix(null)
                             ->withStatusDate(null)
                             ->withVolume(null)
@@ -792,6 +794,7 @@ final class Builder
                             ->withAuthorLine('authorLine')
                             ->withPublished(new DateTimeImmutable('2016-09-16T12:34:56Z'))
                             ->withReviewedDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
+                            ->withVersionDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
                             ->withStatusDate(new DateTimeImmutable('2016-09-16T12:34:56Z'))
                             ->withVolume(4)
                             ->withElocationId('elocationId')

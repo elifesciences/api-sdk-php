@@ -179,6 +179,22 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_may_have_a_version_date()
+    {
+        $with = $this->builder
+            ->withVersionDate($reviewedDate = new DateTimeImmutable('now', new DateTimeZone('Z')))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withVersionDate(null)
+            ->__invoke();
+
+        $this->assertEquals($reviewedDate, $with->getVersionDate());
+        $this->assertNull($withOut->getVersionDate());
+    }
+
+    /**
+     * @test
+     */
     public function it_has_a_status()
     {
         $reviewedPreprint = $this->builder

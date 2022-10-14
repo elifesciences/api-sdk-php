@@ -8,7 +8,6 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Collection\ArraySequence;
-use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
@@ -63,6 +62,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['reviewedDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['reviewedDate']);
         }
 
+        if (!empty($data['versionDate'])) {
+            $data['versionDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']);
+        }
+
         if (!empty($data['statusDate'])) {
             $data['statusDate'] = DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']);
         }
@@ -89,6 +92,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['published'] ?? null,
             $data['statusDate'] ?? null,
             $data['reviewedDate'] ?? null,
+            $data['versionDate'] ?? null,
             $data['status'],
             $data['volume'] ?? null,
             $data['elocationId'] ?? null,
@@ -150,6 +154,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
 
         if ($object->getReviewedDate()) {
             $data['reviewedDate'] = $object->getReviewedDate()->format(ApiSdk::DATE_FORMAT);
+        }
+
+        if ($object->getVersionDate()) {
+            $data['versionDate'] = $object->getVersionDate()->format(ApiSdk::DATE_FORMAT);
         }
 
         if ($object->getStatusDate()) {

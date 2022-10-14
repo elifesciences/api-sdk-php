@@ -141,6 +141,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     'titlePrefix' => 'Title prefix',
                     'published' => '2022-08-01T00:00:00Z',
                     'reviewedDate' => '2022-08-01T00:00:00Z',
+                    'versionDate' => '2022-08-01T00:00:00Z',
                     'statusDate' => '2022-08-01T00:00:00Z',
                     'image' => [
                         'thumbnail' => [
@@ -180,6 +181,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ->withTitlePrefix(null)
                     ->withPublished(null)
                     ->withReviewedDate(null)
+                    ->withVersionDate(null)
                     ->withStatusDate(null)
                     ->withThumbnail(null)
                     ->withPromiseOfIndexContent(null)
@@ -220,6 +222,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     'titlePrefix' => 'Title prefix',
                     'published' => '2022-08-01T00:00:00Z',
                     'reviewedDate' => '2022-08-01T00:00:00Z',
+                    'versionDate' => '2022-08-01T00:00:00Z',
                     'statusDate' => '2022-08-01T00:00:00Z',
                     'image' => [
                         'thumbnail' => [
@@ -259,6 +262,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ->withTitlePrefix(null)
                     ->withPublished(null)
                     ->withReviewedDate(null)
+                    ->withVersionDate(null)
                     ->withStatusDate(null)
                     ->withThumbnail(null)
                     ->withPromiseOfIndexContent(null)

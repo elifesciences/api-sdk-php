@@ -20,6 +20,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
     private $published;
     private $statusDate;
     private $reviewedDate;
+    private $versionDate;
     private $status;
     private $volume;
     private $elocationId;
@@ -42,6 +43,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         DateTimeImmutable $published = null,
         DateTimeImmutable $statusDate = null,
         DateTimeImmutable $reviewedDate = null,
+        DateTimeImmutable $versionDate = null,
         string $status,
         int $volume = null,
         string $elocationId = null,
@@ -61,6 +63,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         $this->published = $published;
         $this->statusDate = $statusDate;
         $this->reviewedDate = $reviewedDate;
+        $this->versionDate = $versionDate;
         $this->status = $status;
         $this->volume = $volume;
         $this->elocationId = $elocationId;
@@ -137,6 +140,14 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
     public function getReviewedDate()
     {
         return $this->reviewedDate;
+    }
+
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getVersionDate()
+    {
+        return $this->versionDate;
     }
 
     public function getStatus() : string

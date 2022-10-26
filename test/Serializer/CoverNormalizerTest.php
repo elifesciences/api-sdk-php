@@ -115,9 +115,10 @@ final class CoverNormalizerTest extends ApiTestCase
 
         return [
             [
-                new Cover('title', $image, Builder::for(ArticlePoA::class)->sample('growth-factor')),
+                new Cover('title', $image, Builder::for(ArticlePoA::class)->sample('growth-factor'), 'impactStatement'),
                 [
                     'title' => 'title',
+                    'impactStatement' => 'impactStatement',
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/banner.jpg',

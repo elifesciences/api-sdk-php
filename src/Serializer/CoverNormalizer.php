@@ -18,7 +18,8 @@ final class CoverNormalizer implements NormalizerInterface, DenormalizerInterfac
         return new Cover(
             $data['title'],
             $this->denormalizer->denormalize($data['image'], Image::class, $format, $context),
-            $this->denormalizer->denormalize($data['item'], Model::class, $format, ['snippet' => true])
+            $this->denormalizer->denormalize($data['item'], Model::class, $format, ['snippet' => true]),
+            $data['impactStatement']
         );
     }
 
@@ -34,6 +35,7 @@ final class CoverNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         return [
             'title' => $object->getTitle(),
+            'impactStatement' => $object->getImpactStatement(),
             'image' => $this->normalizer->normalize($object->getBanner()),
             'item' => $this->normalizer->normalize($object->getItem(), null, ['type' => true, 'snippet' => true]),
         ];

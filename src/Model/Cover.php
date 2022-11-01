@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
-final class Cover implements Model, HasBanner
+final class Cover implements Model, HasImpactStatement, HasBanner
 {
     private $title;
     private $impactStatement;
@@ -12,17 +12,25 @@ final class Cover implements Model, HasBanner
     /**
      * @internal
      */
-    public function __construct(string $title, Image $image, Model $item, $impactStatement = null)
+    public function __construct(string $title, string $impactStatement = null, Image $image, Model $item)
     {
         $this->title = $title;
+        $this->impactStatement = $impactStatement;
         $this->image = $image;
         $this->item = $item;
-        $this->impactStatement = $impactStatement;
     }
 
     public function getTitle() : string
     {
         return $this->title;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImpactStatement()
+    {
+        return $this->impactStatement;
     }
 
     public function getBanner() : Image
@@ -33,10 +41,5 @@ final class Cover implements Model, HasBanner
     public function getItem() : Model
     {
         return $this->item;
-    }
-
-    public function getImpactStatement()
-    {
-        return $this->impactStatement;
     }
 }

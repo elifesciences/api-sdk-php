@@ -51,7 +51,7 @@ final class CoverNormalizerTest extends ApiTestCase
     public function canNormalizeProvider() : array
     {
         $image = Builder::for(Image::class)->sample('banner');
-        $cover = new Cover('title', $image, Builder::dummy(ArticleVoR::class));
+        $cover = new Cover('title', null, $image, Builder::dummy(ArticleVoR::class));
 
         return [
             'cover' => [$cover, null, true],
@@ -115,10 +115,9 @@ final class CoverNormalizerTest extends ApiTestCase
 
         return [
             [
-                new Cover('title', $image, Builder::for(ArticlePoA::class)->sample('growth-factor'), 'impactStatement'),
+                new Cover('title', 'impact statement', $image, Builder::for(ArticlePoA::class)->sample('growth-factor')),
                 [
                     'title' => 'title',
-                    'impactStatement' => 'impactStatement',
                     'image' => [
                         'alt' => '',
                         'uri' => 'https://iiif.elifesciences.org/banner.jpg',
@@ -183,6 +182,7 @@ final class CoverNormalizerTest extends ApiTestCase
                         ],
                         'status' => 'poa',
                     ],
+                    'impactStatement' => 'impact statement',
                 ],
                 function (ApiTestCase $test) {
                     $test->mockArticleCall('14107', true, false, 1);

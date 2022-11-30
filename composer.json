@@ -18,11 +18,11 @@
         "composer/package-versions-deprecated": "1.11.99.2",
         "elife/api-client": "^1.0@dev",
         "guzzlehttp/promises": "^1.0",
-        "symfony/serializer": "^2.8.2 || ^3.0.2"
+        "symfony/serializer": "^2.8.2 || ^3.0.2",
+        "elife/api": "^2.12.0"
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
-        "elife/api": "^2.9",
         "elife/api-validator": "^1.0@dev",
         "guzzlehttp/guzzle": "^6.0",
         "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",

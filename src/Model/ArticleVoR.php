@@ -206,4 +206,10 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     {
         return $this->authorResponse->wait();
     }
+
+    public function hasReviewedPreprint() : bool
+    {
+        // placeholder which should be refactored when we can verify a VOR has one through PRC route.
+        return false;
+    }
 }

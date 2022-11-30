@@ -339,4 +339,9 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     {
         return $this->additionalFiles;
     }
+
+    public function hasReviewedPreprint() : bool
+    {
+        return false;
+    }
 }

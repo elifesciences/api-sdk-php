@@ -206,9 +206,4 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     {
         return $this->authorResponse->wait();
     }
-
-    public function hasReviewedPreprint() : bool
-    {
-        return false;
-    }
 }

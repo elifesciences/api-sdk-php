@@ -21,7 +21,7 @@
         "symfony/serializer": "^2.8.2 || ^3.0.2"
     },
     "require-dev": {
-        "csa/guzzle-cache-middleware": "^1.0",,
+        "csa/guzzle-cache-middleware": "^1.0",
         "elife/api": "^2.13.0",
         "elife/api-validator": "^1.0@dev",
         "guzzlehttp/guzzle": "^6.0",

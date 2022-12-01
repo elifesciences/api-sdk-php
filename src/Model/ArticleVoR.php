@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasReviewedDate, HasCurationLabels
+final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactStatement, HasReferences, HasReviewedDate, HasCurationLabels, IsReviewedPreprint
 {
     private $reviewedDate;
     private $figuresPdf;
@@ -205,5 +205,11 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAuthorResponse()
     {
         return $this->authorResponse->wait();
+    }
+
+    public function isReviewedPreprint() : bool
+    {
+        // placeholder which will be refactored when we can verify a VOR has gone through PRC route.
+        return false;
     }
 }

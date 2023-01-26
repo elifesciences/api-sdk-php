@@ -57,6 +57,21 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['decisionLetter'] ?? null;
                 });
 
+            $data['elifeAssessment'] = $article
+                ->then(function (Result $article) {
+                    return $article['elifeAssessment'] ?? null;
+                });
+
+            $data['recommendationsForAuthors'] = $article
+                ->then(function (Result $article) {
+                    return $article['recommendationsForAuthors'] ?? null;
+                });
+
+            $data['publicReviews'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['publicReviews'] ?? [];
+                }));
+
             $data['digest'] = $article
                 ->then(function (Result $article) {
                     return $article['digest'] ?? null;
@@ -81,6 +96,12 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['body'] = new ArraySequence($data['body']);
 
             $data['editorEvaluation'] = promise_for($data['editorEvaluation'] ?? null);
+
+            $data['elifeAssessment'] = promise_for($data['elifeAssessment'] ?? null);
+
+            $data['publicReviews'] = new ArraySequence($data['publicReviews'] ?? []);
+
+            $data['recommendationsForAuthors'] = promise_for($data['recommendationsForAuthors'] ?? null);
 
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
 
@@ -141,6 +162,42 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $editorEvaluation['id'] ?? null
                 );
             });
+
+        $data['elifeAssessment'] = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) use ($format, $context) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $elifeAssessment['content'])),
+                    $elifeAssessment['doi'] ?? null,
+                    $elifeAssessment['id'] ?? null
+                );
+            });
+
+        $data['recommendationsForAuthors'] = $data['recommendationsForAuthors']
+            ->then(function (array $recommendationsForAuthors = null) use ($format, $context) {
+                if (empty($recommendationsForAuthors)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $recommendationsForAuthors['content'])),
+                    $recommendationsForAuthors['doi'] ?? null,
+                    $recommendationsForAuthors['id'] ?? null
+                );
+            });
+
+
+        $data['publicReviews'] = $data['publicReviews']->map(function (array $block) use ($format, $context) {
+            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+        });
+
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
@@ -234,7 +291,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $editorEvaluationScietyUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse']
+            $data['authorResponse'],
+            $data['elifeAssessment'],
+            $data['recommendationsForAuthors'],
+            $data['publicReviews']
         );
     }
 
@@ -369,6 +429,46 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getDecisionLetter()->getId()) {
                     $data['decisionLetter']['id'] = $article->getDecisionLetter()->getId();
+                }
+            }
+
+            if ($article->getElifeAssessment()) {
+                $data['elifeAssessment'] = [
+                    'content' => $article->getElifeAssessment()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                ];
+
+                if ($article->getElifeAssessment()->getDoi()) {
+                    $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getDoi();
+                }
+
+                if ($article->getElifeAssessment()->getId()) {
+                    $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getId();
+                }
+            }
+
+            if ($article->getRecommendationsForAuthors()) {
+                $data['recommendationsForAuthors'] = [
+                    'content' => $article->getRecommendationsForAuthors()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                ];
+
+                if ($article->getRecommendationsForAuthors()->getDoi()) {
+                    $data['recommendationsForAuthors']['doi'] = $article->getRecommendationsForAuthors()->getDoi();
+                }
+
+                if ($article->getRecommendationsForAuthors()->getId()) {
+                    $data['recommendationsForAuthors']['id'] = $article->getRecommendationsForAuthors()->getId();
                 }
             }
 

@@ -23,6 +23,9 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
+    private $elifeAssessment;
+    private $recommendationsForAuthors;
+    private $publicReviews;
 
     /**
      * @internal
@@ -72,7 +75,10 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $editorEvaluationScietyUri,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
-        PromiseInterface $authorResponse
+        PromiseInterface $authorResponse,
+        PromiseInterface $elifeAssessment = null,
+        PromiseInterface $recommendationsForAuthors = null,
+        Sequence $publicReviews
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
@@ -94,6 +100,9 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
+        $this->elifeAssessment = $elifeAssessment;
+        $this->recommendationsForAuthors = $recommendationsForAuthors;
+        $this->publicReviews = $publicReviews;
     }
 
     /**
@@ -206,6 +215,28 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     {
         return $this->authorResponse->wait();
     }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getElifeAssessment()
+    {
+        return $this->elifeAssessment->wait();
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getRecommendationsForAuthors()
+    {
+        return $this->recommendationsForAuthors->wait();
+    }
+
+    public function getPublicReviews(): Sequence
+    {
+        return $this->publicReviews;
+    }
+
 
     public function isReviewedPreprint() : bool
     {

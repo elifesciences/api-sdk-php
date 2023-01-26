@@ -119,7 +119,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         }
 
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
-
+var_dump($actual);
         $this->mockSubjectCall('subject1');
 
         $this->assertObjectsAreEqual($expected, $actual);
@@ -146,6 +146,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->getRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                     ->__invoke(),
                 [],
                 [
@@ -430,6 +432,26 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                         'doi' => '10.7554/eLife.09560authorResponse',
                         'id' => 'author-response-id',
+                    ],
+                    'elifeAssessment' =>  [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elifeAssessment',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elifeAssessment_id',
+                    ],
+                    'recommendationsForAuthors' =>  [
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 recommendationsForAuthors',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560recommendationsForAuthors',
+                        'id' => 'recommendationsForAuthors-id',
                     ],
                 ],
                 function ($test) {

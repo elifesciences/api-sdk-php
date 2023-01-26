@@ -443,6 +443,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         })->toArray(),
                 ];
 
+                if ($article->getEditorEvaluationScietyUri()) {
+                    $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentSceityUri();
+                }
+
                 if ($article->getElifeAssessment()->getDoi()) {
                     $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getDoi();
                 }

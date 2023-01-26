@@ -471,6 +471,7 @@ final class Builder
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
+                        'elifeAssessmentScietyUri' => promise_for('https://elife-assessment.com'),
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
                         'publicReviews' => new ArraySequence([new Paragraph('publicReviews')]),
                     ];
@@ -593,8 +594,9 @@ final class Builder
                             ->withEditorEvaluationScietyUri(promise_for('https://editor-evaluation-09560.com'))
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
-                            ->withAuthoElifeAssrResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                            ->withessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')));
+                            ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                            ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                            ->withElifeAssessmentScietyUri('sciety uri');
                     },
                 ],
                 BlogArticle::class => [

@@ -454,7 +454,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 ];
 
                 if ($article->getEditorEvaluationScietyUri()) {
-                    $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentSceityUri();
+                    $data['elifeAssessment']['scietyUri'] = $article->getEditorEvaluationScietyUri();
                 }
 
                 if ($article->getElifeAssessment()->getDoi()) {

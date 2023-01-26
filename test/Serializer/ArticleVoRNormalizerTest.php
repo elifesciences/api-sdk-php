@@ -119,7 +119,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         }
 
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
-var_dump($actual);
+
         $this->mockSubjectCall('subject1');
 
         $this->assertObjectsAreEqual($expected, $actual);

@@ -178,6 +178,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
+        $elifeAssessmentScietyUri = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return $elifeAssessment['scietyUri'] ?? null;
+            });
+
         $data['recommendationsForAuthors'] = $data['recommendationsForAuthors']
             ->then(function (array $recommendationsForAuthors = null) use ($format, $context) {
                 if (empty($recommendationsForAuthors)) {
@@ -293,6 +302,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $decisionLetterDescription,
             $data['authorResponse'],
             $data['elifeAssessment'],
+            $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $data['publicReviews']
         );

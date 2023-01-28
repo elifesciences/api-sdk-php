@@ -1734,6 +1734,29 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'elifeAssessment' => [
+                'id' => 'elife-assessment-id',
+                'doi' => '10.7554/eLife.'.$id.'elifeAssessment',
+                'title' => 'eLife assessment',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$id.' elife assessment text',
+                    ],
+                ],
+                'scietyUri' => 'https://elife-assessment-'.$id.'.com',
+            ],
+            'recommendationsForAuthors' => [
+                'id' => 'recommendations-for-authors-id',
+                'doi' => '10.7554/eLife.'.$id.'recommendationsForAuthors',
+                'title' => 'Recommendations for authors',
+                'content' => [
+                    [
+                        'type' => 'paragraph',
+                        'text' => 'Article '.$id.' recommendations for authors text',
+                    ],
+                ],
+            ],
             'authorResponse' => [
                 'id' => 'author-response-id',
                 'doi' => '10.7554/eLife.'.$id.'authorResponse',
@@ -1758,6 +1781,8 @@ abstract class ApiTestCase extends TestCase
             unset($article['editorEvaluation']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
+            unset($article['elifeAssessment']);
+            unset($article['recommendationsForAuthors']);
         }
 
         if ($isSnippet) {
@@ -1771,6 +1796,8 @@ abstract class ApiTestCase extends TestCase
             unset($article['editorEvaluation']);
             unset($article['decisionLetter']);
             unset($article['authorResponse']);
+            unset($article['elifeAssessment']);
+            unset($article['recommendationsForAuthors']);
         }
 
         return $article;

@@ -156,21 +156,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
-        $data['elifeAssessment'] = $data['elifeAssessment']
-            ->then(function (array $elifeAssessment = null) use ($format, $context) {
-                if (empty($elifeAssessment)) {
-                    return null;
-                }
-
-                return new ArticleSection(
-                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $elifeAssessment['content'])),
-                    $elifeAssessment['doi'] ?? null,
-                    $elifeAssessment['id'] ?? null
-                );
-            });
-
         $elifeAssessmentTitle = $data['elifeAssessment']
             ->then(function (array $elifeAssessment = null) {
                 if (empty($elifeAssessment)) {
@@ -189,6 +174,30 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $elifeAssessment['scietyUri'] ?? null;
             });
 
+        $data['elifeAssessment'] = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) use ($format, $context) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $elifeAssessment['content'])),
+                    $elifeAssessment['doi'] ?? null,
+                    $elifeAssessment['id'] ?? null
+                );
+            });
+
+        $recommendationsForAuthorsTitle = $data['recommendationsForAuthors']
+            ->then(function (array $recommendationsForAuthors = null) {
+                if (empty($recommendationsForAuthors)) {
+                    return null;
+                }
+
+                return $recommendationsForAuthors['title'];
+            });
+
         $data['recommendationsForAuthors'] = $data['recommendationsForAuthors']
             ->then(function (array $recommendationsForAuthors = null) use ($format, $context) {
                 if (empty($recommendationsForAuthors)) {
@@ -202,15 +211,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $recommendationsForAuthors['doi'] ?? null,
                     $recommendationsForAuthors['id'] ?? null
                 );
-            });
-
-        $recommendationsForAuthorsTitle = $data['recommendationsForAuthors']
-            ->then(function (array $recommendationsForAuthors = null) {
-                if (empty($recommendationsForAuthors)) {
-                    return null;
-                }
-
-                return $recommendationsForAuthors['title'];
             });
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']

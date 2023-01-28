@@ -171,6 +171,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
+        $elifeAssessmentTitle = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return $elifeAssessment['title'];
+            });
+
         $elifeAssessmentScietyUri = $data['elifeAssessment']
             ->then(function (array $elifeAssessment = null) {
                 if (empty($elifeAssessment)) {
@@ -193,6 +202,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $recommendationsForAuthors['doi'] ?? null,
                     $recommendationsForAuthors['id'] ?? null
                 );
+            });
+
+        $recommendationsForAuthorsTitle = $data['recommendationsForAuthors']
+            ->then(function (array $recommendationsForAuthors = null) {
+                if (empty($recommendationsForAuthors)) {
+                    return null;
+                }
+
+                return $recommendationsForAuthors['title'];
             });
 
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
@@ -289,8 +307,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $decisionLetterDescription,
             $data['authorResponse'],
             $data['elifeAssessment'],
+            $elifeAssessmentTitle,
             $elifeAssessmentScietyUri,
-            $data['recommendationsForAuthors']
+            $data['recommendationsForAuthors'],
+            $recommendationsForAuthorsTitle
         );
     }
 
@@ -430,6 +450,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if ($article->getElifeAssessment()) {
                 $data['elifeAssessment'] = [
+                    'title' => $article->getElifeAssessmentTitle(),
                     'content' => $article->getElifeAssessment()->getContent()
                         ->map(function (Block $block) use (
                             $format,
@@ -439,8 +460,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                         })->toArray(),
                 ];
 
-                if ($article->getEditorEvaluationScietyUri()) {
-                    $data['elifeAssessment']['scietyUri'] = $article->getEditorEvaluationScietyUri();
+                if ($article->getElifeAssessmentScietyUri()) {
+                    $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
                 }
 
                 if ($article->getElifeAssessment()->getDoi()) {
@@ -454,6 +475,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             if ($article->getRecommendationsForAuthors()) {
                 $data['recommendationsForAuthors'] = [
+                    'title' => $article->getRecommendationsForAuthorsTitle(),
                     'content' => $article->getRecommendationsForAuthors()->getContent()
                         ->map(function (Block $block) use (
                             $format,

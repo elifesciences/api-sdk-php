@@ -146,8 +146,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                    ->getRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->getRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->__invoke(),
                 [],
                 [
@@ -437,9 +437,11 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'Article 09560 elifeAssessment',
+                                'text' => 'Article 09560 elife assessment text',
                             ],
                         ],
+                        'title' => 'eLife assessment',
+                        'scietyUri' => 'https://elife-assessment.com',
                         'doi' => '10.7554/eLife.09560elifeAssessment',
                         'id' => 'elifeAssessment_id',
                     ],
@@ -447,11 +449,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'content' => [
                             [
                                 'type' => 'paragraph',
-                                'text' => 'Article 09560 recommendationsForAuthors',
+                                'text' => 'Article 09560 recommendations for authors test',
                             ],
                         ],
+                        'title' => 'Recommendations for authors',
                         'doi' => '10.7554/eLife.09560recommendationsForAuthors',
-                        'id' => 'recommendationsForAuthors-id',
+                        'id' => 'recommendations-for-authors-id',
                     ],
                 ],
                 function ($test) {
@@ -494,6 +497,11 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
+                    ->withPromiseOfElifeAssessment(null)
+                    ->withPromiseOfElifeAssessmentTitle(null)
+                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withPromiseOfRecommendationsForAuthors(null)
+                    ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->__invoke(),
                 [],
                 [
@@ -545,6 +553,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->getRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -645,6 +655,11 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
+                    ->withPromiseOfElifeAssessment(null)
+                    ->withPromiseOfElifeAssessmentTitle(null)
+                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withPromiseOfRecommendationsForAuthors(null)
+                    ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -674,7 +689,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v6/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v7/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?status=='vor']";
     }

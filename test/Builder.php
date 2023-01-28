@@ -471,9 +471,10 @@ final class Builder
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
+                        'elifeAssessmentTitle' => promise_for('eLife assessment'),
                         'elifeAssessmentScietyUri' => promise_for('https://elife-assessment.com'),
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
-                        'publicReviews' => new ArraySequence([new Paragraph('publicReviews')]),
+                        'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),
                     ];
                 },
             ];

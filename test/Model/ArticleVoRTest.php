@@ -282,4 +282,84 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals(['Landmark', 'Exceptional'], $with->getCurationLabels());
         $this->assertEmpty($withOut->getCurationLabels());
     }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessment($elifeAssessment = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessment(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessment, $with->getElifeAssessment());
+        $this->assertNull($withOut->getElifeAssessment());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment_title()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessmentTitle($elifeAssessmentTitle = 'eLife assessment')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessmentTitle(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessmentTitle, $with->getElifeAssessmentTitle());
+        $this->assertNull($withOut->getElifeAssessmentTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment_uri()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessmentScietyUri($elifeAssessmentScietyUri = 'https://elife-assessment.com')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessmentScietyUri(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessmentScietyUri, $with->getElifeAssessmentScietyUri());
+        $this->assertNull($withOut->getElifeAssessmentScietyUri());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_recommendations_for_authors()
+    {
+        $with = $this->builder
+            ->withPromiseOfRecommendationsForAuthors($recommendationsForAuthors = new ArticleSection(new ArraySequence([new Paragraph('Recommendations for authors')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfRecommendationsForAuthors(null)
+            ->__invoke();
+
+        $this->assertEquals($recommendationsForAuthors, $with->getRecommendationsForAuthors());
+        $this->assertNull($withOut->getRecommendationsForAuthors());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_recommendations_for_authors_title()
+    {
+        $with = $this->builder
+            ->withPromiseOfRecommendationsForAuthorsTitle($recommendationsForAuthorsTitle = 'Recommendations for authors')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfRecommendationsForAuthorsTitle(null)
+            ->__invoke();
+
+        $this->assertEquals($recommendationsForAuthorsTitle, $with->getRecommendationsForAuthorsTitle());
+        $this->assertNull($withOut->getRecommendationsForAuthorsTitle());
+    }
 }

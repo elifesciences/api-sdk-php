@@ -24,9 +24,10 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetterDescription;
     private $authorResponse;
     private $elifeAssessment;
+    private $elifeAssessmentTitle;
     private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
-    private $publicReviews;
+    private $recommendationsForAuthorsTitle;
 
     /**
      * @internal
@@ -78,9 +79,10 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
         PromiseInterface $elifeAssessment = null,
+        PromiseInterface $elifeAssessmentTitle = null,
         PromiseInterface $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
-        Sequence $publicReviews
+        PromiseInterface $recommendationsForAuthorsTitle = null
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
@@ -103,9 +105,10 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
         $this->elifeAssessment = $elifeAssessment;
+        $this->elifeAssessmentTitle = $elifeAssessmentTitle;
         $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
-        $this->publicReviews = $publicReviews;
+        $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
     }
 
     /**
@@ -220,6 +223,22 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     }
 
     /**
+     * @return ArticleSection|null
+     */
+    public function getElifeAssessment()
+    {
+        return $this->elifeAssessment->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getElifeAssessmentTitle()
+    {
+        return $this->elifeAssessmentTitle->wait();
+    }
+
+    /**
      * @return string|null
      */
     public function getElifeAssessmentScietyUri()
@@ -230,25 +249,18 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     /**
      * @return ArticleSection|null
      */
-    public function getElifeAssessment()
-    {
-        return $this->elifeAssessment->wait();
-    }
-
-
-    /**
-     * @return ArticleSection|null
-     */
     public function getRecommendationsForAuthors()
     {
         return $this->recommendationsForAuthors->wait();
     }
 
-    public function getPublicReviews(): Sequence
+    /**
+     * @return string|null
+     */
+    public function getRecommendationsForAuthorsTitle()
     {
-        return $this->publicReviews;
+        return $this->recommendationsForAuthorsTitle->wait();
     }
-
 
     public function isReviewedPreprint() : bool
     {

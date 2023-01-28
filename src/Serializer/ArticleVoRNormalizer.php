@@ -67,11 +67,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['recommendationsForAuthors'] ?? null;
                 });
 
-            $data['publicReviews'] = new PromiseSequence($article
-                ->then(function (Result $article) {
-                    return $article['publicReviews'] ?? [];
-                }));
-
             $data['digest'] = $article
                 ->then(function (Result $article) {
                     return $article['digest'] ?? null;
@@ -98,8 +93,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['editorEvaluation'] = promise_for($data['editorEvaluation'] ?? null);
 
             $data['elifeAssessment'] = promise_for($data['elifeAssessment'] ?? null);
-
-            $data['publicReviews'] = new ArraySequence($data['publicReviews'] ?? []);
 
             $data['recommendationsForAuthors'] = promise_for($data['recommendationsForAuthors'] ?? null);
 
@@ -202,12 +195,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
-
-        $data['publicReviews'] = $data['publicReviews']->map(function (array $block) use ($format, $context) {
-            return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-        });
-
-
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
                 if (empty($decisionLetter)) {
@@ -303,8 +290,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['authorResponse'],
             $data['elifeAssessment'],
             $elifeAssessmentScietyUri,
-            $data['recommendationsForAuthors'],
-            $data['publicReviews']
+            $data['recommendationsForAuthors']
         );
     }
 

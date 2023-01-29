@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -18,6 +19,7 @@ use eLife\ApiSdk\Model\HasReviewedDate;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use test\eLife\ApiSdk\Builder;
 
@@ -361,5 +363,21 @@ final class ArticleVoRTest extends ArticleVersionTest
 
         $this->assertEquals($recommendationsForAuthorsTitle, $with->getRecommendationsForAuthorsTitle());
         $this->assertNull($withOut->getRecommendationsForAuthorsTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_public_reviews()
+    {
+        $with = $this->builder
+            ->withPublicReviews($publicReviews = new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublicReviews(new EmptySequence())
+            ->__invoke();
+
+        $this->assertEquals($publicReviews, $with->getPublicReviews());
+        $this->assertEquals(new EmptySequence(), $withOut->getPublicReviews());
     }
 }

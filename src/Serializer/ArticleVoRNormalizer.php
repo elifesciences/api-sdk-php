@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -67,6 +68,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['recommendationsForAuthors'] ?? null;
                 });
 
+            $data['publicReviews'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['publicReviews'] ?? [];
+                }));
+
             $data['digest'] = $article
                 ->then(function (Result $article) {
                     return $article['digest'] ?? null;
@@ -97,6 +103,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['recommendationsForAuthors'] = promise_for($data['recommendationsForAuthors'] ?? null);
 
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
+
+            $data['publicReviews'] = new ArraySequence($data['publicReviews'] ?? []);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
 
@@ -239,6 +247,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
+        $data['publicReviews'] = $data['publicReviews']
+            ->map(function (array $publicReview) use ($format, $context) {
+                return $this->denormalizer->denormalize($publicReview, PublicReview::class, $format, $context);
+            });
+
         $data['digest'] = $data['digest']
             ->then(function (array $digest = null) use ($format, $context) {
                 if (empty($digest)) {
@@ -310,7 +323,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $elifeAssessmentTitle,
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
-            $recommendationsForAuthorsTitle
+            $recommendationsForAuthorsTitle,
+            $data['publicReviews']
         );
     }
 
@@ -492,6 +506,17 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 if ($article->getRecommendationsForAuthors()->getId()) {
                     $data['recommendationsForAuthors']['id'] = $article->getRecommendationsForAuthors()->getId();
                 }
+            }
+
+            $data['publicReviews'] = $article->getPublicReviews()->map(function (PublicReview $publicReview) use (
+                $format,
+                $context
+            ) {
+                return $this->normalizer->normalize($publicReview, $format, $context);
+            })->toArray();
+
+            if (empty($data['publicReviews'])) {
+                unset($data['publicReviews']);
             }
 
             if ($article->getAuthorResponse()) {

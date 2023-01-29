@@ -1757,6 +1757,17 @@ abstract class ApiTestCase extends TestCase
                     ],
                 ],
             ],
+            'publicReviews' => [
+                [
+                    'title' => 'Public review 1',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'Public review 1 content',
+                        ],
+                    ],
+                ],
+            ],
             'authorResponse' => [
                 'id' => 'author-response-id',
                 'doi' => '10.7554/eLife.'.$id.'authorResponse',
@@ -1783,6 +1794,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['authorResponse']);
             unset($article['elifeAssessment']);
             unset($article['recommendationsForAuthors']);
+            unset($article['publicReviews']);
         }
 
         if ($isSnippet) {
@@ -1798,6 +1810,7 @@ abstract class ApiTestCase extends TestCase
             unset($article['authorResponse']);
             unset($article['elifeAssessment']);
             unset($article['recommendationsForAuthors']);
+            unset($article['publicReviews']);
         }
 
         return $article;

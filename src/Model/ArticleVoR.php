@@ -28,6 +28,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
     private $recommendationsForAuthorsTitle;
+    private $publicReviews;
 
     /**
      * @internal
@@ -82,7 +83,8 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $elifeAssessmentTitle = null,
         PromiseInterface $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
-        PromiseInterface $recommendationsForAuthorsTitle = null
+        PromiseInterface $recommendationsForAuthorsTitle = null,
+        Sequence $publicReviews = null
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
@@ -109,6 +111,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
         $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
+        $this->publicReviews = $publicReviews;
     }
 
     /**
@@ -260,6 +263,14 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getRecommendationsForAuthorsTitle()
     {
         return $this->recommendationsForAuthorsTitle->wait();
+    }
+
+    /**
+     * @return Sequence|PublicReview[]
+     */
+    public function getPublicReviews() : Sequence
+    {
+        return $this->publicReviews;
     }
 
     public function isReviewedPreprint() : bool

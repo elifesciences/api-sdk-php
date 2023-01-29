@@ -91,6 +91,7 @@ use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\PressPackageNormalizer;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
 use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
+use eLife\ApiSdk\Serializer\PublicReviewNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
@@ -231,6 +232,7 @@ final class ApiSdk
             new PressPackageNormalizer($this->pressPackagesClient),
             new ProfileNormalizer($this->profilesClient),
             new PromotionalCollectionNormalizer($this->promotionalCollectionsClient),
+            new PublicReviewNormalizer(),
             new ReviewerNormalizer(),
             new SearchSubjectsNormalizer(),
             new SubjectNormalizer($this->subjectsClient),

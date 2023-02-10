@@ -287,11 +287,18 @@ final class ArticleVoRTest extends ArticleVersionTest
      */
     public function it_is_new_vor_model()
     {
-        /** @var ArticleVoR $article */
-        $article = $this->builder
-            ->witElocationId('RPe00569')
+        /** @var ArticleVoR $articleNewModel */
+        $articleNewModel = $this->builder
+            ->withElocationId('RPe00569')
             ->__invoke();
 
-        $this->assertTrue($article->isReviewedPreprint());
+        $this->assertTrue($articleNewModel->isReviewedPreprint());
+
+        /** @var ArticleVoR $articleOldModel */
+        $articleOldModel = $this->builder
+            ->withElocationId('e00569')
+            ->__invoke();
+
+        $this->assertFalse($articleOldModel->isReviewedPreprint());
     }
 }

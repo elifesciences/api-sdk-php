@@ -282,4 +282,16 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals(['Landmark', 'Exceptional'], $with->getCurationLabels());
         $this->assertEmpty($withOut->getCurationLabels());
     }
+    /**
+     * @test
+     */
+    public function it_is_new_vor_model()
+    {
+        /** @var ArticleVoR $article */
+        $article = $this->builder
+            ->witElocationId('RPe00569')
+            ->__invoke();
+
+        $this->assertTrue($article->isReviewedPreprint());
+    }
 }

@@ -23,6 +23,12 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
+    private $elifeAssessment;
+    private $elifeAssessmentTitle;
+    private $elifeAssessmentScietyUri;
+    private $recommendationsForAuthors;
+    private $recommendationsForAuthorsTitle;
+    private $publicReviews;
 
     /**
      * @internal
@@ -72,7 +78,13 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $editorEvaluationScietyUri,
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
-        PromiseInterface $authorResponse
+        PromiseInterface $authorResponse,
+        PromiseInterface $elifeAssessment = null,
+        PromiseInterface $elifeAssessmentTitle = null,
+        PromiseInterface $elifeAssessmentScietyUri = null,
+        PromiseInterface $recommendationsForAuthors = null,
+        PromiseInterface $recommendationsForAuthorsTitle = null,
+        Sequence $publicReviews = null
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
@@ -94,6 +106,12 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
+        $this->elifeAssessment = $elifeAssessment;
+        $this->elifeAssessmentTitle = $elifeAssessmentTitle;
+        $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
+        $this->recommendationsForAuthors = $recommendationsForAuthors;
+        $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
+        $this->publicReviews = $publicReviews;
     }
 
     /**
@@ -205,6 +223,54 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAuthorResponse()
     {
         return $this->authorResponse->wait();
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getElifeAssessment()
+    {
+        return $this->elifeAssessment->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getElifeAssessmentTitle()
+    {
+        return $this->elifeAssessmentTitle->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getElifeAssessmentScietyUri()
+    {
+        return $this->elifeAssessmentScietyUri->wait();
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getRecommendationsForAuthors()
+    {
+        return $this->recommendationsForAuthors->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRecommendationsForAuthorsTitle()
+    {
+        return $this->recommendationsForAuthorsTitle->wait();
+    }
+
+    /**
+     * @return Sequence|PublicReview[]
+     */
+    public function getPublicReviews() : Sequence
+    {
+        return $this->publicReviews;
     }
 
     public function isReviewedPreprint() : bool

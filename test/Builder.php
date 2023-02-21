@@ -45,6 +45,7 @@ use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Model\PromotionalCollection;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
@@ -469,7 +470,13 @@ final class Builder
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
                         'curationLabels' => [],
-                        'reviewedDate' => null
+                        'reviewedDate' => null,
+                        'elifeAssessment' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
+                        'elifeAssessmentTitle' => promise_for('eLife assessment'),
+                        'elifeAssessmentScietyUri' => promise_for('https://elife-assessment.com'),
+                        'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
+                        'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),
+                        'publicReviews' => new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]),
                     ];
                 },
             ];
@@ -589,7 +596,13 @@ final class Builder
                             ->withEditorEvaluationScietyUri(promise_for('https://editor-evaluation-09560.com'))
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
-                            ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')));
+                            ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                            ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                            ->withElifeAssessmentTitle(promise_for('eLife assessment'))
+                            ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
+                            ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                            ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
+                            ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]));
                     },
                 ],
                 BlogArticle::class => [

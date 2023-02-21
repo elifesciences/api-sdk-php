@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Appendix;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -18,6 +19,7 @@ use eLife\ApiSdk\Model\HasReviewedDate;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference\BookReference;
 use test\eLife\ApiSdk\Builder;
 
@@ -282,6 +284,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals(['Landmark', 'Exceptional'], $with->getCurationLabels());
         $this->assertEmpty($withOut->getCurationLabels());
     }
+
     /**
      * @test
      */
@@ -300,5 +303,101 @@ final class ArticleVoRTest extends ArticleVersionTest
             ->__invoke();
 
         $this->assertFalse($articleVorTraditional->isReviewedPreprint());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessment($elifeAssessment = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessment(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessment, $with->getElifeAssessment());
+        $this->assertNull($withOut->getElifeAssessment());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment_title()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessmentTitle($elifeAssessmentTitle = 'eLife assessment')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessmentTitle(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessmentTitle, $with->getElifeAssessmentTitle());
+        $this->assertNull($withOut->getElifeAssessmentTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment_uri()
+    {
+        $with = $this->builder
+            ->withPromiseOfElifeAssessmentScietyUri($elifeAssessmentScietyUri = 'https://elife-assessment.com')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfElifeAssessmentScietyUri(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessmentScietyUri, $with->getElifeAssessmentScietyUri());
+        $this->assertNull($withOut->getElifeAssessmentScietyUri());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_recommendations_for_authors()
+    {
+        $with = $this->builder
+            ->withPromiseOfRecommendationsForAuthors($recommendationsForAuthors = new ArticleSection(new ArraySequence([new Paragraph('Recommendations for authors')])))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfRecommendationsForAuthors(null)
+            ->__invoke();
+
+        $this->assertEquals($recommendationsForAuthors, $with->getRecommendationsForAuthors());
+        $this->assertNull($withOut->getRecommendationsForAuthors());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_recommendations_for_authors_title()
+    {
+        $with = $this->builder
+            ->withPromiseOfRecommendationsForAuthorsTitle($recommendationsForAuthorsTitle = 'Recommendations for authors')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPromiseOfRecommendationsForAuthorsTitle(null)
+            ->__invoke();
+
+        $this->assertEquals($recommendationsForAuthorsTitle, $with->getRecommendationsForAuthorsTitle());
+        $this->assertNull($withOut->getRecommendationsForAuthorsTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_public_reviews()
+    {
+        $with = $this->builder
+            ->withPublicReviews($publicReviews = new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withPublicReviews(new EmptySequence())
+            ->__invoke();
+
+        $this->assertEquals($publicReviews, $with->getPublicReviews());
+        $this->assertEquals(new EmptySequence(), $withOut->getPublicReviews());
     }
 }

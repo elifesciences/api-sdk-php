@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -57,6 +58,21 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $article['decisionLetter'] ?? null;
                 });
 
+            $data['elifeAssessment'] = $article
+                ->then(function (Result $article) {
+                    return $article['elifeAssessment'] ?? null;
+                });
+
+            $data['recommendationsForAuthors'] = $article
+                ->then(function (Result $article) {
+                    return $article['recommendationsForAuthors'] ?? null;
+                });
+
+            $data['publicReviews'] = new PromiseSequence($article
+                ->then(function (Result $article) {
+                    return $article['publicReviews'] ?? [];
+                }));
+
             $data['digest'] = $article
                 ->then(function (Result $article) {
                     return $article['digest'] ?? null;
@@ -82,7 +98,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             $data['editorEvaluation'] = promise_for($data['editorEvaluation'] ?? null);
 
+            $data['elifeAssessment'] = promise_for($data['elifeAssessment'] ?? null);
+
+            $data['recommendationsForAuthors'] = promise_for($data['recommendationsForAuthors'] ?? null);
+
             $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
+
+            $data['publicReviews'] = new ArraySequence($data['publicReviews'] ?? []);
 
             $data['digest'] = promise_for($data['digest'] ?? null);
 
@@ -142,6 +164,63 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 );
             });
 
+        $elifeAssessmentTitle = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return $elifeAssessment['title'];
+            });
+
+        $elifeAssessmentScietyUri = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return $elifeAssessment['scietyUri'] ?? null;
+            });
+
+        $data['elifeAssessment'] = $data['elifeAssessment']
+            ->then(function (array $elifeAssessment = null) use ($format, $context) {
+                if (empty($elifeAssessment)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $elifeAssessment['content'])),
+                    $elifeAssessment['doi'] ?? null,
+                    $elifeAssessment['id'] ?? null
+                );
+            });
+
+        $recommendationsForAuthorsTitle = $data['recommendationsForAuthors']
+            ->then(function (array $recommendationsForAuthors = null) {
+                if (empty($recommendationsForAuthors)) {
+                    return null;
+                }
+
+                return $recommendationsForAuthors['title'];
+            });
+
+        $data['recommendationsForAuthors'] = $data['recommendationsForAuthors']
+            ->then(function (array $recommendationsForAuthors = null) use ($format, $context) {
+                if (empty($recommendationsForAuthors)) {
+                    return null;
+                }
+
+                return new ArticleSection(
+                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    }, $recommendationsForAuthors['content'])),
+                    $recommendationsForAuthors['doi'] ?? null,
+                    $recommendationsForAuthors['id'] ?? null
+                );
+            });
+
         $decisionLetterDescription = new PromiseSequence($data['decisionLetter']
             ->then(function (array $decisionLetter = null) use ($format, $context) {
                 if (empty($decisionLetter)) {
@@ -166,6 +245,11 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $decisionLetter['doi'] ?? null,
                     $decisionLetter['id'] ?? null
                 );
+            });
+
+        $data['publicReviews'] = $data['publicReviews']
+            ->map(function (array $publicReview) use ($format, $context) {
+                return $this->denormalizer->denormalize($publicReview, PublicReview::class, $format, $context);
             });
 
         $data['digest'] = $data['digest']
@@ -234,7 +318,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $editorEvaluationScietyUri,
             $data['decisionLetter'],
             $decisionLetterDescription,
-            $data['authorResponse']
+            $data['authorResponse'],
+            $data['elifeAssessment'],
+            $elifeAssessmentTitle,
+            $elifeAssessmentScietyUri,
+            $data['recommendationsForAuthors'],
+            $recommendationsForAuthorsTitle,
+            $data['publicReviews']
         );
     }
 
@@ -370,6 +460,63 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 if ($article->getDecisionLetter()->getId()) {
                     $data['decisionLetter']['id'] = $article->getDecisionLetter()->getId();
                 }
+            }
+
+            if ($article->getElifeAssessment()) {
+                $data['elifeAssessment'] = [
+                    'title' => $article->getElifeAssessmentTitle(),
+                    'content' => $article->getElifeAssessment()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                ];
+
+                if ($article->getElifeAssessmentScietyUri()) {
+                    $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
+                }
+
+                if ($article->getElifeAssessment()->getDoi()) {
+                    $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getDoi();
+                }
+
+                if ($article->getElifeAssessment()->getId()) {
+                    $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getId();
+                }
+            }
+
+            if ($article->getRecommendationsForAuthors()) {
+                $data['recommendationsForAuthors'] = [
+                    'title' => $article->getRecommendationsForAuthorsTitle(),
+                    'content' => $article->getRecommendationsForAuthors()->getContent()
+                        ->map(function (Block $block) use (
+                            $format,
+                            $context
+                        ) {
+                            return $this->normalizer->normalize($block, $format, $context);
+                        })->toArray(),
+                ];
+
+                if ($article->getRecommendationsForAuthors()->getDoi()) {
+                    $data['recommendationsForAuthors']['doi'] = $article->getRecommendationsForAuthors()->getDoi();
+                }
+
+                if ($article->getRecommendationsForAuthors()->getId()) {
+                    $data['recommendationsForAuthors']['id'] = $article->getRecommendationsForAuthors()->getId();
+                }
+            }
+
+            $data['publicReviews'] = $article->getPublicReviews()->map(function (PublicReview $publicReview) use (
+                $format,
+                $context
+            ) {
+                return $this->normalizer->normalize($publicReview, $format, $context);
+            })->toArray();
+
+            if (empty($data['publicReviews'])) {
+                unset($data['publicReviews']);
             }
 
             if ($article->getAuthorResponse()) {

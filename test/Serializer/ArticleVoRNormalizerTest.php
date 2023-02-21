@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
+use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use function GuzzleHttp\Promise\promise_for;
@@ -146,6 +147,9 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                    ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
                     ->__invoke(),
                 [],
                 [
@@ -421,6 +425,40 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         'doi' => '10.7554/eLife.09560decisionLetter',
                         'id' => 'decision-letter-id',
                     ],
+                    'elifeAssessment' =>  [
+                        'title' => 'eLife assessment',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elife assessment text',
+                            ],
+                        ],
+                        'scietyUri' => 'https://elife-assessment.com',
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
+                    ],
+                    'recommendationsForAuthors' =>  [
+                        'title' => 'Recommendations for authors',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 recommendations for authors text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560recommendationsForAuthors',
+                        'id' => 'recommendations-for-authors-id',
+                    ],
+                    'publicReviews' => [
+                        [
+                            'title' => 'Public review 1',
+                            'content' => [
+                                [
+                                    'type' => 'paragraph',
+                                    'text' => 'Public review 1 content',
+                                ],
+                            ],
+                        ],
+                    ],
                     'authorResponse' => [
                         'content' => [
                             [
@@ -472,6 +510,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
+                    ->withPromiseOfElifeAssessment(null)
+                    ->withPromiseOfElifeAssessmentTitle(null)
+                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withPromiseOfRecommendationsForAuthors(null)
+                    ->withPromiseOfRecommendationsForAuthorsTitle(null)
+                    ->withPublicReviews(new EmptySequence())
                     ->__invoke(),
                 [],
                 [
@@ -523,6 +567,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->withElifeAssessmentTitle(promise_for('eLife assessment'))
+                    ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
+                    ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                    ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
+                    ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -623,6 +673,12 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
+                    ->withPromiseOfElifeAssessment(null)
+                    ->withPromiseOfElifeAssessmentTitle(null)
+                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withPromiseOfRecommendationsForAuthors(null)
+                    ->withPromiseOfRecommendationsForAuthorsTitle(null)
+                    ->withPublicReviews(new EmptySequence())
                     ->__invoke(),
                 ['snippet' => true],
                 [
@@ -652,7 +708,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v6/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v7/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?status=='vor']";
     }

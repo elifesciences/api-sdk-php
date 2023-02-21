@@ -275,7 +275,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
 
     public function isReviewedPreprint() : bool
     {
-        // placeholder which will be refactored when we can verify a VOR has gone through PRC route.
-        return false;
+        return strpos($this->getElocationId(), 'RP') !== false;
     }
 }

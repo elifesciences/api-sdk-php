@@ -288,6 +288,26 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
+    public function it_may_be_vor_prc()
+    {
+        /** @var ArticleVoR $articleVorPRC */
+        $articleVorPRC = $this->builder
+            ->withElocationId('RP00569')
+            ->__invoke();
+
+        $this->assertTrue($articleVorPRC->isReviewedPreprint());
+
+        /** @var ArticleVoR $articleVorTraditional */
+        $articleVorTraditional = $this->builder
+            ->withElocationId('e00569')
+            ->__invoke();
+
+        $this->assertFalse($articleVorTraditional->isReviewedPreprint());
+    }
+
+    /**
+     * @test
+     */
     public function it_may_have_an_elife_assessment()
     {
         $with = $this->builder

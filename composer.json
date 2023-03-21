@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "php": "^7.0",
+        "php": ">=7.0",
         "composer/package-versions-deprecated": "1.11.99.2",
         "elife/api-client": "^1.0@dev",
         "guzzlehttp/promises": "^1.0",

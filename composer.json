@@ -13,10 +13,14 @@
             "test\\eLife\\ApiSdk\\": "./test"
         }
     },
+    "repositories": [
+      { "type": "vcs",
+        "url": "https://github.com/elifesciences/api-client"}
+    ],
     "require": {
         "php": ">=7.0",
         "composer/package-versions-deprecated": "1.11.99.2",
-        "elife/api-client": "^1.0@dev",
+        "elife/api-client": "dev-php-8-1-support",
         "guzzlehttp/promises": "^1.0",
         "symfony/serializer": "^2.8.2 || ^3.0.2"
     },

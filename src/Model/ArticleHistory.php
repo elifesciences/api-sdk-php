@@ -8,15 +8,17 @@ final class ArticleHistory
 {
     private $received;
     private $accepted;
+    private $sentForReview;
     private $versions;
 
     /**
      * @internal
      */
-    public function __construct(Date $received = null, Date $accepted = null, Sequence $versions)
+    public function __construct(Date $received = null, Date $accepted = null, Date $sentForReview = null, Sequence $versions)
     {
         $this->received = $received;
         $this->accepted = $accepted;
+        $this->sentForReview = $sentForReview;
         $this->versions = $versions;
     }
 
@@ -34,6 +36,14 @@ final class ArticleHistory
     public function getAccepted()
     {
         return $this->accepted;
+    }
+
+    /**
+     * @return Date|null
+     */
+    public function getSentForReview()
+    {
+        return $this->sentForReview;
     }
 
     public function getVersions() : Sequence

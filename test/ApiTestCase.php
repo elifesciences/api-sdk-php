@@ -959,11 +959,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 "http://api.elifesciences.org/press-packages/$id",
-                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)]
+                ['Accept' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 4)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 3)],
+                ['Content-Type' => (string) new MediaType(PressPackagesClient::TYPE_PRESS_PACKAGE, 4)],
                 json_encode($this->createPressPackageJson($id, false, $complete))
             )
         );

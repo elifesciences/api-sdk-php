@@ -116,6 +116,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                 new ArticleHistory(
                     Date::fromString('2014-01-01'),
                     Date::fromString('2014-02-01'),
+                    Date::fromString('2013-12-01'),
                     new ArraySequence([
                         Builder::dummy(ArticlePreprint::class),
                         Builder::dummy(ArticlePoA::class),
@@ -183,6 +184,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
                     ],
                     'received' => '2014-01-01',
                     'accepted' => '2014-02-01',
+                    'sentForReview' => '2013-12-01',
                 ],
                 function ($test) {
                     $test->mockArticleCall('14107', true, false, 1);
@@ -190,6 +192,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
             ],
             'minimum' => [
                 new ArticleHistory(
+                    null,
                     null,
                     null,
                     new ArraySequence([

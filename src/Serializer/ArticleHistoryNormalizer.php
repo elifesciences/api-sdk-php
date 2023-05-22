@@ -20,6 +20,7 @@ final class ArticleHistoryNormalizer implements NormalizerInterface, Denormalize
         return new ArticleHistory(
             isset($data['received']) ? Date::fromString($data['received']) : null,
             isset($data['accepted']) ? Date::fromString($data['accepted']) : null,
+            isset($data['sentForReview']) ? Date::fromString($data['sentForReview']) : null,
             $normalizationHelper->denormalizeArray($data['versions'], ArticleVersion::class, $context + ['snippet' => true])
         );
     }
@@ -46,6 +47,10 @@ final class ArticleHistoryNormalizer implements NormalizerInterface, Denormalize
 
         if ($object->getAccepted()) {
             $data['accepted'] = $object->getAccepted()->toString();
+        }
+
+        if ($object->getSentForReview()) {
+            $data['sentForReview'] = $object->getSentForReview()->toString();
         }
 
         return $data;

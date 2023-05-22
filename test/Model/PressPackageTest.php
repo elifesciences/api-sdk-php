@@ -19,6 +19,7 @@ use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PressPackage;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -181,7 +182,10 @@ final class PressPackageTest extends PHPUnit_Framework_TestCase
     public function it_has_related_content()
     {
         $with = $this->builder
-            ->withRelatedContent(new ArraySequence($relatedContent = [Builder::dummy(ArticlePoA::class)]))
+            ->withRelatedContent(new ArraySequence($relatedContent = [
+                Builder::dummy(ReviewedPreprint::class),
+                Builder::dummy(ArticlePoA::class),
+            ]))
             ->__invoke();
         $withOut = $this->builder
             ->withRelatedContent(new EmptySequence())

@@ -331,7 +331,7 @@ final class PressPackageNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package/v3/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package/v4/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/press-package-list/v1/*.json#items';
         yield __DIR__."/../../vendor/elife/api/dist/samples/highlight-list/v3/*.json#items[?type=='press-package']";
     }

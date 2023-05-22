@@ -94,8 +94,13 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             return $this->denormalizer->denormalize($block, Block::class, $format, ['snippet' => false] + $context);
         });
 
-        $data['relatedContent'] = $data['relatedContent']->map(function (array $article) use ($format, $context) {
-            return $this->denormalizer->denormalize($article, ArticleVersion::class, $format, ['snippet' => true] + $context);
+        $data['relatedContent'] = $data['relatedContent']->map(function ($eachContent) use ($format, $context) {
+            return $this->denormalizer->denormalize(
+                $eachContent,
+                Model::class,
+                $format,
+                $context + ['snippet' => true]
+            );
         });
 
         $data['mediaContacts'] = $data['mediaContacts']->map(function (array $mediaContact) use ($format, $context) {
@@ -133,6 +138,8 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
+        $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
+
         $data = [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
@@ -167,9 +174,7 @@ final class PressPackageNormalizer implements NormalizerInterface, DenormalizerI
             })->toArray();
 
             if ($object->getRelatedContent()->notEmpty()) {
-                $data['relatedContent'] = $object->getRelatedContent()->map(function (ArticleVersion $article) use ($format, $context) {
-                    return $this->normalizer->normalize($article, $format, ['snippet' => true] + $context);
-                })->toArray();
+                $data['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedContent(), $context + ['type' => true]);
             }
 
             if ($object->getMediaContacts()->notEmpty()) {

@@ -107,7 +107,7 @@ final class PressPackage implements Model, HasContent, HasId, HasIdentifier, Has
     }
 
     /**
-     * @return Sequence|ArticleVersion[]
+     * @return Sequence|Model[]
      */
     public function getRelatedContent() : Sequence
     {

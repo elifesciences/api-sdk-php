@@ -16,7 +16,7 @@
     "require": {
         "php": "^7.0",
         "composer/package-versions-deprecated": "1.11.99.2",
-        "elife/api-client": "^1.0@dev",
+        "elife/api-client": "dev-github-actions",
         "guzzlehttp/promises": "^1.0",
         "symfony/serializer": "^2.8.2 || ^3.0.2"
     },
@@ -38,6 +38,11 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "mindplay/composer-locator": true
         }
     }
 }

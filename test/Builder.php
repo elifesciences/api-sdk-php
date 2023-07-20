@@ -389,7 +389,7 @@ final class Builder
                         'version' => 1,
                         'type' => 'research-article',
                         'doi' => '10.7554/eLife.09560',
-                        'doiVersion' => '10.7554/eLife.09560.1',
+                        'doiVersion' => null,
                         'authorLine' => 'Lee R Berger et al',
                         'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                         'titlePrefix' => null,
@@ -603,7 +603,6 @@ final class Builder
                             ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
                             ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                             ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
-                            ->withVersionDoi('10.7554/eLife.09560.1')
                             ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]));
                     },
                 ],
@@ -804,6 +803,7 @@ final class Builder
                             ->withStage('published')
                             ->withStatus('reviewed')
                             ->withDoi('doi')
+                            ->withDoiVersion('doi version')
                             ->withTitlePrefix('title prefix')
                             ->withPromiseOfIndexContent('indexContent')
                             ->withAuthorLine('authorLine')

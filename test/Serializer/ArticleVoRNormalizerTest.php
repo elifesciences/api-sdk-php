@@ -118,7 +118,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         if ($extra) {
             call_user_func($extra, $this);
         }
-
+//var_dump($expected->getDoiVersion());
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
 
         $this->mockSubjectCall('subject1');
@@ -132,6 +132,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
+                    ->withDoiVersion('10.7554/eLife.09560.1')
                     ->withReviewedDate(new DateTimeImmutable('2022-09-15T00:00:00Z'))
                     ->withCurationLabels(['Landmark', 'Exceptional'])
                     ->withPdf('http://www.example.com/pdf')
@@ -325,6 +326,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'doiVersion' => '10.7554/eLife.09560.1',
                     'reviewedDate' => '2022-09-15T00:00:00Z',
                     'curationLabels' => ['Landmark', 'Exceptional'],
                     'figuresPdf' => 'http://www.example.com/figures',
@@ -515,6 +517,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
+                    ->withDoiVersion(null)
                     ->withPublicReviews(new EmptySequence())
                     ->__invoke(),
                 [],
@@ -550,6 +553,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 Builder::for(ArticleVoR::class)
                     ->withTitlePrefix('title prefix')
+                    ->withDoiVersion('10.7554/eLife.09560.1')
                     ->withReviewedDate(new DateTimeImmutable('2022-09-15T00:00:00Z'))
                     ->withCurationLabels(['Landmark', 'Exceptional'])
                     ->withPdf('http://www.example.com/pdf')
@@ -632,6 +636,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'status' => 'vor',
+                    'doiVersion' => '10.7554/eLife.09560.1',
                     'reviewedDate' => '2022-09-15T00:00:00Z',
                     'curationLabels' => ['Landmark', 'Exceptional'],
                     'figuresPdf' => 'http://www.example.com/figures',
@@ -678,6 +683,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
+                    ->withDoiVersion(null)
                     ->withPublicReviews(new EmptySequence())
                     ->__invoke(),
                 ['snippet' => true],

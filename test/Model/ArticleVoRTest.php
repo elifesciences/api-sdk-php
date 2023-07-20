@@ -400,4 +400,20 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($publicReviews, $with->getPublicReviews());
         $this->assertEquals(new EmptySequence(), $withOut->getPublicReviews());
     }
+
+    /**
+     * @test
+     */
+    public function it_may_have_version_doi()
+    {
+        $with = $this->builder
+            ->withDoiVersion('10.7554/eLife.09560.1')
+            ->__invoke();
+        $withOut = $this->builder
+            ->withDoiVersion(null)
+            ->__invoke();
+
+        $this->assertEquals('10.7554/eLife.09560.1', $with->getDoiVersion());
+        $this->assertNull($withOut->getDoiVersion());
+    }
 }

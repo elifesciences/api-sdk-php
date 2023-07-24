@@ -28,6 +28,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
     private $recommendationsForAuthorsTitle;
+    private $doiVersion;
     private $publicReviews;
 
     /**
@@ -39,6 +40,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         int $version,
         string $type,
         string $doi,
+        string $doiVersion = null,
         string $authorLine = null,
         string $titlePrefix = null,
         string $title,
@@ -111,6 +113,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
         $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
+        $this->doiVersion = $doiVersion;
         $this->publicReviews = $publicReviews;
     }
 
@@ -263,6 +266,14 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getRecommendationsForAuthorsTitle()
     {
         return $this->recommendationsForAuthorsTitle->wait();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDoiVersion()
+    {
+        return $this->doiVersion;
     }
 
     /**

@@ -279,6 +279,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['version'],
             $data['type'],
             $data['doi'],
+            $data['doiVersion'] ?? null,
             $data['authorLine'] ?? null,
             $data['titlePrefix'] ?? null,
             $data['title'],
@@ -348,6 +349,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : array {
         $data['status'] = 'vor';
+
+        if ($article->getDoiVersion()) {
+            $data['doiVersion'] = $article->getDoiVersion();
+        }
 
         if ($article->getReviewedDate()) {
             $data['reviewedDate'] = $article->getReviewedDate()->format(ApiSdk::DATE_FORMAT);

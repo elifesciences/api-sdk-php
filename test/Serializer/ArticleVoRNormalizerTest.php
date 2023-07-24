@@ -118,7 +118,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         if ($extra) {
             call_user_func($extra, $this);
         }
-//var_dump($expected->getDoiVersion());
+
         $actual = $this->normalizer->denormalize($json, ArticleVoR::class, null, $context);
 
         $this->mockSubjectCall('subject1');

@@ -269,7 +269,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getDoiVersion()
     {

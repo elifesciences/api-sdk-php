@@ -816,6 +816,29 @@ final class Builder
                             ]))
                             ->withCurationLabels(['curation-label'])
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
+                    },
+                    '19560' => function($builder) {
+                        return $builder
+                            ->withId('19560')
+                            ->withTitle('<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi('10.7554/eLife.19560')
+                            ->withTitlePrefix('Title prefix')
+                            ->withPromiseOfIndexContent('<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa')
+                            ->withAuthorLine('Lee R Berger, John Hawks ... Scott A Williams')
+                            ->withPublished(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withReviewedDate(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withVersionDate(new DateTimeImmutable('2022-08-05T00:00:00Z'))
+                            ->withStatusDate(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withVolume(4)
+                            ->withElocationId('e19560')
+                            ->withPdf('https://elifesciences.org/content/4/e19560.pdf')
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('genomics-evolutionary-biology'),
+                            ]))
+                            ->withCurationLabels(['Ground-breaking', 'Convincing'])
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
                     }
                 ],
                 Subject::class => [

@@ -1063,11 +1063,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/collections/'.$id,
-                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)]
+                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
+                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 3)],
                 json_encode($this->createCollectionJson($id, false, $complete))
             )
         );

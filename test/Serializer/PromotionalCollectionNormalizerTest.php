@@ -19,6 +19,7 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PromotionalCollection;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -161,6 +162,8 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                             ->sample('slime'),
                         Builder::for(Interview::class)
                             ->sample('controlling-traffic'),
+                        Builder::for(ReviewedPreprint::class)
+                            ->sample('19560'),
                     ]))
                     ->withRelatedContent(new ArraySequence([
                         Builder::for(ArticlePoa::class)
@@ -365,6 +368,48 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                             ],
                             'published' => '2016-01-29T16:22:28Z',
                         ],
+                        3 => [
+                            "type" => 'reviewed-preprint',
+                            'id' => '19560',
+                            'doi' => '10.7554/eLife.19560',
+                            'status' => 'reviewed',
+                            'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+                            'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
+                            'titlePrefix' => 'Title prefix',
+                            'stage' => 'published',
+                            'published' => '2022-08-01T00:00:00Z',
+                            'reviewedDate' => '2022-08-01T00:00:00Z',
+                            'versionDate' => '2022-08-05T00:00:00Z',
+                            'statusDate' => '2022-08-01T00:00:00Z',
+                            'volume' => 4,
+                            'elocationId' => 'e19560',
+                            'pdf' => 'https://elifesciences.org/content/4/e19560.pdf',
+                            'subjects' => [
+                                [
+                                    'id' => 'genomics-evolutionary-biology',
+                                    'name' => 'Genomics and Evolutionary Biology',
+                                ]
+                            ],
+                            'curationLabels' => [
+                                'Ground-breaking',
+                                'Convincing',
+                            ],
+                            'image' => [
+                                'thumbnail' => [
+                                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                                    'alt' => '',
+                                    'source' => [
+                                        'mediaType' => 'image/jpeg',
+                                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                                        'filename' => 'thumbnail.jpg',
+                                    ],
+                                    'size' => [
+                                        'width' => 140,
+                                        'height' => 140
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                     'relatedContent' => [
                         0 => [
@@ -517,6 +562,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                     $test->mockPodcastEpisodeCall(29, true);
                     $test->mockSubjectCall('1', true);
                     $test->mockArticleCall('1', true, false, 1);
+                    $test->mockReviewedPreprintCall('19560', true, false);
                 },
             ],
             'minimum' => [
@@ -755,7 +801,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v1/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection-list/v1/*.json#items';
     }
 }

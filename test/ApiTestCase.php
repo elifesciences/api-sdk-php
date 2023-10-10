@@ -1188,11 +1188,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/promotional-collections/'.$id,
-                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)]
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)],
+                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 2)],
                 json_encode($this->createPromotionalCollectionJson($id, false, $complete))
             )
         );

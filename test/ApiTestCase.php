@@ -295,7 +295,7 @@ abstract class ApiTestCase extends TestCase
 
         $response = new Response(
             200,
-            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2)],
             json_encode($this->createRelatedArticlesJson($id, $complete))
         );
 
@@ -305,7 +305,7 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.'/related',
                 [
                     'Accept' => [
-                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2),
                     ],
                 ]
             ),
@@ -1395,10 +1395,13 @@ abstract class ApiTestCase extends TestCase
 
     private function createRelatedArticlesJson(string $id, bool $complete = false) : array
     {
+        $rp = $this->createReviewedPreprintJson($id, true, $complete);
+        $rp['type'] = 'reviewed-preprint';
         return [
             $this->createArticlePoAJson($id.'related1', true, $complete, 1),
             $this->createArticleVoRJson($id.'related1', true, $complete, 2),
             $this->createExternalArticleJson($complete),
+            $rp,
         ];
     }
 

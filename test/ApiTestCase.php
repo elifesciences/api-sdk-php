@@ -1395,13 +1395,11 @@ abstract class ApiTestCase extends TestCase
 
     private function createRelatedArticlesJson(string $id, bool $complete = false) : array
     {
-        $rp = $this->createReviewedPreprintJson($id, true, $complete);
-        $rp['type'] = 'reviewed-preprint';
         return [
             $this->createArticlePoAJson($id.'related1', true, $complete, 1),
             $this->createArticleVoRJson($id.'related1', true, $complete, 2),
             $this->createExternalArticleJson($complete),
-            $rp,
+            $this->createReviewedPreprintJson($id, true, $complete, true),
         ];
     }
 
@@ -3091,7 +3089,7 @@ abstract class ApiTestCase extends TestCase
         return $subject;
     }
 
-    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false) : array
+    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false, $hasType = false) : array
     {
         if (is_int($number)) {
             $id = 'reviewed-preprint-'.$number;
@@ -3158,6 +3156,10 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($reviewedPreprint['indexContent']);
+        }
+
+        if ($hasType) {
+            $reviewedPreprint['type'] = 'reviewed-preprint';
         }
 
         return $reviewedPreprint;

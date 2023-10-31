@@ -295,7 +295,7 @@ abstract class ApiTestCase extends TestCase
 
         $response = new Response(
             200,
-            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2)],
             json_encode($this->createRelatedArticlesJson($id, $complete))
         );
 
@@ -305,7 +305,7 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.'/related',
                 [
                     'Accept' => [
-                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2),
                     ],
                 ]
             ),
@@ -1132,11 +1132,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)]
+                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)],
+                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 3)],
                 json_encode([
                     'total' => $total,
                     'items' => $recommendations,
@@ -1399,6 +1399,7 @@ abstract class ApiTestCase extends TestCase
             $this->createArticlePoAJson($id.'related1', true, $complete, 1),
             $this->createArticleVoRJson($id.'related1', true, $complete, 2),
             $this->createExternalArticleJson($complete),
+            $this->createReviewedPreprintJson($id, true, $complete, true),
         ];
     }
 
@@ -3088,7 +3089,7 @@ abstract class ApiTestCase extends TestCase
         return $subject;
     }
 
-    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false) : array
+    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false, $hasType = false) : array
     {
         if (is_int($number)) {
             $id = 'reviewed-preprint-'.$number;
@@ -3155,6 +3156,10 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($reviewedPreprint['indexContent']);
+        }
+
+        if ($hasType) {
+            $reviewedPreprint['type'] = 'reviewed-preprint';
         }
 
         return $reviewedPreprint;

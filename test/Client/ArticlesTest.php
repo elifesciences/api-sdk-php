@@ -14,6 +14,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
 
@@ -176,7 +177,13 @@ final class ArticlesTest extends ApiTestCase
         $relatedArticles = $this->articles->getRelatedArticles('article7');
 
         $this->assertInstanceOf(Sequence::class, $relatedArticles);
-        $this->assertCount(3, $relatedArticles);
+        $relatedArticles = $relatedArticles->toArray();
+
+        $this->assertCount(4, $relatedArticles);
+
+        $rp = array_pop($relatedArticles); // the last one is reviewed-preprint
+        $this->assertInstanceOf(ReviewedPreprint::class, $rp);
+
         foreach ($relatedArticles as $relatedArticle) {
             $this->assertInstanceOf(Article::class, $relatedArticle);
         }

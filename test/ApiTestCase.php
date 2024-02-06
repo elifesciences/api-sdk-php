@@ -223,7 +223,7 @@ abstract class ApiTestCase extends TestCase
         }, $this->generateIdList($page, $perPage, $total));
         $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
         $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
-var_dump(            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery);
+
         $request = new Request(
             'GET',
             'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,

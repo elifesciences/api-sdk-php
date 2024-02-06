@@ -3,11 +3,13 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
+use DateTimeImmutable;
 use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\ApiTestCase;
@@ -111,7 +113,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame('reviewed-preprint-1', $this->reviewedPreprints[0]->getId());
 
         $this->mockNotFound(
-            'reviewed-preprints?page=6&per-page=1&order=desc',
+            'reviewed-preprints?page=6&per-page=1&order=desc&use-date=default',
             ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)]
         );
 
@@ -140,6 +142,48 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $values = $this->reviewedPreprints->prepend(0, 1)->map($this->tidyValue());
 
         $this->assertSame([0, 1, 'reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5'], $values->toArray());
+    }
+    /**
+     * @test
+     */
+    public function it_can_use_published_dates()
+    {
+        $this->mockReviewedPreprintListCall(1, 1, 10, true);
+        $this->mockReviewedPreprintListCall(1, 100, 10, true);
+        $rps = $this->reviewedPreprints
+            ->useDate('default');
+        foreach ($rps as $i => $reviewedPreprint) {
+            $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
+            $this->assertSame("reviewed preprint $i", $reviewedPreprint->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_start_date()
+    {
+        $this->mockReviewedPreprintListCall(1, 1, 10, true, 'date', 'default', new DateTimeImmutable('2017-01-02'));
+        $this->mockReviewedPreprintListCall(1, 100, 10, true, 'date', 'default', new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->reviewedPreprints->startDate(new DateTimeImmutable('2017-01-02')) as $i => $reviewedPreprint) {
+            $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
+            $this->assertSame("reviewed preprint $i", $reviewedPreprint->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_end_date()
+    {
+        $this->mockReviewedPreprintListCall(1, 1, 10, true, 'date', 'default', null, new DateTimeImmutable('2017-01-02'));
+        $this->mockReviewedPreprintListCall(1, 100, 10, true, 'date', 'default', null, new DateTimeImmutable('2017-01-02'));
+
+        foreach ($this->reviewedPreprints->endDate(new DateTimeImmutable('2017-01-02')) as $i => $reviewedPreprint) {
+            $this->assertInstanceOf(ReviewedPreprint::class, $reviewedPreprint);
+            $this->assertSame("reviewed preprint $i", $reviewedPreprint->getTitle());
+        }
     }
 
     /**

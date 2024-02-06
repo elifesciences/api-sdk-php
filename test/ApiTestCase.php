@@ -212,15 +212,21 @@ abstract class ApiTestCase extends TestCase
         int $page,
         int $perPage,
         int $total,
-        bool $descendingOrder = true
+        bool $descendingOrder = true,
+        string $sort = 'date',
+        string $useDate = 'default',
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
     ) {
         $reviewedPreprints = array_map(function (int $id) {
             return $this->createReviewedPreprintJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
-
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
+var_dump(            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery);
         $request = new Request(
             'GET',
-            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,
             ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)]
         );
         $this->storage->save(

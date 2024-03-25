@@ -51,7 +51,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
 
     public function canNormalizeProvider() : array
     {
-        $articleHistory = new ArticleHistory(null, null, new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));
+        $articleHistory = new ArticleHistory(null, null, null, new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));
 
         return [
             'article history' => [$articleHistory, null, true],

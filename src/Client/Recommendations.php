@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Recommendations
 {
-    const VERSION_RECOMMENDATIONS = 2;
+    const VERSION_RECOMMENDATIONS = 3;
 
     private $recommendationsClient;
     private $denormalizer;

@@ -10,17 +10,18 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 final class Articles implements Iterator, Sequence
 {
-    const VERSION_ARTICLE_POA = 3;
-    const VERSION_ARTICLE_VOR = 7;
+    const VERSION_ARTICLE_POA = 4;
+    const VERSION_ARTICLE_VOR = 8;
     const VERSION_ARTICLE_LIST = 1;
     const VERSION_ARTICLE_HISTORY = 2;
-    const VERSION_ARTICLE_RELATED = 1;
+    const VERSION_ARTICLE_RELATED = 2;
 
     use Client;
     use ForSubject;
@@ -96,7 +97,12 @@ final class Articles implements Iterator, Sequence
             )
             ->then(function (Result $result) {
                 return array_map(function (array $article) {
-                    return $this->denormalizer->denormalize($article, Article::class, null, ['snippet' => true]);
+                    return $this->denormalizer->denormalize(
+                        $article,
+                        $article['type'] === 'reviewed-preprint' ? ReviewedPreprint::class : Article::class,
+                        null,
+                        ['snippet' => true]
+                    );
                 }, $result->toArray());
             }));
     }

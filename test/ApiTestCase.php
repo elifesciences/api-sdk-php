@@ -212,15 +212,21 @@ abstract class ApiTestCase extends TestCase
         int $page,
         int $perPage,
         int $total,
-        bool $descendingOrder = true
+        bool $descendingOrder = true,
+        string $sort = 'date',
+        string $useDate = 'default',
+        DateTimeImmutable $startDate = null,
+        DateTimeImmutable $endDate = null
     ) {
         $reviewedPreprints = array_map(function (int $id) {
             return $this->createReviewedPreprintJson($id, true);
         }, $this->generateIdList($page, $perPage, $total));
+        $startsQuery = $startDate ? '&start-date='.$startDate->format('Y-m-d') : '';
+        $endsQuery = $endDate ? '&end-date='.$endDate->format('Y-m-d') : '';
 
         $request = new Request(
             'GET',
-            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
+            'http://api.elifesciences.org/reviewed-preprints?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc').'&use-date='.$useDate.$startsQuery.$endsQuery,
             ['Accept' => (string) new MediaType(ReviewedPreprintsClient::TYPE_REVIEWED_PREPRINT_LIST, 1)]
         );
         $this->storage->save(
@@ -295,7 +301,7 @@ abstract class ApiTestCase extends TestCase
 
         $response = new Response(
             200,
-            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1)],
+            ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2)],
             json_encode($this->createRelatedArticlesJson($id, $complete))
         );
 
@@ -305,7 +311,7 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.'/related',
                 [
                     'Accept' => [
-                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 1),
+                        (string) new MediaType(ArticlesClient::TYPE_ARTICLE_RELATED, 2),
                     ],
                 ]
             ),
@@ -323,13 +329,13 @@ abstract class ApiTestCase extends TestCase
         if ($vor) {
             $response = new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 6)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 8)],
                 json_encode($this->createArticleVoRJson($id, false, $complete, $version ?? 1))
             );
         } else {
             $response = new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 3)],
+                ['Content-Type' => (string) new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 4)],
                 json_encode($this->createArticlePoAJson($id, false, $complete, $version ?? 1))
             );
         }
@@ -340,8 +346,8 @@ abstract class ApiTestCase extends TestCase
                 'http://api.elifesciences.org/articles/'.$id.($version ? '/versions/'.$version : ''),
                 [
                     'Accept' => implode(', ', [
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 3),
-                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 7),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_POA, 4),
+                        new MediaType(ArticlesClient::TYPE_ARTICLE_VOR, 8),
                     ]),
                 ]
             ),
@@ -1063,11 +1069,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/collections/'.$id,
-                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)]
+                ['Accept' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 2)],
+                ['Content-Type' => (string) new MediaType(CollectionsClient::TYPE_COLLECTION, 3)],
                 json_encode($this->createCollectionJson($id, false, $complete))
             )
         );
@@ -1132,11 +1138,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/recommendations/'.$type.'/'.$id.'?page='.$page.'&per-page='.$perPage.'&order='.($descendingOrder ? 'desc' : 'asc'),
-                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)]
+                ['Accept' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 3)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 2)],
+                ['Content-Type' => (string) new MediaType(RecommendationsClient::TYPE_RECOMMENDATIONS, 3)],
                 json_encode([
                     'total' => $total,
                     'items' => $recommendations,
@@ -1188,11 +1194,11 @@ abstract class ApiTestCase extends TestCase
             new Request(
                 'GET',
                 'http://api.elifesciences.org/promotional-collections/'.$id,
-                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)]
+                ['Accept' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 2)]
             ),
             new Response(
                 200,
-                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 1)],
+                ['Content-Type' => (string) new MediaType(PromotionalCollectionsClient::TYPE_PROMOTIONAL_COLLECTION, 2)],
                 json_encode($this->createPromotionalCollectionJson($id, false, $complete))
             )
         );
@@ -1399,6 +1405,7 @@ abstract class ApiTestCase extends TestCase
             $this->createArticlePoAJson($id.'related1', true, $complete, 1),
             $this->createArticleVoRJson($id.'related1', true, $complete, 2),
             $this->createExternalArticleJson($complete),
+            $this->createReviewedPreprintJson($id, true, $complete, true),
         ];
     }
 
@@ -3088,7 +3095,7 @@ abstract class ApiTestCase extends TestCase
         return $subject;
     }
 
-    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false) : array
+    private function createReviewedPreprintJson($number, bool $isSnippet = false, bool $complete = false, $hasType = false) : array
     {
         if (is_int($number)) {
             $id = 'reviewed-preprint-'.$number;
@@ -3155,6 +3162,10 @@ abstract class ApiTestCase extends TestCase
 
         if ($isSnippet) {
             unset($reviewedPreprint['indexContent']);
+        }
+
+        if ($hasType) {
+            $reviewedPreprint['type'] = 'reviewed-preprint';
         }
 
         return $reviewedPreprint;

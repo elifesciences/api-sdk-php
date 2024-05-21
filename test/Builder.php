@@ -389,13 +389,13 @@ final class Builder
                         'version' => 1,
                         'type' => 'research-article',
                         'doi' => '10.7554/eLife.09560',
+                        'doiVersion' => null,
                         'authorLine' => 'Lee R Berger et al',
                         'title' => '<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa',
                         'titlePrefix' => null,
                         'published' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'versionDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
                         'statusDate' => new DateTimeImmutable('2015-09-10T00:00:00Z'),
-                        'reviewedDate' => null,
                         'volume' => 4,
                         'elocationId' => 'e09560',
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
@@ -404,7 +404,6 @@ final class Builder
                         'figuresPdf' => null,
                         'xml' => promise_for('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
-                        'curationLabels' => [],
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
                         'issue' => promise_for(1),
@@ -816,6 +815,29 @@ final class Builder
                                 self::for(Subject::class)->sample('biophysics-structural-biology'),
                             ]))
                             ->withCurationLabels(['curation-label'])
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
+                    },
+                    '19560' => function($builder) {
+                        return $builder
+                            ->withId('19560')
+                            ->withTitle('<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa')
+                            ->withStage('published')
+                            ->withStatus('reviewed')
+                            ->withDoi('10.7554/eLife.19560')
+                            ->withTitlePrefix('Title prefix')
+                            ->withPromiseOfIndexContent('<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa')
+                            ->withAuthorLine('Lee R Berger, John Hawks ... Scott A Williams')
+                            ->withPublished(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withReviewedDate(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withVersionDate(new DateTimeImmutable('2022-08-05T00:00:00Z'))
+                            ->withStatusDate(new DateTimeImmutable('2022-08-01T00:00:00Z'))
+                            ->withVolume(4)
+                            ->withElocationId('e19560')
+                            ->withPdf('https://elifesciences.org/content/4/e19560.pdf')
+                            ->withSubjects(new ArraySequence([
+                                self::for(Subject::class)->sample('genomics-evolutionary-biology'),
+                            ]))
+                            ->withCurationLabels(['Ground-breaking', 'Convincing'])
                             ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
                     }
                 ],

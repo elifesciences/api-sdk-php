@@ -10,16 +10,19 @@ final class FundingAward implements HasId
     private $source;
     private $awardId;
     private $recipients;
+    private $awardDoi;
 
     /**
      * @internal
      */
-    public function __construct(string $id, Funder $source, string $awardId = null, Sequence $recipients)
+    public function __construct(string $id, Funder $source, string $awardId = null,
+                                Sequence $recipients = null, string $awardDoi = null)
     {
         $this->id = $id;
         $this->source = $source;
         $this->awardId = $awardId;
         $this->recipients = $recipients;
+        $this->awardDoi = $awardDoi;
     }
 
     public function getId() : string
@@ -46,5 +49,13 @@ final class FundingAward implements HasId
     public function getRecipients() : Sequence
     {
         return $this->recipients;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAwardDoi()
+    {
+        return $this->awardDoi;
     }
 }

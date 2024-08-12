@@ -72,6 +72,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         switch ($type) {
             case 'correction':
             case 'editorial':
+            case 'expression-concern':
             case 'feature':
             case 'insight':
             case 'research-advance':

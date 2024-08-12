@@ -1259,6 +1259,7 @@ abstract class ApiTestCase extends TestCase
                     'types' => [
                         'correction' => $firstTypeResult = round($total / 3),
                         'editorial' => $secondTypeResult = round($total / 3),
+                        'expression-concern' => 0,
                         'feature' => $total - $firstTypeResult - $secondTypeResult,
                         'insight' => 0,
                         'research-advance' => 0,

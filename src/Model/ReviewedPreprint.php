@@ -29,6 +29,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
     private $curationLabels;
     private $thumbnail;
     private $indexContent;
+    private $version;
 
     /**
      * @internal
@@ -51,7 +52,8 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         Sequence $subjects,
         array $curationLabels,
         Image $thumbnail = null,
-        PromiseInterface $indexContent
+        PromiseInterface $indexContent,
+        int $version
     )
     {
         $this->id = $id;
@@ -72,6 +74,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         $this->curationLabels = $curationLabels;
         $this->thumbnail = $thumbnail;
         $this->indexContent = $indexContent;
+        $this->version = $version;
     }
 
     public function getId() : string
@@ -209,5 +212,13 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
     public function getIndexContent()
     {
         return $this->indexContent->wait();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 }

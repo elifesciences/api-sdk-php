@@ -121,6 +121,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'complete' => [
                 Builder::for(ReviewedPreprint::class)
                     ->withVolume(4)
+                    ->withVersion(2)
                     ->withElocationId('e19560')
                     ->withPdf('http://www.example.com/pdf')
                     ->withCurationLabels(['one', 'two'])
@@ -160,6 +161,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ],
                     'indexContent' => 'Reviewed preprint',
                     'volume' => 4,
+                    'version' => 2,
                     'elocationId' => 'e19560',
                     'pdf' => 'http://www.example.com/pdf',
                     'curationLabels' => [
@@ -185,6 +187,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ->withStatusDate(null)
                     ->withThumbnail(null)
                     ->withPromiseOfIndexContent(null)
+                    ->withVersion(null)
                     ->__invoke(),
                 [],
                 [
@@ -200,6 +203,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
             'complete snippet' => [
                 Builder::for(ReviewedPreprint::class)
                     ->withVolume(4)
+                    ->withVersion(2)
                     ->withElocationId('e19560')
                     ->withPdf('http://www.example.com/pdf')
                     ->withCurationLabels(['one', 'two'])
@@ -240,6 +244,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                         ],
                     ],
                     'volume' => 4,
+                    'version' => 2,
                     'elocationId' => 'e19560',
                     'pdf' => 'http://www.example.com/pdf',
                     'curationLabels' => [
@@ -266,6 +271,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ->withStatusDate(null)
                     ->withThumbnail(null)
                     ->withPromiseOfIndexContent(null)
+                    ->withVersion(null)
                     ->__invoke(),
                 ['snippet' => true],
                 [

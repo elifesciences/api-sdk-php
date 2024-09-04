@@ -256,6 +256,7 @@ final class Builder
                         'versionDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
                         'statusDate' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
                         'volume' => null,
+                        'version' => null,
                         'elocationId' => null,
                         'pdf' => null,
                         'subjects' => new EmptySequence(),

@@ -223,6 +223,22 @@ final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    final public function it_may_have_a_version()
+    {
+        $with = $this->builder
+            ->withVersion(2)
+            ->__invoke();
+        $withOut = $this->builder
+            ->withVersion(null)
+            ->__invoke();
+
+        $this->assertSame(2, $with->getVersion());
+        $this->assertNull($withOut->getVersion());
+    }
+
+    /**
+     * @test
+     */
     final public function it_may_have_an_elocation_id()
     {
         $with = $this->builder

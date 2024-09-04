@@ -100,7 +100,8 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['subjects'],
             $data['curationLabels'],
             $data['image']['thumbnail'] ?? null,
-            $data['indexContent']
+            $data['indexContent'],
+            $data['version'] ?? null
         );
     }
 
@@ -196,6 +197,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             if ($object->getIndexContent()) {
                 $data['indexContent'] = $object->getIndexContent();
             }
+        }
+
+        if ($object->getVersion()) {
+            $data['version'] = $object->getVersion();
         }
 
         return $data;

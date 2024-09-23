@@ -448,6 +448,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return in_array($type, [
             'correction',
             'editorial',
+            'expression-concern',
             'feature',
             'insight',
             'research-advance',

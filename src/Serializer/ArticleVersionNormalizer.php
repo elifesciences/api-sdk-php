@@ -232,7 +232,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                             $award['awardId'] ?? null,
                             new ArraySequence(array_map(function (array $recipient) use ($format, $context) {
                                 return $this->denormalizer->denormalize($recipient, Author::class, $format, $context);
-                            }, $award['recipients'])),
+                            }, $award['recipients'] ?? [])),
                             $award['awardDoi'] ?? null
                         );
                     }, $funding['awards'] ?? [])),
@@ -391,11 +391,18 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                             $data = [
                                 'id' => $award->getId(),
                                 'source' => $source,
-                                'recipients' => $award->getRecipients()
-                                    ->map(function (Author $author) use ($format, $context) {
-                                        return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
-                                    })->toArray(),
                             ];
+                            
+                            if ($award->getRecipients()->notEmpty()) {
+                                $data['recipients'] = $award->getRecipients()
+                                    ->map(function (Author $author) use ($format, $context) {
+                                        return $this->normalizer->normalize(
+                                            $author,
+                                            $format,
+                                            ['type' => true] + $context
+                                        );
+                                    })->toArray();
+                            }
 
                             if ($award->getAwardId()) {
                                 $data['awardId'] = $award->getAwardId();
@@ -448,6 +455,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return in_array($type, [
             'correction',
             'editorial',
+            'expression',
             'feature',
             'insight',
             'research-advance',

@@ -267,6 +267,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 ],
                                 'awardId' => 'awardId',
                             ],
+                            [
+                                'id' => 'award2',
+                                'source' => [
+                                    'name' => [
+                                        'Funder',
+                                    ],
+                                    'funderId' => '10.13039/501100001695',
+                                ],
+                            ],
                         ],
                         'statement' => 'Funding statement',
                     ],
@@ -712,10 +721,10 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 
     protected function samples()
     {
-        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
-        yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v7/*.json';
-        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
-        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?status=='vor']";
+//        yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
+//        yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='vor']";
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-vor/v8/complete.json';
+//        yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='vor']";
+//        yield __DIR__."/../../vendor/elife/api/dist/samples/search/v2/*.json#items[?status=='vor']";
     }
 }

@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Model;
 
+use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
 
 final class FundingAward implements HasId
@@ -21,7 +22,7 @@ final class FundingAward implements HasId
         $this->id = $id;
         $this->source = $source;
         $this->awardId = $awardId;
-        $this->recipients = $recipients;
+        $this->recipients = $recipients ?? new EmptySequence();
         $this->awardDoi = $awardDoi;
     }
 

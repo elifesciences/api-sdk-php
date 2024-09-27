@@ -1490,6 +1490,15 @@ abstract class ApiTestCase extends TestCase
                             ],
                         ],
                     ],
+                    [
+                        'id' => 'award2',
+                        'source' => [
+                            'name' => [
+                                'Funder',
+                            ],
+                            'funderId' => '10.13039/501100001695',
+                        ],
+                    ],
                 ],
                 'statement' => 'Funding statement',
             ],

@@ -242,6 +242,15 @@ final class ArticlePoANormalizerTest extends ApiTestCase
                                 ],
                                 'awardId' => 'awardId',
                             ],
+                            [
+                                'id' => 'award2',
+                                'source' => [
+                                    'name' => [
+                                        'Funder',
+                                    ],
+                                    'funderId' => '10.13039/501100001695',
+                                ],
+                            ],
                         ],
                         'statement' => 'Funding statement',
                     ],
@@ -469,7 +478,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/first-page.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v1/*.json#[?status=='poa']";
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v3/*.json';
+        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-poa/v4/*.json';
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/search/v1/*.json#items[?status=='poa']";
     }

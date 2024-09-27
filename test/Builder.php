@@ -374,6 +374,10 @@ final class Builder
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
                                 ),
+                                new FundingAward(
+                                    'award2',
+                                    new Funder(new Place(['Funder']), '10.13039/501100001695')
+                                ),
                             ]),
                             'Funding statement'
                         )),
@@ -460,6 +464,10 @@ final class Builder
                                     new Funder(new Place(['Funder']), '10.13039/501100001659'),
                                     'awardId',
                                     new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))])
+                                ),
+                                new FundingAward(
+                                    'award2',
+                                    new Funder(new Place(['Funder']), '10.13039/501100001695')
                                 ),
                             ]),
                             'Funding statement'

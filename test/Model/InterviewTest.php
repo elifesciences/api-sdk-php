@@ -22,10 +22,10 @@ use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\PersonDetails;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class InterviewTest extends PHPUnit_Framework_TestCase
+final class InterviewTest extends TestCase
 {
     /**
      * @test

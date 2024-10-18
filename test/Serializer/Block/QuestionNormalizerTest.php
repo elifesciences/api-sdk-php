@@ -8,11 +8,11 @@ use eLife\ApiSdk\Model\Block\Question;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\QuestionNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class QuestionNormalizerTest extends PHPUnit_Framework_TestCase
+final class QuestionNormalizerTest extends TestCase
 {
     /** @var QuestionNormalizer */
     private $normalizer;

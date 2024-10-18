@@ -3,10 +3,10 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Date;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\TimezoneAwareTestCase;
 
-final class DateTest extends PHPUnit_Framework_TestCase
+final class DateTest extends TestCase
 {
     use TimezoneAwareTestCase;
 

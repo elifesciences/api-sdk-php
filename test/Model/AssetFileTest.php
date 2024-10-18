@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\HasCaption;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class AssetFileTest extends PHPUnit_Framework_TestCase
+final class AssetFileTest extends TestCase
 {
     /**
      * @test

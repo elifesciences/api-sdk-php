@@ -11,11 +11,11 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ThesisReferenceNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ThesisReferenceNormalizerTest extends PHPUnit_Framework_TestCase
+final class ThesisReferenceNormalizerTest extends TestCase
 {
     /** @var ThesisReferenceNormalizer */
     private $normalizer;

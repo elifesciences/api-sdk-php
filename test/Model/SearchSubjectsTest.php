@@ -5,8 +5,9 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\Subject;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\TestCase;
 
-class SearchSubjectsTest extends \PHPUnit_Framework_TestCase
+class SearchSubjectsTest extends TestCase
 {
     /**
      * @test
@@ -26,7 +27,7 @@ class SearchSubjectsTest extends \PHPUnit_Framework_TestCase
         foreach ($searchSubjects as $subject => $results) {
             $this->assertInstanceOf(Subject::class, $subject);
             $actualSubjects[] = $subject;
-            $this->assertInternalType('integer', $results);
+            $this->assertIsInt($results);
             $actualResults[] = $results;
         }
 

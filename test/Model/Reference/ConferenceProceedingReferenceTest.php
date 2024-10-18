@@ -11,9 +11,9 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ConferenceProceedingReferenceTest extends PHPUnit_Framework_TestCase
+final class ConferenceProceedingReferenceTest extends TestCase
 {
     /**
      * @test

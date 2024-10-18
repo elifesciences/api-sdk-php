@@ -20,6 +20,7 @@ final class Events implements Iterator, Sequence
 
     use Client;
 
+    private $events;
     private $count;
     private $descendingOrder = true;
     private $show = 'all';

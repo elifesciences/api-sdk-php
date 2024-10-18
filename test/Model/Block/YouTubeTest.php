@@ -8,9 +8,9 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\YouTube;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class YouTubeTest extends PHPUnit_Framework_TestCase
+final class YouTubeTest extends TestCase
 {
     /**
      * @test

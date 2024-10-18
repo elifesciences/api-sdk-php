@@ -14,6 +14,7 @@ trait SlicedArrayAccess
         return null !== $this->offsetGet($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         try {

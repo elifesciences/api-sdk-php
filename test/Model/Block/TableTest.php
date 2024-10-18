@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Model\HasAttribution;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class TableTest extends PHPUnit_Framework_TestCase
+final class TableTest extends TestCase
 {
     /**
      * @test

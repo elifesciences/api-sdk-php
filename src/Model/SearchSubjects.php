@@ -19,33 +19,35 @@ final class SearchSubjects implements Iterator, Countable
         $this->results = $results;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->subjects);
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->results);
     }
 
-    public function next()
+    public function next(): void
     {
         next($this->subjects);
         next($this->results);
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return current($this->subjects);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return false !== $this->key();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->subjects);
         reset($this->results);

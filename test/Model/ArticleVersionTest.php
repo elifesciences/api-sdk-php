@@ -31,10 +31,10 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-abstract class ArticleVersionTest extends PHPUnit_Framework_TestCase
+abstract class ArticleVersionTest extends TestCase
 {
     /** @var Builder */
     protected $builder;

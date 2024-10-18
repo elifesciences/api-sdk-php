@@ -6,9 +6,9 @@ use BadMethodCallException;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class EmptySequenceTest extends PHPUnit_Framework_TestCase
+final class EmptySequenceTest extends TestCase
 {
     /**
      * @test

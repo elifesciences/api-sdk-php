@@ -18,14 +18,14 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ReviewedPreprintTest extends PHPUnit_Framework_TestCase
+final class ReviewedPreprintTest extends TestCase
 {
     private $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->builder = Builder::for(ReviewedPreprint::class);
     }

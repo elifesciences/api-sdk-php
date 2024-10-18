@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\GoogleMap;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class GoogleMapTest extends PHPUnit_Framework_TestCase
+final class GoogleMapTest extends TestCase
 {
     /**
      * @test

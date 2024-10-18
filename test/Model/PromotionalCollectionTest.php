@@ -25,14 +25,14 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Subject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PromotionalCollectionTest extends PHPUnit_Framework_TestCase
+final class PromotionalCollectionTest extends TestCase
 {
     private $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->builder = Builder::for(PromotionalCollection::class);
     }

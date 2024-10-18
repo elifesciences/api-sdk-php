@@ -126,7 +126,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame('Digest digest-7 text', $digest->getContent()[0]->getText());
 
         $this->assertInstanceOf(ArticleVoR::class, $digest->getRelatedContent()[0]);
-        $this->assertContains('Homo naledi', $digest->getRelatedContent()[0]->getTitle());
+        $this->assertStringContainsString('Homo naledi', $digest->getRelatedContent()[0]->getTitle());
 
         $this->mockArticleCall('09560', true, true, 1);
 

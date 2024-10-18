@@ -10,9 +10,9 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class JournalReferenceTest extends PHPUnit_Framework_TestCase
+final class JournalReferenceTest extends TestCase
 {
     /**
      * @test

@@ -412,7 +412,7 @@ class SearchTest extends ApiTestCase
 
         $types = $this->search->types();
         foreach ($types as $type => $counter) {
-            $this->assertInternalType('string', $type);
+            $this->assertIsString($type);
             $this->assertRegexp('/^[a-z-]+$/', $type);
             $this->assertGreaterThanOrEqual(0, $counter);
         }

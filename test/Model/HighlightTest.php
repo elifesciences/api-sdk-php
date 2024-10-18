@@ -5,10 +5,10 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class HighlightTest extends PHPUnit_Framework_TestCase
+final class HighlightTest extends TestCase
 {
     /**
      * @test

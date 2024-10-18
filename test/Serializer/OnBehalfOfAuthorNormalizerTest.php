@@ -5,11 +5,11 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\OnBehalfOfAuthor;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class OnBehalfOfAuthorNormalizerTest extends PHPUnit_Framework_TestCase
+final class OnBehalfOfAuthorNormalizerTest extends TestCase
 {
     /** @var OnBehalfOfAuthorNormalizer */
     private $normalizer;

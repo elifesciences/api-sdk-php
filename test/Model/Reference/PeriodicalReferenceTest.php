@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PeriodicalReferenceTest extends PHPUnit_Framework_TestCase
+final class PeriodicalReferenceTest extends TestCase
 {
     /**
      * @test

@@ -10,10 +10,10 @@ use eLife\ApiSdk\Model\Block\VideoSource;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class VideoTest extends PHPUnit_Framework_TestCase
+final class VideoTest extends TestCase
 {
     /**
      * @test

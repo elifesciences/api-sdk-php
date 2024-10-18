@@ -6,9 +6,9 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Excerpt;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ExcerptTest extends PHPUnit_Framework_TestCase
+final class ExcerptTest extends TestCase
 {
     /**
      * @test

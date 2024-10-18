@@ -4,9 +4,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ParagraphTest extends PHPUnit_Framework_TestCase
+final class ParagraphTest extends TestCase
 {
     /**
      * @test

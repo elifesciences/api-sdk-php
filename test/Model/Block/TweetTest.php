@@ -6,9 +6,9 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Tweet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class TweetTest extends PHPUnit_Framework_TestCase
+final class TweetTest extends TestCase
 {
     /**
      * @test

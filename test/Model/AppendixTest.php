@@ -8,9 +8,9 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class AppendixTest extends PHPUnit_Framework_TestCase
+final class AppendixTest extends TestCase
 {
     /**
      * @test

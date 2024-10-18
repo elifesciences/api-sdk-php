@@ -5,10 +5,10 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ReviewerTest extends PHPUnit_Framework_TestCase
+final class ReviewerTest extends TestCase
 {
     /**
      * @test

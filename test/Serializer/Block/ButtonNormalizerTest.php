@@ -5,11 +5,11 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Button;
 use eLife\ApiSdk\Serializer\Block\ButtonNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ButtonNormalizerTest extends PHPUnit_Framework_TestCase
+final class ButtonNormalizerTest extends TestCase
 {
     /** @var ButtonNormalizer */
     private $normalizer;

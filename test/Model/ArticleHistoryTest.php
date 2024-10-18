@@ -8,10 +8,10 @@ use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\Date;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ArticleHistoryTest extends PHPUnit_Framework_TestCase
+final class ArticleHistoryTest extends TestCase
 {
     /**
      * @test

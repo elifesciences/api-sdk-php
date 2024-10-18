@@ -4,10 +4,10 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Identifier;
 use InvalidArgumentException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Traversable;
 
-final class IdentifierTest extends PHPUnit_Framework_TestCase
+final class IdentifierTest extends TestCase
 {
     /**
      * @test
@@ -46,7 +46,7 @@ final class IdentifierTest extends PHPUnit_Framework_TestCase
     public function identifierProvider() : Traversable
     {
         $examples = [
-            'annual-report' => 2017,
+            'annual-report' => '2017',
             'article' => '1234-5678',
             'blog-article' => '1234-5678',
             'collection' => '1234-5678',
@@ -54,7 +54,7 @@ final class IdentifierTest extends PHPUnit_Framework_TestCase
             'interview' => '1234-5678',
             'labs-post' => '1234-5678',
             'person' => '1234-5678',
-            'podcast-episode' => 7,
+            'podcast-episode' => '7',
             'press-package' => '1234-5678',
             'profile' => '1234-5678',
             'promotional-collection' => '1234-5678',

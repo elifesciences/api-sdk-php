@@ -7,10 +7,10 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ImageTest extends PHPUnit_Framework_TestCase
+final class ImageTest extends TestCase
 {
     /**
      * @test

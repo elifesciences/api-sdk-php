@@ -11,10 +11,10 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ProfileTest extends PHPUnit_Framework_TestCase
+final class ProfileTest extends TestCase
 {
     /**
      * @test

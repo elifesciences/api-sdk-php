@@ -94,6 +94,7 @@ final class EmptySequence implements IteratorAggregate, Sequence
         return false;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return null;

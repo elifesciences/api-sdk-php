@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Copyright;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class CopyrightTest extends PHPUnit_Framework_TestCase
+final class CopyrightTest extends TestCase
 {
     /**
      * @test

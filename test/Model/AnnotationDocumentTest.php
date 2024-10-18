@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AnnotationDocument;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class AnnotationDocumentTest extends PHPUnit_Framework_TestCase
+final class AnnotationDocumentTest extends TestCase
 {
     /**
      * @test

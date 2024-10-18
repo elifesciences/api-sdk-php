@@ -5,11 +5,11 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Code;
 use eLife\ApiSdk\Serializer\Block\CodeNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class CodeNormalizerTest extends PHPUnit_Framework_TestCase
+final class CodeNormalizerTest extends TestCase
 {
     /** @var CodeNormalizer */
     private $normalizer;

@@ -9,10 +9,10 @@ use eLife\ApiSdk\Model\Block\Figure;
 use eLife\ApiSdk\Model\Block\FigureAsset;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Image as ImageFile;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class FigureTest extends PHPUnit_Framework_TestCase
+final class FigureTest extends TestCase
 {
     /**
      * @test

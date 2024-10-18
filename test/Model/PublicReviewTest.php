@@ -8,9 +8,9 @@ use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PublicReviewTest extends PHPUnit_Framework_TestCase
+final class PublicReviewTest extends TestCase
 {
     /**
      * @test

@@ -2,7 +2,9 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-class IdentityMapTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class IdentityMapTest extends TestCase
 {
     public function testResetValuesAreNotConsidered()
     {

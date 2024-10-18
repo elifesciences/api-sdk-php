@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\Block\FigureAsset;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasDoi;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class FigureAssetTest extends PHPUnit_Framework_TestCase
+final class FigureAssetTest extends TestCase
 {
     /**
      * @test

@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Serializer\SnippetDenormalizer;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class SnippetDenormalizerTest extends PHPUnit_Framework_TestCase
+final class SnippetDenormalizerTest extends TestCase
 {
     /**
      * @test

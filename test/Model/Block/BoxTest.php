@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class BoxTest extends PHPUnit_Framework_TestCase
+final class BoxTest extends TestCase
 {
     /**
      * @test

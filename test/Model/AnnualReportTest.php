@@ -7,9 +7,9 @@ use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\Identifier;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class AnnualReportTest extends PHPUnit_Framework_TestCase
+final class AnnualReportTest extends TestCase
 {
     /**
      * @test

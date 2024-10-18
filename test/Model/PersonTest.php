@@ -18,10 +18,10 @@ use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PersonTest extends PHPUnit_Framework_TestCase
+final class PersonTest extends TestCase
 {
     /**
      * @test

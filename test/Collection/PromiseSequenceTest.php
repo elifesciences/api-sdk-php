@@ -13,9 +13,9 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use function GuzzleHttp\Promise\rejection_for;
 use LogicException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PromiseSequenceTest extends PHPUnit_Framework_TestCase
+final class PromiseSequenceTest extends TestCase
 {
     /**
      * @test

@@ -13,12 +13,12 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectionException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use ReflectionMethod;
 use RuntimeException;
 use Traversable;
 
-abstract class TestCase extends PHPUnit_Framework_TestCase
+abstract class TestCase extends PHPUnitTestCase
 {
     final protected function classNameProvider(string ...$classes) : Traversable
     {
@@ -29,8 +29,8 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
 
     final protected function assertObjectsAreEqual($expected, $actual, $detail = '')
     {
-        $this->assertInternalType('object', $expected, $detail);
-        $this->assertInternalType('object', $actual, $detail);
+        $this->assertIsObject($expected, $detail);
+        $this->assertIsObject($actual, $detail);
         $this->assertInstanceOf(get_class($expected), $actual, $detail);
 
         foreach (get_class_methods($actual) as $method) {
@@ -59,7 +59,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
         if (is_object($actual)) {
             $this->assertObjectsAreEqual($expected, $actual, $detail);
         } elseif (is_array($actual)) {
-            $this->assertInternalType('array', $expected, "We are getting an array out of $detail but we were not expecting it");
+            $this->assertIsArray($expected, "We are getting an array out of $detail but we were not expecting it");
             $this->assertEquals(count($expected), count($actual), "Count of $detail doesn't match expected");
             foreach ($actual as $key => $actualItem) {
                 $this->assertItemsAreEqual($expected[$key], $actualItem, $detail.' '.$key);

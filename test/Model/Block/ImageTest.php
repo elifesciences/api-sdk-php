@@ -8,10 +8,10 @@ use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\Image as ImageFile;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ImageTest extends PHPUnit_Framework_TestCase
+final class ImageTest extends TestCase
 {
     /**
      * @test

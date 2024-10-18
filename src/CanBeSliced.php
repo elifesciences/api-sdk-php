@@ -31,7 +31,7 @@ trait CanBeSliced
         return $this->pages[$page];
     }
 
-    final private function resetPages()
+    private function resetPages()
     {
         $this->pages = [];
         $this->pageBatch = 100;

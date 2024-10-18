@@ -6,9 +6,9 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class FootnoteTest extends PHPUnit_Framework_TestCase
+final class FootnoteTest extends TestCase
 {
     /**
      * @test

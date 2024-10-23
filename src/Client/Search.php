@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Client;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\SearchClient;
+use eLife\ApiSdk\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;

@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\CoversClient;
+use eLife\ApiSdk\ApiClient\CoversClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Covers;

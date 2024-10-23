@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
+use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\ReviewedPreprints;

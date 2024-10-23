@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiSdk\ApiClient\ArticlesClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;
@@ -392,7 +392,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                                 'id' => $award->getId(),
                                 'source' => $source,
                             ];
-                            
+
                             if ($award->getRecipients()->notEmpty()) {
                                 $data['recipients'] = $award->getRecipients()
                                     ->map(function (Author $author) use ($format, $context) {

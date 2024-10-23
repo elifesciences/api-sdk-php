@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiSdk\ApiClient\BlogClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;

@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
-use eLife\ApiClient\ApiClient\JobAdvertsClient;
+use eLife\ApiSdk\ApiClient\JobAdvertsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\JobAdverts;

@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\PodcastClient;
+use eLife\ApiSdk\ApiClient\PodcastClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;

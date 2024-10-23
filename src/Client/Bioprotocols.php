@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\BioprotocolClient;
+use eLife\ApiSdk\ApiClient\BioprotocolClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Model\Bioprotocol;

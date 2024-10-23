@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Client;
 
 use ArrayObject;
-use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiSdk\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;

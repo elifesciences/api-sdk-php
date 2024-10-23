@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
+use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ReviewedPreprint;

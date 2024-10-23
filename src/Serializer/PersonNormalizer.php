@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use eLife\ApiClient\ApiClient\PeopleClient;
+use eLife\ApiSdk\ApiClient\PeopleClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Client\People;

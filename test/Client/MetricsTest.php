@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\MetricsClient;
+use eLife\ApiSdk\ApiClient\MetricsClient;
 use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;

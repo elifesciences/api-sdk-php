@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
-use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiSdk\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Events;

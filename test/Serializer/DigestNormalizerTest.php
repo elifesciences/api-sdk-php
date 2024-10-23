@@ -5,7 +5,7 @@ namespace test\eLife\ApiSdk\Serializer;
 use function call_user_func;
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiClient\ApiClient\DigestsClient;
+use eLife\ApiSdk\ApiClient\DigestsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticleVoR;

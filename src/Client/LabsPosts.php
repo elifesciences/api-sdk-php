@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Client;
 
-use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiSdk\ApiClient\LabsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;

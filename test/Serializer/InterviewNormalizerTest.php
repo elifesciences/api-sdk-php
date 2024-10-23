@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiSdk\ApiClient\InterviewsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;

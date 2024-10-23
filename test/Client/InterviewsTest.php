@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
-use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiSdk\ApiClient\InterviewsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Interviews;

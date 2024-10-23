@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiClient\ApiClient\PressPackagesClient;
+use eLife\ApiSdk\ApiClient\PressPackagesClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\Block\Paragraph;

@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiSdk\ApiClient\CollectionsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;

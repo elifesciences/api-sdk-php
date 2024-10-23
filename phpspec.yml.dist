@@ -1,0 +1,4 @@
+suites:
+    api-client:
+        namespace: eLife\ApiSdk
+        psr4_prefix: eLife\ApiSdk

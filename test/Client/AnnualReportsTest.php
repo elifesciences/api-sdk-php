@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
-use eLife\ApiClient\ApiClient\AnnualReportsClient;
+use eLife\ApiSdk\ApiClient\AnnualReportsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\Client\AnnualReports;
 use eLife\ApiSdk\Collection\Sequence;

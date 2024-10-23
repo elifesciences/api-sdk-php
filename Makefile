@@ -4,7 +4,7 @@ build:
 	docker buildx build --build-arg=PHP_VERSION=$(PHP_VERSION) -t php-composer:$(PHP_VERSION) .
 
 lint: build
-	docker run --rm -v ./:/code -v/code/vendor php-composer:$(PHP_VERSION) bash -c 'vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ scripts/ test/'
+	docker run --rm -v ./:/code -v/code/vendor php-composer:$(PHP_VERSION) bash -c 'vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ scripts/ test/ spec/'
 
 test: build lint
 	docker run --rm -v ./:/code -v/code/vendor php-composer:$(PHP_VERSION) bash -c './project_tests.sh'

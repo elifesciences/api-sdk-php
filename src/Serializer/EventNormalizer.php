@@ -4,7 +4,7 @@ namespace eLife\ApiSdk\Serializer;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiSdk\ApiClient\EventsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\ApiSdk;

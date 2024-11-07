@@ -27,7 +27,7 @@ class SearchSubjectsTest extends TestCase
         foreach ($searchSubjects as $subject => $results) {
             $this->assertInstanceOf(Subject::class, $subject);
             $actualSubjects[] = $subject;
-            $this->assertInternalType('integer', $results);
+            $this->assertIsInt($results);
             $actualResults[] = $results;
         }
 

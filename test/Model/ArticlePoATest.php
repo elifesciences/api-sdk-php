@@ -7,7 +7,7 @@ use test\eLife\ApiSdk\Builder;
 
 final class ArticlePoATest extends ArticleVersionTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->builder = Builder::for(ArticlePoA::class);
     }

@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Client;
 
 use function array_map;
-use eLife\ApiClient\ApiClient\DigestsClient;
+use eLife\ApiSdk\ApiClient\DigestsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\PromiseSequence;

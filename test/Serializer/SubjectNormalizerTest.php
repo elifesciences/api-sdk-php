@@ -2,7 +2,7 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
-use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiSdk\ApiClient\SubjectsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;

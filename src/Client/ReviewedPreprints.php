@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Client;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\ReviewedPreprintsClient;
+use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection;

@@ -3,7 +3,7 @@
 namespace eLife\ApiSdk\Client;
 
 use DateTimeImmutable;
-use eLife\ApiClient\ApiClient\CoversClient;
+use eLife\ApiSdk\ApiClient\CoversClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;

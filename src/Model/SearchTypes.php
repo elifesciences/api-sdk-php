@@ -19,7 +19,7 @@ final class SearchTypes implements IteratorAggregate, Countable
         $this->typesToResults = $typesToResults;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->typesToResults);
     }

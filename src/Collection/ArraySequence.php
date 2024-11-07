@@ -141,6 +141,7 @@ final class ArraySequence implements IteratorAggregate, Sequence
         return isset($this->array[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!isset($this->array[$offset])) {

@@ -9,11 +9,11 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\Block\ExcerptNormalizer;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ExcerptNormalizerTest extends PHPUnit_Framework_TestCase
+final class ExcerptNormalizerTest extends TestCase
 {
     /** @var ExcerptNormalizer */
     private $normalizer;

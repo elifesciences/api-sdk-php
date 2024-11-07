@@ -4,9 +4,10 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-class SearchSubjectsTest extends \PHPUnit_Framework_TestCase
+class SearchSubjectsTest extends TestCase
 {
     /**
      * @test

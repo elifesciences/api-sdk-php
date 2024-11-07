@@ -10,9 +10,9 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class DataReferenceTest extends PHPUnit_Framework_TestCase
+final class DataReferenceTest extends TestCase
 {
     /**
      * @test

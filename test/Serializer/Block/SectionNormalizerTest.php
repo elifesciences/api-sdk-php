@@ -10,11 +10,11 @@ use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\SectionNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class SectionNormalizerTest extends PHPUnit_Framework_TestCase
+final class SectionNormalizerTest extends TestCase
 {
     /** @var SectionNormalizer */
     private $normalizer;

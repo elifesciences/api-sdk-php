@@ -3,10 +3,10 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AccessControl;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class AccessControlTest extends PHPUnit_Framework_TestCase
+final class AccessControlTest extends TestCase
 {
     /**
      * @test

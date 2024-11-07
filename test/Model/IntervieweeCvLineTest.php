@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\IntervieweeCvLine;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class IntervieweeCvLineTest extends PHPUnit_Framework_TestCase
+final class IntervieweeCvLineTest extends TestCase
 {
     /**
      * @test

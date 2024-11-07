@@ -4,10 +4,10 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Identifier;
 use InvalidArgumentException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Traversable;
 
-final class IdentifierTest extends PHPUnit_Framework_TestCase
+final class IdentifierTest extends TestCase
 {
     /**
      * @test

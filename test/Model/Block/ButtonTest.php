@@ -4,9 +4,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Button;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ButtonTest extends PHPUnit_Framework_TestCase
+final class ButtonTest extends TestCase
 {
     /**
      * @test

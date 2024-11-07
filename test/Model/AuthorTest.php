@@ -6,10 +6,10 @@ use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-abstract class AuthorTest extends PHPUnit_Framework_TestCase
+abstract class AuthorTest extends TestCase
 {
     /**
      * @test

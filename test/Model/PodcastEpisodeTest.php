@@ -22,10 +22,10 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PodcastEpisodeTest extends PHPUnit_Framework_TestCase
+final class PodcastEpisodeTest extends TestCase
 {
     /**
      * @test

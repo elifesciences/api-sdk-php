@@ -4,10 +4,10 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ExternalArticleTest extends PHPUnit_Framework_TestCase
+final class ExternalArticleTest extends TestCase
 {
     /**
      * @test

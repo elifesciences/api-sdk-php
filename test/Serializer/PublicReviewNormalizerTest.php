@@ -9,11 +9,11 @@ use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PublicReviewNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class PublicReviewNormalizerTest extends PHPUnit_Framework_TestCase
+final class PublicReviewNormalizerTest extends TestCase
 {
     /** @var PublicReviewNormalizer */
     private $normalizer;

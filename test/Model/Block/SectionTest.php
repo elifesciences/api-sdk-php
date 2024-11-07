@@ -8,9 +8,9 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class SectionTest extends PHPUnit_Framework_TestCase
+final class SectionTest extends TestCase
 {
     /**
      * @test

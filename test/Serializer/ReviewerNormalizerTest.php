@@ -9,12 +9,12 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
 
-final class ReviewerNormalizerTest extends PHPUnit_Framework_TestCase
+final class ReviewerNormalizerTest extends TestCase
 {
     /** @var ReviewerNormalizer */
     private $normalizer;

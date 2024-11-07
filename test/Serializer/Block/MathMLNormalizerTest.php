@@ -5,11 +5,11 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
 use eLife\ApiSdk\Serializer\Block\MathMLNormalizer;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class MathMLNormalizerTest extends PHPUnit_Framework_TestCase
+final class MathMLNormalizerTest extends TestCase
 {
     /** @var MathMLNormalizer */
     private $normalizer;

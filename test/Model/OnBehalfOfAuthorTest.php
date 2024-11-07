@@ -4,9 +4,9 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\OnBehalfOfAuthor;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class OnBehalfOfAuthorTest extends PHPUnit_Framework_TestCase
+final class OnBehalfOfAuthorTest extends TestCase
 {
     /**
      * @test

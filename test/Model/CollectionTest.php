@@ -25,10 +25,10 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class CollectionTest extends PHPUnit_Framework_TestCase
+final class CollectionTest extends TestCase
 {
     private $builder;
 

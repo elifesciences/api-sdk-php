@@ -18,9 +18,9 @@ use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Model;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class AnnotationTest extends PHPUnit_Framework_TestCase
+final class AnnotationTest extends TestCase
 {
     /**
      * @test

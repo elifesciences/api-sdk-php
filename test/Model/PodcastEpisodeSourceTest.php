@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PodcastEpisodeSourceTest extends PHPUnit_Framework_TestCase
+final class PodcastEpisodeSourceTest extends TestCase
 {
     /**
      * @test

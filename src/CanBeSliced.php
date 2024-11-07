@@ -14,7 +14,7 @@ trait CanBeSliced
 
     abstract public function slice(int $offset, int $length = null) : Sequence;
 
-    final private function getPage(int $page) : Sequence
+    private function getPage(int $page) : Sequence
     {
         if (empty($this->pages)) {
             for ($i = 0; $i < $this->count(); ++$i) {
@@ -31,7 +31,7 @@ trait CanBeSliced
         return $this->pages[$page];
     }
 
-    final private function resetPages()
+    private function resetPages()
     {
         $this->pages = [];
         $this->pageBatch = 100;

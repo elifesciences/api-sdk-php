@@ -65,7 +65,7 @@ trait ArrayFromIterator
         return $array;
     }
 
-    final private function all() : PromiseSequence
+    private function all() : PromiseSequence
     {
         return new PromiseSequence(
             $promise = new Promise(

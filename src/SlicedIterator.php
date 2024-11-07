@@ -10,6 +10,7 @@ trait SlicedIterator
 
     private $key = 1;
 
+    #[\ReturnTypeWillChange]
     final public function current()
     {
         $page = (int) ceil($this->key / $this->pageBatch);
@@ -23,11 +24,12 @@ trait SlicedIterator
         return $pageContents[$inPage];
     }
 
-    final public function next()
+    final public function next(): void
     {
         ++$this->key;
     }
 
+    #[\ReturnTypeWillChange]
     final public function key()
     {
         if ($this->key > $this->count()) {
@@ -37,17 +39,17 @@ trait SlicedIterator
         return $this->key;
     }
 
-    final public function valid()
+    final public function valid(): bool
     {
         return $this->key <= $this->count();
     }
 
-    final public function rewind()
+    final public function rewind(): void
     {
         $this->key = 1;
     }
 
-    final private function resetIterator()
+    private function resetIterator()
     {
         $this->rewind();
         $this->resetPages();

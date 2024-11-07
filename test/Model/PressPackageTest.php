@@ -28,7 +28,7 @@ final class PressPackageTest extends TestCase
 {
     private $builder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->builder = Builder::for(PressPackage::class);
     }

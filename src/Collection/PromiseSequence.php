@@ -191,6 +191,7 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         return $this->wait()->offsetExists($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->wait()->offsetGet($offset);

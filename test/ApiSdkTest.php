@@ -133,8 +133,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->mockCommunityListCall(1, 1, 1);
         $this->mockBlogArticleCall('model-1', true);
 
-        $this->assertInternalType(
-            'array',
+        $this->assertIsArray(
             $this->apiSdk->getSerializer()->normalize($this->apiSdk->community()[0])
         );
     }

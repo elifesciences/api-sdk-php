@@ -13,7 +13,7 @@ final class IdentifierTest extends TestCase
      * @test
      * @dataProvider identifierProvider
      */
-    public function it_has_a_type(string $method, string $type, string $id)
+    public function it_has_a_type(string $method, string $type, $id)
     {
         $identifier = Identifier::{$method}($id);
 
@@ -24,7 +24,7 @@ final class IdentifierTest extends TestCase
      * @test
      * @dataProvider identifierProvider
      */
-    public function it_has_an_id(string $method, string $type, string $id)
+    public function it_has_an_id(string $method, string $type, $id)
     {
         $identifier = Identifier::{$method}($id);
 
@@ -35,7 +35,7 @@ final class IdentifierTest extends TestCase
      * @test
      * @dataProvider identifierProvider
      */
-    public function it_can_be_created_from_a_string(string $method, string $type, string $id)
+    public function it_can_be_created_from_a_string(string $method, string $type, $id)
     {
         $identifier = Identifier::fromString("$type/$id");
 

@@ -23,6 +23,7 @@ final class Events implements Iterator, Sequence
     private $count;
     private $descendingOrder = true;
     private $show = 'all';
+    private $events;
     private $eventsClient;
     private $denormalizer;
 

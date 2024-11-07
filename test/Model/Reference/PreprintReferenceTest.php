@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PreprintReferenceTest extends PHPUnit_Framework_TestCase
+final class PreprintReferenceTest extends TestCase
 {
     /**
      * @test

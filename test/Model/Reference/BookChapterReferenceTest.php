@@ -11,9 +11,9 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookChapterReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class BookChapterReferenceTest extends PHPUnit_Framework_TestCase
+final class BookChapterReferenceTest extends TestCase
 {
     /**
      * @test

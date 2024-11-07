@@ -9,9 +9,9 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ThesisReference;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ThesisReferenceTest extends PHPUnit_Framework_TestCase
+final class ThesisReferenceTest extends TestCase
 {
     /**
      * @test

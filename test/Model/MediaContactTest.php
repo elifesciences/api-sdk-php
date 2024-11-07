@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class MediaContactTest extends PHPUnit_Framework_TestCase
+final class MediaContactTest extends TestCase
 {
     /**
      * @test

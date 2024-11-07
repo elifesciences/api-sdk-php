@@ -6,10 +6,10 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeChapterModel;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PodcastEpisodeChapterModelTest extends PHPUnit_Framework_TestCase
+final class PodcastEpisodeChapterModelTest extends TestCase
 {
     /**
      * @test

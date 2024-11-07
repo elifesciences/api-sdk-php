@@ -25,10 +25,10 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ArticlePreprintTest extends PHPUnit_Framework_TestCase
+final class ArticlePreprintTest extends TestCase
 {
     /**
      * @test

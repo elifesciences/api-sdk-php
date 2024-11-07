@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\PersonDetails;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class PersonDetailsTest extends PHPUnit_Framework_TestCase
+final class PersonDetailsTest extends TestCase
 {
     /**
      * @test

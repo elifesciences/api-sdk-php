@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
 use eLife\ApiSdk\Model\HasId;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class MathMLTest extends PHPUnit_Framework_TestCase
+final class MathMLTest extends TestCase
 {
     /**
      * @test

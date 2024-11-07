@@ -5,10 +5,10 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Place;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PlaceTest extends PHPUnit_Framework_TestCase
+final class PlaceTest extends TestCase
 {
     /**
      * @test

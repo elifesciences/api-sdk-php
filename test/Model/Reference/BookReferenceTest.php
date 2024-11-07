@@ -10,9 +10,9 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class BookReferenceTest extends PHPUnit_Framework_TestCase
+final class BookReferenceTest extends TestCase
 {
     /**
      * @test

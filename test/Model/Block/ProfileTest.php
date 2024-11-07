@@ -9,10 +9,10 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Profile;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\Image;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class ProfileTest extends PHPUnit_Framework_TestCase
+final class ProfileTest extends TestCase
 {
     /**
      * @test

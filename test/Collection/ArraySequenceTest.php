@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Collection;
 use BadMethodCallException;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ArraySequenceTest extends PHPUnit_Framework_TestCase
+final class ArraySequenceTest extends TestCase
 {
     /**
      * @test

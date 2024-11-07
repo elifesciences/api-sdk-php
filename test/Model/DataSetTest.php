@@ -8,10 +8,10 @@ use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class DataSetTest extends PHPUnit_Framework_TestCase
+final class DataSetTest extends TestCase
 {
     /**
      * @test

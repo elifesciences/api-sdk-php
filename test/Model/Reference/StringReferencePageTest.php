@@ -3,9 +3,9 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class StringReferencePageTest extends PHPUnit_Framework_TestCase
+final class StringReferencePageTest extends TestCase
 {
     /**
      * @test

@@ -4,9 +4,9 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Code;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class CodeTest extends PHPUnit_Framework_TestCase
+final class CodeTest extends TestCase
 {
     /**
      * @test

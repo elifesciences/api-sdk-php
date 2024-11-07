@@ -8,9 +8,9 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ClinicalTrialReference;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class ClinicalTrialReferenceTest extends PHPUnit_Framework_TestCase
+final class ClinicalTrialReferenceTest extends TestCase
 {
     /**
      * @test

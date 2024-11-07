@@ -5,9 +5,9 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class CitationsMetricTest extends PHPUnit_Framework_TestCase
+final class CitationsMetricTest extends TestCase
 {
     /**
      * @test

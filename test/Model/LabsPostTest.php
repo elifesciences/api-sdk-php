@@ -19,10 +19,10 @@ use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use function GuzzleHttp\Promise\promise_for;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class LabsPostTest extends PHPUnit_Framework_TestCase
+final class LabsPostTest extends TestCase
 {
     /**
      * @test

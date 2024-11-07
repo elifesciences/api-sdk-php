@@ -8,10 +8,10 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-final class PodcastEpisodeChapterTest extends PHPUnit_Framework_TestCase
+final class PodcastEpisodeChapterTest extends TestCase
 {
     /**
      * @test

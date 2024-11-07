@@ -10,9 +10,9 @@ use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\PersonDetails;
 use function GuzzleHttp\Promise\rejection_for;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-final class IntervieweeTest extends PHPUnit_Framework_TestCase
+final class IntervieweeTest extends TestCase
 {
     /**
      * @test

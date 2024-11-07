@@ -107,7 +107,6 @@ final class ApiSdk
 
     private $version;
     private $httpClient;
-    private $annotationsClient;
     private $articlesClient;
     private $bioprotocolClient;
     private $blogClient;
@@ -131,6 +130,7 @@ final class ApiSdk
     private $searchClient;
     private $subjectsClient;
     private $serializer;
+    private $annotations;
     private $annualReports;
     private $articles;
     private $bioprotocols;
@@ -169,7 +169,6 @@ final class ApiSdk
 
         $this->version = $version;
         $this->httpClient = new UserAgentPrependingHttpClient($httpClient, 'eLifeApiSdk/'.$this->version);
-        $this->annotationsClient = new AnnotationsClient($this->httpClient);
         $this->articlesClient = new ArticlesClient($this->httpClient);
         $this->bioprotocolClient = new BioprotocolClient($this->httpClient);
         $this->blogClient = new BlogClient($this->httpClient);

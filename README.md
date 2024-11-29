@@ -11,6 +11,14 @@ Dependencies
 * [Composer](https://getcomposer.org/)
 * PHP 7
 
+Running tests
+-------------
+
+To run all tests locally:
+```
+make test
+```
+
 Installation
 ------------
 

@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\HasCurationLabels;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
@@ -341,14 +342,15 @@ final class ReviewedPreprintTest extends TestCase
      */
     final public function it_may_have_elife_assessment()
     {
-        // $with = $this->builder
-        //     ->withPromiseOfIndexContent('index content')
-        //     ->__invoke();
+        $elifeAssessment = Builder::dummy(ElifeAssessment::class);
+        $with = $this->builder
+             ->withElifeAssessment($elifeAssessment)
+             ->__invoke();
         $withOut = $this->builder
             ->withElifeAssessment(null)
             ->__invoke();
 
-        // $this->assertSame('index content', $with->getIndexContent());
+        $this->assertSame($elifeAssessment, $with->getElifeAssessment());
         $this->assertNull($withOut->getElifeAssessment());
     }
 }

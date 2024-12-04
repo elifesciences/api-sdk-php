@@ -225,6 +225,9 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         return $this->version;
     }
 
+    /**
+     * @return ElifeAssessment|null
+     */
     public function getElifeAssessment()
     {
         return $this->elifeAssessment;

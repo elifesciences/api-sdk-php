@@ -25,6 +25,7 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\DataSet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Digest;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\File;
@@ -273,6 +274,12 @@ final class Builder
                         'aimsAndScope' => new EmptySequence(),
                         'banner' => promise_for(self::for(Image::class)->sample('banner')),
                         'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
+                    ];
+                },
+                ElifeAssessment::class => function () {
+                    return [
+                        'significance' => ['Landmark', 'Important'],
+                        'strength' => ['Solid', 'Adequate'],
                     ];
                 },
                 Person::class => function () {

@@ -262,6 +262,7 @@ final class Builder
                         'subjects' => new EmptySequence(),
                         'curationLabels' => [],
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
+                        'elifeAssessment' => null,
                     ];
                 },
                 Subject::class => function () {

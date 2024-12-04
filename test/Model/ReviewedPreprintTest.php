@@ -335,4 +335,20 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertSame('index content', $with->getIndexContent());
         $this->assertNull($withOut->getIndexContent());
     }
+
+    /**
+     * @test
+     */
+    final public function it_may_have_elife_assessment()
+    {
+        // $with = $this->builder
+        //     ->withPromiseOfIndexContent('index content')
+        //     ->__invoke();
+        $withOut = $this->builder
+            ->withElifeAssessment(null)
+            ->__invoke();
+
+        // $this->assertSame('index content', $with->getIndexContent());
+        $this->assertNull($withOut->getElifeAssessment());
+    }
 }

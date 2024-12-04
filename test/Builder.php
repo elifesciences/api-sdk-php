@@ -802,7 +802,8 @@ final class Builder
                             ->withPdf(null)
                             ->withSubjects(new EmptySequence())
                             ->withCurationLabels([])
-                            ->withThumbnail(null);
+                            ->withThumbnail(null)
+                            ->withElifeAssessment(null);
                     },
                     'complete' => function($builder) {
                         return $builder
@@ -825,7 +826,8 @@ final class Builder
                                 self::for(Subject::class)->sample('biophysics-structural-biology'),
                             ]))
                             ->withCurationLabels(['curation-label'])
-                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'));
+                            ->withThumbnail(self::for(Image::class)->sample('thumbnail'))
+                            ->withElifeAssessment(null);
                     },
                     '19560' => function($builder) {
                         return $builder

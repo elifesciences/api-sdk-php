@@ -101,7 +101,8 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['curationLabels'],
             $data['image']['thumbnail'] ?? null,
             $data['indexContent'],
-            $data['version'] ?? null
+            $data['version'] ?? null,
+            $data['elifeAssessment'] ?? null
         );
     }
 
@@ -201,6 +202,10 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
 
         if ($object->getVersion()) {
             $data['version'] = $object->getVersion();
+        }
+
+        if ($object->getElifeAssessment()) {
+            $data['elifeAssessment'] = $object->getElifeAssessment();
         }
 
         return $data;

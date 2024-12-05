@@ -55,7 +55,7 @@ class ReviewedPreprint implements Model, HasId, HasIdentifier, HasDoi, HasPublis
         Image $thumbnail = null,
         PromiseInterface $indexContent,
         int $version = null,
-        $elifeAssessment = null
+        ElifeAssessment $elifeAssessment = null
     )
     {
         $this->id = $id;

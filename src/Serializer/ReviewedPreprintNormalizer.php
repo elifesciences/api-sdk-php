@@ -82,6 +82,15 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context);
         }
 
+        if (isset($data['elifeAssessment'])) {
+            if (!isset($data['elifeAssessment']['significance'])) {
+                $data['elifeAssessment']['significance'] = [];
+            }
+            if (!isset($data['elifeAssessment']['strength'])) {
+                $data['elifeAssessment']['strength'] = [];
+            }
+        }
+
         return new ReviewedPreprint(
             $data['id'],
             $data['stage'],
@@ -204,7 +213,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['version'] = $object->getVersion();
         }
 
-        if ($object->getElifeAssessment()) {
+        if (!empty($object->getElifeAssessment())) {
             $data['elifeAssessment'] = $object->getElifeAssessment();
         }
 

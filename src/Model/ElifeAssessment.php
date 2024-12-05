@@ -11,19 +11,25 @@ final class ElifeAssessment implements Model
      * @internal
      */
     public function __construct(
-        array $significance,
-        array $strength
+        array $significance = null,
+        array $strength = null
     ) {
         $this->significance = $significance;
         $this->strength = $strength;
     }
 
-    public function getSignificance() : array
+    /**
+     * @return array|null
+     */
+    public function getSignificance()
     {
         return $this->significance;
     }
 
-    public function getStrength() : array
+    /**
+     * @return array|null
+     */
+    public function getStrength()
     {
         return $this->strength;
     }

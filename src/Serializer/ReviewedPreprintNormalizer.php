@@ -17,6 +17,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use DateTimeImmutable;
+use eLife\ApiSdk\Model\ElifeAssessment;
 
 final class ReviewedPreprintNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
@@ -83,12 +84,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         }
 
         if (isset($data['elifeAssessment'])) {
-            if (!isset($data['elifeAssessment']['significance'])) {
-                $data['elifeAssessment']['significance'] = [];
-            }
-            if (!isset($data['elifeAssessment']['strength'])) {
-                $data['elifeAssessment']['strength'] = [];
-            }
+            $data['elifeAssessment'] = $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
         }
 
         return new ReviewedPreprint(
@@ -213,8 +209,8 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
             $data['version'] = $object->getVersion();
         }
 
-        if (!empty($object->getElifeAssessment())) {
-            $data['elifeAssessment'] = $object->getElifeAssessment();
+        if (null !== ($object->getElifeAssessment())) {
+            $data['elifeAssessment'] = $this->normalizer->normalize($object->getElifeAssessment(), $format, $context);
         }
 
         return $data;

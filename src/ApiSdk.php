@@ -52,6 +52,7 @@ use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Client\Search;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Serializer\AccessControlNormalizer;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
 use eLife\ApiSdk\Serializer\AnnotationDocumentNormalizer;
@@ -70,6 +71,7 @@ use eLife\ApiSdk\Serializer\CollectionNormalizer;
 use eLife\ApiSdk\Serializer\CoverNormalizer;
 use eLife\ApiSdk\Serializer\DataSetNormalizer;
 use eLife\ApiSdk\Serializer\DigestNormalizer;
+use eLife\ApiSdk\Serializer\ElifeAssessmentNormalizer;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\ExternalArticleNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
@@ -211,6 +213,7 @@ final class ApiSdk
             new CoverNormalizer(),
             new DataSetNormalizer(),
             new DigestNormalizer($this->digestsClient),
+            new ElifeAssessmentNormalizer(),
             new EventNormalizer($this->eventsClient),
             new ExternalArticleNormalizer(),
             new FileNormalizer(),

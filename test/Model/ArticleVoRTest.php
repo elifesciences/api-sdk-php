@@ -311,14 +311,14 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_an_elife_assessment()
     {
         $with = $this->builder
-            ->withPromiseOfElifeAssessment($elifeAssessment = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')])))
+            ->withPromiseOfElifeAssessmentArticleSection($elifeAssessment = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')])))
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfElifeAssessment(null)
+            ->withPromiseOfElifeAssessmentArticleSection(null)
             ->__invoke();
 
-        $this->assertEquals($elifeAssessment, $with->getElifeAssessment());
-        $this->assertNull($withOut->getElifeAssessment());
+        $this->assertEquals($elifeAssessment, $with->getElifeAssessmentArticleSection());
+        $this->assertNull($withOut->getElifeAssessmentArticleSection());
     }
 
     /**

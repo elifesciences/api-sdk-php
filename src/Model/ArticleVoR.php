@@ -23,7 +23,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
-    private $elifeAssessment;
+    private $elifeAssessmentArticleSection;
     private $elifeAssessmentTitle;
     private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
@@ -81,7 +81,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
-        PromiseInterface $elifeAssessment = null,
+        PromiseInterface $elifeAssessmentArticleSection = null,
         PromiseInterface $elifeAssessmentTitle = null,
         PromiseInterface $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
@@ -108,7 +108,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
-        $this->elifeAssessment = $elifeAssessment;
+        $this->elifeAssessmentArticleSection = $elifeAssessmentArticleSection;
         $this->elifeAssessmentTitle = $elifeAssessmentTitle;
         $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
@@ -229,11 +229,20 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     }
 
     /**
+     * @deprecated Use getElifeAssessmentArticleSection instead
      * @return ArticleSection|null
      */
     public function getElifeAssessment()
     {
-        return $this->elifeAssessment->wait();
+        return $this->elifeAssessmentArticleSection->wait();
+    }
+
+    /**
+     * @return ArticleSection|null
+     */
+    public function getElifeAssessmentArticleSection()
+    {
+        return $this->elifeAssessmentArticleSection->wait();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ReviewedPreprintNormalizer;
@@ -212,6 +213,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
+                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
                     ->withPromiseOfIndexContent(null)
                     ->__invoke(),
                 ['snippet' => true, 'type' => true],
@@ -250,6 +252,10 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     'curationLabels' => [
                         'one',
                         'two',
+                    ],
+                    'elifeAssessment' => [
+                        'significance' => ['landmark'],
+                        'strength' => ['solid'],
                     ],
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],

@@ -131,6 +131,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
+                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
                     ->__invoke(),
                 [],
                 [
@@ -171,6 +172,10 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ],
                     'subjects' => [
                         ['id' => 'subject1', 'name' => 'Subject 1'],
+                    ],
+                    'elifeAssessment' => [
+                        'significance' => ['landmark'],
+                        'strength' => ['solid'],
                     ],
                 ],
                 function (ApiTestCase $test) {

@@ -1,4 +1,5 @@
 PROJECT_NAME = api-sdk-php
+PHP_VERSION = 7.1
 .PHONY: build test test-ci clean
 
 vendor:

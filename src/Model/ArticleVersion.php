@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
 
-abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifier, HasPdf, HasPublishedDate, HasSubjects, HasThumbnail, HasSocialImage
+abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifier, HasPdf, HasPublishedDate, HasSubjects, HasThumbnail, HasSocialImage, HasElifeAssessment
 {
     const STAGE_PREVIEW = 'preview';
     const STAGE_PUBLISHED = 'published';
@@ -41,6 +41,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     private $generatedDataSets;
     private $usedDataSets;
     private $additionalFiles;
+    private $elifeAssessment;
 
     /**
      * @internal
@@ -75,7 +76,8 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         Sequence $dataAvailability,
         Sequence $generatedDataSets,
         Sequence $usedDataSets,
-        Sequence $additionalFiles
+        Sequence $additionalFiles,
+        ElifeAssessment $elifeAssessment = null
     ) {
         $this->id = $id;
         $this->stage = $stage;
@@ -107,6 +109,7 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
         $this->generatedDataSets = $generatedDataSets;
         $this->usedDataSets = $usedDataSets;
         $this->additionalFiles = $additionalFiles;
+        $this->elifeAssessment = $elifeAssessment;
     }
 
     final public function getIdentifier() : Identifier
@@ -338,5 +341,13 @@ abstract class ArticleVersion implements Article, HasCiteAs, HasDoi, HasIdentifi
     public function getAdditionalFiles() : Sequence
     {
         return $this->additionalFiles;
+    }
+
+    /**
+     * @return ElifeAssessment|null
+     */
+    public function getElifeAssessment()
+    {
+        return $this->elifeAssessment;
     }
 }

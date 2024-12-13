@@ -467,10 +467,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 }
             }
 
-            if ($article->getElifeAssessment()) {
+            if ($article->getElifeAssessmentArticleSection()) {
                 $data['elifeAssessment'] = [
                     'title' => $article->getElifeAssessmentTitle(),
-                    'content' => $article->getElifeAssessment()->getContent()
+                    'content' => $article->getElifeAssessmentArticleSection()->getContent()
                         ->map(function (Block $block) use (
                             $format,
                             $context
@@ -483,12 +483,12 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
                 }
 
-                if ($article->getElifeAssessment()->getDoi()) {
-                    $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getDoi();
+                if ($article->getElifeAssessmentArticleSection()->getDoi()) {
+                    $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
                 }
 
-                if ($article->getElifeAssessment()->getId()) {
-                    $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getId();
+                if ($article->getElifeAssessmentArticleSection()->getId()) {
+                    $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
                 }
             }
 

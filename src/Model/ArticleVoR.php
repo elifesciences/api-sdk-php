@@ -86,12 +86,13 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
         PromiseInterface $recommendationsForAuthorsTitle = null,
-        Sequence $publicReviews = null
+        Sequence $publicReviews = null,
+        ElifeAssessment $elifeAssessment = null
     ) {
         parent::__construct($id, $stage, $version, $type, $doi, $authorLine, $titlePrefix, $title, $published,
             $versionDate, $statusDate, $volume, $elocationId, $thumbnail, $socialImage, $pdf, $xml, $subjects,
             $researchOrganisms, $abstract, $issue, $copyright, $authors, $reviewers, $ethics, $funding,
-            $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles);
+            $dataAvailability, $generatedDataSets, $usedDataSets, $additionalFiles, $elifeAssessment);
 
         $this->reviewedDate = $reviewedDate;
         $this->curationLabels = $curationLabels;

@@ -488,6 +488,7 @@ final class Builder
                         'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
                         'curationLabels' => [],
                         'reviewedDate' => null,
+                        'elifeAssessment' => null,
                         'elifeAssessmentArticleSection' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
                         'elifeAssessmentTitle' => promise_for('eLife assessment'),
                         'elifeAssessmentScietyUri' => promise_for('https://elife-assessment.com'),

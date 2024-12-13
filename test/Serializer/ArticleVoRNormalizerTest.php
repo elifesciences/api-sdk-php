@@ -584,6 +584,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
                     ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
                     ->withElifeAssessmentTitle(promise_for('eLife assessment'))
                     ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
@@ -654,6 +655,20 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'curationLabels' => ['Landmark', 'Exceptional'],
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
+                    'elifeAssessment' =>  [
+                        'title' => 'eLife assessment',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elife assessment text',
+                            ],
+                        ],
+                        'scietyUri' => 'https://elife-assessment-09560.com',
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
+                        'significance' => ['landmark'],
+                        'strength' => ['solid'],
+                    ]
                 ],
                 function (ApiTestCase $test) {
                     $test->mockArticleCall('09560', true, true, 1);
@@ -717,6 +732,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
             ],
         ];
         unset($datasets['complete']);
+        unset($datasets['complete snippet']);
         return $datasets;
     }
 

@@ -343,10 +343,10 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_an_elife_assessment_uri()
     {
         $with = $this->builder
-            ->withPromiseOfElifeAssessmentScietyUri($elifeAssessmentScietyUri = 'https://elife-assessment.com')
+            ->withElifeAssessmentScietyUri($elifeAssessmentScietyUri = 'https://elife-assessment.com')
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfElifeAssessmentScietyUri(null)
+            ->withElifeAssessmentScietyUri(null)
             ->__invoke();
 
         $this->assertEquals($elifeAssessmentScietyUri, $with->getElifeAssessmentScietyUri());

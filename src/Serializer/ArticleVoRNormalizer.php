@@ -31,8 +31,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if (empty($data['elifeAssessment'])) {
             $elifeAssessmentTitle = null;
+            $elifeAssessmentScietyUri = null;
         } else {
             $elifeAssessmentTitle = $data['elifeAssessment']['title'];
+            $elifeAssessmentScietyUri = $data['elifeAssessment']['scietyUri'] ?? null;
         }
 
         if ($article) {
@@ -170,15 +172,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $editorEvaluation['doi'] ?? null,
                     $editorEvaluation['id'] ?? null
                 );
-            });
-
-        $elifeAssessmentScietyUri = $data['elifeAssessment']
-            ->then(function (array $elifeAssessment = null) {
-                if (empty($elifeAssessment)) {
-                    return null;
-                }
-
-                return $elifeAssessment['scietyUri'] ?? null;
             });
 
         $elifeAssessmentArticleSection = $data['elifeAssessment']
@@ -471,6 +464,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['elifeAssessment'] = [
                 'title' => $article->getElifeAssessmentTitle()
             ];
+        }
+
+        if ($article->getElifeAssessmentScietyUri()) {
+            $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
         }
 
         if (empty($context['snippet'])) {

@@ -491,7 +491,7 @@ final class Builder
                         'elifeAssessment' => null,
                         'elifeAssessmentArticleSection' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
                         'elifeAssessmentTitle' => 'eLife assessment',
-                        'elifeAssessmentScietyUri' => promise_for('https://elife-assessment.com'),
+                        'elifeAssessmentScietyUri' => 'https://elife-assessment.com',
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
                         'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),
                         'publicReviews' => new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]),
@@ -617,7 +617,7 @@ final class Builder
                             ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                             ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
                             ->withElifeAssessmentTitle(null)
-                            ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
+                            ->withElifeAssessmentScietyUri(null)
                             ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                             ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
                             ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]));

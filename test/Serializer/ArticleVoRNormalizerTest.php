@@ -527,7 +527,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfAuthorResponse(null)
                     ->withPromiseOfElifeAssessmentArticleSection(null)
                     ->withElifeAssessmentTitle(null)
-                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->withDoiVersion(null)
@@ -587,7 +587,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
 //                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
                     ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
                     ->withElifeAssessmentTitle('eLife assessment')
-                    ->withElifeAssessmentScietyUri(promise_for('https://elife-assessment-09560.com'))
+                    ->withElifeAssessmentScietyUri('https://elife-assessment-09560.com')
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
@@ -656,14 +656,14 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'figuresPdf' => 'http://www.example.com/figures',
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'elifeAssessment' =>  [
-                       'title' => 'eLife assessment',
+                        'title' => 'eLife assessment',
+                        'scietyUri' => 'https://elife-assessment-09560.com',
 //                        'content' => [
 //                            [
 //                                'type' => 'paragraph',
 //                                'text' => 'Article 09560 elife assessment text',
 //                            ],
 //                        ],
-//                        'scietyUri' => 'https://elife-assessment-09560.com',
 //                        'doi' => '10.7554/eLife.09560elifeAssessment',
 //                        'id' => 'elife-assessment-id',
 //                        'significance' => ['landmark'],
@@ -708,7 +708,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfAuthorResponse(null)
                     ->withPromiseOfElifeAssessmentArticleSection(null)
                     ->withElifeAssessmentTitle(null)
-                    ->withPromiseOfElifeAssessmentScietyUri(null)
+                    ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->withDoiVersion(null)

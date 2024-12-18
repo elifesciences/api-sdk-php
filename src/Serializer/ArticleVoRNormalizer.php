@@ -17,6 +17,7 @@ use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {
@@ -182,7 +183,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $elifeAssessment['scietyUri'] ?? null;
             });
 
-        $data['elifeAssessment'] = $data['elifeAssessment']
+        $data['elifeAssessmentArticleSection'] = $data['elifeAssessment']
             ->then(function (array $elifeAssessment = null) use ($format, $context) {
                 if (empty($elifeAssessment)) {
                     return null;
@@ -320,7 +321,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse'],
-            $data['elifeAssessment'],
+            $data['elifeAssessmentArticleSection'],
             $elifeAssessmentTitle,
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],

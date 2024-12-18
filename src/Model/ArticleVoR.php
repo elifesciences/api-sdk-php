@@ -82,7 +82,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
         PromiseInterface $elifeAssessmentArticleSection = null,
-        PromiseInterface $elifeAssessmentTitle = null,
+        string $elifeAssessmentTitle = null,
         PromiseInterface $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
         PromiseInterface $recommendationsForAuthorsTitle = null,
@@ -242,7 +242,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
      */
     public function getElifeAssessmentTitle()
     {
-        return $this->elifeAssessmentTitle->wait();
+        return $this->elifeAssessmentTitle;
     }
 
     /**

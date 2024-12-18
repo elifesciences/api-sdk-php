@@ -327,10 +327,10 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_an_elife_assessment_title()
     {
         $with = $this->builder
-            ->withPromiseOfElifeAssessmentTitle($elifeAssessmentTitle = 'eLife assessment')
+            ->withElifeAssessmentTitle($elifeAssessmentTitle = 'eLife assessment')
             ->__invoke();
         $withOut = $this->builder
-            ->withPromiseOfElifeAssessmentTitle(null)
+            ->withElifeAssessmentTitle(null)
             ->__invoke();
 
         $this->assertEquals($elifeAssessmentTitle, $with->getElifeAssessmentTitle());

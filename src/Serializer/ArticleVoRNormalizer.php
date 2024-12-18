@@ -28,6 +28,13 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         string $format = null,
         array $context = []
     ) : ArticleVersion {
+
+        if (empty($data['elifeAssessment'])) {
+            $elifeAssessmentTitle = null;
+        } else {
+            $elifeAssessmentTitle = $data['elifeAssessment']['title'];
+        }
+
         if ($article) {
             $data['acknowledgements'] = new PromiseSequence($article
                 ->then(function (Result $article) {
@@ -163,15 +170,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $editorEvaluation['doi'] ?? null,
                     $editorEvaluation['id'] ?? null
                 );
-            });
-
-        $elifeAssessmentTitle = $data['elifeAssessment']
-            ->then(function (array $elifeAssessment = null) {
-                if (empty($elifeAssessment)) {
-                    return null;
-                }
-
-                return $elifeAssessment['title'];
             });
 
         $elifeAssessmentScietyUri = $data['elifeAssessment']
@@ -467,7 +465,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     $data['decisionLetter']['id'] = $article->getDecisionLetter()->getId();
                 }
             }
+        }
 
+        if ($article->getElifeAssessmentTitle()) {
+            $data['elifeAssessment'] = [
+                'title' => $article->getElifeAssessmentTitle()
+            ];
+        }
+
+        if (empty($context['snippet'])) {
             if ($article->getElifeAssessmentArticleSection()) {
                 $data['elifeAssessment'] = [
                     'title' => $article->getElifeAssessmentTitle(),

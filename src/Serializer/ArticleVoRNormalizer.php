@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
@@ -28,6 +29,17 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         string $format = null,
         array $context = []
     ) : ArticleVersion {
+
+        if (empty($data['elifeAssessment'])) {
+            $elifeAssessment = null;
+            } else {
+                if(empty($data['elifeAssessment']['significance'])) {
+                    $elifeAssessment = null;
+                } else {
+                    $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
+                }
+            }
+
         if ($article) {
             $data['acknowledgements'] = new PromiseSequence($article
                 ->then(function (Result $article) {
@@ -326,7 +338,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,
-            $data['publicReviews']
+            $data['publicReviews'],
+            $elifeAssessment
         );
     }
 

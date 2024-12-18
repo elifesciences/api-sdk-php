@@ -731,7 +731,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                 },
             ],
         ];
-        unset($datasets['complete']);
+        // unset($datasets['complete']);
         unset($datasets['complete snippet']);
         return $datasets;
     }

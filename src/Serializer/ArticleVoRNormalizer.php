@@ -183,7 +183,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 return $elifeAssessment['scietyUri'] ?? null;
             });
 
-        $data['elifeAssessmentArticleSection'] = $data['elifeAssessment']
+        $elifeAssessmentArticleSection = $data['elifeAssessment']
             ->then(function (array $elifeAssessment = null) use ($format, $context) {
                 if (empty($elifeAssessment)) {
                     return null;
@@ -321,7 +321,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse'],
-            $data['elifeAssessmentArticleSection'],
+            $elifeAssessmentArticleSection,
             $elifeAssessmentTitle,
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],

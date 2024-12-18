@@ -33,11 +33,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         if (empty($data['elifeAssessment'])) {
             $elifeAssessment = null;
             } else {
-                if(empty($data['elifeAssessment']['significance'])) {
-                    $elifeAssessment = null;
-                } else {
-                    $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
-                }
+                $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
             }
 
         if ($article) {
@@ -503,6 +499,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getElifeAssessmentArticleSection()->getId()) {
                     $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
+                }
+
+                if ($article->getElifeAssessment()) {
+                    if ($article->getElifeAssessment()->getSignificance() !== null) {
+                        $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
+                    }
+                    if ($article->getElifeAssessment()->getStrength() !== null) {
+                        $data['elifeAssessment']['strength'] = $article->getElifeAssessment()->getStrength();
+                    }
                 }
             }
 

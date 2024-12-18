@@ -13,7 +13,9 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
 
     public function denormalize($data, $class, $format = null, array $context = []) : ElifeAssessment
     {
-        return new ElifeAssessment($data['significance'], $data['strength']);
+        $significance = $data['significance'] ?? null;
+        $strength = $data['strength'] ?? null;
+        return new ElifeAssessment($significance, $strength);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

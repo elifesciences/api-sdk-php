@@ -12,6 +12,7 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
@@ -43,6 +44,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 $data['elifeAssessment']['doi'] ?? null,
                 $data['elifeAssessment']['id'] ?? null
             );
+            $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
         }
 
         if ($article) {
@@ -310,7 +312,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,
-            $data['publicReviews']
+            $data['publicReviews'],
+            $elifeAssessment ?? null
         );
     }
 
@@ -475,6 +478,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 })->toArray();
         }
 
+        if ($article->getElifeAssessment()) {
+            if ($article->getElifeAssessment()->getSignificance() !== null) {
+                $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
+            }
+            if ($article->getElifeAssessment()->getStrength() !== null) {
+                $data['elifeAssessment']['strength'] = $article->getElifeAssessment()->getStrength();
+            }
+        }
+
         if (empty($context['snippet'])) {
             if ($article->getElifeAssessmentArticleSection()) {
                 $data['elifeAssessment'] = [
@@ -498,6 +510,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
                 if ($article->getElifeAssessmentArticleSection()->getId()) {
                     $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
+                }
+            }
+
+            if ($article->getElifeAssessment()) {
+                if ($article->getElifeAssessment()->getSignificance() !== null) {
+                    $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
+                }
+                if ($article->getElifeAssessment()->getStrength() !== null) {
+                    $data['elifeAssessment']['strength'] = $article->getElifeAssessment()->getStrength();
                 }
             }
 

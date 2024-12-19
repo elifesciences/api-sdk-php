@@ -668,7 +668,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
                     $test->mockSubjectCall('biophysics-structural-biology', true);
                     $test->mockArticleCall('14107', true, false, 1);
                 },
-            ],
+                ],
             'complete snippet' => [
                 Builder::for(PromotionalCollection::class)
                     ->withId('1')

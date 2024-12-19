@@ -30,7 +30,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : ArticleVersion {
 
-        if (empty($data['elifeAssessment'])) {
+        if (empty($data['elifeAssessment']) || !isset($data['elifeAssessment'])) {
             $elifeAssessmentTitle = null;
             $elifeAssessmentScietyUri = null;
             $elifeAssessmentArticleSection = null;

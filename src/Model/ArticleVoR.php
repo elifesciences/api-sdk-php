@@ -30,6 +30,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $recommendationsForAuthorsTitle;
     private $doiVersion;
     private $publicReviews;
+    private $elifeAssessment;
 
     /**
      * @internal
@@ -116,6 +117,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
         $this->doiVersion = $doiVersion;
         $this->publicReviews = $publicReviews;
+        $this->elifeAssessment = $elifeAssessment;
     }
 
     /**

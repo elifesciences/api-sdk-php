@@ -657,15 +657,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'elifeAssessment' =>  [
                         'title' => 'eLife assessment',
+                        'scietyUri' => 'https://elife-assessment-09560.com',
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
                         'content' => [
                             [
                                 'type' => 'paragraph',
                                 'text' => 'Article 09560 elife assessment text',
                             ],
                         ],
-                        'scietyUri' => 'https://elife-assessment-09560.com',
-                        'doi' => '10.7554/eLife.09560elifeAssessment',
-                        'id' => 'elife-assessment-id',
 //                        'significance' => ['landmark'],
 //                        'strength' => ['solid'],
                     ]

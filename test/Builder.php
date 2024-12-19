@@ -489,7 +489,7 @@ final class Builder
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => null,
-                        'elifeAssessmentArticleSection' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')]))),
+                        'elifeAssessmentArticleSection' => new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')])),
                         'elifeAssessmentTitle' => 'eLife assessment',
                         'elifeAssessmentScietyUri' => 'https://elife-assessment.com',
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
@@ -615,7 +615,7 @@ final class Builder
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                             ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                            ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                            ->withElifeAssessmentArticleSection(null)
                             ->withElifeAssessmentTitle(null)
                             ->withElifeAssessmentScietyUri(null)
                             ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))

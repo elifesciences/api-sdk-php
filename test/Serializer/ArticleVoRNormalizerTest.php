@@ -149,7 +149,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                    ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
 //                    ->withElifeAssessment(new ElifeAssessment(['important'], ['solid']))
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
@@ -525,7 +525,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withPromiseOfElifeAssessmentArticleSection(null)
+                    ->withElifeAssessmentArticleSection(null)
                     ->withElifeAssessmentTitle(null)
                     ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
@@ -585,7 +585,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
 //                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
-                    ->withElifeAssessmentArticleSection(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id')))
+                    ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
                     ->withElifeAssessmentTitle('eLife assessment')
                     ->withElifeAssessmentScietyUri('https://elife-assessment-09560.com')
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
@@ -657,15 +657,15 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                     'elifeAssessment' =>  [
                         'title' => 'eLife assessment',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elife assessment text',
+                            ],
+                        ],
                         'scietyUri' => 'https://elife-assessment-09560.com',
-//                        'content' => [
-//                            [
-//                                'type' => 'paragraph',
-//                                'text' => 'Article 09560 elife assessment text',
-//                            ],
-//                        ],
-//                        'doi' => '10.7554/eLife.09560elifeAssessment',
-//                        'id' => 'elife-assessment-id',
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
 //                        'significance' => ['landmark'],
 //                        'strength' => ['solid'],
                     ]
@@ -706,7 +706,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withPromiseOfElifeAssessmentArticleSection(null)
+                    ->withElifeAssessmentArticleSection(null)
                     ->withElifeAssessmentTitle(null)
                     ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)

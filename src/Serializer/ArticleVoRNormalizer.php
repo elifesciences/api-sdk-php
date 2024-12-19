@@ -32,9 +32,17 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         if (empty($data['elifeAssessment'])) {
             $elifeAssessmentTitle = null;
             $elifeAssessmentScietyUri = null;
+            $elifeAssessmentArticleSection = null;
         } else {
             $elifeAssessmentTitle = $data['elifeAssessment']['title'];
             $elifeAssessmentScietyUri = $data['elifeAssessment']['scietyUri'] ?? null;
+            $elifeAssessmentArticleSection = new ArticleSection(
+                new ArraySequence(array_map(function (array $block) use ($format, $context) {
+                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                }, $data['elifeAssessment']['content'])),
+                $data['elifeAssessment']['doi'] ?? null,
+                $data['elifeAssessment']['id'] ?? null
+            );
         }
 
         if ($article) {
@@ -171,21 +179,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     }, $editorEvaluation['content'])),
                     $editorEvaluation['doi'] ?? null,
                     $editorEvaluation['id'] ?? null
-                );
-            });
-
-        $elifeAssessmentArticleSection = $data['elifeAssessment']
-            ->then(function (array $elifeAssessment = null) use ($format, $context) {
-                if (empty($elifeAssessment)) {
-                    return null;
-                }
-
-                return new ArticleSection(
-                    new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                    }, $elifeAssessment['content'])),
-                    $elifeAssessment['doi'] ?? null,
-                    $elifeAssessment['id'] ?? null
                 );
             });
 
@@ -462,12 +455,24 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if ($article->getElifeAssessmentTitle()) {
             $data['elifeAssessment'] = [
-                'title' => $article->getElifeAssessmentTitle()
+                'title' => $article->getElifeAssessmentTitle(),
+                'content' => $article->getElifeAssessmentArticleSection()->getContent()
+                    ->map(function (Block $block) use (
+                        $format,
+                        $context
+                    ) {
+                        return $this->normalizer->normalize($block, $format, $context);
+                    })->toArray(),
             ];
         }
 
         if ($article->getElifeAssessmentScietyUri()) {
             $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
+        }
+
+        if ($article->getElifeAssessmentArticleSection()) {
+            $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
+            $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
         }
 
         if (empty($context['snippet'])) {

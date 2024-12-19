@@ -81,7 +81,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
-        PromiseInterface $elifeAssessmentArticleSection = null,
+        ArticleSection $elifeAssessmentArticleSection = null,
         string $elifeAssessmentTitle = null,
         string $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
@@ -234,7 +234,7 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
      */
     public function getElifeAssessmentArticleSection()
     {
-        return $this->elifeAssessmentArticleSection->wait();
+        return $this->elifeAssessmentArticleSection;
     }
 
     /**

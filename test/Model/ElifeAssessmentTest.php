@@ -31,4 +31,16 @@ final class ElifeAssessmentTest extends TestCase
         $this->assertSame(['solid'], $with->getStrength());
         $this->assertNull($withOut->getStrength());
     }
+
+    /**
+     * @test
+     */
+    public function it_may_have_a_title()
+    {
+        $with = new ElifeAssessment('Lorem ipsum', null, null);
+        $withOut = new ElifeAssessment(null, null, null);
+
+        $this->assertSame('Lorem ipsum', $with->getTitle());
+        $this->assertNull($withOut->getTitle());
+    }
 }

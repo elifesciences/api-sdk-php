@@ -150,7 +150,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                     ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
-                    ->withElifeAssessment(new ElifeAssessment(['important'], ['solid']))
+                    ->withElifeAssessment(new ElifeAssessment(null, ['important'], ['solid']))
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
                     ->__invoke(),
@@ -585,7 +585,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                    ->withElifeAssessment(new ElifeAssessment(['landmark'], ['solid']))
+                    ->withElifeAssessment(new ElifeAssessment(null, ['landmark'], ['solid']))
                     ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
                     ->withElifeAssessmentTitle('eLife assessment')
                     ->withElifeAssessmentScietyUri('https://elife-assessment-09560.com')

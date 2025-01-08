@@ -278,6 +278,7 @@ final class Builder
                 },
                 ElifeAssessment::class => function () {
                     return [
+                        'title' => null,
                         'significance' => ['Landmark', 'Important'],
                         'strength' => ['Solid', 'Adequate'],
                     ];

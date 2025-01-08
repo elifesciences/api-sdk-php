@@ -13,8 +13,8 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_may_have_significance_terms()
     {
-        $with = new ElifeAssessment(['important'], ['solid']);
-        $withOut = new ElifeAssessment(null, ['solid']);
+        $with = new ElifeAssessment(null, ['important'], ['solid']);
+        $withOut = new ElifeAssessment(null, null, ['solid']);
 
         $this->assertSame(['important'], $with->getSignificance());
         $this->assertNull($withOut->getSignificance());
@@ -25,8 +25,8 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_may_have_strength_terms()
     {
-        $with = new ElifeAssessment(['important'], ['solid']);
-        $withOut = new ElifeAssessment(['important']);
+        $with = new ElifeAssessment(null, ['important'], ['solid']);
+        $withOut = new ElifeAssessment(null, ['important'], null);
 
         $this->assertSame(['solid'], $with->getStrength());
         $this->assertNull($withOut->getStrength());

@@ -464,13 +464,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             }
         }
 
-        if ($article->getElifeAssessmentScietyUri()) {
-            $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
-        }
-
         if ($article->getElifeAssessmentArticleSection()) {
-            $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
-            $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
             $data['elifeAssessment']['content'] = $article->getElifeAssessmentArticleSection()->getContent()
                 ->map(function (Block $block) use (
                     $format,
@@ -478,6 +472,15 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 ) {
                     return $this->normalizer->normalize($block, $format, $context);
                 })->toArray();
+        }
+
+        if ($article->getElifeAssessmentScietyUri()) {
+            $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
+        }
+
+        if ($article->getElifeAssessmentArticleSection()) {
+            $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
+            $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
         }
 
         if ($article->getElifeAssessment()) {
@@ -490,40 +493,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         }
 
         if (empty($context['snippet'])) {
-            if ($article->getElifeAssessment()) {
-                $data['elifeAssessment'] = [
-                    'title' => $article->getElifeAssessmentTitle(),
-                    'content' => $article->getElifeAssessmentArticleSection()->getContent()
-                        ->map(function (Block $block) use (
-                            $format,
-                            $context
-                        ) {
-                            return $this->normalizer->normalize($block, $format, $context);
-                        })->toArray(),
-                ];
-
-                if ($article->getElifeAssessmentScietyUri()) {
-                    $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
-                }
-
-                if ($article->getElifeAssessmentArticleSection()->getDoi()) {
-                    $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
-                }
-
-                if ($article->getElifeAssessmentArticleSection()->getId()) {
-                    $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
-                }
-            }
-
-            if ($article->getElifeAssessment()) {
-                if ($article->getElifeAssessment()->getSignificance() !== null) {
-                    $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
-                }
-                if ($article->getElifeAssessment()->getStrength() !== null) {
-                    $data['elifeAssessment']['strength'] = $article->getElifeAssessment()->getStrength();
-                }
-            }
-
             if ($article->getRecommendationsForAuthors()) {
                 $data['recommendationsForAuthors'] = [
                     'title' => $article->getRecommendationsForAuthorsTitle(),

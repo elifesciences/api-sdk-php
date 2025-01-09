@@ -456,10 +456,12 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             }
         }
 
-        if ($article->getElifeAssessmentTitle()) {
-            $data['elifeAssessment'] = [
-                'title' => $article->getElifeAssessmentTitle(),
-            ];
+        if ($article->getElifeAssessment()) {
+            if ($article->getElifeAssessment()->getTitle() !== null) {
+                $data['elifeAssessment'] = [
+                    'title' => $article->getElifeAssessment()->getTitle(),
+                ];
+            }
         }
 
         if ($article->getElifeAssessmentScietyUri()) {

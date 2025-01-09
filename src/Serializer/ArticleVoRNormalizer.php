@@ -308,7 +308,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $decisionLetterDescription,
             $data['authorResponse'],
             $elifeAssessmentArticleSection,
-            $elifeAssessmentTitle,
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,

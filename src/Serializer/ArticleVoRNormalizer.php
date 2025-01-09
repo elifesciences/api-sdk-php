@@ -490,7 +490,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         }
 
         if (empty($context['snippet'])) {
-            if ($article->getElifeAssessmentArticleSection()) {
+            if ($article->getElifeAssessment()) {
                 $data['elifeAssessment'] = [
                     'title' => $article->getElifeAssessmentTitle(),
                     'content' => $article->getElifeAssessmentArticleSection()->getContent()

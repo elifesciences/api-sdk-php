@@ -312,7 +312,7 @@ final class ArticleVoRTest extends ArticleVersionTest
     public function it_may_have_an_elife_assessment()
     {
         $with = $this->builder
-            ->withElifeAssessment($elifeAssessment = new ElifeAssessment('elife assessment', ['solid'], null))
+            ->withElifeAssessment($elifeAssessment = new ElifeAssessment('elife assessment', null, ['solid'], null))
             ->__invoke();
         $withOut = $this->builder
             ->withElifeAssessment(null)

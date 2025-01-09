@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\Date;
+use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasCurationLabels;
 use eLife\ApiSdk\Model\HasImpactStatement;
@@ -305,10 +306,26 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertFalse($articleVorTraditional->isReviewedPreprint());
     }
 
-    /**
+        /**
      * @test
      */
     public function it_may_have_an_elife_assessment()
+    {
+        $with = $this->builder
+            ->withElifeAssessment($elifeAssessment = new ElifeAssessment('elife assessment', ['solid'], null))
+            ->__invoke();
+        $withOut = $this->builder
+            ->withElifeAssessment(null)
+            ->__invoke();
+
+        $this->assertEquals($elifeAssessment, $with->getElifeAssessment());
+        $this->assertNull($withOut->getElifeAssessment());
+    }
+
+    /**
+     * @test
+     */
+    public function it_may_have_an_elife_assessment_article_section()
     {
         $with = $this->builder
             ->withElifeAssessmentArticleSection($elifeAssessment = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')])))

@@ -31,11 +31,9 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     ) : ArticleVersion {
 
         if (empty($data['elifeAssessment']) || !isset($data['elifeAssessment'])) {
-            $elifeAssessmentTitle = null;
             $elifeAssessmentScietyUri = null;
             $elifeAssessmentArticleSection = null;
         } else {
-            $elifeAssessmentTitle = $data['elifeAssessment']['title'];
             $elifeAssessmentScietyUri = $data['elifeAssessment']['scietyUri'] ?? null;
             $elifeAssessmentArticleSection = new ArticleSection(
                 new ArraySequence(array_map(function (array $block) use ($format, $context) {

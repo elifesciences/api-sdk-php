@@ -12,7 +12,7 @@ final class ElifeAssessment implements Model
      * @internal
      */
     public function __construct(
-        string $title = null,
+        string $title,
         array $significance = null,
         array $strength = null
     ) {
@@ -21,10 +21,7 @@ final class ElifeAssessment implements Model
         $this->strength = $strength;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

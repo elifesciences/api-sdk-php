@@ -341,22 +341,6 @@ final class ArticleVoRTest extends ArticleVersionTest
     /**
      * @test
      */
-    public function it_may_have_an_elife_assessment_title()
-    {
-        $with = $this->builder
-            ->withElifeAssessmentTitle($elifeAssessmentTitle = 'eLife assessment')
-            ->__invoke();
-        $withOut = $this->builder
-            ->withElifeAssessmentTitle(null)
-            ->__invoke();
-
-        $this->assertEquals($elifeAssessmentTitle, $with->getElifeAssessmentTitle());
-        $this->assertNull($withOut->getElifeAssessmentTitle());
-    }
-
-    /**
-     * @test
-     */
     public function it_may_have_an_elife_assessment_uri()
     {
         $with = $this->builder

@@ -29,11 +29,12 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
      */
     public function normalize($object, $format = null, array $context = []) : array
     {
-        $data = [
-            'significance' => $object->getSignificance(),
-            'strength' => $object->getStrength(),
- 
-        ];
+        $data = [];
+        if ($object->getTitle() !== null) {
+            $data['title'] = $object->getTitle();
+        }
+        $data['significance'] = $object->getSignificance();
+        $data['strength'] = $object->getStrength();
 
         return $data;
     }

@@ -131,7 +131,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withElifeAssessment(new ElifeAssessment(null, ['landmark'], ['solid']))
+                    ->withElifeAssessment(new ElifeAssessment('eLife assessment title', ['landmark'], ['solid']))
                     ->__invoke(),
                 [],
                 [
@@ -174,6 +174,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                         ['id' => 'subject1', 'name' => 'Subject 1'],
                     ],
                     'elifeAssessment' => [
+                        'title' => 'eLife assessment title',
                         'significance' => ['landmark'],
                         'strength' => ['solid'],
                     ],
@@ -218,7 +219,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withElifeAssessment(new ElifeAssessment(null, ['landmark'], ['solid']))
+                    ->withElifeAssessment(new ElifeAssessment('eLife assessment title', ['landmark'], ['solid']))
                     ->withPromiseOfIndexContent(null)
                     ->__invoke(),
                 ['snippet' => true, 'type' => true],
@@ -259,6 +260,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                         'two',
                     ],
                     'elifeAssessment' => [
+                        'title' => 'eLife assessment title',
                         'significance' => ['landmark'],
                         'strength' => ['solid'],
                     ],

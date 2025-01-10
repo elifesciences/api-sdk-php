@@ -7,11 +7,13 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use PHPUnit\Framework\TestCase;
+use test\eLife\ApiSdk\Builder;
 
 final class ElifeAssessmentTest extends TestCase
 {
     private $title = 'eLife Assessment';
     private $articleSection;
+    private $builder;
 
     /**
      * @before
@@ -19,6 +21,7 @@ final class ElifeAssessmentTest extends TestCase
     public function set_up()
     {
         $this->articleSection = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')]));
+        $this->builder = Builder::for(ElifeAssessment::class);
     }
 
     /**
@@ -26,7 +29,9 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_has_a_title()
     {
-        $assessment = new ElifeAssessment($this->title, $this->articleSection, null, null);
+        $assessment = $this->builder
+            ->withTitle($this->title)
+            ->__invoke();
 
         $this->assertSame($this->title, $assessment->getTitle());
     }

@@ -2,6 +2,9 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\ArticleSection;
+use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\ElifeAssessment;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -16,6 +19,18 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
         $title = $data['title'];
         $significance = $data['significance'] ?? null;
         $strength = $data['strength'] ?? null;
+        $elifeAssessmentArticleSection = new ArticleSection(
+            new ArraySequence(
+                array_map(
+                    function (array $block) use ($format, $context) {
+                        return $this->denormalizer->denormalize($block, Block::class, $format, $context);
+                    },
+                    $data['content'] ?? []
+                )
+            ),
+            $data['doi'] ?? null,
+            $data['id'] ?? null
+        );
         return new ElifeAssessment($title, null, $significance, $strength);
     }
 

@@ -149,7 +149,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
                     ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                    ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
                     ->withElifeAssessment(new ElifeAssessment(
                         'eLife assessment',
                         new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
@@ -530,7 +529,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withElifeAssessmentArticleSection(null)
                     ->withElifeAssessment(null)
                     ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
@@ -595,7 +593,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ['landmark'],
                         ['solid']
                     ))
-                    ->withElifeAssessmentArticleSection(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'))
                     ->withElifeAssessmentScietyUri('https://elife-assessment-09560.com')
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
@@ -715,7 +712,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withElifeAssessmentArticleSection(null)
                     ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)

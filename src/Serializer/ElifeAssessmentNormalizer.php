@@ -54,6 +54,12 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
                     return $this->normalizer->normalize($block, $format, $context);
                 })
                 ->toArray();
+            if ($articleSection->getDoi() !== null) {
+                $data['doi'] = $articleSection->getDoi();
+            }
+            if ($articleSection->getId() !== null) {
+                $data['id'] = $articleSection->getId();
+            }
         }
         if ($object->getSignificance() !== null) {
             $data['significance'] = $object->getSignificance();

@@ -457,28 +457,21 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['elifeAssessment'] = [
                 'title' => $article->getElifeAssessment()->getTitle(),
             ];
-        }
-
-        if ($article->getElifeAssessmentArticleSection()) {
-            $data['elifeAssessment']['content'] = $article->getElifeAssessmentArticleSection()->getContent()
-                ->map(function (Block $block) use (
-                    $format,
-                    $context
-                ) {
+            $data['elifeAssessment']['content'] = $article
+                ->getElifeAssessmentArticleSection()
+                ->getContent()
+                ->map(function (Block $block) use ($format, $context) {
                     return $this->normalizer->normalize($block, $format, $context);
-                })->toArray();
-        }
+                })
+                ->toArray();
 
-        if ($article->getElifeAssessmentScietyUri()) {
-            $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
-        }
+            if ($article->getElifeAssessmentScietyUri()) {
+                $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
+            }
 
-        if ($article->getElifeAssessmentArticleSection()) {
             $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
             $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
-        }
 
-        if ($article->getElifeAssessment()) {
             if ($article->getElifeAssessment()->getSignificance() !== null) {
                 $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
             }

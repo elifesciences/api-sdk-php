@@ -227,14 +227,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     }
 
     /**
-     * @return ArticleSection|null
-     */
-    public function getElifeAssessmentArticleSection()
-    {
-        return $this->elifeAssessmentArticleSection;
-    }
-
-    /**
      * @return string|null
      */
     public function getElifeAssessmentScietyUri()

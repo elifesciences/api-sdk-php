@@ -458,7 +458,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 'title' => $article->getElifeAssessment()->getTitle(),
             ];
             $data['elifeAssessment']['content'] = $article
-                ->getElifeAssessmentArticleSection()
+                ->getElifeAssessment()
+                ->getArticleSection()
                 ->getContent()
                 ->map(function (Block $block) use ($format, $context) {
                     return $this->normalizer->normalize($block, $format, $context);
@@ -469,8 +470,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                 $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
             }
 
-            $data['elifeAssessment']['doi'] = $article->getElifeAssessmentArticleSection()->getDoi();
-            $data['elifeAssessment']['id'] = $article->getElifeAssessmentArticleSection()->getId();
+            $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getArticleSection()->getDoi();
+            $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getArticleSection()->getId();
 
             if ($article->getElifeAssessment()->getSignificance() !== null) {
                 $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();

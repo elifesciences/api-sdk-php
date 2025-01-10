@@ -279,7 +279,7 @@ final class Builder
                 ElifeAssessment::class => function () {
                     return [
                         'title' => 'eLife Assessment',
-                        'articleSection' => null,
+                        'articleSection' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
                         'significance' => ['Landmark', 'Important'],
                         'strength' => ['Solid', 'Adequate'],
                     ];

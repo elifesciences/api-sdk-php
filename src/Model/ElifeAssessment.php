@@ -14,7 +14,7 @@ final class ElifeAssessment implements Model
      */
     public function __construct(
         string $title,
-        ArticleSection $articleSection = null,
+        ArticleSection $articleSection,
         array $significance = null,
         array $strength = null
     ) {
@@ -29,10 +29,7 @@ final class ElifeAssessment implements Model
         return $this->title;
     }
 
-    /**
-     * @return ArticleSection|null
-     */
-    public function getArticleSection()
+    public function getArticleSection(): ArticleSection
     {
         return $this->articleSection;
     }

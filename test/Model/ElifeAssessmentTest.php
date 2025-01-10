@@ -11,8 +11,6 @@ use test\eLife\ApiSdk\Builder;
 
 final class ElifeAssessmentTest extends TestCase
 {
-    private $title = 'eLife Assessment';
-    private $articleSection;
     private $builder;
 
     /**
@@ -20,7 +18,6 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function set_up()
     {
-        $this->articleSection = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')]));
         $this->builder = Builder::for(ElifeAssessment::class);
     }
 
@@ -29,11 +26,12 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_has_a_title()
     {
+        $title = 'eLife Assessment';
         $assessment = $this->builder
-            ->withTitle($this->title)
+            ->withTitle($title)
             ->__invoke();
 
-        $this->assertSame($this->title, $assessment->getTitle());
+        $this->assertSame($title, $assessment->getTitle());
     }
 
     /**
@@ -41,9 +39,12 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_has_an_article_section()
     {
-        $assessment = new ElifeAssessment($this->title, $this->articleSection, null, null);
+        $articleSection = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')]));
+        $assessment = $this->builder
+            ->withArticleSection($articleSection)
+            ->__invoke();
 
-        $this->assertSame($this->articleSection, $assessment->getArticleSection());
+        $this->assertSame($articleSection, $assessment->getArticleSection());
     }
 
     /**
@@ -51,8 +52,12 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_may_have_significance_terms()
     {
-        $with = new ElifeAssessment($this->title, $this->articleSection, ['important'], ['solid']);
-        $withOut = new ElifeAssessment($this->title, $this->articleSection, null, ['solid']);
+        $with = $this->builder
+            ->withSignificance(['important'])
+            ->__invoke();
+        $withOut = $this->builder
+            ->withSignificance(null)
+            ->__invoke();
 
         $this->assertSame(['important'], $with->getSignificance());
         $this->assertNull($withOut->getSignificance());
@@ -63,8 +68,12 @@ final class ElifeAssessmentTest extends TestCase
      */
     public function it_may_have_strength_terms()
     {
-        $with = new ElifeAssessment($this->title, $this->articleSection, ['important'], ['solid']);
-        $withOut = new ElifeAssessment($this->title, $this->articleSection, ['important'], null);
+        $with = $this->builder
+            ->withStrength(['solid'])
+            ->__invoke();
+        $withOut = $this->builder
+            ->withStrength(null)
+            ->__invoke();
 
         $this->assertSame(['solid'], $with->getStrength());
         $this->assertNull($withOut->getStrength());

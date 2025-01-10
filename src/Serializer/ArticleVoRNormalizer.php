@@ -32,16 +32,8 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
         if (empty($data['elifeAssessment']) || !isset($data['elifeAssessment'])) {
             $elifeAssessmentScietyUri = null;
-            $elifeAssessmentArticleSection = null;
         } else {
             $elifeAssessmentScietyUri = $data['elifeAssessment']['scietyUri'] ?? null;
-            $elifeAssessmentArticleSection = new ArticleSection(
-                new ArraySequence(array_map(function (array $block) use ($format, $context) {
-                    return $this->denormalizer->denormalize($block, Block::class, $format, $context);
-                }, $data['elifeAssessment']['content'])),
-                $data['elifeAssessment']['doi'] ?? null,
-                $data['elifeAssessment']['id'] ?? null
-            );
             $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
         }
 
@@ -305,7 +297,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse'],
-            $elifeAssessmentArticleSection,
             $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,

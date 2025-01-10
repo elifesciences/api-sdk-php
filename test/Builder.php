@@ -491,7 +491,6 @@ final class Builder
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => null,
-                        'elifeAssessmentArticleSection' => new ArticleSection(new ArraySequence([new Paragraph('eLife Assessment')])),
                         'elifeAssessmentScietyUri' => 'https://elife-assessment.com',
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
                         'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),

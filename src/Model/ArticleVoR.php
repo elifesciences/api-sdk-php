@@ -23,7 +23,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
-    private $elifeAssessmentArticleSection;
     private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
     private $recommendationsForAuthorsTitle;
@@ -80,7 +79,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
-        ArticleSection $elifeAssessmentArticleSection = null,
         string $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
         PromiseInterface $recommendationsForAuthorsTitle = null,
@@ -107,7 +105,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
-        $this->elifeAssessmentArticleSection = $elifeAssessmentArticleSection;
         $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
         $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;

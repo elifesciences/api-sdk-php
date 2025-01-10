@@ -47,19 +47,17 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
         $data = [];
         $data['title'] = $object->getTitle();
         $articleSection = $object->getArticleSection();
-        if ($articleSection !== null) {
-            $data['content'] = $articleSection
-                ->getContent()
-                ->map(function (Block $block) use ($format, $context) {
-                    return $this->normalizer->normalize($block, $format, $context);
-                })
-                ->toArray();
-            if ($articleSection->getDoi() !== null) {
-                $data['doi'] = $articleSection->getDoi();
-            }
-            if ($articleSection->getId() !== null) {
-                $data['id'] = $articleSection->getId();
-            }
+        $data['content'] = $articleSection
+            ->getContent()
+            ->map(function (Block $block) use ($format, $context) {
+                return $this->normalizer->normalize($block, $format, $context);
+            })
+            ->toArray();
+        if ($articleSection->getDoi() !== null) {
+            $data['doi'] = $articleSection->getDoi();
+        }
+        if ($articleSection->getId() !== null) {
+            $data['id'] = $articleSection->getId();
         }
         if ($object->getSignificance() !== null) {
             $data['significance'] = $object->getSignificance();

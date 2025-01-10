@@ -25,7 +25,7 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
                     function (array $block) use ($format, $context) {
                         return $this->denormalizer->denormalize($block, Block::class, $format, $context);
                     },
-                    $data['content'] ?? []
+                    $data['content']
                 )
             ),
             $data['doi'] ?? null,

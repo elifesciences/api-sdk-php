@@ -5,6 +5,8 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\ArraySequence;
+use eLife\ApiSdk\Model\ArticleSection;
+use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
@@ -131,7 +133,13 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                             ->withId('subject1')
                             ->__invoke(),
                     ]))
-                    ->withElifeAssessment(new ElifeAssessment('eLife assessment title', null, ['landmark'], ['solid']))
+                    ->withElifeAssessment(new ElifeAssessment(
+                        'eLife assessment title',
+//                        new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
+                        null,
+                        ['landmark'],
+                        ['solid']
+                    ))
                     ->__invoke(),
                 [],
                 [
@@ -175,6 +183,14 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ],
                     'elifeAssessment' => [
                         'title' => 'eLife assessment title',
+//                        'content' => [
+//                            [
+//                                'type' => 'paragraph',
+//                                'text' => 'Article 09560 elife assessment text',
+//                            ],
+//                        ],
+//                        'doi' => '10.7554/eLife.09560elifeAssessment',
+//                        'id' => 'elife-assessment-id',
                         'significance' => ['landmark'],
                         'strength' => ['solid'],
                     ],

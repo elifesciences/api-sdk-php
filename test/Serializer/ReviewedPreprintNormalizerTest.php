@@ -135,8 +135,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ]))
                     ->withElifeAssessment(new ElifeAssessment(
                         'eLife assessment title',
-//                        new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
-                        null,
+                        new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
                         ['landmark'],
                         ['solid']
                     ))
@@ -183,14 +182,14 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ],
                     'elifeAssessment' => [
                         'title' => 'eLife assessment title',
-//                        'content' => [
-//                            [
-//                                'type' => 'paragraph',
-//                                'text' => 'Article 09560 elife assessment text',
-//                            ],
-//                        ],
-//                        'doi' => '10.7554/eLife.09560elifeAssessment',
-//                        'id' => 'elife-assessment-id',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elife assessment text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
                         'significance' => ['landmark'],
                         'strength' => ['solid'],
                     ],
@@ -237,8 +236,7 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ]))
                     ->withElifeAssessment(new ElifeAssessment(
                         'eLife assessment title',
-//                        new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
-                        null,
+                        new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
                         ['landmark'],
                         ['solid']
                     ))
@@ -283,14 +281,14 @@ final class ReviewedPreprintNormalizerTest extends ApiTestCase
                     ],
                     'elifeAssessment' => [
                         'title' => 'eLife assessment title',
-//                        'content' => [
-//                            [
-//                                'type' => 'paragraph',
-//                                'text' => 'Article 09560 elife assessment text',
-//                            ],
-//                        ],
-//                        'doi' => '10.7554/eLife.09560elifeAssessment',
-//                        'id' => 'elife-assessment-id',
+                        'content' => [
+                            [
+                                'type' => 'paragraph',
+                                'text' => 'Article 09560 elife assessment text',
+                            ],
+                        ],
+                        'doi' => '10.7554/eLife.09560elifeAssessment',
+                        'id' => 'elife-assessment-id',
                         'significance' => ['landmark'],
                         'strength' => ['solid'],
                     ],

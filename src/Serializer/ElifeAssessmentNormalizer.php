@@ -19,7 +19,7 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
         $title = $data['title'];
         $significance = $data['significance'] ?? null;
         $strength = $data['strength'] ?? null;
-        $elifeAssessmentArticleSection = new ArticleSection(
+        $articleSection = new ArticleSection(
             new ArraySequence(
                 array_map(
                     function (array $block) use ($format, $context) {
@@ -31,7 +31,7 @@ final class ElifeAssessmentNormalizer implements NormalizerInterface, Denormaliz
             $data['doi'] ?? null,
             $data['id'] ?? null
         );
-        return new ElifeAssessment($title, null, $significance, $strength);
+        return new ElifeAssessment($title, $articleSection, $significance, $strength);
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool

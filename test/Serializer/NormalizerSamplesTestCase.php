@@ -25,7 +25,7 @@ trait NormalizerSamplesTestCase
         $denormalized = $this->normalizer->denormalize(json_decode($original, true), $this->class(), null, $context);
         $normalized = $this->normalizer->normalize($denormalized, null, $context);
 
-        $this->assertJsonStringEqualsJsonString($original, json_encode($normalized));
+        $this->assertEquals(json_decode($original, true), $normalized);
     }
 
     final public function sampleProvider()

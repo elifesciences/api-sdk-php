@@ -30,9 +30,10 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         array $context = []
     ) : ArticleVersion {
 
-        if (empty($data['elifeAssessment']) || !isset($data['elifeAssessment'])) {
+        if (!empty($data['elifeAssessment'])) {
+            $elifeAssessment = $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
         } else {
-            $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
+            $elifeAssessment = null;
         }
 
         if ($article) {
@@ -298,7 +299,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,
             $data['publicReviews'],
-            $elifeAssessment ?? null
+            $elifeAssessment
         );
     }
 

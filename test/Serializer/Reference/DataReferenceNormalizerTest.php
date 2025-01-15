@@ -190,95 +190,10 @@ final class DataReferenceNormalizerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider denormalizeProvider
+     * @dataProvider normalizeProvider
      */
-    public function it_denormalize_data_references(array $json, DataReference $expected)
+    public function it_denormalize_data_references(DataReference $expected, array $json)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, DataReference::class));
-    }
-
-    public function denormalizeProvider() : array
-    {
-        return [
-            'complete' => [
-                [
-                    'type' => 'data',
-                    'id' => 'id',
-                    'date' => '2000-01-01',
-                    'discriminator' => 'a',
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'author preferred name',
-                                'index' => 'author index name',
-                            ],
-                        ],
-                    ],
-                    'authorsEtAl' => true,
-                    'compilers' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'compiler preferred name',
-                                'index' => 'compiler index name',
-                            ],
-                        ],
-                    ],
-                    'compilersEtAl' => true,
-                    'curators' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'curator preferred name',
-                                'index' => 'curator index name',
-                            ],
-                        ],
-                    ],
-                    'curatorsEtAl' => true,
-                    'title' => 'title',
-                    'source' => 'source',
-                    'dataId' => 'id',
-                    'assigningAuthority' => [
-                        'name' => [
-                            'assigning authority',
-                        ],
-                    ],
-                    'specificUse' => 'analyzed',
-                    'doi' => '10.1000/182',
-                    'uri' => 'http://www.example.com/',
-                ],
-                new DataReference('id', Date::fromString('2000-01-01'), 'a',
-                    [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], true,
-                    [new PersonAuthor(new PersonDetails('compiler preferred name', 'compiler index name'))], true,
-                    [new PersonAuthor(new PersonDetails('curator preferred name', 'curator index name'))], true,
-                    'title',
-                    'source', 'id', new Place(['assigning authority']),
-                    'analyzed',
-                    '10.1000/182',
-                    'http://www.example.com/'),
-            ],
-            'minimum' => [
-                [
-                    'type' => 'data',
-                    'id' => 'id',
-                    'date' => '2000',
-                    'authors' => [
-                        [
-                            'type' => 'person',
-                            'name' => [
-                                'preferred' => 'preferred name',
-                                'index' => 'index name',
-                            ],
-                        ],
-                    ],
-                    'title' => 'title',
-                    'source' => 'source',
-                ],
-                new DataReference('id', Date::fromString('2000'), null,
-                    [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false,
-                    'title', 'source'),
-            ],
-        ];
     }
 }

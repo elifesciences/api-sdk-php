@@ -442,27 +442,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         }
 
         if ($article->getElifeAssessment()) {
-            $data['elifeAssessment'] = [
-                'title' => $article->getElifeAssessment()->getTitle(),
-            ];
-            $data['elifeAssessment']['content'] = $article
-                ->getElifeAssessment()
-                ->getArticleSection()
-                ->getContent()
-                ->map(function (Block $block) use ($format, $context) {
-                    return $this->normalizer->normalize($block, $format, $context);
-                })
-                ->toArray();
-
-            $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getArticleSection()->getDoi();
-            $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getArticleSection()->getId();
-
-            if ($article->getElifeAssessment()->getSignificance() !== null) {
-                $data['elifeAssessment']['significance'] = $article->getElifeAssessment()->getSignificance();
-            }
-            if ($article->getElifeAssessment()->getStrength() !== null) {
-                $data['elifeAssessment']['strength'] = $article->getElifeAssessment()->getStrength();
-            }
+            $data['elifeAssessment'] = $this->normalizer->normalize($article->getElifeAssessment(), $format, $context);
         }
 
         if (empty($context['snippet'])) {

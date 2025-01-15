@@ -23,7 +23,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     private $decisionLetter;
     private $decisionLetterDescription;
     private $authorResponse;
-    private $elifeAssessmentScietyUri;
     private $recommendationsForAuthors;
     private $recommendationsForAuthorsTitle;
     private $doiVersion;
@@ -79,7 +78,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         PromiseInterface $decisionLetter,
         Sequence $decisionLetterDescription,
         PromiseInterface $authorResponse,
-        string $elifeAssessmentScietyUri = null,
         PromiseInterface $recommendationsForAuthors = null,
         PromiseInterface $recommendationsForAuthorsTitle = null,
         Sequence $publicReviews = null,
@@ -105,7 +103,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
         $this->decisionLetter = $decisionLetter;
         $this->decisionLetterDescription = $decisionLetterDescription;
         $this->authorResponse = $authorResponse;
-        $this->elifeAssessmentScietyUri = $elifeAssessmentScietyUri;
         $this->recommendationsForAuthors = $recommendationsForAuthors;
         $this->recommendationsForAuthorsTitle = $recommendationsForAuthorsTitle;
         $this->doiVersion = $doiVersion;
@@ -221,14 +218,6 @@ final class ArticleVoR extends ArticleVersion implements HasContent, HasImpactSt
     public function getAuthorResponse()
     {
         return $this->authorResponse->wait();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getElifeAssessmentScietyUri()
-    {
-        return $this->elifeAssessmentScietyUri;
     }
 
     /**

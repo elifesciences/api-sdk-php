@@ -491,7 +491,6 @@ final class Builder
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => null,
-                        'elifeAssessmentScietyUri' => 'https://elife-assessment.com',
                         'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
                         'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),
                         'publicReviews' => new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]),
@@ -615,7 +614,6 @@ final class Builder
                             ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
                             ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                            ->withElifeAssessmentScietyUri(null)
                             ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                             ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
                             ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]));

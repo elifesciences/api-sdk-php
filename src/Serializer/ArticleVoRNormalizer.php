@@ -31,9 +31,7 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
     ) : ArticleVersion {
 
         if (empty($data['elifeAssessment']) || !isset($data['elifeAssessment'])) {
-            $elifeAssessmentScietyUri = null;
         } else {
-            $elifeAssessmentScietyUri = $data['elifeAssessment']['scietyUri'] ?? null;
             $elifeAssessment =  $this->denormalizer->denormalize($data['elifeAssessment'], ElifeAssessment::class, $format, $context);
         }
 
@@ -297,7 +295,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             $data['decisionLetter'],
             $decisionLetterDescription,
             $data['authorResponse'],
-            $elifeAssessmentScietyUri,
             $data['recommendationsForAuthors'],
             $recommendationsForAuthorsTitle,
             $data['publicReviews'],
@@ -456,10 +453,6 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
                     return $this->normalizer->normalize($block, $format, $context);
                 })
                 ->toArray();
-
-            if ($article->getElifeAssessmentScietyUri()) {
-                $data['elifeAssessment']['scietyUri'] = $article->getElifeAssessmentScietyUri();
-            }
 
             $data['elifeAssessment']['doi'] = $article->getElifeAssessment()->getArticleSection()->getDoi();
             $data['elifeAssessment']['id'] = $article->getElifeAssessment()->getArticleSection()->getId();

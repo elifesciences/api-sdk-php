@@ -450,7 +450,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'text' => 'Article 09560 elife assessment text',
                             ],
                         ],
-                        'scietyUri' => 'https://elife-assessment.com',
                         'doi' => '10.7554/eLife.09560elifeAssessment',
                         'id' => 'elife-assessment-id',
                         'significance' => ['important'],
@@ -530,7 +529,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
                     ->withElifeAssessment(null)
-                    ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->withDoiVersion(null)
@@ -593,7 +591,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                         ['landmark'],
                         ['solid']
                     ))
-                    ->withElifeAssessmentScietyUri('https://elife-assessment-09560.com')
                     ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
@@ -669,7 +666,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                                 'text' => 'Article 09560 elife assessment text',
                             ],
                         ],
-                        'scietyUri' => 'https://elife-assessment-09560.com',
                         'doi' => '10.7554/eLife.09560elifeAssessment',
                         'id' => 'elife-assessment-id',
                         'significance' => ['landmark'],
@@ -712,7 +708,6 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ->withPromiseOfDecisionLetter(null)
                     ->withDecisionLetterDescription(new EmptySequence())
                     ->withPromiseOfAuthorResponse(null)
-                    ->withElifeAssessmentScietyUri(null)
                     ->withPromiseOfRecommendationsForAuthors(null)
                     ->withPromiseOfRecommendationsForAuthorsTitle(null)
                     ->withDoiVersion(null)

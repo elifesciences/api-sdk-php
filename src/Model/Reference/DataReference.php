@@ -23,6 +23,7 @@ final class DataReference implements Reference, HasDoi
     private $source;
     private $dataId;
     private $assigningAuthority;
+    private $specificUse;
     private $doi;
     private $uri;
 
@@ -43,6 +44,7 @@ final class DataReference implements Reference, HasDoi
         string $source,
         string $dataId = null,
         Place $assigningAuthority = null,
+        string $specificUse = null,
         string $doi = null,
         string $uri = null
     ) {
@@ -59,6 +61,7 @@ final class DataReference implements Reference, HasDoi
         $this->source = $source;
         $this->dataId = $dataId;
         $this->assigningAuthority = $assigningAuthority;
+        $this->specificUse = $specificUse;
         $this->doi = $doi;
         $this->uri = $uri;
     }
@@ -143,6 +146,14 @@ final class DataReference implements Reference, HasDoi
         return $this->assigningAuthority;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getSpecificUse()
+    {
+        return $this->specificUse;
+    }
+    
     /**
      * @return string|null
      */

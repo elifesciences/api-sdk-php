@@ -42,6 +42,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
             $data['dataId'] ?? null,
             empty($data['assigningAuthority']) ? null : $this->denormalizer->denormalize($data['assigningAuthority'],
                 Place::class, $format, $context),
+            $data['specificUse'] ?? null,
             $data['doi'] ?? null,
             $data['uri'] ?? null
         );
@@ -109,6 +110,10 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
         if ($object->getAssigningAuthority()) {
             $data['assigningAuthority'] = $this->normalizer->normalize($object->getAssigningAuthority(), $format,
                 $context);
+        }
+
+        if ($object->getSpecificUse()) {
+            $data['specificUse'] = $object->getSpecificUse();
         }
 
         if ($object->getDoi()) {

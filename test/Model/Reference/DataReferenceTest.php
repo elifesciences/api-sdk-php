@@ -224,7 +224,7 @@ final class DataReferenceTest extends TestCase
     {
         $with = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
-            'source', null, null, '10.1000/182');
+            'source', null, null, null, '10.1000/182');
         $withOut = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');
@@ -241,7 +241,7 @@ final class DataReferenceTest extends TestCase
     {
         $with = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
-            'source', null, null, null, 'http://www.example.com/');
+            'source', null, null, null, null, 'http://www.example.com/');
         $withOut = new DataReference('id', new Date(2000), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, [], false, 'title',
             'source');

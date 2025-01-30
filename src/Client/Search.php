@@ -35,6 +35,9 @@ final class Search implements Iterator, Sequence
     private $useDate = 'default';
     private $startDate;
     private $endDate;
+    private $prc;
+    private $significance;
+    private $strength;
 
     // cached outputs
     private $count;
@@ -147,7 +150,10 @@ final class Search implements Iterator, Sequence
                 $this->typesQuery,
                 $this->useDate,
                 $this->startDate,
-                $this->endDate
+                $this->endDate,
+                $this->prc,
+                $this->significance,
+                $this->strength
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];
@@ -179,6 +185,33 @@ final class Search implements Iterator, Sequence
         $clone = clone $this;
 
         $clone->descendingOrder = !$this->descendingOrder;
+
+        return $clone;
+    }
+    
+    public function prc(bool $prc = true) : self
+    {
+        $clone = clone $this;
+
+        $clone->prc = $prc ?? null;
+
+        return $clone;
+    }
+    
+    public function significance(string $significance) : self
+    {
+        $clone = clone $this;
+
+        $clone->significance = $significance;
+
+        return $clone;
+    }
+    
+    public function strength(string $strength) : self
+    {
+        $clone = clone $this;
+
+        $clone->strength = $strength;
 
         return $clone;
     }

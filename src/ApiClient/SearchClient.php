@@ -24,7 +24,10 @@ class SearchClient
         array $types = [],
         string $useDate = 'default',
         DateTimeImmutable $starts = null,
-        DateTimeImmutable $ends = null
+        DateTimeImmutable $ends = null,
+        bool $prc = false,
+        string $significance = null,
+        string $strength = null
     ) : PromiseInterface {
         $uri = $this->createUri([
             'path' => 'search',
@@ -39,6 +42,9 @@ class SearchClient
                 'use-date' => $useDate,
                 'start-date' => $starts ? $starts->format('Y-m-d') : null,
                 'end-date' => $ends ? $ends->format('Y-m-d') : null,
+                'prc' => $prc,
+                'significance' => $significance,
+                'strength' => $strength,
             ],
         ]);
 

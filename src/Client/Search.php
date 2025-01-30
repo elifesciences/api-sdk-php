@@ -198,7 +198,7 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
     
-    public function significance(string $significance) : self
+    public function significance(string $significance = null) : self
     {
         $clone = clone $this;
 
@@ -207,7 +207,7 @@ final class Search implements Iterator, Sequence
         return $clone;
     }
     
-    public function strength(string $strength) : self
+    public function strength(string $strength = null) : self
     {
         $clone = clone $this;
 

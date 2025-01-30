@@ -25,7 +25,7 @@ class SearchClient
         string $useDate = 'default',
         DateTimeImmutable $starts = null,
         DateTimeImmutable $ends = null,
-        bool $prc = false,
+        bool $prc = null,
         string $significance = null,
         string $strength = null
     ) : PromiseInterface {

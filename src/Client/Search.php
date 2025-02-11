@@ -21,6 +21,7 @@ final class Search implements Iterator, Sequence
 
     use Client;
     use ForSubject;
+    use ForElifeAssessment;
 
     // collaborators
     private $searchClient;
@@ -35,6 +36,8 @@ final class Search implements Iterator, Sequence
     private $useDate = 'default';
     private $startDate;
     private $endDate;
+    private $elifeAssessmentSignificancesQuery = [];
+    private $elifeAssessmentStrengthsQuery = [];
 
     // cached outputs
     private $count;
@@ -46,6 +49,9 @@ final class Search implements Iterator, Sequence
      * @var PromiseInterface
      */
     private $subjects;
+    /**
+     * @var PromiseInterface
+     */
 
     public function __construct(SearchClient $searchClient, DenormalizerInterface $denormalizer)
     {
@@ -147,7 +153,9 @@ final class Search implements Iterator, Sequence
                 $this->typesQuery,
                 $this->useDate,
                 $this->startDate,
-                $this->endDate
+                $this->endDate,
+                $this->elifeAssessmentSignificancesQuery,
+                $this->elifeAssessmentStrengthsQuery
             )
             ->then(function (Result $result) {
                 $this->count = $result['total'];

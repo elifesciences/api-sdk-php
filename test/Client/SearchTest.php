@@ -131,6 +131,18 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_filtered_by_elife_assessment_significance()
+    {
+        $this->mockCountCall(5, $query = '', $descendingOrder = true, ['elife-assessment-significance']);
+        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['elife-assessment-significance']);
+
+        $this->markTestSkipped('Functionality not yet implemented');
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('elife-assessment-significance')));
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_type()
     {
         $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);

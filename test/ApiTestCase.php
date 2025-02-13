@@ -1215,7 +1215,8 @@ abstract class ApiTestCase extends TestCase
         $sort = 'relevance',
         $useDate = 'default',
         DateTimeImmutable $startDate = null,
-        DateTimeImmutable $endDate = null
+        DateTimeImmutable $endDate = null,
+        array $elifeAssessmentSignificances = []
     ) {
         $results = array_map(function (int $id) {
             return $this->createSearchResultJson($id);
@@ -1224,6 +1225,10 @@ abstract class ApiTestCase extends TestCase
         $subjectsQuery = implode('', array_map(function (string $subjectId) {
             return '&subject[]='.$subjectId;
         }, $subjects));
+
+        $elifeAssessmentSignificancesQuery = implode('', array_map(function (string $significance) {
+            return '&elifeAssessmentSignificance[]='.$significance;
+        }, $elifeAssessmentSignificances));
 
         $typesQuery = implode('', array_map(function (string $type) {
             return '&type[]='.$type;
@@ -1235,7 +1240,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$elifeAssessmentSignificancesQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, 2)]
             ),
             new Response(

@@ -247,6 +247,7 @@ class SearchTest extends ApiTestCase
         );
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important', 'important')));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important')));
     }
 
     /**

@@ -36,6 +36,7 @@ class SearchClient
                 'sort' => $sort,
                 'order' => $descendingOrder ? 'desc' : 'asc',
                 'subject[]' => $subjects,
+                'elifeAssessmentSignificance[]' => $elifeAssessmentSignificance,
                 'type[]' => $types,
                 'use-date' => $useDate,
                 'start-date' => $starts ? $starts->format('Y-m-d') : null,

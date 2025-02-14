@@ -131,6 +131,17 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_only_filters_by_the_same_subject_once()
+    {
+        $this->mockCountCall(5, $query = '', $descendingOrder = true, ['biochemistry']);
+        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['biochemistry']);
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('biochemistry', 'biochemistry')));
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_elife_assessment_significance()
     {
         $this->mockCountCall(

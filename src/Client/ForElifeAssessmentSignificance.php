@@ -10,7 +10,7 @@ trait ForElifeAssessmentSignificance
     {
         $clone = clone $this;
 
-        $clone->elifeAssessmentSignificanceQuery = array_merge($this->elifeAssessmentSignificanceQuery, $elifeAssessmentSignificanceTerm);
+        $clone->elifeAssessmentSignificanceQuery = array_unique(array_merge($this->elifeAssessmentSignificanceQuery, $elifeAssessmentSignificanceTerm));
         return $clone;
     }
 }

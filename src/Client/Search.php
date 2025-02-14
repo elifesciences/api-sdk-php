@@ -20,6 +20,7 @@ final class Search implements Iterator, Sequence
     const VERSION_SEARCH = 2;
 
     use Client;
+    use ForElifeAssessmentSignificance;
     use ForSubject;
 
     // collaborators

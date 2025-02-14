@@ -253,6 +253,33 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_recounts_when_filtering_by_elifeAssessment_significance()
+    {
+        $this->mockCountCall(5);
+
+        $this->search->count();
+
+        $this->mockCountCall(
+            3,
+            $query = '',
+            $descendingOrder = true,
+            $subjects = [],
+            $types = [],
+            $sort = 'relevance',
+            $useDate = 'default',
+            $startDate = null,
+            $endDate = null,
+            ['important']
+        );
+
+        $this->markTestSkipped();
+        $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
+    }
+
+
+    /**
+     * @test
+     */
     public function it_can_be_filtered_by_type()
     {
         $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);

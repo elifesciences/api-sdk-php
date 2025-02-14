@@ -158,7 +158,6 @@ class SearchTest extends ApiTestCase
             ['important', 'useful']
         );
 
-        $this->markTestSkipped('Functionality not yet implemented');
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important', 'useful')));
     }
 

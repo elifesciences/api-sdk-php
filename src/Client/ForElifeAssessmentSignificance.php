@@ -8,6 +8,9 @@ trait ForElifeAssessmentSignificance
 
     final public function forElifeAssessmentSignificance(string ...$elifeAssessmentSignificanceTerm) : self
     {
-        return $this;
+        $clone = clone $this;
+
+        $clone->elifeAssessmentSignificanceQuery = $elifeAssessmentSignificanceTerm;
+        return $clone;
     }
 }

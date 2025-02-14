@@ -213,7 +213,6 @@ class SearchTest extends ApiTestCase
             ['important', 'useful']
         );
 
-        $this->markTestSkipped();
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
     }
 

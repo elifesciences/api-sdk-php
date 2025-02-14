@@ -4,7 +4,10 @@ namespace eLife\ApiSdk\Client;
 
 trait ForElifeAssessmentSignificance
 {
-    final public function forElifeAssessmentSignificance() : self
+    private $elifeAssessmentSignificanceQuery = [];
+
+    final public function forElifeAssessmentSignificance(string ...$elifeAssessmentSignificanceTerm) : self
     {
+        return $this;
     }
 }

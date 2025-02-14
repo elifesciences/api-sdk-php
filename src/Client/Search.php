@@ -145,6 +145,7 @@ final class Search implements Iterator, Sequence
                 $this->sort,
                 $this->descendingOrder,
                 $this->subjectsQuery,
+                [],
                 $this->typesQuery,
                 $this->useDate,
                 $this->startDate,

@@ -21,6 +21,7 @@ class SearchClient
         string $sort = 'relevance',
         bool $descendingOrder = true,
         array $subjects = [],
+        array $elifeAssessmentSignificance = [],
         array $types = [],
         string $useDate = 'default',
         DateTimeImmutable $starts = null,

@@ -143,7 +143,7 @@ class SearchTest extends ApiTestCase
             $useDate = 'default',
             $startDate = null,
             $endDate = null,
-            ['elife-assessment-significance']
+            ['important', 'useful']
         );
         $this->mockFirstPageCall(
             5,
@@ -155,11 +155,11 @@ class SearchTest extends ApiTestCase
             $useDate = 'default',
             $startDate = null,
             $endDate = null,
-            ['elife-assessment-significance']
+            ['important', 'useful']
         );
 
         $this->markTestSkipped('Functionality not yet implemented');
-        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('elife-assessment-significance')));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important', 'useful')));
     }
 
     /**

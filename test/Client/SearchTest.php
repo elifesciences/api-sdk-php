@@ -272,7 +272,6 @@ class SearchTest extends ApiTestCase
             ['important']
         );
 
-        $this->markTestSkipped();
         $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
     }
 

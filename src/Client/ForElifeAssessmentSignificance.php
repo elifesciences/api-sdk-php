@@ -11,6 +11,11 @@ trait ForElifeAssessmentSignificance
         $clone = clone $this;
 
         $clone->elifeAssessmentSignificanceQuery = array_unique(array_merge($this->elifeAssessmentSignificanceQuery, $elifeAssessmentSignificanceTerm));
+
+        if ($clone->elifeAssessmentSignificanceQuery !== $this->elifeAssessmentSignificanceQuery) {
+            $clone->invalidateData();
+        }
+
         return $clone;
     }
 }

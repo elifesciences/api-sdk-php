@@ -10,7 +10,11 @@ final class PersonDetailsNormalizer implements NormalizerInterface, Denormalizer
 {
     public function denormalize($data, $class, $format = null, array $context = []) : PersonDetails
     {
-        return new PersonDetails($data['name']['preferred'], $data['name']['index'], $data['orcid'] ?? null);
+        return new PersonDetails(
+            is_array($data['name']) ? $data['name']['preferred'] : $data['name'],
+            is_array($data['name']) ? $data['name']['index'] : $data['name'],
+            $data['orcid'] ?? null
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null) : bool
@@ -24,10 +28,10 @@ final class PersonDetailsNormalizer implements NormalizerInterface, Denormalizer
     public function normalize($object, $format = null, array $context = []) : array
     {
         $data = [
-            'name' => [
+            'name' => $object->getPreferredName() !== $object->getIndexName() ? [
                 'preferred' => $object->getPreferredName(),
                 'index' => $object->getIndexName(),
-            ],
+            ] : $object->getPreferredName(),
         ];
 
         if ($object->getOrcid()) {

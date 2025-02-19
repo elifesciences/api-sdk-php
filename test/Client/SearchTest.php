@@ -448,8 +448,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_sorted()
     {
-        $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], $types = [], 'relevance');
-        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, $subjects = [], $types = [], 'relevance');
+        $this->expectCountCallContaining(['sort' => 'relevance'], 5);
+        $this->expectFirstPageCallContaining(['sort' => 'relevance'], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->sortBy('relevance')));
     }
@@ -459,8 +459,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_reversed()
     {
-        $this->mockCountCall(10, $query = '', $descendingOrder = false);
-        $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
+        $this->expectCountCallContaining(['descendingOrder' => false], 10);
+        $this->expectFirstPageCallContaining(['descendingOrder' => false], 10);
 
         $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()));
     }
@@ -486,7 +486,7 @@ class SearchTest extends ApiTestCase
         $this->expectFirstPageCallContaining([], 10);
         $this->search->toArray();
 
-        $this->mockFirstPageCall(10, $query = '', $descendingOrder = false);
+        $this->expectFirstPageCallContaining(['descendingOrder' => false], 10);
         $this->assertSame(10, $this->traverseAndSanityCheck($this->search->reverse()->toArray()));
     }
 
@@ -533,16 +533,6 @@ class SearchTest extends ApiTestCase
         $actualOptions = array_merge($this->defaultOptions, $options);
         
         $this->mockSearchCall(1, 100, $count, ...array_values($actualOptions));
-    }
-
-    private function mockCountCall(int $count, ...$options)
-    {
-        $this->mockSearchCall(1, 1, $count, ...$options);
-    }
-
-    private function mockFirstPageCall($total, ...$options)
-    {
-        $this->mockSearchCall(1, 100, $total, ...$options);
     }
 
     private function traverseAndSanityCheck($search)

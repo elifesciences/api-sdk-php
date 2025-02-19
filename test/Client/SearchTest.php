@@ -55,7 +55,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_traversed()
     {
-        $this->mockCountCall(200);
+        $this->expectCountCallContaining([], 200);
         $this->mockFirstPageCall(200);
         $this->mockSearchCall($page = 2, $perPage = 100, $total = 200);
 
@@ -67,7 +67,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_counted()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
 
         $this->assertFalse($this->search->isEmpty());
         $this->assertSame(10, $this->search->count());
@@ -78,7 +78,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_casts_to_an_array()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
         $this->mockFirstPageCall(10);
 
         $array = $this->search->toArray();
@@ -200,7 +200,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_recounts_when_filtering_by_elifeAssessment_significance()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
 
         $this->search->count();
         
@@ -261,7 +261,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_recounts_when_filtering()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
+
         $this->search->count();
 
         $this->mockCountCall(4, 'bacteria');
@@ -281,7 +282,8 @@ class SearchTest extends ApiTestCase
 
             return $sum;
         };
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
+
         $oldTypes = $total($this->search->types());
         $oldSubjects = $total($this->search->subjects());
 
@@ -295,7 +297,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_fetches_pages_again_when_filtering()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
+
         $this->mockFirstPageCall(10);
         $this->search->toArray();
 
@@ -309,7 +312,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_prepended()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
+
         $this->mockFirstPageCall(5);
 
         $values = $this->search->prepend('foo', 'bar')->map($this->tidyValue());
@@ -322,7 +326,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_appended()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $values = $this->search->append('foo', 'bar')->map($this->tidyValue());
@@ -335,7 +339,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_have_values_dropped()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $values = $this->search->drop(2)->map($this->tidyValue());
@@ -348,7 +352,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_have_values_inserted()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $values = $this->search->insert(2, 'foo')->map($this->tidyValue());
@@ -361,7 +365,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_have_values_set()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $values = $this->search->set(2, 'foo')->map($this->tidyValue());
@@ -388,7 +392,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_mapped()
     {
-        $this->mockCountCall(3);
+        $this->expectCountCallContaining([], 3);
         $this->mockFirstPageCall(3);
 
         $map = function (Model $model) {
@@ -406,7 +410,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $filter = function (Model $model) {
@@ -421,7 +425,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_reduced()
     {
-        $this->mockCountCall(5);
+        $this->expectCountCallContaining([], 5);
         $this->mockFirstPageCall(5);
 
         $reduce = function (int $carry = null, Model $model) {
@@ -466,7 +470,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_does_not_recount_when_reversed()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
 
         $this->search->count();
 
@@ -478,7 +482,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_fetches_pages_again_when_reversed()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
         $this->mockFirstPageCall(10);
         $this->search->toArray();
 
@@ -491,7 +495,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_has_counters_for_types()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
         $this->mockFirstPageCall(10);
 
         $types = $this->search->types();
@@ -507,7 +511,7 @@ class SearchTest extends ApiTestCase
      */
     public function it_has_counters_for_subjects()
     {
-        $this->mockCountCall(10);
+        $this->expectCountCallContaining([], 10);
         $this->mockFirstPageCall(10);
 
         $subjects = $this->search->subjects();

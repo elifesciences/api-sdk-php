@@ -178,18 +178,7 @@ class SearchTest extends ApiTestCase
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_significances()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
-        $this->mockFirstPageCall(
-            5,
-            $query = '',
-            $descendingOrder = true,
-            $subjects = [],
-            $types = [],
-            $sort = 'relevance',
-            $useDate = 'default',
-            $startDate = null,
-            $endDate = null,
-            ['important', 'useful']
-        );
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
     }
@@ -200,18 +189,7 @@ class SearchTest extends ApiTestCase
     public function it_only_filters_by_the_same_elife_assessment_significance_once()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important']], 5);
-        $this->mockFirstPageCall(
-            5,
-            $query = '',
-            $descendingOrder = true,
-            $subjects = [],
-            $types = [],
-            $sort = 'relevance',
-            $useDate = 'default',
-            $startDate = null,
-            $endDate = null,
-            ['important']
-        );
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important', 'important')));
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important')));

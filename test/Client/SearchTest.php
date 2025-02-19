@@ -133,10 +133,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_subject()
     {
-        $this->mockCountCall(5, $query = '', $descendingOrder = true, ['subject']);
-        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['subject']);
+        $this->expectCountCallContaining(['subject' => ['neuroscience']], 5);
+        $this->expectFirstPageCallContaining(['subject' => ['neuroscience']], 5);
 
-        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('subject')));
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('neuroscience')));
     }
 
     /**
@@ -144,8 +144,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_only_filters_by_the_same_subject_once()
     {
-        $this->mockCountCall(5, $query = '', $descendingOrder = true, ['biochemistry']);
-        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['biochemistry']);
+        $this->expectCountCallContaining(['subject' => ['biochemistry']], 5);
+        $this->expectFirstPageCallContaining(['subject' => ['biochemistry']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('biochemistry', 'biochemistry')));
     }
@@ -155,8 +155,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_subjects()
     {
-        $this->mockCountCall(5, $query = '', $descendingOrder = true, ['biochemistry', 'neuroscience']);
-        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, ['biochemistry', 'neuroscience']);
+        $this->expectCountCallContaining(['subject' => ['biochemistry', 'neuroscience']], 5);
+        $this->expectFirstPageCallContaining(['subject' => ['biochemistry', 'neuroscience']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forSubject('biochemistry')->forSubject('neuroscience')));
     }

@@ -258,19 +258,10 @@ class SearchTest extends ApiTestCase
         $this->mockCountCall(5);
 
         $this->search->count();
-
-        $this->mockCountCall(
-            3,
-            $query = '',
-            $descendingOrder = true,
-            $subjects = [],
-            $types = [],
-            $sort = 'relevance',
-            $useDate = 'default',
-            $startDate = null,
-            $endDate = null,
-            ['important']
-        );
+        
+        $this->expectCountCallContaining([
+            'elifeAssessmentSignificance' => ['important'],
+        ], 3);
 
         $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
     }
@@ -579,6 +570,23 @@ class SearchTest extends ApiTestCase
             $this->assertInstanceOf(Subject::class, $subject);
             $this->assertGreaterThanOrEqual(0, $counter);
         }
+    }
+
+    private function expectCountCallContaining(array $options, int $count)
+    {
+        $actualOptions = array_merge([
+            'query' => '',
+            'descendingOrder' => true,
+            'subject' => [],
+            'type' => [],
+            'sort' => 'relevance',
+            'useDate' => 'default',
+            'startDate' => null,
+            'endDate' => null,
+            'elifeAssessmentSignificance' => [],
+        ], $options);
+        
+        $this->mockSearchCall(1, 1, $count, ...array_values($actualOptions));
     }
 
     private function mockCountCall(int $count, ...$options)

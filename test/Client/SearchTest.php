@@ -217,8 +217,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_type()
     {
-        $this->mockCountCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);
-        $this->mockFirstPageCall(5, $query = '', $descendingOrder = true, $subjects = [], ['blog-article']);
+        $this->expectCountCallContaining(['type' => ['blog-article']], 5);
+        $this->expectFirstPageCallContaining(['type' => ['blog-article']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forType('blog-article')));
     }
@@ -228,8 +228,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_use_published_dates()
     {
-        $this->mockCountCall(5, '', true, [], [], 'date', 'published');
-        $this->mockFirstPageCall(5, '', true, [], [], 'date', 'published');
+        $this->expectCountCallContaining(['sort' => 'date', 'useDate' => 'published'], 5);
+        $this->expectFirstPageCallContaining(['sort' => 'date', 'useDate' => 'published'], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->sortBy('date')->useDate('published')));
     }
@@ -239,8 +239,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_start_date()
     {
-        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
-        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', new DateTimeImmutable('2017-01-02'));
+        $this->expectCountCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], 5);
+        $this->expectFirstPageCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
     }
@@ -250,8 +250,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_end_date()
     {
-        $this->mockCountCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
-        $this->mockFirstPageCall(5, '', true, [], [], 'relevance', 'default', null, new DateTimeImmutable('2017-01-02'));
+        $this->expectCountCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], 5);
+        $this->expectFirstPageCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
     }

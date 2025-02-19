@@ -22,6 +22,17 @@ class SearchTest extends ApiTestCase
 
     /** @var Search */
     private $search;
+    private $defaultOptions = [
+        'query' => '',
+        'descendingOrder' => true,
+        'subject' => [],
+        'type' => [],
+        'sort' => 'relevance',
+        'useDate' => 'default',
+        'startDate' => null,
+        'endDate' => null,
+        'elifeAssessmentSignificance' => [],
+    ];
 
     /**
      * @before
@@ -156,18 +167,7 @@ class SearchTest extends ApiTestCase
     public function it_can_be_filtered_by_elife_assessment_significance()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
-        $this->mockFirstPageCall(
-            5,
-            $query = '',
-            $descendingOrder = true,
-            $subjects = [],
-            $types = [],
-            $sort = 'relevance',
-            $useDate = 'default',
-            $startDate = null,
-            $endDate = null,
-            ['important', 'useful']
-        );
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentSignificance('important', 'useful')));
     }
@@ -541,19 +541,16 @@ class SearchTest extends ApiTestCase
 
     private function expectCountCallContaining(array $options, int $count)
     {
-        $actualOptions = array_merge([
-            'query' => '',
-            'descendingOrder' => true,
-            'subject' => [],
-            'type' => [],
-            'sort' => 'relevance',
-            'useDate' => 'default',
-            'startDate' => null,
-            'endDate' => null,
-            'elifeAssessmentSignificance' => [],
-        ], $options);
+        $actualOptions = array_merge($this->defaultOptions, $options);
         
         $this->mockSearchCall(1, 1, $count, ...array_values($actualOptions));
+    }
+
+    private function expectFirstPageCallContaining(array $options, int $count)
+    {
+        $actualOptions = array_merge($this->defaultOptions, $options);
+        
+        $this->mockSearchCall(1, 100, $count, ...array_values($actualOptions));
     }
 
     private function mockCountCall(int $count, ...$options)

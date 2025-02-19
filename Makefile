@@ -19,6 +19,9 @@ build:
 lint: build
 	docker run --rm $(PROJECT_NAME):$(PHP_VERSION) bash -c 'vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ scripts/ test/ spec/'
 
+lint-fix:
+	vendor/bin/phpcbf --standard=phpcs.xml.dist --warning-severity=0 -p src/ scripts/ test/ spec/
+
 test-ci: build lint
 	docker run --rm $(PROJECT_NAME):$(PHP_VERSION) bash -c './project_tests.sh'
 

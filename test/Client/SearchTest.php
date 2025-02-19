@@ -23,7 +23,7 @@ class SearchTest extends ApiTestCase
     /** @var Search */
     private $search;
     private $defaultOptions = [
-        'query' => '',
+        'for' => '',
         'descendingOrder' => true,
         'subject' => [],
         'type' => [],
@@ -122,8 +122,8 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_query()
     {
-        $this->mockCountCall(5, 'bacteria');
-        $this->mockFirstPageCall(5, 'bacteria');
+        $this->expectCountCallContaining(['for' => 'bacteria'], 5);
+        $this->expectFirstPageCallContaining(['for' => 'bacteria'], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forQuery('bacteria')));
     }
@@ -265,7 +265,7 @@ class SearchTest extends ApiTestCase
 
         $this->search->count();
 
-        $this->mockCountCall(4, 'bacteria');
+        $this->expectCountCallContaining(['for' => 'bacteria'], 4);
         $this->assertSame(4, $this->search->forQuery('bacteria')->count());
     }
 
@@ -287,7 +287,7 @@ class SearchTest extends ApiTestCase
         $oldTypes = $total($this->search->types());
         $oldSubjects = $total($this->search->subjects());
 
-        $this->mockCountCall(4, 'bacteria');
+        $this->expectCountCallContaining(['for' => 'bacteria'], 4);
         $this->assertNotEquals($oldTypes, $total($this->search->forQuery('bacteria')->types()), 'Types are not being refreshed');
         $this->assertNotEquals($oldSubjects, $total($this->search->forQuery('bacteria')->subjects()), 'Subjects are not being refreshed');
     }
@@ -302,8 +302,8 @@ class SearchTest extends ApiTestCase
         $this->mockFirstPageCall(10);
         $this->search->toArray();
 
-        $this->mockCountCall(8, 'bacteria');
-        $this->mockFirstPageCall(8, 'bacteria');
+        $this->expectCountCallContaining(['for' => 'bacteria'], 8);
+        $this->expectFirstPageCallContaining(['for' => 'bacteria'], 8);
         $this->assertSame(8, $this->traverseAndSanityCheck($this->search->forQuery('bacteria')->toArray()));
     }
 

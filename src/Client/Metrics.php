@@ -41,6 +41,26 @@ final class Metrics
             });
     }
 
+    public function versionCitations(Identifier $identifier, int $version) : PromiseInterface
+    {
+        return $this->metricsClient
+            ->versionCitations(
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, self::VERSION_METRIC_CITATIONS)],
+                $identifier->getType(),
+                $identifier->getId(),
+                $version
+            )
+            ->then(function (Result $result) {
+                $sources = [];
+
+                foreach ($result as $source) {
+                    $sources[] = new CitationsMetricSource($source['service'], $source['uri'], $source['citations']);
+                }
+
+                return new CitationsMetric(...$sources);
+            });
+    }
+
     public function totalPageViews(Identifier $identifier) : PromiseInterface
     {
         return $this->metricsClient

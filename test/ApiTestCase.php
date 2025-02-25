@@ -767,6 +767,28 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
+    final protected function mockMetricVersionCitationsCall(string $type, string $id, string $version)
+    {
+        $this->storage->save(
+            new Request(
+                'GET',
+                'http://api.elifesciences.org/metrics/'.$type.'/'.$id.'/citations/version/'.$version,
+                ['Accept' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)]
+            ),
+            new Response(
+                200,
+                ['Content-Type' => (string) new MediaType(MetricsClient::TYPE_METRIC_CITATIONS, 1)],
+                json_encode([
+                    [
+                        'service' => 'Service',
+                        'uri' => 'http://www.example.com/',
+                        'citations' => (int) $id,
+                    ],
+                ])
+            )
+        );
+    }
+
     final protected function mockMetricDownloadsCall(string $type, string $id)
     {
         $this->storage->save(

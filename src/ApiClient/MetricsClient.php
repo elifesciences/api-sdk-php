@@ -17,6 +17,11 @@ class MetricsClient
         return $this->getRequest($this->createUri(['path' => "metrics/$type/$id/citations"]), $headers);
     }
 
+    public function versionCitations(array $headers, string $type, string $id, int $version) : PromiseInterface
+    {
+        return $this->getRequest($this->createUri(['path' => "metrics/$type/$id/citations/version/$version"]), $headers);
+    }
+
     public function downloads(
         array $headers,
         string $type,

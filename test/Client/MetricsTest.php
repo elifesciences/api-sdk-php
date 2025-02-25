@@ -37,6 +37,18 @@ final class MetricsTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_gets_version_citations()
+    {
+        $this->mockMetricVersionCitationsCall('article', '09560', 1);
+
+        $expected = new CitationsMetric(new CitationsMetricSource('Service', 'http://www.example.com/', 9560));
+
+        $this->assertEquals($expected, $this->metrics->versionCitations(Identifier::article('09560'), 1)->wait());
+    }
+
+    /**
+     * @test
+     */
     public function it_gets_total_page_views()
     {
         $this->mockMetricPageViewsCall('article', '09560');

@@ -21,6 +21,7 @@ final class Search implements Iterator, Sequence
 
     use Client;
     use ForElifeAssessmentSignificance;
+    use ForElifeAssessmentStrength;
     use ForSubject;
 
     // collaborators

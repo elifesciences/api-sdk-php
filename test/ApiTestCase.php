@@ -1231,6 +1231,10 @@ abstract class ApiTestCase extends TestCase
             return '&elifeAssessmentSignificance[]='.$significance;
         }, $elifeAssessmentSignificances));
 
+        $elifeAssessmentStrengthQuery = implode('', array_map(function (string $strength) {
+            return '&elifeAssessmentStrength[]='.$strength;
+        }, $elifeAssessmentStrength));
+
         $typesQuery = implode('', array_map(function (string $type) {
             return '&type[]='.$type;
         }, $types));
@@ -1241,7 +1245,7 @@ abstract class ApiTestCase extends TestCase
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$elifeAssessmentSignificancesQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
+                'http://api.elifesciences.org/search?for='.$query.'&page='.$page.'&per-page='.$perPage.'&sort='.$sort.'&order='.($descendingOrder ? 'desc' : 'asc').$subjectsQuery.$elifeAssessmentSignificancesQuery.$elifeAssessmentStrengthQuery.$typesQuery.'&use-date='.$useDate.$startsQuery.$endsQuery,
                 ['Accept' => (string) new MediaType(SearchClient::TYPE_SEARCH, 2)]
             ),
             new Response(

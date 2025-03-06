@@ -200,7 +200,7 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_strength()
+    public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_strengths()
     {
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);

@@ -33,7 +33,7 @@ final class SearchClientSpec extends ObjectBehavior
         $this->httpClient->send($request)->willReturn($response);
 
         $this->query((['Accept' => 'application/vnd.elife.search+json; version=2']), 'foo/# bar', 1, 20, 'date', true,
-            ['cell-biology'], [], ['research-article'], 'published', new DateTimeImmutable('2017-01-02'), new DateTimeImmutable('2017-02-03'))
+            ['cell-biology'], [], [], ['research-article'], 'published', new DateTimeImmutable('2017-01-02'), new DateTimeImmutable('2017-02-03'))
             ->shouldBeLike($response)
         ;
     }

@@ -33,6 +33,7 @@ final class Search implements Iterator, Sequence
     private $descendingOrder = true;
     private $subjectsQuery = [];
     private $elifeAssessmentSignificanceQuery = [];
+    private $elifeAssessmentStrengthQuery = [];
     private $typesQuery = [];
     private $sort = 'relevance';
     private $useDate = 'default';
@@ -148,6 +149,7 @@ final class Search implements Iterator, Sequence
                 $this->descendingOrder,
                 $this->subjectsQuery,
                 $this->elifeAssessmentSignificanceQuery,
+                $this->elifeAssessmentStrengthQuery,
                 $this->typesQuery,
                 $this->useDate,
                 $this->startDate,

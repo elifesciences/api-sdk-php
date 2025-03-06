@@ -180,7 +180,6 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_elife_assessment_strength()
     {
-        $this->markTestIncomplete();
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
 

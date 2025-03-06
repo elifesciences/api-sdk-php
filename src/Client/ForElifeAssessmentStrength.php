@@ -4,8 +4,17 @@ namespace eLife\ApiSdk\Client;
 
 trait ForElifeAssessmentStrength
 {
-    final public function forElifeAssessmentStrength(string ...$elifeAssessmentStrength) : self
+    private $elifeAssessmentStrengthQuery = [];
+    final public function forElifeAssessmentStrength(string ...$elifeAssessmentStrengthTerm) : self
     {
-        return $this;
+        $clone = clone $this;
+
+        $clone->elifeAssessmentStrengthQuery = array_unique(array_merge($this->elifeAssessmentStrengthQuery, $elifeAssessmentStrengthTerm));
+
+        if ($clone->elifeAssessmentStrengthQuery !== $this->elifeAssessmentStrengthQuery) {
+            $clone->invalidateData();
+        }
+
+        return $clone;
     }
 }

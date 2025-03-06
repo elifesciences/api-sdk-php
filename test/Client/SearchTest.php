@@ -125,10 +125,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_query()
     {
-        $this->expectCountCallContaining(['for' => 'bacteria'], 5);
-        $this->expectFirstPageCallContaining(['for' => 'bacteria'], 5);
+        $this->expectCountCallContaining(['for' => 'bacteria'], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['for' => 'bacteria'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forQuery('bacteria')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forQuery('bacteria')));
     }
 
     /**
@@ -136,10 +136,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_subject()
     {
-        $this->expectCountCallContaining(['subject' => ['neuroscience']], 5);
-        $this->expectFirstPageCallContaining(['subject' => ['neuroscience']], 5);
+        $this->expectCountCallContaining(['subject' => ['neuroscience']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['subject' => ['neuroscience']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('neuroscience')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('neuroscience')));
     }
 
     /**
@@ -147,10 +147,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_only_filters_by_the_same_subject_once()
     {
-        $this->expectCountCallContaining(['subject' => ['biochemistry']], 5);
-        $this->expectFirstPageCallContaining(['subject' => ['biochemistry']], 5);
+        $this->expectCountCallContaining(['subject' => ['biochemistry']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['subject' => ['biochemistry']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry', 'biochemistry')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry', 'biochemistry')));
     }
 
     /**
@@ -158,10 +158,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_subjects()
     {
-        $this->expectCountCallContaining(['subject' => ['biochemistry', 'neuroscience']], 5);
-        $this->expectFirstPageCallContaining(['subject' => ['biochemistry', 'neuroscience']], 5);
+        $this->expectCountCallContaining(['subject' => ['biochemistry', 'neuroscience']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['subject' => ['biochemistry', 'neuroscience']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry')->forSubject('neuroscience')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry')->forSubject('neuroscience')));
     }
 
     /**
@@ -169,10 +169,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_elife_assessment_significance()
     {
-        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
-        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
+        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'useful')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'useful')));
     }
 
     /**
@@ -192,10 +192,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_significances()
     {
-        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
-        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);
+        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
     }
 
     /**
@@ -203,11 +203,11 @@ class SearchTest extends ApiTestCase
      */
     public function it_only_filters_by_the_same_elife_assessment_significance_once()
     {
-        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important']], 5);
-        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important']], 5);
+        $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'important')));
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'important')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important')));
     }
 
     /**
@@ -232,10 +232,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_type()
     {
-        $this->expectCountCallContaining(['type' => ['blog-article']], 5);
-        $this->expectFirstPageCallContaining(['type' => ['blog-article']], 5);
+        $this->expectCountCallContaining(['type' => ['blog-article']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['type' => ['blog-article']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->forType('blog-article')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forType('blog-article')));
     }
 
     /**
@@ -243,10 +243,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_use_published_dates()
     {
-        $this->expectCountCallContaining(['sort' => 'date', 'useDate' => 'published'], 5);
-        $this->expectFirstPageCallContaining(['sort' => 'date', 'useDate' => 'published'], 5);
+        $this->expectCountCallContaining(['sort' => 'date', 'useDate' => 'published'], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['sort' => 'date', 'useDate' => 'published'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('date')->useDate('published')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('date')->useDate('published')));
     }
 
     /**
@@ -254,10 +254,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_start_date()
     {
-        $this->expectCountCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], 5);
-        $this->expectFirstPageCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], 5);
+        $this->expectCountCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
     }
 
     /**
@@ -265,10 +265,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_end_date()
     {
-        $this->expectCountCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], 5);
-        $this->expectFirstPageCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], 5);
+        $this->expectCountCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
     }
 
     /**
@@ -463,10 +463,10 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_sorted()
     {
-        $this->expectCountCallContaining(['sort' => 'relevance'], 5);
-        $this->expectFirstPageCallContaining(['sort' => 'relevance'], 5);
+        $this->expectCountCallContaining(['sort' => 'relevance'], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['sort' => 'relevance'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame(5, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('relevance')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('relevance')));
     }
 
     /**

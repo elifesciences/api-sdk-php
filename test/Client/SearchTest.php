@@ -33,6 +33,7 @@ class SearchTest extends ApiTestCase
         'startDate' => null,
         'endDate' => null,
         'elifeAssessmentSignificance' => [],
+        'elifeAssessmentStrength' => [],
     ];
 
     /**

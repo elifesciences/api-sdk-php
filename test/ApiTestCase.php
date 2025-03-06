@@ -1216,7 +1216,8 @@ abstract class ApiTestCase extends TestCase
         $useDate = 'default',
         DateTimeImmutable $startDate = null,
         DateTimeImmutable $endDate = null,
-        array $elifeAssessmentSignificances = []
+        array $elifeAssessmentSignificances = [],
+        array $elifeAssessmentStrength = []
     ) {
         $results = array_map(function (int $id) {
             return $this->createSearchResultJson($id);

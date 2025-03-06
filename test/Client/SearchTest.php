@@ -175,6 +175,18 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_can_be_filtered_by_elife_assessment_strength()
+    {
+        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], 5);
+        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], 5);
+
+        $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentStrength('solid', 'incomplete')));
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_significances()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], 5);

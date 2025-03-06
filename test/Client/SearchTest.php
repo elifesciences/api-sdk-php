@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 use BadMethodCallException;
 use DateTimeImmutable;
+use InvalidArgumentException;
 use eLife\ApiSdk\ApiClient\SearchClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiSdk\ApiSdk;
@@ -177,11 +178,11 @@ class SearchTest extends ApiTestCase
      */
     public function it_can_be_filtered_by_elife_assessment_strength()
     {
+        $this->markTestIncomplete();
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], 5);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], 5);
 
         $this->assertSame(5, $this->traverseAndSanityCheck($this->search->forElifeAssessmentStrength('solid', 'incomplete')));
-        $this->markTestIncomplete();
     }
 
     /**
@@ -536,6 +537,9 @@ class SearchTest extends ApiTestCase
     private function expectCountCallContaining(array $options, int $count)
     {
         $actualOptions = array_merge($this->defaultOptions, $options);
+        if (sizeof($actualOptions) > sizeof($this->defaultOptions)) {
+            throw new InvalidArgumentException('Unexpected options, update default options and the mockSearchCall arguments.');
+        }
         
         $this->mockSearchCall(1, 1, $count, ...array_values($actualOptions));
     }

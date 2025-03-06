@@ -178,34 +178,12 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
-    public function it_can_be_filtered_by_elife_assessment_strength()
-    {
-        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
-        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
-
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'incomplete')));
-    }
-
-    /**
-     * @test
-     */
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_significances()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
 
         $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_strengths()
-    {
-        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
-        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
-
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('incomplete')));
     }
 
     /**
@@ -223,6 +201,44 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_recounts_when_filtering_by_elifeAssessment_significance()
+    {
+        $this->expectCountCallContaining([], 5);
+
+        $this->search->count();
+
+        $this->expectCountCallContaining([
+            'elifeAssessmentSignificance' => ['important'],
+        ], 3);
+
+        $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_filtered_by_elife_assessment_strength()
+    {
+        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
+
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'incomplete')));
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_strengths()
+    {
+        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
+
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('incomplete')));
+    }
+
+    /**
+     * @test
+     */
     public function it_only_filters_by_the_same_elife_assessment_strength_once()
     {
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
@@ -230,22 +246,6 @@ class SearchTest extends ApiTestCase
 
         $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'solid')));
         $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('solid')));
-    }
-
-    /**
-     * @test
-     */
-    public function it_recounts_when_filtering_by_elifeAssessment_significance()
-    {
-        $this->expectCountCallContaining([], 5);
-
-        $this->search->count();
-        
-        $this->expectCountCallContaining([
-            'elifeAssessmentSignificance' => ['important'],
-        ], 3);
-
-        $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
     }
 
     /**

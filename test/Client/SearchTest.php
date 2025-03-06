@@ -248,6 +248,22 @@ class SearchTest extends ApiTestCase
         $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
     }
 
+    /**
+     * @test
+     */
+    public function it_recounts_when_filtering_by_elifeAssessment_strength()
+    {
+        $this->expectCountCallContaining([], 5);
+
+        $this->search->count();
+        
+        $this->expectCountCallContaining([
+            'elifeAssessmentStrength' => ['solid'],
+        ], 3);
+
+        $this->assertSame(3, $this->search->forElifeAssessmentStrength('solid')->count());
+    }
+
 
     /**
      * @test

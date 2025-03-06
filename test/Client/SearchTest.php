@@ -223,6 +223,18 @@ class SearchTest extends ApiTestCase
     /**
      * @test
      */
+    public function it_only_filters_by_the_same_elife_assessment_strength_once()
+    {
+        $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
+        $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
+
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'solid')));
+        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('solid')));
+    }
+
+    /**
+     * @test
+     */
     public function it_recounts_when_filtering_by_elifeAssessment_significance()
     {
         $this->expectCountCallContaining([], 5);

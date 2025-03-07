@@ -62,7 +62,8 @@ class SearchTest extends ApiTestCase
         $this->expectFirstPageCallContaining([], 200);
         $this->mockSearchCall($page = 2, $perPage = 100, $total = 200);
 
-        $this->assertSame(200, $this->assertAllResultsAreModelsAndCountThem($this->search));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search);
+        $this->assertCount(200, $this->search);
     }
 
     /**
@@ -86,9 +87,8 @@ class SearchTest extends ApiTestCase
 
         $array = $this->search->toArray();
 
+        $this->assertContainsOnlyInstancesOf(Model::class, $array);
         $this->assertCount(10, $array);
-
-        $this->assertSame(10, $this->assertAllResultsAreModelsAndCountThem($array));
     }
 
     /**
@@ -128,7 +128,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['for' => 'bacteria'], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['for' => 'bacteria'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forQuery('bacteria')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forQuery('bacteria'));
     }
 
     /**

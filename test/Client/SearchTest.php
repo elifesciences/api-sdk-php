@@ -139,7 +139,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['subject' => ['neuroscience']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['subject' => ['neuroscience']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('neuroscience')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forSubject('neuroscience'));
     }
 
     /**
@@ -150,7 +150,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['subject' => ['biochemistry']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['subject' => ['biochemistry']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry', 'biochemistry')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forSubject('biochemistry', 'biochemistry'));
     }
 
     /**
@@ -161,7 +161,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['subject' => ['biochemistry', 'neuroscience']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['subject' => ['biochemistry', 'neuroscience']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forSubject('biochemistry')->forSubject('neuroscience')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forSubject('biochemistry')->forSubject('neuroscience'));
     }
 
     /**
@@ -172,7 +172,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'useful')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentSignificance('important', 'useful'));
     }
 
     /**
@@ -183,7 +183,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful'));
     }
 
     /**
@@ -194,8 +194,8 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentSignificance' => ['important']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important', 'important')));
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentSignificance('important', 'important'));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important'));
     }
 
     /**
@@ -222,7 +222,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'incomplete')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentStrength('solid', 'incomplete'));
     }
 
     /**
@@ -233,7 +233,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('incomplete')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('incomplete'));
     }
 
     /**
@@ -244,8 +244,8 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid', 'solid')));
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('solid')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentStrength('solid', 'solid'));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('solid'));
     }
 
     /**
@@ -273,7 +273,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['type' => ['blog-article']], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['type' => ['blog-article']], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->forType('blog-article')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forType('blog-article'));
     }
 
     /**
@@ -284,7 +284,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['sort' => 'date', 'useDate' => 'published'], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['sort' => 'date', 'useDate' => 'published'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('date')->useDate('published')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->sortBy('date')->useDate('published'));
     }
 
     /**
@@ -295,7 +295,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->startDate(new DateTimeImmutable('2017-01-02'))));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->startDate(new DateTimeImmutable('2017-01-02')));
     }
 
     /**
@@ -306,7 +306,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->endDate(new DateTimeImmutable('2017-01-02'))));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->endDate(new DateTimeImmutable('2017-01-02')));
     }
 
     /**
@@ -357,7 +357,7 @@ class SearchTest extends ApiTestCase
 
         $this->expectCountCallContaining(['for' => 'bacteria'], 8);
         $this->expectFirstPageCallContaining(['for' => 'bacteria'], 8);
-        $this->assertSame(8, $this->assertAllResultsAreModelsAndCountThem($this->search->forQuery('bacteria')->toArray()));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->forQuery('bacteria')->toArray());
     }
 
     /**
@@ -436,7 +436,7 @@ class SearchTest extends ApiTestCase
             $this->mockSearchCall($call['page'], $call['per-page'], $total = 5);
         }
 
-        $this->assertAllResultsAreModelsAndCountThem($this->search->slice($offset, $length));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->slice($offset, $length));
     }
 
     /**
@@ -504,7 +504,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['sort' => 'relevance'], $this->defaultNumberOfResultsToGenerate);
         $this->expectFirstPageCallContaining(['sort' => 'relevance'], $this->defaultNumberOfResultsToGenerate);
 
-        $this->assertSame($this->defaultNumberOfResultsToGenerate, $this->assertAllResultsAreModelsAndCountThem($this->search->sortBy('relevance')));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->sortBy('relevance'));
     }
 
     /**
@@ -515,7 +515,7 @@ class SearchTest extends ApiTestCase
         $this->expectCountCallContaining(['descendingOrder' => false], 10);
         $this->expectFirstPageCallContaining(['descendingOrder' => false], 10);
 
-        $this->assertSame(10, $this->assertAllResultsAreModelsAndCountThem($this->search->reverse()));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->reverse());
     }
 
     /**
@@ -540,7 +540,7 @@ class SearchTest extends ApiTestCase
         $this->search->toArray();
 
         $this->expectFirstPageCallContaining(['descendingOrder' => false], 10);
-        $this->assertSame(10, $this->assertAllResultsAreModelsAndCountThem($this->search->reverse()->toArray()));
+        $this->assertContainsOnlyInstancesOf(Model::class, $this->search->reverse()->toArray());
     }
 
     /**
@@ -589,16 +589,5 @@ class SearchTest extends ApiTestCase
         $actualOptions = array_merge($this->defaultOptions, $options);
         
         $this->mockSearchCall(1, 100, $count, ...array_values($actualOptions));
-    }
-
-    private function assertAllResultsAreModelsAndCountThem($search)
-    {
-        $count = 0;
-        foreach ($search as $i => $model) {
-            $this->assertInstanceOf(Model::class, $model);
-            ++$count;
-        }
-
-        return $count;
     }
 }

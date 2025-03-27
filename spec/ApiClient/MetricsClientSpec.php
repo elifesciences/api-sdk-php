@@ -34,6 +34,19 @@ final class MetricsClientSpec extends ObjectBehavior
             ->shouldBeLike($response);
     }
 
+    public function it_gets_version_citations()
+    {
+        $request = new Request('GET', 'metrics/article/01234/citations/version/1',
+            ['X-Foo' => 'bar', 'Accept' => 'application/vnd.elife.metric-citations+json; version=2', 'User-Agent' => 'eLifeApiClient/'.Version::get()]);
+        $response = new FulfilledPromise(new ArrayResult(new MediaType('application/vnd.elife.metric-citations+json',
+            2), ['foo' => ['bar', 'baz']]));
+
+        $this->httpClient->send($request)->willReturn($response);
+
+        $this->versionCitations(['Accept' => 'application/vnd.elife.metric-citations+json; version=2'], 'article', '01234', 1)
+            ->shouldBeLike($response);
+    }
+
     public function it_gets_downloads()
     {
         $request = new Request('GET', 'metrics/article/01234/downloads?by=month&page=1&per-page=20&order=desc',

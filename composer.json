@@ -24,7 +24,7 @@
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
-        "elife/api": "2.31.3",
+        "elife/api": "^2.33",
         "elife/api-validator": "^1.0",
         "guzzlehttp/guzzle": "^6.0",
         "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",

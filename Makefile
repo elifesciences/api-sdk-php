@@ -16,7 +16,7 @@ test: vendor
 .PHONY: build
 build:
 	$(if $(PHP_VERSION),,$(error PHP_VERSION make variable needs to be set))
-	docker buildx build --build-arg=PHP_VERSION=$(PHP_VERSION) -t $(PROJECT_NAME):$(PHP_VERSION) .
+	docker buildx build --load --build-arg=PHP_VERSION=$(PHP_VERSION) -t $(PROJECT_NAME):$(PHP_VERSION) .
 
 .PHONY: lint
 lint: build

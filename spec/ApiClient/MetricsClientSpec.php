@@ -24,26 +24,26 @@ final class MetricsClientSpec extends ObjectBehavior
     public function it_gets_citations()
     {
         $request = new Request('GET', 'metrics/article/01234/citations',
-            ['X-Foo' => 'bar', 'Accept' => 'application/vnd.elife.metric-citations+json; version=2', 'User-Agent' => 'eLifeApiClient/'.Version::get()]);
+            ['X-Foo' => 'bar', 'Accept' => 'application/vnd.elife.metric-citations+json; version=1', 'User-Agent' => 'eLifeApiClient/'.Version::get()]);
         $response = new FulfilledPromise(new ArrayResult(new MediaType('application/vnd.elife.metric-citations+json',
-            2), ['foo' => ['bar', 'baz']]));
+            1), ['foo' => ['bar', 'baz']]));
 
         $this->httpClient->send($request)->willReturn($response);
 
-        $this->citations(['Accept' => 'application/vnd.elife.metric-citations+json; version=2'], 'article', '01234')
+        $this->citations(['Accept' => 'application/vnd.elife.metric-citations+json; version=1'], 'article', '01234')
             ->shouldBeLike($response);
     }
 
     public function it_gets_version_citations()
     {
         $request = new Request('GET', 'metrics/article/01234/citations/version/1',
-            ['X-Foo' => 'bar', 'Accept' => 'application/vnd.elife.metric-citations+json; version=2', 'User-Agent' => 'eLifeApiClient/'.Version::get()]);
+            ['X-Foo' => 'bar', 'Accept' => 'application/vnd.elife.metric-citations+json; version=1', 'User-Agent' => 'eLifeApiClient/'.Version::get()]);
         $response = new FulfilledPromise(new ArrayResult(new MediaType('application/vnd.elife.metric-citations+json',
-            2), ['foo' => ['bar', 'baz']]));
+            1), ['foo' => ['bar', 'baz']]));
 
         $this->httpClient->send($request)->willReturn($response);
 
-        $this->versionCitations(['Accept' => 'application/vnd.elife.metric-citations+json; version=2'], 'article', '01234', 1)
+        $this->versionCitations(['Accept' => 'application/vnd.elife.metric-citations+json; version=1'], 'article', '01234', 1)
             ->shouldBeLike($response);
     }
 

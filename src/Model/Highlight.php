@@ -7,15 +7,17 @@ final class Highlight implements Model, HasThumbnail
     private $title;
     private $image;
     private $item;
+    private $impactStatement;
 
     /**
      * @internal
      */
-    public function __construct(string $title, Image $image = null, Model $item)
+    public function __construct(string $title, Image $image = null, Model $item, string $impactStatement = null)
     {
         $this->title = $title;
         $this->image = $image;
         $this->item = $item;
+        $this->impactStatement = $impactStatement;
     }
 
     public function getTitle() : string
@@ -34,5 +36,10 @@ final class Highlight implements Model, HasThumbnail
     public function getItem() : Model
     {
         return $this->item;
+    }
+
+    public function getImpactStatement(): ?string
+    {
+        return $this->impactStatement;
     }
 }

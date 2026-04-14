@@ -24,7 +24,8 @@ final class HighlightNormalizer implements NormalizerInterface, DenormalizerInte
         return new Highlight(
             $data['title'],
             $data['image'] ?? null,
-            $data['item']
+            $data['item'],
+            $data['impactStatement'] ?? null
         );
     }
 

@@ -2068,6 +2068,7 @@ abstract class ApiTestCase extends TestCase
     {
         $highlight = [
             'title' => 'Highlight '.$number.' title',
+            'impactStatement' => 'Highlight '.$number.' impact statement',
             'image' => [
                 'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
                 'alt' => '',

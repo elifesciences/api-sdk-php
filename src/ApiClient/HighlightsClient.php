@@ -5,7 +5,6 @@ namespace eLife\ApiSdk\ApiClient;
 use eLife\ApiClient\ApiClient;
 use GuzzleHttp\Promise\PromiseInterface;
 
-
 class HighlightsClient
 {
     const TYPE_HIGHLIGHT_LIST = 'application/vnd.elife.highlight-list+json';

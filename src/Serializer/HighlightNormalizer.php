@@ -44,6 +44,7 @@ final class HighlightNormalizer implements NormalizerInterface, DenormalizerInte
         $data = [
             'title' => $object->getTitle(),
             'item' => $normalizationHelper->normalizeToSnippet($object->getItem(), ['type' => true] + $context),
+            'impactStatement' => $object->getImpactStatement(),
         ];
 
         if ($object->getThumbnail()) {

@@ -40,7 +40,8 @@ class HighlightsClient
     public function listCurrentHighlights(string $highlightListId, array $headers = []) : PromiseInterface
     {
         return $this->getRequest(
-            $this->createUri(['path' => "highlights/$highlightListId/current"], $headers)
+            $this->createUri(['path' => "highlights/$highlightListId/current"]),
+            $headers
         );
     }
 }

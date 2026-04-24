@@ -76,6 +76,31 @@ final class Highlights
                 );
             }
 
+            /**
+             * Retrieves the first 3 or 4 highlights (current) as defined in journal cms
+             * @param string $highlightListId
+             * @return Sequence
+             */
+            public function getCurrent(string $highlightListId) : Sequence
+            {
+                return new PromiseSequence(
+                    $this->highlightsClient->listCurrentHighlights(
+                        $highlightListId,
+                        ['Accept' => (string) new MediaType(
+                            HighlightsClient::TYPE_HIGHLIGHT_LIST,
+                            Highlights::VERSION_HIGHLIGHT_LIST
+                        )]
+                    )->then(function (Result $result) {
+                        $this->count = $result['total'];
+                        return $result;
+                    })->then(function (Result $result) {
+                        return array_map(function (array $highlight) {
+                            return $this->denormalizer->denormalize($highlight, Highlight::class);
+                        }, $result['items']);
+                    })
+                );
+            }
+
             public function reverse() : Sequence
             {
                 $clone = clone $this;

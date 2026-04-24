@@ -5,6 +5,7 @@ namespace eLife\ApiSdk\ApiClient;
 use eLife\ApiClient\ApiClient;
 use GuzzleHttp\Promise\PromiseInterface;
 
+
 class HighlightsClient
 {
     const TYPE_HIGHLIGHT_LIST = 'application/vnd.elife.highlight-list+json';
@@ -28,6 +29,18 @@ class HighlightsClient
                 ],
             ]),
             $headers
+        );
+    }
+
+    /**
+     * @param string $highlightListId
+     * @param array $headers
+     * @return PromiseInterface
+     */
+    public function listCurrentHighlights(string $highlightListId, array $headers = []) : PromiseInterface
+    {
+        return $this->getRequest(
+            $this->createUri(['path' => "highlights/$highlightListId/current"], $headers)
         );
     }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ReferencePagesNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : ReferencePages
+    public function denormalize($data, $type, $format = null, array $context = []) : ReferencePages
     {
         if (is_string($data)) {
             return new StringReferencePage($data);
@@ -19,29 +19,36 @@ final class ReferencePagesNormalizer implements NormalizerInterface, Denormalize
         return new ReferencePageRange($data['first'], $data['last'], $data['range']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return ReferencePages::class === $type;
     }
 
     /**
-     * @param ReferencePages $object
+     * @param ReferencePages $data
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($data, $format = null, array $context = []): array | string
     {
-        if ($object instanceof ReferencePageRange) {
+        if ($data instanceof ReferencePageRange) {
             return [
-                'first' => $object->getFirst(),
-                'last' => $object->getLast(),
-                'range' => $object->getRange(),
+                'first' => $data->getFirst(),
+                'last' => $data->getLast(),
+                'range' => $data->getRange(),
             ];
         }
 
-        return $object->toString();
+        return $data->toString();
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ReferencePages;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ReferencePages::class => false,
+        ];
     }
 }

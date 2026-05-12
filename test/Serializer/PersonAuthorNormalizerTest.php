@@ -16,20 +16,21 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PersonAuthorNormalizerTest extends TestCase
 {
     /** @var PersonAuthorNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new PersonAuthorNormalizer();
 
@@ -42,44 +43,38 @@ final class PersonAuthorNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_people($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $personAuthor = new PersonAuthor(new PersonDetails('preferred name', 'index name'));
 
         return [
             'person author' => [$personAuthor, null, true],
             'person author with format' => [$personAuthor, 'foo', true],
-            'non-person author' => [$this, null, false],
+            'non-person author' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_person_authors(PersonAuthor $personAuthor, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($personAuthor));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -137,24 +132,20 @@ final class PersonAuthorNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_people($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'person author' => [[], PersonAuthor::class, [], true],
@@ -162,20 +153,18 @@ final class PersonAuthorNormalizerTest extends TestCase
             'author entry that isn\'t a person' => [['type' => 'foo'], AuthorEntry::class, [], false],
             'author that is a person' => [['type' => 'person'], Author::class, [], true],
             'author that isn\'t a person' => [['type' => 'foo'], Author::class, [], false],
-            'non-person author' => [[], get_class($this), [], false],
+            'non-person author' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_people(array $json, PersonAuthor $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PersonAuthor::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

@@ -9,20 +9,21 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\ReviewerNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ReviewerNormalizerTest extends TestCase
 {
     /** @var ReviewerNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new ReviewerNormalizer();
 
@@ -33,78 +34,66 @@ final class ReviewerNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_people($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reviewer = Builder::for(Reviewer::class)->__invoke();
 
         return [
             'reviewer' => [$reviewer, null, true],
             'reviewer with format' => [$reviewer, 'foo', true],
-            'non-reviewer' => [$this, null, false],
+            'non-reviewer' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_reviewers(Reviewer $reviewer, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reviewer));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_people($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'reviewer' => [[], Reviewer::class, [], true],
-            'non-reviewer' => [[], get_class($this), [], false],
+            'non-reviewer' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_people(Reviewer $expected, array $json)
     {
         $this->assertEquals($expected, $this->normalizer->denormalize($json, Reviewer::class));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [

@@ -11,19 +11,20 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\WebReferenceNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class WebReferenceNormalizerTest extends TestCase
 {
     /** @var WebReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new WebReferenceNormalizer();
 
@@ -34,24 +35,20 @@ final class WebReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_web_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new WebReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title',
@@ -60,20 +57,18 @@ final class WebReferenceNormalizerTest extends TestCase
         return [
             'web reference' => [$reference, null, true],
             'web reference with format' => [$reference, 'foo', true],
-            'non-web reference' => [$this, null, false],
+            'non-web reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_web_references(WebReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -125,43 +120,37 @@ final class WebReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_web_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'web reference' => [[], WebReference::class, [], true],
             'reference that is a web page' => [['type' => 'web'], Reference::class, [], true],
             'reference that isn\'t a web page' => [['type' => 'foo'], Reference::class, [], false],
-            'non-web reference' => [[], get_class($this), [], false],
+            'non-web reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_web_references(array $json, WebReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, WebReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

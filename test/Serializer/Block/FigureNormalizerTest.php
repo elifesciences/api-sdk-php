@@ -21,20 +21,21 @@ use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer as ImageModelNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class FigureNormalizerTest extends TestCase
 {
     /** @var FigureNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new FigureNormalizer();
 
@@ -51,24 +52,20 @@ final class FigureNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_figures($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $assets = new ArraySequence([
             new FigureAsset(null, 'label', new EmptySequence(), new Image(null, null, new EmptySequence(), Builder::for(ImageModel::class)->__invoke())),
@@ -78,20 +75,18 @@ final class FigureNormalizerTest extends TestCase
         return [
             'figure' => [$figure, null, true],
             'figure with format' => [$figure, 'foo', true],
-            'non-figure' => [$this, null, false],
+            'non-figure' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_figures(Figure $figure, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($figure));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -205,43 +200,37 @@ final class FigureNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_figures($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'figure' => [[], Figure::class, [], true],
             'block that is an figure' => [['type' => 'figure'], Block::class, [], true],
             'block that isn\'t an figure' => [['type' => 'foo'], Block::class, [], false],
-            'non-figure' => [[], get_class($this), [], false],
+            'non-figure' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_figures(array $json, Figure $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Figure::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

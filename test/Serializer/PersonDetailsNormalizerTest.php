@@ -4,89 +4,78 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PersonDetailsNormalizerTest extends TestCase
 {
     /** @var PersonDetailsNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new PersonDetailsNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_people($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $person = new PersonDetails('preferred name', 'index name');
 
         return [
             'person' => [$person, null, true],
             'person with format' => [$person, 'foo', true],
-            'non-person' => [$this, null, false],
+            'non-person' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_people(PersonDetails $person, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($person));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_people($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'person' => [[], PersonDetails::class, [], true],
-            'non-person' => [[], get_class($this), [], false],
+            'non-person' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_people(PersonDetails $expected, array $json)
     {
         $actual = $this->normalizer->denormalize($json, PersonDetails::class);
@@ -94,7 +83,7 @@ final class PersonDetailsNormalizerTest extends TestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [

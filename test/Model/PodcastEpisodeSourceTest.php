@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PodcastEpisodeSourceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_media_type()
     {
         $source = new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3');
@@ -17,9 +16,7 @@ final class PodcastEpisodeSourceTest extends TestCase
         $this->assertSame('audio/mpeg', $source->getMediaType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $source = new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3');

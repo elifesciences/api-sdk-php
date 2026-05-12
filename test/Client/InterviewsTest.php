@@ -10,7 +10,11 @@ use eLife\ApiSdk\Client\Interviews;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Interview;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class InterviewsTest extends ApiTestCase
 {
@@ -19,25 +23,19 @@ final class InterviewsTest extends ApiTestCase
     /** @var Interviews */
     private $interviews;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpInterviews()
     {
         $this->interviews = (new ApiSdk($this->getHttpClient()))->interviews();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->interviews);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockInterviewListCall(1, 1, 200);
@@ -50,9 +48,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockInterviewListCall(1, 1, 10);
@@ -61,9 +57,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(10, $this->interviews->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockInterviewListCall(1, 1, 10);
@@ -79,9 +73,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockInterviewListCall(1, 1, 1);
@@ -98,9 +90,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(null, $this->interviews[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -108,9 +98,7 @@ final class InterviewsTest extends ApiTestCase
         $this->interviews[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_an_interview()
     {
         $this->mockInterviewCall('interview7');
@@ -124,9 +112,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame('Interview interview7 text', $interview->getContent()[0]->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -137,9 +123,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame([0, 1, 'interview1', 'interview2', 'interview3', 'interview4', 'interview5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -150,9 +134,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(['interview1', 'interview2', 'interview3', 'interview4', 'interview5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -163,9 +145,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(['interview1', 'interview2', 'interview4', 'interview5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -176,9 +156,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(['interview1', 'interview2', 2, 'interview3', 'interview4', 'interview5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -189,10 +167,8 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(['interview1', 'interview2', 2, 'interview4', 'interview5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -205,7 +181,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [
@@ -237,10 +213,7 @@ final class InterviewsTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockInterviewListCall(1, 1, 3);
@@ -253,9 +226,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(['interview1', 'interview2', 'interview3'], $this->interviews->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -270,9 +241,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -285,17 +254,13 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(115, $this->interviews->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->interviews, $this->interviews->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockInterviewListCall(1, 1, 5);
@@ -310,9 +275,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockInterviewListCall(1, 1, 5, false);
@@ -323,9 +286,7 @@ final class InterviewsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockInterviewListCall(1, 1, 10);
@@ -335,9 +296,7 @@ final class InterviewsTest extends ApiTestCase
         $this->assertSame(10, $this->interviews->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockInterviewListCall(1, 1, 200);

@@ -8,12 +8,11 @@ use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use PHPUnit\Framework\Attributes\Test;
 
 final class PersonAuthorTest extends AuthorTest
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_preferred_name()
     {
         $author = new PersonAuthor(new PersonDetails('preferred name', 'index name'));
@@ -22,9 +21,7 @@ final class PersonAuthorTest extends AuthorTest
         $this->assertSame('preferred name', $author->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_index_name()
     {
         $author = new PersonAuthor(new PersonDetails('preferred name', 'index name'));
@@ -32,9 +29,7 @@ final class PersonAuthorTest extends AuthorTest
         $this->assertSame('index name', $author->getIndexName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_orcid()
     {
         $with = new PersonAuthor(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'));
@@ -44,9 +39,7 @@ final class PersonAuthorTest extends AuthorTest
         $this->assertNull($withOut->getOrcid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_biography()
     {
         $biography = new ArraySequence([new Paragraph('biography')]);
@@ -57,9 +50,7 @@ final class PersonAuthorTest extends AuthorTest
         $this->assertEmpty($withOut->getBiography());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_deceased()
     {
         $with = new PersonAuthor(new PersonDetails('preferred name', 'index name'), new EmptySequence(), true);
@@ -69,9 +60,7 @@ final class PersonAuthorTest extends AuthorTest
         $this->assertFalse($withOut->isDeceased());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_role()
     {
         $with = new PersonAuthor(new PersonDetails('preferred name', 'index name'), new EmptySequence(), false, 'role');

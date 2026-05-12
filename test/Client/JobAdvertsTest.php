@@ -10,7 +10,11 @@ use eLife\ApiSdk\Client\JobAdverts;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\JobAdvert;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class JobAdvertsTest extends ApiTestCase
 {
@@ -19,25 +23,19 @@ final class JobAdvertsTest extends ApiTestCase
     /** @var JobAdverts */
     private $jobAdverts;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpJobAdverts()
     {
         $this->jobAdverts = (new ApiSdk($this->getHttpClient()))->jobAdverts();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->jobAdverts);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockJobAdvertListCall(1, 1, 200);
@@ -50,9 +48,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockJobAdvertListCall(1, 1, 10);
@@ -61,9 +57,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(10, $this->jobAdverts->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockJobAdvertListCall(1, 1, 10);
@@ -79,9 +73,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockJobAdvertListCall(1, 1, 1);
@@ -99,9 +91,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(null, $this->jobAdverts[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -109,9 +99,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->jobAdverts[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_job_advert()
     {
         $this->mockJobAdvertCall('job-advert7');
@@ -125,9 +113,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame('Job advert job-advert7 text', $jobAdvert->getContent()[0]->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_open_and_closed()
     {
         $this->mockJobAdvertListCall(1, 1, 5, true, 'open');
@@ -138,9 +124,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_open_and_closed()
     {
         $this->mockJobAdvertListCall(1, 1, 10);
@@ -152,9 +136,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(10, $this->jobAdverts->show('open')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_open_and_closed()
     {
         $this->mockJobAdvertListCall(1, 1, 200);
@@ -170,9 +152,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->jobAdverts->show('open')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -183,9 +163,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame([0, 1, 'job-advert1', 'job-advert2', 'job-advert3', 'job-advert4', 'job-advert5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -196,9 +174,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(['job-advert1', 'job-advert2', 'job-advert3', 'job-advert4', 'job-advert5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -209,9 +185,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(['job-advert1', 'job-advert2', 'job-advert4', 'job-advert5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -222,9 +196,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(['job-advert1', 'job-advert2', 2, 'job-advert3', 'job-advert4', 'job-advert5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -235,10 +207,8 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(['job-advert1', 'job-advert2', 2, 'job-advert4', 'job-advert5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -251,10 +221,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockJobAdvertListCall(1, 1, 3);
@@ -267,9 +234,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(['job-advert1', 'job-advert2', 'job-advert3'], $this->jobAdverts->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -284,9 +249,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -299,17 +262,13 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(115, $this->jobAdverts->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->jobAdverts, $this->jobAdverts->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockJobAdvertListCall(1, 1, 5);
@@ -324,9 +283,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockJobAdvertListCall(1, 1, 5, false);
@@ -337,9 +294,7 @@ final class JobAdvertsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockJobAdvertListCall(1, 1, 10);
@@ -349,9 +304,7 @@ final class JobAdvertsTest extends ApiTestCase
         $this->assertSame(10, $this->jobAdverts->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockJobAdvertListCall(1, 1, 200);

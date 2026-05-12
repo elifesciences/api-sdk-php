@@ -3,14 +3,13 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\AccessControl;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class AccessControlTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_value()
     {
         $accessControl = Builder::for(AccessControl::class)
@@ -20,9 +19,7 @@ final class AccessControlTest extends TestCase
         $this->assertSame('value1', $accessControl->getValue());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_access()
     {
         $accessControl = Builder::for(AccessControl::class)

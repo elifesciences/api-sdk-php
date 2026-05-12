@@ -6,21 +6,22 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\SearchSubjectsNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class SearchSubjectsNormalizerTest extends ApiTestCase
 {
     /** @var SearchSubjectsNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new SearchSubjectsNormalizer();
@@ -28,24 +29,20 @@ final class SearchSubjectsNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_search_subjects($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $searchSubjects = new SearchSubjects(
             [
@@ -62,44 +59,36 @@ final class SearchSubjectsNormalizerTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_search_subjects(SearchSubjects $searchSubjects, array $context, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($searchSubjects, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_subjects($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'subject' => [[], SearchSubjects::class, [], true],
-            'non-subject' => [[], get_class($this), [], false],
+            'non-subject' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_subjects(SearchSubjects $expected, array $context, array $json)
     {
         $this->mockSubjectCall('biophysics-structural-biology', true);
@@ -110,7 +99,7 @@ final class SearchSubjectsNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [

@@ -8,9 +8,13 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 final class GroupAuthorNormalizer extends AuthorNormalizer
 {
+    /**
+     * @throws ExceptionInterface
+     */
     public function denormalizeAuthor(
         array $data,
         string $class,
@@ -41,7 +45,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             GroupAuthor::class === $type
@@ -51,6 +55,7 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
 
     /**
      * @param GroupAuthor $object
+     * @throws ExceptionInterface
      */
     protected function normalizeAuthor(Author $object, array $data, $format = null, array $context = []) : array
     {
@@ -76,8 +81,17 @@ final class GroupAuthorNormalizer extends AuthorNormalizer
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof GroupAuthor;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            GroupAuthor::class => false,
+            AuthorEntry::class => false,
+            Author::class => false,
+        ];
     }
 }

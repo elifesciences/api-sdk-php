@@ -8,10 +8,13 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Serializer\CoverNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class CoverNormalizerTest extends ApiTestCase
 {
@@ -20,10 +23,8 @@ final class CoverNormalizerTest extends ApiTestCase
     /** @var CoverNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new CoverNormalizer();
@@ -31,24 +32,20 @@ final class CoverNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_covers($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $image = Builder::for(Image::class)->sample('banner');
         $cover = new Cover('title', null, $image, Builder::dummy(ArticleVoR::class));
@@ -56,48 +53,40 @@ final class CoverNormalizerTest extends ApiTestCase
         return [
             'cover' => [$cover, null, true],
             'cover with format' => [$cover, 'foo', true],
-            'non-cover' => [$this, null, false],
+            'non-cover' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_covers(Cover $cover, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_covers(Cover $cover, array $expected, callable $extra = null)
     {
         $this->assertSame($expected, $this->normalizer->normalize($cover));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_covers($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'cover' => [[], Cover::class, [], true],
-            'non-cover' => [[], get_class($this), [], false],
+            'non-cover' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_covers(Cover $expected, array $json, callable $extra = null)
     {
         if ($extra) {
@@ -109,7 +98,7 @@ final class CoverNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $image = Builder::for(Image::class)->sample('banner');
 
@@ -196,7 +185,7 @@ final class CoverNormalizerTest extends ApiTestCase
         return Cover::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/cover-list/v1/*.json#items';
     }

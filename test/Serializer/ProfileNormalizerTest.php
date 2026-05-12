@@ -11,10 +11,13 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
 use eLife\ApiSdk\Serializer\ProfileNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ProfileNormalizerTest extends ApiTestCase
 {
@@ -23,10 +26,8 @@ final class ProfileNormalizerTest extends ApiTestCase
     /** @var ProfileNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ProfileNormalizer(new ProfilesClient($this->getHttpClient()));
@@ -34,72 +35,60 @@ final class ProfileNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_profiles($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $profile = Builder::for(Profile::class)->__invoke();
 
         return [
             'profile' => [$profile, null, true],
             'profile with format' => [$profile, 'foo', true],
-            'non-profile' => [$this, null, false],
+            'non-profile' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_profiles(Profile $profile, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_profiles(Profile $profile, array $context, array $expected, callable $extra = null)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($profile, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_profiles($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'profile' => [[], Profile::class, [], true],
-            'non-profile' => [[], get_class($this), [], false],
+            'non-profile' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_profiles(
         Profile $expected,
         array $context,
@@ -117,7 +106,7 @@ final class ProfileNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -218,7 +207,7 @@ final class ProfileNormalizerTest extends ApiTestCase
         return Profile::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/profile/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/profile-list/v1/*.json#items';

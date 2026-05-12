@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ClinicalTrialReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ClinicalTrialReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,
@@ -24,9 +23,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,
@@ -37,9 +34,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new ClinicalTrialReference('id', $date = new Date(2000), null,
@@ -49,9 +44,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new ClinicalTrialReference('id', new Date(2000), 'a',
@@ -65,9 +58,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,
@@ -77,9 +68,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new ClinicalTrialReference('id', new Date(2000), null,
@@ -93,9 +82,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function authors_have_a_type()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,
@@ -105,9 +92,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertSame(ClinicalTrialReference::AUTHOR_TYPE_AUTHORS, $reference->getAuthorsType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,
@@ -117,9 +102,7 @@ final class ClinicalTrialReferenceTest extends TestCase
         $this->assertSame('title', $reference->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $reference = new ClinicalTrialReference('id', new Date(2000), null,

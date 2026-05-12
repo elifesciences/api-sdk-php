@@ -5,54 +5,49 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ParagraphNormalizerTest extends TestCase
 {
     /** @var ParagraphNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new ParagraphNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_paragraphs($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $paragraph = new Paragraph('foo');
 
         return [
             'paragraph' => [$paragraph, null, true],
             'paragraph with format' => [$paragraph, 'foo', true],
-            'non-paragraph' => [$this, null, false],
+            'non-paragraph' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_normalize_paragraphs()
     {
         $expected = [
@@ -63,36 +58,30 @@ final class ParagraphNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize(new Paragraph('foo')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_paragraphs($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'paragraph' => [[], Paragraph::class, [], true],
             'block that is a paragraph' => [['type' => 'paragraph'], Block::class, [], true],
             'block that isn\'t a paragraph' => [['type' => 'foo'], Block::class, [], false],
-            'non-paragraph' => [[], get_class($this), [], false],
+            'non-paragraph' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_denormalize_paragraphs()
     {
         $json = [

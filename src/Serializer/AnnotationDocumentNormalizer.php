@@ -8,33 +8,66 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class AnnotationDocumentNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : AnnotationDocument
+    /**
+     * @param $data
+     * @param $type
+     * @param $format
+     * @param array $context
+     * @return AnnotationDocument
+     */
+    public function denormalize($data, $type, $format = null, array $context = []) : AnnotationDocument
     {
         return new AnnotationDocument(
             $data['title'],
             $data['uri']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    /**
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return AnnotationDocument::class === $type;
     }
 
-    /**
-     * @param AnnotationDocument $object
-     */
-    public function normalize($object, $format = null, array $context = []) : array
-    {
-        $data = [
-            'title' => $object->getTitle(),
-            'uri' => $object->getUri(),
-        ];
 
-        return $data;
+    /**
+     * @param AnnotationDocument $data
+     * @param $format
+     * @param array $context
+     * @return array
+     */
+    public function normalize($data, $format = null, array $context = []) : array
+    {
+        return [
+            'title' => $data->getTitle(),
+            'uri' => $data->getUri(),
+        ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof AnnotationDocument;
+    }
+
+    /**
+     * @param string|null $format
+     * @return true[]
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            AnnotationDocument::class => true,
+        ];
     }
 }

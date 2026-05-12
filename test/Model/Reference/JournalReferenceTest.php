@@ -10,13 +10,12 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\JournalReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class JournalReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new JournalReference('id', new Date(2000), null,
@@ -26,9 +25,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new JournalReference('id', new Date(2000), null,
@@ -39,9 +36,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new JournalReference('id', $date = new Date(2000), null,
@@ -51,9 +46,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new JournalReference('id', new Date(2000), 'a',
@@ -67,9 +60,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new JournalReference('id', new Date(2000), null,
@@ -79,9 +70,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new JournalReference('id', new Date(2000), null,
@@ -95,9 +84,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_title()
     {
         $reference = new JournalReference('id', new Date(2000), null,
@@ -107,9 +94,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertSame('article title', $reference->getArticleTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_journal()
     {
         $reference = new JournalReference('id', new Date(2000), null,
@@ -119,9 +104,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertSame('journal', $reference->getJournal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_pages()
     {
         $with = new JournalReference('id', new Date(2000), null,
@@ -135,9 +118,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertNull($withOut->getPages());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_volume()
     {
         $with = new JournalReference('id', new Date(2000), null,
@@ -151,9 +132,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertNull($withOut->getVolume());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new JournalReference('id', new Date(2000), null,
@@ -168,9 +147,7 @@ final class JournalReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_pmid()
     {
         $with = new JournalReference('id', new Date(2000), null,

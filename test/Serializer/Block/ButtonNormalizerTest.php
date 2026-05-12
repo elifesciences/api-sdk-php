@@ -5,54 +5,49 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Button;
 use eLife\ApiSdk\Serializer\Block\ButtonNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ButtonNormalizerTest extends TestCase
 {
     /** @var ButtonNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new ButtonNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_buttons($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $button = new Button('foo', 'http://www.example.com/');
 
         return [
             'button' => [$button, null, true],
             'button with format' => [$button, 'foo', true],
-            'non-button' => [$this, null, false],
+            'non-button' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_normalize_buttons()
     {
         $expected = [
@@ -64,36 +59,30 @@ final class ButtonNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize(new Button('foo', 'http://www.example.com/')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_buttons($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'button' => [[], Button::class, [], true],
             'block that is a button' => [['type' => 'button'], Block::class, [], true],
             'block that isn\'t a button' => [['type' => 'foo'], Block::class, [], false],
-            'non-button' => [[], get_class($this), [], false],
+            'non-button' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_denormalize_buttons()
     {
         $json = [

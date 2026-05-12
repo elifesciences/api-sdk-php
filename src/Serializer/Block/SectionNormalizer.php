@@ -5,10 +5,10 @@ namespace eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Section;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,7 +17,7 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Section
+    public function denormalize($data, $type, $format = null, array $context = []) : Section
     {
         $data['content'] = new ArraySequence(array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
@@ -26,7 +26,7 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
         return new Section($data['title'], $data['id'] ?? null, $data['content']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Section::class === $type
@@ -35,27 +35,35 @@ final class SectionNormalizer implements NormalizerInterface, DenormalizerInterf
     }
 
     /**
-     * @param Section $object
+     * @param Section $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'section',
-            'title' => $object->getTitle(),
-            'content' => $object->getContent()->map(function (Block $block) {
+            'title' => $data->getTitle(),
+            'content' => $data->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray(),
         ];
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Section;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Section::class => false,
+            Block::class => false,
+        ];
     }
 }

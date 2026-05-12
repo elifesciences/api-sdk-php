@@ -4,14 +4,13 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\SearchSubjects;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 class SearchSubjectsTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_iterable_with_subjects_as_keys()
     {
         $searchSubjects = new SearchSubjects(

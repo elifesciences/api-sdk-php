@@ -9,7 +9,10 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Highlights;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Highlight;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class HighlightsTest extends ApiTestCase
 {
@@ -18,17 +21,13 @@ final class HighlightsTest extends ApiTestCase
     /** @var Highlights */
     private $highlights;
 
-    /**
-     * @before
-     */
-    protected function setUpSearch()
+    #[Before]
+    protected function setUpSearch() : void
     {
         $this->highlights = (new ApiSdk($this->getHttpClient()))->highlights();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $list = $this->highlights->get('foo');
@@ -36,9 +35,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertInstanceOf(Sequence::class, $list);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $list = $this->highlights->get('foo');
@@ -50,9 +47,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(200, $this->traverseAndSanityCheck($this->highlights->get('foo')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $list = $this->highlights->get('foo');
@@ -63,9 +58,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(10, $list->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $list = $this->highlights->get('foo');
@@ -76,9 +69,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(10, $this->traverseAndSanityCheck($list->toArray()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $list = $this->highlights->get('foo');
@@ -97,9 +88,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(null, $list[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $list = $this->highlights->get('foo');
@@ -109,10 +98,8 @@ final class HighlightsTest extends ApiTestCase
         $list[0] = 'foo';
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         $list = $this->highlights->get('foo');
@@ -127,10 +114,7 @@ final class HighlightsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $list = $this->highlights->get('foo');
@@ -145,9 +129,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(['Highlight 1 title', 'Highlight 2 title', 'Highlight 3 title'], $list->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $list = $this->highlights->get('foo');
@@ -165,9 +147,7 @@ final class HighlightsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $list = $this->highlights->get('foo');
@@ -182,9 +162,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(115, $list->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $list = $this->highlights->get('foo');
@@ -202,9 +180,7 @@ final class HighlightsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $list = $this->highlights->get('foo');
@@ -217,9 +193,7 @@ final class HighlightsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $list = $this->highlights->get('foo');
@@ -231,9 +205,7 @@ final class HighlightsTest extends ApiTestCase
         $this->assertSame(10, $list->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $list = $this->highlights->get('foo');

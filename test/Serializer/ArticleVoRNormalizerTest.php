@@ -18,11 +18,14 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
-use function GuzzleHttp\Promise\promise_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ArticleVoRNormalizerTest extends ApiTestCase
 {
@@ -31,10 +34,8 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
     /** @var ArticleVoRNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ArticleVoRNormalizer(new ArticlesClient($this->getHttpClient()));
@@ -42,74 +43,67 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_article_vors($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $articleVoR = Builder::for(ArticleVoR::class)->__invoke();
 
         return [
             'article vor' => [$articleVoR, null, true],
             'article vor with format' => [$articleVoR, 'foo', true],
-            'non-article vor' => [$this, null, false],
+            'non-article vor' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_article_vors(ArticleVoR $articleVoR, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_article_vors(
+        ArticleVoR $articleVoR,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertSame($expected, $this->normalizer->normalize($articleVoR, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_article_vors($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'article vor' => [[], ArticleVoR::class, [], true],
             'article vor by article type' => [['type' => 'research-article', 'status' => 'vor'], Article::class, [], true],
             'article vor by model type' => [['type' => 'research-article', 'status' => 'vor'], Model::class, [], true],
-            'non-article vor' => [[], get_class($this), [], false],
+            'non-article vor' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_article_vors(
         ArticleVoR $expected,
         array $context,
@@ -127,7 +121,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $datasets = [
             'complete' => [
@@ -146,16 +140,16 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Section('Article 09560 abstract section title', null, new ArraySequence([new Paragraph('Article 09560 abstract text')]))]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
-                    ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
-                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
-                    ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withEditorEvaluation(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
+                    ->withDecisionLetter(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
+                    ->withAuthorResponse(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                     ->withElifeAssessment(new ElifeAssessment(
                         'eLife assessment',
                         new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
                         ['important'],
                         ['solid']
                     ))
-                    ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                    ->withRecommendationsForAuthors(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
                     ->__invoke(),
                 [],
@@ -580,19 +574,19 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
                     ]))
                     ->withAbstract(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')]), '10.7554/eLife.09560abstract'))
                     ->withResearchOrganisms(['research organism'])
-                    ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
-                    ->withEditorEvaluationScietyUri(promise_for('https://editor-evaluation-09560.com'))
-                    ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
+                    ->withEditorEvaluation(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
+                    ->withEditorEvaluationScietyUri(Create::promiseFor('https://editor-evaluation-09560.com'))
+                    ->withDecisionLetter(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                     ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
-                    ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                    ->withAuthorResponse(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
                     ->withElifeAssessment(new ElifeAssessment(
                         'eLife assessment',
                         new ArticleSection(new ArraySequence([new Paragraph('Article 09560 elife assessment text')]), '10.7554/eLife.09560elifeAssessment', 'elife-assessment-id'),
                         ['landmark'],
                         ['solid']
                     ))
-                    ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
-                    ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
+                    ->withRecommendationsForAuthors(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                    ->withRecommendationsForAuthorsTitle(Create::promiseFor('Recommendations for authors'))
                     ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]))
                     ->__invoke(),
                 ['snippet' => true],
@@ -738,7 +732,7 @@ final class ArticleVoRNormalizerTest extends ApiTestCase
         return ArticleVoR::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/*.json#items[?status=='vor']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v2/*.json#[?status=='vor']";

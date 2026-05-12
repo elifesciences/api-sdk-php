@@ -8,14 +8,13 @@ use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\Image as ImageFile;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ImageTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $image = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke());
@@ -23,9 +22,7 @@ final class ImageTest extends TestCase
         $this->assertInstanceOf(BlockWithCaption::class, $image);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new Image('id', null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke());
@@ -35,9 +32,7 @@ final class ImageTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_title()
     {
         $with = new Image(null, 'title', new EmptySequence(), Builder::for(ImageFile::class)->__invoke());
@@ -47,9 +42,7 @@ final class ImageTest extends TestCase
         $this->assertNull($withOut->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_caption()
     {
         $caption = new ArraySequence([new Paragraph('caption')]);
@@ -60,9 +53,7 @@ final class ImageTest extends TestCase
         $this->assertEmpty($withOut->getCaption());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_attribution()
     {
         $attribution = new ArraySequence(['attribution']);
@@ -73,9 +64,7 @@ final class ImageTest extends TestCase
         $this->assertEmpty($withOut->getAttribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_image()
     {
         $imageFile = new Image(null, null, new EmptySequence(), $image = Builder::for(ImageFile::class)->__invoke());
@@ -83,9 +72,7 @@ final class ImageTest extends TestCase
         $this->assertEquals($image, $imageFile->getImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_inlined()
     {
         $true = new Image(null, null, new EmptySequence(), Builder::for(ImageFile::class)->__invoke(), true);

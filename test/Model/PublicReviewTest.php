@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PublicReviewTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $title = 'title';
@@ -22,9 +21,7 @@ final class PublicReviewTest extends TestCase
 
         $this->assertEquals($title, $publicReview->getTitle());
     }
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = new ArraySequence([new Paragraph('content')]);
@@ -33,9 +30,7 @@ final class PublicReviewTest extends TestCase
         $this->assertEquals($content, $articleSection->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new PublicReview('title', new EmptySequence(), '10.1000/182');
@@ -46,9 +41,7 @@ final class PublicReviewTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new PublicReview('title', new EmptySequence(), null, 'id');

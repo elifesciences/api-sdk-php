@@ -6,14 +6,13 @@ use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Place;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 abstract class AuthorTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_is_an_author_entry()
     {
         $author = $this->createAuthor();
@@ -21,9 +20,7 @@ abstract class AuthorTest extends TestCase
         $this->assertInstanceOf(AuthorEntry::class, $author);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_additional_information()
     {
         $with = $this->createAuthor($additionalInformation = ['foo']);
@@ -33,9 +30,7 @@ abstract class AuthorTest extends TestCase
         $this->assertEmpty($withOut->getAdditionalInformation());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_affiliations()
     {
         $with = $this->createAuthor([], $affiliations = [new Place(['affiliation'])]);
@@ -45,9 +40,7 @@ abstract class AuthorTest extends TestCase
         $this->assertEmpty($withOut->getAffiliations());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_competing_interests_statement()
     {
         $with = $this->createAuthor([], [], 'competing interests');
@@ -57,9 +50,7 @@ abstract class AuthorTest extends TestCase
         $this->assertNull($withOut->getCompetingInterests());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_contribution()
     {
         $with = $this->createAuthor([], [], null, 'contribution');
@@ -69,9 +60,7 @@ abstract class AuthorTest extends TestCase
         $this->assertNull($withOut->getContribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_email_addresses()
     {
         $with = $this->createAuthor([], [], null, null, ['foo@example.com']);
@@ -81,9 +70,7 @@ abstract class AuthorTest extends TestCase
         $this->assertEmpty($withOut->getEmailAddresses());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_equal_contribution_groups()
     {
         $with = $this->createAuthor([], [], null, null, [], [1, 2]);
@@ -93,9 +80,7 @@ abstract class AuthorTest extends TestCase
         $this->assertEmpty($withOut->getEqualContributionGroups());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_phone_numbers()
     {
         $with = $this->createAuthor([], [], null, null, [], [], ['+447700900415']);
@@ -105,9 +90,7 @@ abstract class AuthorTest extends TestCase
         $this->assertEmpty($withOut->getPhoneNumbers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_postal_addresses()
     {
         $with = $this->createAuthor([], [], null, null, [], [], [], $postalAddresses = [Builder::dummy(Address::class)]);

@@ -6,10 +6,11 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Image;
 use eLife\ApiSdk\Model\Image as ImageFile;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -18,7 +19,7 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Image
+    public function denormalize($data, $type, $format = null, array $context = []) : Image
     {
         return new Image(
             $data['id'] ?? null,
@@ -31,7 +32,7 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Image::class === $type
@@ -40,38 +41,47 @@ final class ImageNormalizer implements NormalizerInterface, DenormalizerInterfac
     }
 
     /**
-     * @param Image $object
+     * @param Image $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'image',
-            'image' => $this->normalizer->normalize($object->getImage()),
+            'image' => $this->normalizer->normalize($data->getImage()),
         ];
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
+        if ($data->getTitle()) {
+            $arr['title'] = $data->getTitle();
         }
 
-        if ($object->getCaption()->notEmpty()) {
-            $data['caption'] = $object->getCaption()->map(function (Block $block) {
+        if ($data->getCaption()->notEmpty()) {
+            $arr['caption'] = $data->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
         }
 
-        if ($object->isInline()) {
-            $data['inline'] = true;
+        if ($data->isInline()) {
+            $arr['inline'] = true;
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Image;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Image::class => false,
+            Block::class => false,
+        ];
     }
 }

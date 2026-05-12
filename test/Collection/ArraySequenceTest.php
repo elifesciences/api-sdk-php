@@ -5,13 +5,13 @@ namespace test\eLife\ApiSdk\Collection;
 use BadMethodCallException;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ArraySequenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -19,9 +19,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertInstanceOf(Sequence::class, $collection);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -31,9 +29,7 @@ final class ArraySequenceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -42,9 +38,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame(5, $collection->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $array = [1, 2, 3, 4, 5];
@@ -54,9 +48,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame($array, $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -67,9 +59,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame(null, $collection[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -79,9 +69,7 @@ final class ArraySequenceTest extends TestCase
         $collection[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -91,9 +79,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([-1, 0, 1, 2, 3, 4, 5], $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -103,10 +89,8 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([1, 2, 3, 4, 5, 6, 7], $collection->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider dropProvider
-     */
+    #[Test]
+    #[DataProvider('dropProvider')]
     public function it_can_have_values_dropped(array $drop, array $expected)
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -116,7 +100,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame($expected, $collection->toArray());
     }
 
-    public function dropProvider() : array
+    public static function dropProvider() : array
     {
         return [
             '1, 3' => [[1, 3], [1, 3, 5]],
@@ -127,10 +111,8 @@ final class ArraySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider insertProvider
-     */
+    #[Test]
+    #[DataProvider('insertProvider')]
     public function it_can_have_values_inserted(int $index, array $expected)
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -140,7 +122,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame($expected, $collection->toArray());
     }
 
-    public function insertProvider() : array
+    public static function insertProvider() : array
     {
         return [
             '2' => [2, [1, 2, 'foo', 3, 4, 5]],
@@ -150,10 +132,8 @@ final class ArraySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider setProvider
-     */
+    #[Test]
+    #[DataProvider('setProvider')]
     public function it_can_have_a_value_set(int $index, array $expected)
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -163,7 +143,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame($expected, $collection->toArray());
     }
 
-    public function setProvider() : array
+    public static function setProvider() : array
     {
         return [
             'index 0' => [0, ['foo', 2, 3, 4, 5]],
@@ -174,10 +154,8 @@ final class ArraySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected)
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -185,7 +163,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame($expected, $collection->slice($offset, $length)->toArray());
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [1, 1, [2]],
@@ -194,10 +172,7 @@ final class ArraySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -209,9 +184,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([100, 200, 300, 400, 500], $collection->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_also_provides_the_index_when_mapping()
     {
         $collection = new ArraySequence([5, 9, 100]);
@@ -223,9 +196,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([0, 1, 2], $collection->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $collection = new ArraySequence([1, null, 2, 3, false, 4, 5]);
@@ -233,9 +204,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([1, 2, 3, 4, 5], $collection->filter()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_with_a_callback()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -247,9 +216,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([4, 5], $collection->filter($filter)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_also_provides_the_index_when_filtering_with_a_callback()
     {
         $collection = new ArraySequence([5, 9, 100]);
@@ -261,9 +228,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([9, 100], $collection->filter($filter)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -275,9 +240,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame(115, $collection->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_flattened()
     {
         $collection = new ArraySequence([1, new ArraySequence([2, new ArraySequence([3, 4]), 5]), 6]);
@@ -285,9 +248,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([1, 2, 3, 4, 5, 6], $collection->flatten()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $collection = new ArraySequence([5, 4, 3, 2, 1]);
@@ -295,9 +256,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([1, 2, 3, 4, 5], $collection->sort()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted_with_a_callback()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);
@@ -309,9 +268,7 @@ final class ArraySequenceTest extends TestCase
         $this->assertSame([5, 4, 3, 2, 1], $collection->sort($sort)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $collection = new ArraySequence([1, 2, 3, 4, 5]);

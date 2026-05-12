@@ -6,10 +6,10 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Profile;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -18,7 +18,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Profile
+    public function denormalize($data, $type, $format = null, array $context = []) : Profile
     {
         $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class);
         $data['content'] = new ArraySequence(array_map(function (array $block) {
@@ -28,7 +28,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
         return new Profile($data['image'], $data['content']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Profile::class === $type
@@ -37,21 +37,29 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
     }
 
     /**
-     * @param Profile $object
+     * @param Profile $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         return [
             'type' => 'profile',
-            'image' => $this->normalizer->normalize($object->getImage()),
-            'content' => $object->getContent()->map(function (Block $block) {
+            'image' => $this->normalizer->normalize($data->getImage()),
+            'content' => $data->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray(),
         ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Profile;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Profile::class => false,
+            Block::class => false,
+        ];
     }
 }

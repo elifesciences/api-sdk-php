@@ -9,10 +9,13 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Serializer\ArticleHistoryNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ArticleHistoryNormalizerTest extends ApiTestCase
 {
@@ -21,10 +24,8 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
     /** @var ArticleHistoryNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer(): void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ArticleHistoryNormalizer();
@@ -32,72 +33,74 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_article_histories($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider(): array
     {
-        $articleHistory = new ArticleHistory(null, null, null, new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));
+        $articleHistory = new ArticleHistory(
+            null,
+            null,
+            null,
+            new ArraySequence(
+                [
+                    Builder::dummy(ArticlePoA::class),
+                    Builder::dummy(ArticlePreprint::class)
+                ]
+            )
+        );
 
         return [
             'article history' => [$articleHistory, null, true],
             'article history with format' => [$articleHistory, 'foo', true],
-            'non-article history' => [$this, null, false],
+            'non-article history' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_article_histories(ArticleHistory $articleHistory, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_article_histories(
+        ArticleHistory $articleHistory,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertSame($expected, $this->normalizer->normalize($articleHistory));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_article_histories($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider(): array
     {
         return [
             'article history' => [[], ArticleHistory::class, [], true],
-            'non-article history' => [[], get_class($this), [], false],
+            'non-article history' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_article_histories(ArticleHistory $expected, array $json, callable $extra = null)
     {
         if ($extra) {
@@ -109,7 +112,7 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider(): array
     {
         return [
             'complete' => [
@@ -261,14 +264,14 @@ final class ArticleHistoryNormalizerTest extends ApiTestCase
         ];
     }
 
-    protected function class() : string
+    protected function class(): string
     {
         return ArticleHistory::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v1/*.json';
-        yield __DIR__.'/../../vendor/elife/api/dist/samples/article-history/v2/*.json';
+        yield __DIR__ . '/../../vendor/elife/api/dist/samples/article-history/v1/*.json';
+        yield __DIR__ . '/../../vendor/elife/api/dist/samples/article-history/v2/*.json';
     }
 }

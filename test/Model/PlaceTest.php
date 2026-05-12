@@ -5,14 +5,13 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Place;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class PlaceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_name()
     {
         $place = new Place(['foo']);
@@ -20,9 +19,7 @@ final class PlaceTest extends TestCase
         $this->assertEquals(['foo'], $place->getName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_address()
     {
         $address = Builder::dummy(Address::class);
@@ -34,9 +31,7 @@ final class PlaceTest extends TestCase
         $this->assertNull($withOut->getAddress());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_a_string()
     {
         $address = Builder::for(Address::class)

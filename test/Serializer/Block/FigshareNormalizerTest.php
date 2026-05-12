@@ -6,19 +6,20 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Figshare;
 use eLife\ApiSdk\Serializer\Block\FigshareNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class FigshareNormalizerTest extends TestCase
 {
     /** @var FigshareNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new FigshareNormalizer();
 
@@ -27,64 +28,54 @@ final class FigshareNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_figshares($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $figshare = new Figshare('foo', 'title', 300, 200);
 
         return [
             'figshare' => [$figshare, null, true],
             'figshare with format' => [$figshare, 'foo', true],
-            'non-figshare' => [$this, null, false],
+            'non-figshare' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_figshares($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'figshare' => [[], Figshare::class, [], true],
             'block that is a figshare' => [['type' => 'figshare'], Block::class, [], true],
             'block that isn\'t a figshare' => [['type' => 'foo'], Block::class, [], false],
-            'non-figshare' => [[], get_class($this), [], false],
+            'non-figshare' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_denormalizes_figshares()
     {
         $json = [

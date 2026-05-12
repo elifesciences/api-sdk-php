@@ -5,61 +5,56 @@ namespace test\eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
 use eLife\ApiSdk\Serializer\Block\MathMLNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class MathMLNormalizerTest extends TestCase
 {
     /** @var MathMLNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new MathMLNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_math_ml($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $mathML = new MathML(null, null, '<math></math>');
 
         return [
             'mathML' => [$mathML, null, true],
             'mathML with format' => [$mathML, 'foo', true],
-            'non-mathML' => [$this, null, false],
+            'non-mathML' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_math_ml(MathML $mathML, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($mathML));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -81,43 +76,37 @@ final class MathMLNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_math_ml($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'mathML' => [[], MathML::class, [], true],
             'block that is mathML' => [['type' => 'mathml'], Block::class, [], true],
             'block that isn\'t mathML' => [['type' => 'foo'], Block::class, [], false],
-            'non-mathML' => [[], get_class($this), [], false],
+            'non-mathML' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_math_ml(array $json, MathML $expected)
     {
         $this->assertEquals($expected, $this->normalizer->denormalize($json, MathML::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

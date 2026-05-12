@@ -8,30 +8,37 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class FileNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : File
+    public function denormalize($data, $type, $format = null, array $context = []) : File
     {
         return new File($data['mediaType'], $data['uri'], $data['filename']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return File::class === $type;
     }
 
     /**
-     * @param File $object
+     * @param File $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         return [
-            'mediaType' => $object->getMediaType(),
-            'uri' => $object->getUri(),
-            'filename' => $object->getFilename(),
+            'mediaType' => $data->getMediaType(),
+            'uri' => $data->getUri(),
+            'filename' => $data->getFilename(),
         ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof File;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            File::class => true,
+        ];
     }
 }

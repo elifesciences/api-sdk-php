@@ -6,13 +6,12 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Tweet;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class TweetTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
@@ -20,9 +19,7 @@ final class TweetTest extends TestCase
         $this->assertInstanceOf(Block::class, $tweet);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
@@ -31,9 +28,7 @@ final class TweetTest extends TestCase
         $this->assertSame('foo', $tweet->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $tweet = new Tweet('foo', new Date(2020, 4, 23), 'tweet', 'accountId', 'accountLabel');
@@ -41,9 +36,7 @@ final class TweetTest extends TestCase
         $this->assertEquals(new Date(2020, 4, 23), $tweet->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_text()
     {
         $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
@@ -51,9 +44,7 @@ final class TweetTest extends TestCase
         $this->assertEquals('tweet', $tweet->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_account_id()
     {
         $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
@@ -61,9 +52,7 @@ final class TweetTest extends TestCase
         $this->assertEquals('accountId', $tweet->getAccountId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_account_label()
     {
         $tweet = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel');
@@ -71,9 +60,7 @@ final class TweetTest extends TestCase
         $this->assertEquals('accountLabel', $tweet->getAccountLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_a_conversation()
     {
         $true = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel', true);
@@ -83,9 +70,7 @@ final class TweetTest extends TestCase
         $this->assertFalse($false->isConversation());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_contain_a_media_card()
     {
         $true = new Tweet('foo', new Date(2000), 'tweet', 'accountId', 'accountLabel', false, true);

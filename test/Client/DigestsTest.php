@@ -12,7 +12,10 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Digest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class DigestsTest extends ApiTestCase
 {
@@ -21,25 +24,19 @@ final class DigestsTest extends ApiTestCase
     /** @var Digests */
     private $digests;
 
-    /**
-     * @before
-     */
-    protected function setUpDigests()
+    #[Before]
+    protected function setUpDigests() : void
     {
         $this->digests = (new ApiSdk($this->getHttpClient()))->digests();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->digests);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockDigestListCall(1, 1, 200);
@@ -52,9 +49,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockDigestListCall(1, 1, 10);
@@ -63,9 +58,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(10, $this->digests->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockDigestListCall(1, 1, 10);
@@ -81,9 +74,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockDigestListCall(1, 1, 1);
@@ -100,9 +91,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(null, $this->digests[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -110,9 +99,7 @@ final class DigestsTest extends ApiTestCase
         $this->digests[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_digest()
     {
         $this->mockDigestCall('digest-7', true);
@@ -133,9 +120,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertInstanceOf(Block::class, $digest->getRelatedContent()[0]->getContent()[0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -146,9 +131,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame([0, 1, 'digest-1', 'digest-2', 'digest-3', 'digest-4', 'digest-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -159,9 +142,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(['digest-1', 'digest-2', 'digest-3', 'digest-4', 'digest-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -172,9 +153,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(['digest-1', 'digest-2', 'digest-4', 'digest-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -185,9 +164,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(['digest-1', 'digest-2', 2, 'digest-3', 'digest-4', 'digest-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -198,10 +175,8 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(['digest-1', 'digest-2', 2, 'digest-4', 'digest-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -214,10 +189,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockDigestListCall(1, 1, 3);
@@ -230,9 +202,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(['digest-1', 'digest-2', 'digest-3'], $this->digests->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -247,9 +217,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -262,17 +230,13 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(115, $this->digests->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->digests, $this->digests->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockDigestListCall(1, 1, 5);
@@ -287,9 +251,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockDigestListCall(1, 1, 5, false);
@@ -300,9 +262,7 @@ final class DigestsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockDigestListCall(1, 1, 10);
@@ -312,9 +272,7 @@ final class DigestsTest extends ApiTestCase
         $this->assertSame(10, $this->digests->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockDigestListCall(1, 1, 200);

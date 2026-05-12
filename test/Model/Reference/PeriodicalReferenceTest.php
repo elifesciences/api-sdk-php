@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PeriodicalReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PeriodicalReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -25,9 +24,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -38,9 +35,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new PeriodicalReference('id', $date = new Date(2000), null,
@@ -50,9 +45,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new PeriodicalReference('id', new Date(2000), 'a',
@@ -66,9 +59,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -78,9 +69,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new PeriodicalReference('id', new Date(2000), null,
@@ -94,9 +83,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_title()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -106,9 +93,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertSame('article title', $reference->getArticleTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_periodical()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -118,9 +103,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertEquals('periodical', $reference->getPeriodical());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_pages()
     {
         $reference = new PeriodicalReference('id', new Date(2000), null,
@@ -130,9 +113,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertEquals($pages, $reference->getPages());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_volume()
     {
         $with = new PeriodicalReference('id', new Date(2000), null,
@@ -146,9 +127,7 @@ final class PeriodicalReferenceTest extends TestCase
         $this->assertNull($withOut->getVolume());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new PeriodicalReference('id', new Date(2000), null,

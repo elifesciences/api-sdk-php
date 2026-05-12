@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Quote;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class QuoteTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $quote = new Quote([new Paragraph('foo')]);
@@ -19,9 +18,7 @@ final class QuoteTest extends TestCase
         $this->assertInstanceOf(Block::class, $quote);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_text()
     {
         $quote = new Quote([new Paragraph('foo')]);
@@ -29,9 +26,7 @@ final class QuoteTest extends TestCase
         $this->assertEquals([new Paragraph('foo')], $quote->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_citation()
     {
         $with = new Quote([new Paragraph('foo')], 'bar');

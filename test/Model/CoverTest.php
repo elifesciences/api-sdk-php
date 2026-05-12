@@ -7,14 +7,13 @@ use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\HasBanner;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\Image;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class CoverTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $image = Builder::for(Image::class)->sample('banner');
@@ -22,9 +21,7 @@ final class CoverTest extends TestCase
 
         $this->assertSame('title', $cover->getTitle());
     }
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $image = Builder::for(Image::class)->sample('banner');
@@ -36,9 +33,7 @@ final class CoverTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_banner()
     {
         $image = Builder::for(Image::class)->sample('banner');
@@ -48,9 +43,7 @@ final class CoverTest extends TestCase
         $this->assertEquals($image, $cover->getBanner());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_item()
     {
         $image = Builder::for(Image::class)->sample('banner');

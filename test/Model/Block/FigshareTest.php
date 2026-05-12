@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Figshare;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FigshareTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $figshare = new Figshare('foo', 'title', 300, 200);
@@ -19,9 +18,7 @@ final class FigshareTest extends TestCase
         $this->assertInstanceOf(Block::class, $figshare);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $figshare = new Figshare('foo', 'title', 300, 200);
@@ -30,9 +27,7 @@ final class FigshareTest extends TestCase
         $this->assertSame('foo', $figshare->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $figshare = new Figshare('foo', 'title', 300, 200);
@@ -40,9 +35,7 @@ final class FigshareTest extends TestCase
         $this->assertSame('title', $figshare->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_width()
     {
         $figshare = new Figshare('foo', 'title', 300, 200);
@@ -50,9 +43,7 @@ final class FigshareTest extends TestCase
         $this->assertSame(300, $figshare->getWidth());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_height()
     {
         $figshare = new Figshare('foo', 'title', 300, 200);

@@ -7,14 +7,13 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ImageTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_alt_text()
     {
         $image = Builder::for(Image::class)
@@ -24,9 +23,7 @@ final class ImageTest extends TestCase
         $this->assertSame('foo', $image->getAltText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $image = Builder::for(Image::class)
@@ -36,9 +33,7 @@ final class ImageTest extends TestCase
         $this->assertSame('http://www.example.com/example.jpg', $image->getUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_attribution()
     {
         $with = Builder::for(Image::class)
@@ -53,9 +48,7 @@ final class ImageTest extends TestCase
         $this->assertEmpty($withOut->getAttribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_source()
     {
         $image = Builder::for(Image::class)
@@ -69,9 +62,7 @@ final class ImageTest extends TestCase
         $this->assertEquals($source, $image->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_width_and_height()
     {
         $image = Builder::for(Image::class)
@@ -83,9 +74,7 @@ final class ImageTest extends TestCase
         $this->assertSame(200, $image->getHeight());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_focal_point()
     {
         $image = Builder::for(Image::class)

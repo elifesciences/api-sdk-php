@@ -10,13 +10,12 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ReportReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ReportReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new ReportReference('id', new Date(2000), null,
@@ -26,9 +25,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new ReportReference('id', new Date(2000), null,
@@ -39,9 +36,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new ReportReference('id', $date = new Date(2000), null,
@@ -51,9 +46,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new ReportReference('id', new Date(2000), 'a',
@@ -67,9 +60,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new ReportReference('id', new Date(2000), null,
@@ -79,9 +70,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new ReportReference('id', new Date(2000), null,
@@ -95,9 +84,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reference = new ReportReference('id', new Date(2000), null,
@@ -107,9 +94,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertSame('title', $reference->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_publisher()
     {
         $reference = new ReportReference('id', new Date(2000), null,
@@ -119,9 +104,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertEquals($report, $reference->getPublisher());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new ReportReference('id', new Date(2000), null,
@@ -136,9 +119,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_pmid()
     {
         $with = new ReportReference('id', new Date(2000), null,
@@ -152,9 +133,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertNull($withOut->getPmid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_isbn()
     {
         $with = new ReportReference('id', new Date(2000), null,
@@ -168,9 +147,7 @@ final class ReportReferenceTest extends TestCase
         $this->assertNull($withOut->getIsbn());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new ReportReference('id', new Date(2000), null,

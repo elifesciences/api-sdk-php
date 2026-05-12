@@ -11,7 +11,11 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PeopleTest extends ApiTestCase
 {
@@ -20,25 +24,19 @@ final class PeopleTest extends ApiTestCase
     /** @var People */
     private $people;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpPeople()
     {
         $this->people = (new ApiSdk($this->getHttpClient()))->people();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->people);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockPersonListCall(1, 1, 200);
@@ -51,9 +49,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockPersonListCall(1, 1, 10);
@@ -62,9 +58,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(10, $this->people->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockPersonListCall(1, 1, 10);
@@ -80,9 +74,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockPersonListCall(1, 1, 1);
@@ -99,9 +91,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(null, $this->people[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -109,9 +99,7 @@ final class PeopleTest extends ApiTestCase
         $this->people[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_person()
     {
         $this->mockPersonCall(7, true);
@@ -133,9 +121,7 @@ final class PeopleTest extends ApiTestCase
             $person->getResearch()->getExpertises()[0]->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->mockPersonListCall(1, 1, 5, true, ['subject']);
@@ -146,9 +132,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_subject()
     {
         $this->mockPersonListCall(1, 1, 10);
@@ -160,9 +144,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(10, $this->people->forSubject('subject')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_subject()
     {
         $this->mockPersonListCall(1, 1, 200);
@@ -178,9 +160,7 @@ final class PeopleTest extends ApiTestCase
         $this->people->forSubject('subject')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_type()
     {
         $this->mockPersonListCall(1, 1, 5, true, [], ['senior-editor']);
@@ -191,9 +171,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_type()
     {
         $this->mockPersonListCall(1, 1, 10);
@@ -205,9 +183,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(10, $this->people->forType('senior-editor')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_type()
     {
         $this->mockPersonListCall(1, 1, 200);
@@ -223,9 +199,7 @@ final class PeopleTest extends ApiTestCase
         $this->people->forType('senior-editor')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -236,9 +210,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame([0, 1, 'person1', 'person2', 'person3', 'person4', 'person5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -249,9 +221,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(['person1', 'person2', 'person3', 'person4', 'person5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -262,9 +232,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(['person1', 'person2', 'person4', 'person5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -275,9 +243,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(['person1', 'person2', 2, 'person3', 'person4', 'person5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -288,10 +254,8 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(['person1', 'person2', 2, 'person4', 'person5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -304,10 +268,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockPersonListCall(1, 1, 3);
@@ -320,9 +281,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(['person1', 'person2', 'person3'], $this->people->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -337,9 +296,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -352,17 +309,13 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(115, $this->people->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->people, $this->people->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockPersonListCall(1, 1, 5);
@@ -377,9 +330,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockPersonListCall(1, 1, 5, false);
@@ -390,9 +341,7 @@ final class PeopleTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockPersonListCall(1, 1, 10);
@@ -402,9 +351,7 @@ final class PeopleTest extends ApiTestCase
         $this->assertSame(10, $this->people->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockPersonListCall(1, 1, 200);

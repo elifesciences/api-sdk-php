@@ -5,15 +5,20 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class ReviewerNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Reviewer
+    public function denormalize($data, $type, $format = null, array $context = []) : Reviewer
     {
         return new Reviewer(
             $this->denormalizer->denormalize($data, PersonDetails::class, $format, $context),
@@ -24,39 +29,47 @@ final class ReviewerNormalizer implements NormalizerInterface, DenormalizerInter
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Reviewer::class === $type;
     }
 
     /**
-     * @param Reviewer $object
+     * @param Reviewer $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'name' => [
-                'preferred' => $object->getPreferredName(),
-                'index' => $object->getIndexName(),
+                'preferred' => $data->getPreferredName(),
+                'index' => $data->getIndexName(),
             ],
-            'role' => $object->getRole(),
+            'role' => $data->getRole(),
         ];
 
-        if ($object->getOrcid()) {
-            $data['orcid'] = $object->getOrcid();
+        if ($data->getOrcid()) {
+            $arr['orcid'] = $data->getOrcid();
         }
 
-        if ($object->getAffiliations()) {
-            $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {
+        if ($data->getAffiliations()) {
+            $arr['affiliations'] = array_map(function (Place $place) use ($format, $context) {
                 return $this->normalizer->normalize($place, $format, $context);
-            }, $object->getAffiliations());
+            }, $data->getAffiliations());
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Reviewer;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Reviewer::class => false,
+        ];
     }
 }

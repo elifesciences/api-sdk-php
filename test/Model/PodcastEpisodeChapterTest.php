@@ -8,14 +8,13 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeChapterTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_number()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', null, 0, null, new EmptySequence());
@@ -23,9 +22,7 @@ final class PodcastEpisodeChapterTest extends TestCase
         $this->assertSame(1, $chapter->getNumber());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', null, 0, null, new EmptySequence());
@@ -33,9 +30,7 @@ final class PodcastEpisodeChapterTest extends TestCase
         $this->assertSame('chapter', $chapter->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_long_title()
     {
         $with = new PodcastEpisodeChapter(1, 'chapter', 'long title', 0, null, new EmptySequence());
@@ -45,9 +40,7 @@ final class PodcastEpisodeChapterTest extends TestCase
         $this->assertNull($withOut->getLongTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_time()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', null, 0, null, new EmptySequence());
@@ -55,9 +48,7 @@ final class PodcastEpisodeChapterTest extends TestCase
         $this->assertSame(0, $chapter->getTime());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = new PodcastEpisodeChapter(1, 'chapter', null, 0, 'impact statement', new EmptySequence());
@@ -68,9 +59,7 @@ final class PodcastEpisodeChapterTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $chapter = new PodcastEpisodeChapter(1, 'chapter', null, 0, null, $content = new ArraySequence([

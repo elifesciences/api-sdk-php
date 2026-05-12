@@ -12,7 +12,11 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PromotionalCollectionsTest extends ApiTestCase
 {
@@ -21,25 +25,19 @@ final class PromotionalCollectionsTest extends ApiTestCase
     /** @var PromotionalCollections */
     private $promotionalCollections;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpPromotionalCollections()
     {
         $this->promotionalCollections = (new ApiSdk($this->getHttpClient()))->promotionalCollections();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->promotionalCollections);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 200);
@@ -52,9 +50,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 10);
@@ -63,9 +59,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(10, $this->promotionalCollections->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 10);
@@ -81,9 +75,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 1);
@@ -100,9 +92,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(null, $this->promotionalCollections[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -110,9 +100,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->promotionalCollections[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_promotional_collection()
     {
         $this->mockPromotionalCollectionCall('highlights-from-japan', true);
@@ -135,9 +123,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
             $promotionalCollection->getSubjects()[0]->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5, true, ['subject']);
@@ -148,9 +134,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_subject()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 10);
@@ -162,9 +146,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(4, $this->promotionalCollections->forSubject('subject')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_subject()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 200);
@@ -180,9 +162,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->promotionalCollections->forSubject('subject')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_contents()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5, true, [], ['article/1234', 'interview/5678']);
@@ -193,9 +173,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_contents()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 10);
@@ -207,9 +185,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(4, $this->promotionalCollections->containing(Identifier::article('1234'), Identifier::interview('5678'))->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_contents()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 200);
@@ -225,9 +201,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->promotionalCollections->containing(Identifier::article('1234'), Identifier::interview('5678'))->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -238,9 +212,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -251,9 +223,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -264,9 +234,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -277,9 +245,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -290,10 +256,8 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -306,7 +270,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [
@@ -338,10 +302,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 3);
@@ -357,9 +318,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -374,9 +333,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -389,17 +346,13 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(115, $this->promotionalCollections->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->promotionalCollections, $this->promotionalCollections->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5);
@@ -414,9 +367,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 5, false);
@@ -427,9 +378,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 10);
@@ -439,9 +388,7 @@ final class PromotionalCollectionsTest extends ApiTestCase
         $this->assertSame(10, $this->promotionalCollections->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockPromotionalCollectionListCall(1, 1, 200);

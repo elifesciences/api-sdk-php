@@ -22,85 +22,76 @@ use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use GuzzleHttp\Promise\Create;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class BlogArticleTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(Model::class, $blogArticle);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasIdentifier::class, $blogArticle);
         $this->assertEquals(Identifier::blogArticle('id'), $blogArticle->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasId::class, $blogArticle);
         $this->assertSame('id', $blogArticle->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertSame('title', $blogArticle->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasImpactStatement::class, $with);
@@ -108,20 +99,18 @@ final class BlogArticleTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_social_image()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, 'impact statement',
-            promise_for($socialImage = Builder::for(Image::class)->sample('social')),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::promiseFor($socialImage = Builder::for(Image::class)->sample('social')),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            promise_for(null),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::promiseFor(null),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasSocialImage::class, $with);
@@ -129,35 +118,31 @@ final class BlogArticleTest extends TestCase
         $this->assertNull($withOut->getSocialImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_published_date()
     {
         $blogArticle = new BlogArticle('id', 'title', $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasPublishedDate::class, $blogArticle);
         $this->assertEquals($date, $blogArticle->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_updated_date()
     {
         $with = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
         $withOut = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
@@ -165,30 +150,28 @@ final class BlogArticleTest extends TestCase
         $this->assertNull($withOut->getUpdatedDate());
     }
 
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
+    #[Test]
+    #[DataProvider('subjectsProvider')]
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')), $subjects
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')), $subjects
         );
 
         $this->assertInstanceOf(HasSubjects::class, $blogArticle);
         $this->assertEquals($expected, $blogArticle->getSubjects()->toArray());
     }
 
-    public function subjectsProvider() : array
+    public static function subjectsProvider() : array
     {
         $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
-                new PromiseSequence(rejection_for('Subject aims and scope should not be unwrapped')),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
-            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
-                new PromiseSequence(rejection_for('Subject aims and scope should not be unwrapped')),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
+            new Subject('subject1', 'Subject 1', Create::rejectionFor('Subject impact statement should not be unwrapped'),
+                new PromiseSequence(Create::rejectionFor('Subject aims and scope should not be unwrapped')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('Subject image should not be unwrapped')),
+            new Subject('subject2', 'Subject 2', Create::rejectionFor('Subject impact statement should not be unwrapped'),
+                new PromiseSequence(Create::rejectionFor('Subject aims and scope should not be unwrapped')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('Subject image should not be unwrapped')),
         ];
 
         return [
@@ -203,9 +186,7 @@ final class BlogArticleTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = [
@@ -214,8 +195,8 @@ final class BlogArticleTest extends TestCase
             new Block\YouTube('foo', null, new EmptySequence(), 300, 200),
         ];
 
-        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, rejection_for('No social image'), new ArraySequence($content),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+        $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, Create::rejectionFor('No social image'), new ArraySequence($content),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasContent::class, $blogArticle);

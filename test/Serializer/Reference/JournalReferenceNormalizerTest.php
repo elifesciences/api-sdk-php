@@ -15,19 +15,20 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\JournalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class JournalReferenceNormalizerTest extends TestCase
 {
     /** @var JournalReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new JournalReferenceNormalizer();
 
@@ -40,24 +41,20 @@ final class JournalReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_journal_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new JournalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
@@ -66,20 +63,18 @@ final class JournalReferenceNormalizerTest extends TestCase
         return [
             'journal reference' => [$reference, null, true],
             'journal reference with format' => [$reference, 'foo', true],
-            'non-journal reference' => [$this, null, false],
+            'non-journal reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_journal_references(JournalReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -138,43 +133,37 @@ final class JournalReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_journal_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'journal reference' => [[], JournalReference::class, [], true],
             'reference that is a journal' => [['type' => 'journal'], Reference::class, [], true],
             'reference that isn\'t a journal' => [['type' => 'foo'], Reference::class, [], false],
-            'non-journal reference' => [[], get_class($this), [], false],
+            'non-journal reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_journal_references(array $json, JournalReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, JournalReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

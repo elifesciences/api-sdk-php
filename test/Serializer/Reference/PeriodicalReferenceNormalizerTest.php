@@ -15,19 +15,20 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PeriodicalReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PeriodicalReferenceNormalizerTest extends TestCase
 {
     /** @var PeriodicalReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new PeriodicalReferenceNormalizer();
 
@@ -40,24 +41,20 @@ final class PeriodicalReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_periodical_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new PeriodicalReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title',
@@ -66,20 +63,18 @@ final class PeriodicalReferenceNormalizerTest extends TestCase
         return [
             'periodical reference' => [$reference, null, true],
             'periodical reference with format' => [$reference, 'foo', true],
-            'non-periodical reference' => [$this, null, false],
+            'non-periodical reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_periodical_references(PeriodicalReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -138,43 +133,37 @@ final class PeriodicalReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_periodical_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'periodical reference' => [[], PeriodicalReference::class, [], true],
             'reference that is a periodical' => [['type' => 'periodical'], Reference::class, [], true],
             'reference that isn\'t a periodical' => [['type' => 'foo'], Reference::class, [], false],
-            'non-periodical reference' => [[], get_class($this), [], false],
+            'non-periodical reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_periodical_references(array $json, PeriodicalReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PeriodicalReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

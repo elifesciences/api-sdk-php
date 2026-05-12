@@ -9,7 +9,11 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Profiles;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Profile;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ProfilesTest extends ApiTestCase
 {
@@ -18,25 +22,19 @@ final class ProfilesTest extends ApiTestCase
     /** @var Profiles */
     private $profiles;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpProfiles()
     {
         $this->profiles = (new ApiSdk($this->getHttpClient()))->profiles();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->profiles);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockProfileListCall(1, 1, 200);
@@ -49,9 +47,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockProfileListCall(1, 1, 10);
@@ -60,9 +56,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(10, $this->profiles->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockProfileListCall(1, 1, 10);
@@ -78,9 +72,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockProfileListCall(1, 1, 1);
@@ -97,9 +89,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(null, $this->profiles[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -107,9 +97,7 @@ final class ProfilesTest extends ApiTestCase
         $this->profiles[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_profile()
     {
         $this->mockProfileCall(7, true);
@@ -120,9 +108,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame('profile7', $profile->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -133,9 +119,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame([0, 1, 'profile1', 'profile2', 'profile3', 'profile4', 'profile5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -146,9 +130,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(['profile1', 'profile2', 'profile3', 'profile4', 'profile5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -159,9 +141,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(['profile1', 'profile2', 'profile4', 'profile5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -172,9 +152,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(['profile1', 'profile2', 2, 'profile3', 'profile4', 'profile5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -185,10 +163,8 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(['profile1', 'profile2', 2, 'profile4', 'profile5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -201,10 +177,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockProfileListCall(1, 1, 3);
@@ -217,9 +190,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(['profile1', 'profile2', 'profile3'], $this->profiles->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -234,9 +205,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -249,17 +218,13 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(115, $this->profiles->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->profiles, $this->profiles->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockProfileListCall(1, 1, 5);
@@ -274,9 +239,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockProfileListCall(1, 1, 5, false);
@@ -287,9 +250,7 @@ final class ProfilesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockProfileListCall(1, 1, 10);
@@ -299,9 +260,7 @@ final class ProfilesTest extends ApiTestCase
         $this->assertSame(10, $this->profiles->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockProfileListCall(1, 1, 200);

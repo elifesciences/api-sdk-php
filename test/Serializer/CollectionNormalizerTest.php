@@ -22,10 +22,13 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\CollectionNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class CollectionNormalizerTest extends ApiTestCase
 {
@@ -34,10 +37,8 @@ final class CollectionNormalizerTest extends ApiTestCase
     /** @var CollectionNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new CollectionNormalizer(new CollectionsClient($this->getHttpClient()));
@@ -45,73 +46,66 @@ final class CollectionNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_collections($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $collection = Builder::for(Collection::class)->__invoke();
 
         return [
             'collection' => [$collection, null, true],
             'collection with format' => [$collection, 'foo', true],
-            'non-collection' => [$this, null, false],
+            'non-collection' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalizes_collections(Collection $collection, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalizes_collections(
+        Collection $collection,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($collection, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_collections($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'collection' => [[], Collection::class, [], true],
             'collection by type' => [['type' => 'collection'], Model::class, [], true],
-            'non-collection' => [[], get_class($this), [], false],
+            'non-collection' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalizes_collections(
         Collection $expected,
         array $context,
@@ -129,7 +123,7 @@ final class CollectionNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -881,7 +875,7 @@ final class CollectionNormalizerTest extends ApiTestCase
         return Collection::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/collection/v3/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/collection-list/v1/*.json#items';

@@ -10,7 +10,11 @@ use eLife\ApiSdk\Client\PressPackages;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\PressPackage;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PressPackagesTest extends ApiTestCase
 {
@@ -19,25 +23,19 @@ final class PressPackagesTest extends ApiTestCase
     /** @var PressPackages */
     private $pressPackages;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpPressPackages()
     {
         $this->pressPackages = (new ApiSdk($this->getHttpClient()))->pressPackages();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->pressPackages);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockPressPackagesListCall(1, 1, 200);
@@ -50,9 +48,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockPressPackagesListCall(1, 1, 10);
@@ -61,9 +57,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(10, $this->pressPackages->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockPressPackagesListCall(1, 1, 10);
@@ -79,9 +73,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockPressPackagesListCall(1, 1, 1);
@@ -98,9 +90,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(null, $this->pressPackages[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -108,9 +98,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->pressPackages[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_press_package()
     {
         $this->mockPressPackageCall(7, true);
@@ -124,9 +112,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame('Press package press-package-7 text', $pressPackage->getContent()[0]->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -137,9 +123,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame([0, 1, 'press-package-1', 'press-package-2', 'press-package-3', 'press-package-4', 'press-package-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -150,9 +134,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(['press-package-1', 'press-package-2', 'press-package-3', 'press-package-4', 'press-package-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -163,9 +145,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(['press-package-1', 'press-package-2', 'press-package-4', 'press-package-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -176,9 +156,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(['press-package-1', 'press-package-2', 2, 'press-package-3', 'press-package-4', 'press-package-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -189,10 +167,8 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(['press-package-1', 'press-package-2', 2, 'press-package-4', 'press-package-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -205,10 +181,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockPressPackagesListCall(1, 1, 3);
@@ -221,9 +194,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(['press-package-1', 'press-package-2', 'press-package-3'], $this->pressPackages->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -238,9 +209,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -253,17 +222,13 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(115, $this->pressPackages->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->pressPackages, $this->pressPackages->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockPressPackagesListCall(1, 1, 5);
@@ -278,9 +243,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockPressPackagesListCall(1, 1, 5, false);
@@ -291,9 +254,7 @@ final class PressPackagesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockPressPackagesListCall(1, 1, 10);
@@ -303,9 +264,7 @@ final class PressPackagesTest extends ApiTestCase
         $this->assertSame(10, $this->pressPackages->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockPressPackagesListCall(1, 1, 200);

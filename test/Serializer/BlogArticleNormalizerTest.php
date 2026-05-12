@@ -15,12 +15,14 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class BlogArticleNormalizerTest extends ApiTestCase
 {
@@ -29,10 +31,8 @@ final class BlogArticleNormalizerTest extends ApiTestCase
     /** @var BlogArticleNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new BlogArticleNormalizer(new BlogClient($this->getHttpClient()));
@@ -40,77 +40,70 @@ final class BlogArticleNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_blog_articles($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $blogArticle = new BlogArticle('id', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full blog article should not be unwrapped')),
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped'))
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full blog article should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped'))
         );
 
         return [
             'blog article' => [$blogArticle, null, true],
             'blog article with format' => [$blogArticle, 'foo', true],
-            'non-blog article' => [$this, null, false],
+            'non-blog article' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_blog_articles(BlogArticle $blogArticle, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_blog_articles(
+        BlogArticle $blogArticle,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($blogArticle, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_blog_articles($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'blog article' => [[], BlogArticle::class, [], true],
             'blog article by type' => [['type' => 'blog-article'], Model::class, [], true],
-            'non-blog article' => [[], get_class($this), [], false],
+            'non-blog article' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_blog_articles(
         BlogArticle $expected,
         array $context,
@@ -128,19 +121,19 @@ final class BlogArticleNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $date = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $socialImage = Builder::for(Image::class)->sample('social');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            new EmptySequence(), promise_for($banner), promise_for($thumbnail), promise_for($socialImage));
+        $subject = new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+            new EmptySequence(), Create::promiseFor($banner), Create::promiseFor($thumbnail), Create::promiseFor($socialImage));
 
         return [
             'complete' => [
-                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', promise_for(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', Create::promiseFor(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('text')]),
                     new ArraySequence([$subject])),
                 [],
                 [
@@ -176,7 +169,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new BlogArticle('id', 'title', $date, null, null, promise_for(null), new ArraySequence([new Paragraph('text')]),
+                new BlogArticle('id', 'title', $date, null, null, Create::promiseFor(null), new ArraySequence([new Paragraph('text')]),
                     new EmptySequence()),
                 [],
                 [
@@ -193,7 +186,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new BlogArticle('blog-article-1', 'Blog article 1 title', $date, $updatedDate, 'Blog article 1 impact statement',
-                    promise_for(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
+                    Create::promiseFor(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new ArraySequence([$subject])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'blog-article-1',
@@ -211,7 +204,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null, null, promise_for(null),
+                new BlogArticle('blog-article-1', 'Blog article 1 title', $date, null, null, Create::promiseFor(null),
                     new ArraySequence([new Paragraph('Blog article blog-article-1 text')]), new EmptySequence()),
                 ['snippet' => true],
                 [
@@ -231,7 +224,7 @@ final class BlogArticleNormalizerTest extends ApiTestCase
         return BlogArticle::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/blog-article/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/blog-article-list/v1/*.json#items';

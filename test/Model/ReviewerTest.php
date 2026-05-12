@@ -5,14 +5,13 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ReviewerTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_preferred_name()
     {
         $reviewer = Builder::for(Reviewer::class)
@@ -22,9 +21,7 @@ final class ReviewerTest extends TestCase
         $this->assertSame('preferred name', $reviewer->getPreferredName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_index_name()
     {
         $reviewer = Builder::for(Reviewer::class)
@@ -34,9 +31,7 @@ final class ReviewerTest extends TestCase
         $this->assertSame('index name', $reviewer->getIndexName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_orcid()
     {
         $with = Builder::for(Reviewer::class)
@@ -50,9 +45,7 @@ final class ReviewerTest extends TestCase
         $this->assertNull($withOut->getOrcid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_role()
     {
         $reviewer = Builder::for(Reviewer::class)
@@ -62,9 +55,7 @@ final class ReviewerTest extends TestCase
         $this->assertSame('role', $reviewer->getRole());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_affiliations()
     {
         $with = Builder::for(Reviewer::class)

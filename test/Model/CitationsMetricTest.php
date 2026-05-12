@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class CitationsMetricTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_collection()
     {
         $metric = new CitationsMetric(new CitationsMetricSource('service', 'uri', 123));
@@ -19,9 +18,7 @@ final class CitationsMetricTest extends TestCase
         $this->assertInstanceOf(Collection::class, $metric);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), new CitationsMetricSource('service 2', 'uri', 456)];
@@ -32,9 +29,7 @@ final class CitationsMetricTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), new CitationsMetricSource('service 2', 'uri', 456)];
@@ -44,9 +39,7 @@ final class CitationsMetricTest extends TestCase
         $this->assertEquals(2, $metric->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), new CitationsMetricSource('service 2', 'uri', 456)];
@@ -55,9 +48,7 @@ final class CitationsMetricTest extends TestCase
         $this->assertEquals($array, $metric->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), new CitationsMetricSource('service 2', 'uri', 456)];
@@ -66,9 +57,7 @@ final class CitationsMetricTest extends TestCase
         $this->assertEquals($array, $metric->filter()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_with_a_callback()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), $service2 = new CitationsMetricSource('service 2', 'uri', 456)];
@@ -81,9 +70,7 @@ final class CitationsMetricTest extends TestCase
         $this->assertEquals([$service2], $metric->filter($filter)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_highest_source()
     {
         $array = [new CitationsMetricSource('service 1', 'uri', 123), $service2 = new CitationsMetricSource('service 2', 'uri', 456)];

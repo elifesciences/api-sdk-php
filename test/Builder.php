@@ -51,11 +51,12 @@ use eLife\ApiSdk\Model\Reference\BookReference;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use GuzzleHttp\Promise\Create;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class Builder
 {
@@ -99,7 +100,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'content' => new ArraySequence([
                             new Paragraph('blogArticle 359325 content'),
                         ]),
@@ -113,9 +114,9 @@ final class Builder
                         'impactStatement' => null,
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updatedDate' => null,
-                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                        'banner' => Create::promiseFor(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'subjects' => new EmptySequence(),
                         'selectedCurator' => self::dummy(Person::class),
                         'selectedCuratorEtAl' => false,
@@ -137,9 +138,9 @@ final class Builder
                         'impactStatement' => null,
                         'publishedDate' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updatedDate' => null,
-                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
+                        'banner' => Create::promiseFor(self::for(Image::class)->sample('banner')),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'subjects' => new EmptySequence(),
                         'editors' => new ArraySequence([
                             self::dummy(Person::class),
@@ -192,7 +193,7 @@ final class Builder
                         'timeZone' => new DateTimeZone('Z'),
                         'content' => new ArraySequence([new Paragraph('Event 1 text')]),
                         'uri' => null,
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                     ];
                 },
                 ExternalArticle::class => function () {
@@ -231,7 +232,7 @@ final class Builder
                         'updated' => null,
                         'impactStatement' => null,
                         'thumbnail' => null,
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'content' => new ArraySequence([new Paragraph('Interview 1 text')]),
                     ];
                 },
@@ -249,7 +250,7 @@ final class Builder
                         'status' => 'reviewed',
                         'stage' => 'published',
                         'doi' => '10.7554/eLife.19560',
-                        'indexContent' => promise_for('Reviewed preprint'),
+                        'indexContent' => Create::promiseFor('Reviewed preprint'),
                         'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
                         'titlePrefix' => 'Title prefix',
                         'published' => new DateTimeImmutable('2022-08-01T00:00:00Z'),
@@ -270,10 +271,10 @@ final class Builder
                     return [
                         'id' => 'subject1',
                         'name' => 'Subject 1',
-                        'impactStatement' => promise_for('Subject subject1 impact statement'),
+                        'impactStatement' => Create::promiseFor('Subject subject1 impact statement'),
                         'aimsAndScope' => new EmptySequence(),
-                        'banner' => promise_for(self::for(Image::class)->sample('banner')),
-                        'thumbnail' => promise_for(self::for(Image::class)->sample('thumbnail')),
+                        'banner' => Create::promiseFor(self::for(Image::class)->sample('banner')),
+                        'thumbnail' => Create::promiseFor(self::for(Image::class)->sample('thumbnail')),
                     ];
                 },
                 ElifeAssessment::class => function () {
@@ -288,15 +289,15 @@ final class Builder
                     return [
                         'id' => 'jqpublic',
                         'details' => new PersonDetails('preferred name', 'index name'),
-                        'givenNames' => promise_for(null),
-                        'surname' => promise_for(null),
+                        'givenNames' => Create::promiseFor(null),
+                        'surname' => Create::promiseFor(null),
                         'type' => 'senior-editor',
                         'typeLabel' => 'Senior Editor',
                         'image' => null,
                         'affiliations' => new EmptySequence(),
-                        'research' => promise_for(null),
+                        'research' => Create::promiseFor(null),
                         'profile' => new EmptySequence(),
-                        'competingInterests' => promise_for(null),
+                        'competingInterests' => Create::promiseFor(null),
                         'emailAddresses' => new EmptySequence(),
                     ];
                 },
@@ -307,16 +308,16 @@ final class Builder
                         'impactStatement' => null,
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
-                        'banner' => rejection_for('No banner'),
+                        'banner' => Create::rejectionFor('No banner'),
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'sources' => [
                             new PodcastEpisodeSource(
                                 'audio/mpeg',
                                 'http://example.com/podcast.mp3'
                             ),
                         ],
-                        'chapters' => new PromiseSequence(rejection_for('no chapters')),
+                        'chapters' => new PromiseSequence(Create::rejectionFor('no chapters')),
                     ];
                 },
                 PressPackage::class => function () {
@@ -326,7 +327,7 @@ final class Builder
                         'published' => new DateTimeImmutable('now', new DateTimeZone('Z')),
                         'updated' => null,
                         'impactStatement' => null,
-                        'socialImage' => promise_for(null),
+                        'socialImage' => Create::promiseFor(null),
                         'subjects' => new EmptySequence(),
                         'content' => new ArraySequence([new Paragraph('Press package 1 text')]),
                         'relatedContent' => new ArraySequence([Builder::dummy(ArticlePoA::class)]),
@@ -367,16 +368,16 @@ final class Builder
                         'thumbnail' => self::for(Image::class)->sample('thumbnail'),
                         'socialImage' => self::for(Image::class)->sample('social'),
                         'pdf' => null,
-                        'xml' => promise_for('http://www.example.com/xml'),
+                        'xml' => Create::promiseFor('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 14107 abstract text')])),
-                        'issue' => promise_for(1),
-                        'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                        'issue' => Create::promiseFor(1),
+                        'copyright' => Create::promiseFor(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'ethics' => new ArraySequence([new Paragraph('ethics')]),
-                        'funding' => promise_for(new Funding(
+                        'funding' => Create::promiseFor(new Funding(
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
@@ -418,17 +419,17 @@ final class Builder
                         'socialImage' => self::for(Image::class)->sample('social'),
                         'pdf' => null,
                         'figuresPdf' => null,
-                        'xml' => promise_for('http://www.example.com/xml'),
+                        'xml' => Create::promiseFor('http://www.example.com/xml'),
                         'subjects' => new EmptySequence(),
                         'researchOrganisms' => [],
                         'abstract' => new ArticleSection(new ArraySequence([new Paragraph('Article 09560 abstract text')])),
-                        'issue' => promise_for(1),
-                        'copyright' => promise_for(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
+                        'issue' => Create::promiseFor(1),
+                        'copyright' => Create::promiseFor(new Copyright('CC-BY-4.0', 'Statement', 'Author et al')),
                         'authors' => new ArraySequence([new PersonAuthor(new PersonDetails('Author', 'Author'))]),
                         'reviewers' => new ArraySequence([new Reviewer(new PersonDetails('Reviewer', 'Reviewer'), 'Role')]),
                         'impactStatement' => 'A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa.',
                         'keywords' => new ArraySequence(['Article 09560 keyword']),
-                        'digest' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
+                        'digest' => Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 digest')]), '10.7554/eLife.09560digest')),
                         'content' => new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]),
                         'appendices' => new ArraySequence([
                             new Appendix(
@@ -468,7 +469,7 @@ final class Builder
                         'usedDataSets' => new ArraySequence([new DataSet('id', new Date(2000), [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'title', null, null, null, 'http://www.example.com/')]),
                         'acknowledgements' => new ArraySequence([new Paragraph('acknowledgements')]),
                         'ethics' => new ArraySequence([new Paragraph('ethics')]),
-                        'funding' => promise_for(new Funding(
+                        'funding' => Create::promiseFor(new Funding(
                             new ArraySequence([
                                 new FundingAward(
                                     'award',
@@ -483,16 +484,16 @@ final class Builder
                             ]),
                             'Funding statement'
                         )),
-                        'editorEvaluation' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Editor evaluation')]))),
-                        'editorEvaluationScietyUri' => promise_for('https://editor-evaluation.com'),
-                        'decisionLetter' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
+                        'editorEvaluation' => Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Editor evaluation')]))),
+                        'editorEvaluationScietyUri' => Create::promiseFor('https://editor-evaluation.com'),
+                        'decisionLetter' => Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Decision letter')]))),
                         'decisionLetterDescription' => new ArraySequence([new Paragraph('Decision letter description')]),
-                        'authorResponse' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
+                        'authorResponse' => Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Author response')]))),
                         'curationLabels' => [],
                         'reviewedDate' => null,
                         'elifeAssessment' => null,
-                        'recommendationsForAuthors' => promise_for(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
-                        'recommendationsForAuthorsTitle' => promise_for('Recommendations for authors'),
+                        'recommendationsForAuthors' => Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Recommendations For Authors')]))),
+                        'recommendationsForAuthorsTitle' => Create::promiseFor('Recommendations for authors'),
                         'publicReviews' => new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]),
                     ];
                 },
@@ -609,13 +610,13 @@ final class Builder
                             ->withContent(new ArraySequence([new Section('Article 09560 section title', 'article09560section', new ArraySequence([new Paragraph('Article 09560 text')]))]))
                             ->withAcknowledgements(new ArraySequence([new Paragraph('acknowledgements')]))
                             ->withEthics(new ArraySequence([new Paragraph('ethics')]))
-                            ->withEditorEvaluation(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
-                            ->withEditorEvaluationScietyUri(promise_for('https://editor-evaluation-09560.com'))
-                            ->withDecisionLetter(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
+                            ->withEditorEvaluation(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 editor evaluation text')]), '10.7554/eLife.09560editorEvaluation', 'editor-evaluation-id')))
+                            ->withEditorEvaluationScietyUri(Create::promiseFor('https://editor-evaluation-09560.com'))
+                            ->withDecisionLetter(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 decision letter text')]), '10.7554/eLife.09560decisionLetter', 'decision-letter-id')))
                             ->withDecisionLetterDescription(new ArraySequence([new Paragraph('Article 09560 decision letter description')]))
-                            ->withAuthorResponse(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
-                            ->withRecommendationsForAuthors(promise_for(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
-                            ->withRecommendationsForAuthorsTitle(promise_for('Recommendations for authors'))
+                            ->withAuthorResponse(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 author response text')]), '10.7554/eLife.09560authorResponse', 'author-response-id')))
+                            ->withRecommendationsForAuthors(Create::promiseFor(new ArticleSection(new ArraySequence([new Paragraph('Article 09560 recommendations for authors text')]), '10.7554/eLife.09560recommendationsForAuthors', 'recommendations-for-authors-id')))
+                            ->withRecommendationsForAuthorsTitle(Create::promiseFor('Recommendations for authors'))
                             ->withPublicReviews(new ArraySequence([new PublicReview('Public review 1', new ArraySequence([new Paragraph('Public review 1 content')]))]));
                     },
                 ],
@@ -937,7 +938,7 @@ final class Builder
             $field = lcfirst($matches[1]);
             $this->ensureExistingField($field);
             $this->ensureSingleArgument($args);
-            $this->testData[$field] = promise_for($args[0]);
+            $this->testData[$field] = Create::promiseFor($args[0]);
         } elseif (preg_match('/^withSequenceOf(.*)$/', $name, $matches)) {
             $field = lcfirst($matches[1]);
             $this->ensureExistingField($field);
@@ -1022,6 +1023,6 @@ final class Builder
 
     private function rejectSequence()
     {
-        return new PromiseSequence(rejection_for('rejecting this sequence'));
+        return new PromiseSequence(Create::rejectionFor('rejecting this sequence'));
     }
 }

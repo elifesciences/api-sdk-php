@@ -10,13 +10,12 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class DataReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new DataReference('id', new Date(2000), null,
@@ -26,9 +25,7 @@ final class DataReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new DataReference('id', new Date(2000), null,
@@ -39,9 +36,7 @@ final class DataReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new DataReference('id', $date = new Date(2000), null,
@@ -51,9 +46,7 @@ final class DataReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new DataReference('id', new Date(2000), 'a',
@@ -67,9 +60,7 @@ final class DataReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_authors()
     {
         $with = new DataReference('id', new Date(2000), null,
@@ -83,9 +74,7 @@ final class DataReferenceTest extends TestCase
         $this->assertEmpty($withOut->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new DataReference('id', new Date(2000), null,
@@ -99,9 +88,7 @@ final class DataReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_compilers()
     {
         $with = new DataReference('id', new Date(2000), null, [], false,
@@ -116,9 +103,7 @@ final class DataReferenceTest extends TestCase
         $this->assertEmpty($withOut->getCompilers());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_compilers()
     {
         $with = new DataReference('id', new Date(2000), null, [], false,
@@ -130,9 +115,7 @@ final class DataReferenceTest extends TestCase
         $this->assertFalse($withOut->compilersEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_curators()
     {
         $with = new DataReference('id', new Date(2000), null, [], false, [], false,
@@ -146,9 +129,7 @@ final class DataReferenceTest extends TestCase
         $this->assertEmpty($withOut->getCurators());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_curators()
     {
         $with = new DataReference('id', new Date(2000), null, [], false, [], false,
@@ -160,9 +141,7 @@ final class DataReferenceTest extends TestCase
         $this->assertFalse($withOut->curatorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reference = new DataReference('id', new Date(2000), null,
@@ -172,9 +151,7 @@ final class DataReferenceTest extends TestCase
         $this->assertSame('title', $reference->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_source()
     {
         $reference = new DataReference('id', new Date(2000), null,
@@ -184,9 +161,7 @@ final class DataReferenceTest extends TestCase
         $this->assertSame('source', $reference->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_data_id()
     {
         $with = new DataReference('id', new Date(2000), null,
@@ -200,9 +175,7 @@ final class DataReferenceTest extends TestCase
         $this->assertNull($withOut->getDataId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_assigning_authority()
     {
         $with = new DataReference('id', new Date(2000), null,
@@ -217,9 +190,7 @@ final class DataReferenceTest extends TestCase
         $this->assertNull($withOut->getDataId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new DataReference('id', new Date(2000), null,
@@ -234,9 +205,7 @@ final class DataReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new DataReference('id', new Date(2000), null,

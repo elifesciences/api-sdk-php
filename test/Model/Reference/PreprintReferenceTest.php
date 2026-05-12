@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PreprintReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PreprintReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new PreprintReference('id', new Date(2000), null,
@@ -24,9 +23,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new PreprintReference('id', new Date(2000), null,
@@ -36,9 +33,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new PreprintReference('id', $date = new Date(2000), null,
@@ -47,9 +42,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new PreprintReference('id', new Date(2000), 'a',
@@ -61,9 +54,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new PreprintReference('id', new Date(2000), null,
@@ -73,9 +64,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new PreprintReference('id', new Date(2000), null,
@@ -87,9 +76,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_title()
     {
         $reference = new PreprintReference('id', new Date(2000), null,
@@ -98,9 +85,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertSame('article title', $reference->getArticleTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_source()
     {
         $reference = new PreprintReference('id', new Date(2000), null,
@@ -109,9 +94,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertSame('source', $reference->getSource());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new PreprintReference('id', new Date(2000), null,
@@ -125,9 +108,7 @@ final class PreprintReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new PreprintReference('id', new Date(2000), null,

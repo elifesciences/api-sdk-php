@@ -12,19 +12,20 @@ use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PreprintReferenceNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PreprintReferenceNormalizerTest extends TestCase
 {
     /** @var PreprintReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new PreprintReferenceNormalizer();
 
@@ -36,24 +37,20 @@ final class PreprintReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_preprint_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new PreprintReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, 'article title', 'source');
@@ -61,20 +58,18 @@ final class PreprintReferenceNormalizerTest extends TestCase
         return [
             'preprint reference' => [$reference, null, true],
             'preprint reference with format' => [$reference, 'foo', true],
-            'non-preprint reference' => [$this, null, false],
+            'non-preprint reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_preprint_references(PreprintReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -127,43 +122,37 @@ final class PreprintReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_preprint_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'preprint reference' => [[], PreprintReference::class, [], true],
             'reference that is a preprint' => [['type' => 'preprint'], Reference::class, [], true],
             'reference that isn\'t a preprint' => [['type' => 'foo'], Reference::class, [], false],
-            'non-preprint reference' => [[], get_class($this), [], false],
+            'non-preprint reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_preprint_references(array $json, PreprintReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PreprintReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

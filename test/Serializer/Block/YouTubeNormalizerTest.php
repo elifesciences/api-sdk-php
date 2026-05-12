@@ -10,19 +10,20 @@ use eLife\ApiSdk\Model\Block\YouTube;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\YouTubeNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class YouTubeNormalizerTest extends TestCase
 {
     /** @var YouTubeNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new YouTubeNormalizer();
 
@@ -32,80 +33,68 @@ final class YouTubeNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_youtubes($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $youTube = new YouTube('foo', null, new EmptySequence(), 300, 200);
 
         return [
             'youtube' => [$youTube, null, true],
             'youtube with format' => [$youTube, 'foo', true],
-            'non-youtube' => [$this, null, false],
+            'non-youtube' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_youtubes(YouTube $youTube, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($youTube));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_youtubes($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'youtube' => [[], YouTube::class, [], true],
             'block that is a youtube' => [['type' => 'youtube'], Block::class, [], true],
             'block that isn\'t a youtube' => [['type' => 'foo'], Block::class, [], false],
-            'non-youtube' => [[], get_class($this), [], false],
+            'non-youtube' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_youtubes(YouTube $expected, array $json)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, YouTube::class));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [

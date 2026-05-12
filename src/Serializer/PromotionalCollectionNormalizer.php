@@ -20,13 +20,17 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class PromotionalCollectionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(PromotionalCollectionsClient $promotionalCollectionsClient)
     {
@@ -43,7 +47,7 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : PromotionalCollection
+    public function denormalize($data, $type, $format = null, array $context = []) : PromotionalCollection
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
@@ -114,63 +118,63 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
     }
 
     /**
-     * @param PromotionalCollection $object
+     * @param PromotionalCollection $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
-        $data = [];
+        $arr = [];
         if (!empty($context['type'])) {
-            $data['type'] = 'promotional-collection';
+            $arr['type'] = 'promotional-collection';
         }
-        $data['id'] = $object->getId();
-        $data['title'] = $object->getTitle();
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        $arr['id'] = $data->getId();
+        $arr['title'] = $data->getTitle();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
-        $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        $arr['published'] = $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
-        if (!$object->getSubjects()->isEmpty()) {
-            $data['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($object->getSubjects(), $context);
+        $arr['image']['thumbnail'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
+        if (!$data->getSubjects()->isEmpty()) {
+            $arr['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($data->getSubjects(), $context);
         }
 
         if (empty($context['snippet'])) {
-            $data['image']['banner'] = $this->normalizer->normalize($object->getBanner(), $format, $context);
+            $arr['image']['banner'] = $this->normalizer->normalize($data->getBanner(), $format, $context);
 
-            if ($object->getSocialImage()) {
-                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            if ($data->getSocialImage()) {
+                $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
             }
 
             $typeContext = array_merge($context, ['type' => true]);
 
-            if ($object->getEditors()->notEmpty()) {
-                $data['editors'] = $normalizationHelper->normalizeSequenceToSnippets($object->getEditors(), $context);
+            if ($data->getEditors()->notEmpty()) {
+                $arr['editors'] = $normalizationHelper->normalizeSequenceToSnippets($data->getEditors(), $context);
             }
 
-            if ($object->getSummary()->notEmpty()) {
-                $data['summary'] = $object->getSummary()->map(function (Block $block) use ($format, $context) {
+            if ($data->getSummary()->notEmpty()) {
+                $arr['summary'] = $data->getSummary()->map(function (Block $block) use ($format, $context) {
                     return $this->normalizer->normalize($block, $format, $context);
                 })->toArray();
             }
 
-            $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($object->getContent(), $typeContext);
-            if (!$object->getRelatedContent()->isEmpty()) {
-                $data['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedContent(), $typeContext);
+            $arr['content'] = $normalizationHelper->normalizeSequenceToSnippets($data->getContent(), $typeContext);
+            if (!$data->getRelatedContent()->isEmpty()) {
+                $arr['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($data->getRelatedContent(), $typeContext);
             }
-            if (!$object->getPodcastEpisodes()->isEmpty()) {
-                $data['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($object->getPodcastEpisodes(), $context);
+            if (!$data->getPodcastEpisodes()->isEmpty()) {
+                $arr['podcastEpisodes'] = $normalizationHelper->normalizeSequenceToSnippets($data->getPodcastEpisodes(), $context);
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             PromotionalCollection::class === $type
@@ -178,8 +182,16 @@ final class PromotionalCollectionNormalizer implements NormalizerInterface, Deno
             'promotional-collection' === ($data['type'] ?? 'unknown');
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof PromotionalCollection;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PromotionalCollection::class => false,
+            Model::class => false,
+        ];
     }
 }

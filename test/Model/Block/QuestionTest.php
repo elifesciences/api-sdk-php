@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Question;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class QuestionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $question = new Question('question', [new Paragraph('answer')]);
@@ -19,9 +18,7 @@ final class QuestionTest extends TestCase
         $this->assertInstanceOf(Block::class, $question);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_question()
     {
         $question = new Question('question', [new Paragraph('answer')]);
@@ -29,9 +26,7 @@ final class QuestionTest extends TestCase
         $this->assertSame('question', $question->getQuestion());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_answer()
     {
         $question = new Question('question', [new Paragraph('answer')]);

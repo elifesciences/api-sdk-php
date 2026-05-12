@@ -4,10 +4,10 @@ namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -16,12 +16,12 @@ final class MathMLNormalizer implements NormalizerInterface, DenormalizerInterfa
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : MathML
+    public function denormalize($data, $type, $format = null, array $context = []) : MathML
     {
         return new MathML($data['id'] ?? null, $data['label'] ?? null, $data['mathml']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             MathML::class === $type
@@ -50,8 +50,16 @@ final class MathMLNormalizer implements NormalizerInterface, DenormalizerInterfa
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof MathML;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            MathML::class => false,
+            Block::class => false,
+        ];
     }
 }

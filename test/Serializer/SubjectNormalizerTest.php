@@ -10,11 +10,14 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use function GuzzleHttp\Promise\promise_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class SubjectNormalizerTest extends ApiTestCase
 {
@@ -23,10 +26,8 @@ final class SubjectNormalizerTest extends ApiTestCase
     /** @var SubjectNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new SubjectNormalizer(new SubjectsClient($this->getHttpClient()));
@@ -34,41 +35,35 @@ final class SubjectNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_subjects($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('id', 'name', promise_for(null), new EmptySequence(), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('id', 'name', Create::promiseFor(null), new EmptySequence(), Create::promiseFor($banner), Create::promiseFor($thumbnail));
 
         return [
             'subject' => [$subject, null, true],
             'subject with format' => [$subject, 'foo', true],
-            'non-subject' => [$this, null, false],
+            'non-subject' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_subjects(Subject $subject, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_subjects(Subject $subject, array $context, array $expected, callable $extra = null)
     {
         if (!empty($context['snippet'])) {
             $this->mockSubjectCall('subject1');
@@ -77,35 +72,29 @@ final class SubjectNormalizerTest extends ApiTestCase
         $this->assertSame($expected, $this->normalizer->normalize($subject, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_subjects($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'subject' => [[], Subject::class, [], true],
-            'non-subject' => [[], get_class($this), [], false],
+            'non-subject' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_subjects(
         Subject $expected,
         array $context,
@@ -121,15 +110,15 @@ final class SubjectNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
 
         return [
             'complete' => [
-                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), Create::promiseFor($banner), Create::promiseFor($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -172,8 +161,8 @@ final class SubjectNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Subject('subject1', 'Subject 1 name', promise_for(null), new EmptySequence(),
-                    promise_for($banner), promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', Create::promiseFor(null), new EmptySequence(),
+                    Create::promiseFor($banner), Create::promiseFor($thumbnail)),
                 [],
                 [
                     'id' => 'subject1',
@@ -209,8 +198,8 @@ final class SubjectNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), promise_for($banner), promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+                    new ArraySequence([new Paragraph('Subject subject1 aims and scope')]), Create::promiseFor($banner), Create::promiseFor($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',
@@ -221,8 +210,8 @@ final class SubjectNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-                    new EmptySequence(), promise_for($banner), promise_for($thumbnail)),
+                new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+                    new EmptySequence(), Create::promiseFor($banner), Create::promiseFor($thumbnail)),
                 ['snippet' => true],
                 [
                     'id' => 'subject1',
@@ -240,7 +229,7 @@ final class SubjectNormalizerTest extends ApiTestCase
         return Subject::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/subject/v1/*.json';
         yield [__DIR__.'/../../vendor/elife/api/dist/samples/subject-list/v1/*.json#items', ['snippet' => false]];

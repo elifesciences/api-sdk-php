@@ -9,7 +9,15 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class AddressNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : Address
+
+    /**
+     * @param $data
+     * @param $type
+     * @param $format
+     * @param array $context
+     * @return Address
+     */
+    public function denormalize($data, $type, $format = null, array $context = []) : Address
     {
         return new Address(
             new ArraySequence($data['formatted']),
@@ -20,46 +28,73 @@ final class AddressNormalizer implements NormalizerInterface, DenormalizerInterf
             $data['components']['postalCode'] ?? null);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    /**
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Address::class === $type;
     }
 
     /**
-     * @param Address $object
+     * @param Address $data
+     * @param $format
+     * @param array $context
+     * @return array
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'formatted' => $object->getFormatted()->toArray(),
+        $arr = [
+            'formatted' => $data->getFormatted()->toArray(),
             'components' => [],
         ];
 
-        if ($object->getStreetAddress()->notEmpty()) {
-            $data['components']['streetAddress'] = $object->getStreetAddress()->toArray();
+        if ($data->getStreetAddress()->notEmpty()) {
+            $arr['components']['streetAddress'] = $data->getStreetAddress()->toArray();
         }
 
-        if ($object->getLocality()->notEmpty()) {
-            $data['components']['locality'] = $object->getLocality()->toArray();
+        if ($data->getLocality()->notEmpty()) {
+            $arr['components']['locality'] = $data->getLocality()->toArray();
         }
 
-        if ($object->getArea()->notEmpty()) {
-            $data['components']['area'] = $object->getArea()->toArray();
+        if ($data->getArea()->notEmpty()) {
+            $arr['components']['area'] = $data->getArea()->toArray();
         }
 
-        if ($object->getCountry()) {
-            $data['components']['country'] = $object->getCountry();
+        if ($data->getCountry()) {
+            $arr['components']['country'] = $data->getCountry();
         }
 
-        if ($object->getPostalCode()) {
-            $data['components']['postalCode'] = $object->getPostalCode();
+        if ($data->getPostalCode()) {
+            $arr['components']['postalCode'] = $data->getPostalCode();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Address;
+    }
+
+    /**
+     * @param string|null $format
+     * @return true[]
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Address::class => true,
+        ];
     }
 }

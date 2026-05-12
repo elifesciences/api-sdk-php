@@ -20,13 +20,17 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class PersonNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(PeopleClient $peopleClient)
     {
@@ -43,7 +47,7 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Person
+    public function denormalize($data, $type, $format = null, array $context = []) : Person
     {
         if (!empty($context['snippet'])) {
             $person = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -153,83 +157,90 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Person::class === $type;
     }
 
     /**
-     * @param Person $object
+     * @param Person $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = $this->normalizer->normalize($object->getDetails(), $format, $context);
+        $arr = $this->normalizer->normalize($data->getDetails(), $format, $context);
 
-        $data['id'] = $object->getId();
-        $data['type'] = [
-            'id' => $object->getType(),
-            'label' => $object->getTypeLabel(),
+        $arr['id'] = $data->getId();
+        $arr['type'] = [
+            'id' => $data->getType(),
+            'label' => $data->getTypeLabel(),
         ];
 
-        if ($object->getThumbnail()) {
-            $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        if ($data->getThumbnail()) {
+            $arr['image'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getGivenNames()) {
-                $data['name']['givenNames'] = $object->getGivenNames();
+            if ($data->getGivenNames()) {
+                $arr['name']['givenNames'] = $data->getGivenNames();
             }
 
-            if ($object->getSurname()) {
-                $data['name']['surname'] = $object->getSurname();
+            if ($data->getSurname()) {
+                $arr['name']['surname'] = $data->getSurname();
             }
 
-            if ($object->getAffiliations()->notEmpty()) {
-                $data['affiliations'] = $object->getAffiliations()->map(function (Place $place) use ($format, $context) {
+            if ($data->getAffiliations()->notEmpty()) {
+                $arr['affiliations'] = $data->getAffiliations()->map(function (Place $place) use ($format, $context) {
                     return $this->normalizer->normalize($place, $format, $context);
                 })->toArray();
             }
 
-            if ($object->getEmailAddresses()->notEmpty()) {
-                $data['emailAddresses'] = $object->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
+            if ($data->getEmailAddresses()->notEmpty()) {
+                $arr['emailAddresses'] = $data->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
                     return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
 
-            if ($object->getResearch()) {
-                if (!$object->getResearch()->getExpertises()->isEmpty()) {
-                    $data['research']['expertises'] = $object->getResearch()->getExpertises()
+            if ($data->getResearch()) {
+                if (!$data->getResearch()->getExpertises()->isEmpty()) {
+                    $arr['research']['expertises'] = $data->getResearch()->getExpertises()
                         ->map(function (Subject $subject) use ($format, $context) {
                             $context['snippet'] = true;
 
                             return $this->normalizer->normalize($subject, $format, $context);
                         })->toArray();
                 }
-                if ($object->getResearch()->getFocuses()) {
-                    $data['research']['focuses'] = $object->getResearch()->getFocuses();
+                if ($data->getResearch()->getFocuses()) {
+                    $arr['research']['focuses'] = $data->getResearch()->getFocuses();
                 }
-                if ($object->getResearch()->getOrganisms()) {
-                    $data['research']['organisms'] = $object->getResearch()->getOrganisms();
+                if ($data->getResearch()->getOrganisms()) {
+                    $arr['research']['organisms'] = $data->getResearch()->getOrganisms();
                 }
             }
 
-            if (!$object->getProfile()->isEmpty()) {
-                $data['profile'] = $object->getProfile()
+            if (!$data->getProfile()->isEmpty()) {
+                $arr['profile'] = $data->getProfile()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
             }
 
-            if ($object->getCompetingInterests()) {
-                $data['competingInterests'] = $object->getCompetingInterests();
+            if ($data->getCompetingInterests()) {
+                $arr['competingInterests'] = $data->getCompetingInterests();
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Person;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Person::class => true,
+        ];
     }
 }

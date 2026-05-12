@@ -6,14 +6,13 @@ use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeChapterModel;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class PodcastEpisodeChapterModelTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_episode()
     {
         $model = new PodcastEpisodeChapterModel($episode = Builder::dummy(PodcastEpisode::class), new PodcastEpisodeChapter(1, 'title', null, 0, null, new EmptySequence()));
@@ -21,9 +20,7 @@ final class PodcastEpisodeChapterModelTest extends TestCase
         $this->assertSame($episode, $model->getEpisode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_chapter()
     {
         $model = new PodcastEpisodeChapterModel(Builder::dummy(PodcastEpisode::class), $chapter = new PodcastEpisodeChapter(1, 'title', null, 0, null, new EmptySequence()));

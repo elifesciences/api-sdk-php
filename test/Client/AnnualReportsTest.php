@@ -12,19 +12,20 @@ use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
 use eLife\ApiSdk\Serializer\AssetFileNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class AnnualReportsTest extends ApiTestCase
 {
     use SlicingTestCase;
 
     /** @var AnnualReports */
-    private $annualReports;
+    private AnnualReports $annualReports;
 
-    /**
-     * @before
-     */
-    protected function setUpAnnualReports()
+    #[Before]
+    protected function setUpAnnualReports(): void
     {
         $this->annualReports = new AnnualReports(
             new AnnualReportsClient($this->getHttpClient()),
@@ -32,17 +33,13 @@ final class AnnualReportsTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->annualReports);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockAnnualReportListCall(1, 1, 200);
@@ -55,9 +52,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockAnnualReportListCall(1, 1, 10);
@@ -66,9 +61,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame(10, $this->annualReports->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockAnnualReportListCall(1, 1, 10);
@@ -84,9 +77,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockAnnualReportListCall(1, 1, 1);
@@ -103,9 +94,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame(null, $this->annualReports[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -113,9 +102,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->annualReports[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_an_annual_report()
     {
         $this->mockAnnualReportCall(2012);
@@ -126,9 +113,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame(2012, $annualReport->getYear());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -139,9 +124,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([0, 1, 2012, 2013, 2014, 2015, 2016], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -152,9 +135,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([2012, 2013, 2014, 2015, 2016, 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -165,9 +146,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([2012, 2013, 2015, 2016], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -178,9 +157,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([2012, 2013, 2, 2014, 2015, 2016], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -191,10 +168,8 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([2012, 2013, 2, 2015, 2016], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -207,7 +182,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [
@@ -239,10 +214,7 @@ final class AnnualReportsTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockAnnualReportListCall(1, 1, 3);
@@ -255,9 +227,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame([2012, 2013, 2014], $this->annualReports->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -272,9 +242,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -287,17 +255,13 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame(10170, $this->annualReports->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->annualReports, $this->annualReports->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockAnnualReportListCall(1, 1, 5);
@@ -312,9 +276,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockAnnualReportListCall(1, 1, 5, false);
@@ -325,9 +287,7 @@ final class AnnualReportsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockAnnualReportListCall(1, 1, 10);
@@ -337,9 +297,7 @@ final class AnnualReportsTest extends ApiTestCase
         $this->assertSame(10, $this->annualReports->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockAnnualReportListCall(1, 1, 200);

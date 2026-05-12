@@ -22,6 +22,7 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference\BookReference;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\Builder;
 
 final class ArticleVoRTest extends ArticleVersionTest
@@ -31,9 +32,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->builder = Builder::for(ArticleVoR::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_figures_pdf()
     {
         $with = $this->builder
@@ -47,9 +46,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getFiguresPdf());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -64,9 +61,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_keywords()
     {
         $article = $this->builder
@@ -76,9 +71,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($keywords, $article->getKeywords());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_digest()
     {
         $with = $this->builder
@@ -92,9 +85,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getDigest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $article = $this->builder
@@ -105,9 +96,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($content, $article->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_appendices()
     {
         $appendices = new ArraySequence([
@@ -132,9 +121,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($appendices, $article->getAppendices());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_references()
     {
         $references = new ArraySequence([
@@ -164,9 +151,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($references, $article->getReferences());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_acknowledgements()
     {
         $article = $this->builder
@@ -176,9 +161,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($acknowledgments, $article->getAcknowledgements());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_editor_evaluation()
     {
         $with = $this->builder
@@ -192,9 +175,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getEditorEvaluation());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_editor_evaluation_uri()
     {
         $with = $this->builder
@@ -208,9 +189,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getEditorEvaluationScietyUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_decision_letter()
     {
         $with = $this->builder
@@ -224,9 +203,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getDecisionLetter());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_decision_letter_description()
     {
         $article = $this->builder
@@ -236,9 +213,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals($description, $article->getDecisionLetterDescription());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_author_response()
     {
         $with = $this->builder
@@ -252,9 +227,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getAuthorResponse());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_reviewed_date()
     {
         $with = $this->builder
@@ -269,9 +242,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getReviewedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_curation_labels()
     {
         $with = $this->builder
@@ -286,9 +257,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEmpty($withOut->getCurationLabels());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_vor_prc()
     {
         /** @var ArticleVoR $articleVorPRC */
@@ -306,9 +275,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertFalse($articleVorTraditional->isReviewedPreprint());
     }
 
-        /**
-     * @test
-     */
+        #[Test]
     public function it_may_have_an_elife_assessment()
     {
         $with = $this->builder
@@ -322,9 +289,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getElifeAssessment());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_recommendations_for_authors()
     {
         $with = $this->builder
@@ -338,9 +303,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getRecommendationsForAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_recommendations_for_authors_title()
     {
         $with = $this->builder
@@ -354,9 +317,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertNull($withOut->getRecommendationsForAuthorsTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_public_reviews()
     {
         $with = $this->builder
@@ -370,9 +331,7 @@ final class ArticleVoRTest extends ArticleVersionTest
         $this->assertEquals(new EmptySequence(), $withOut->getPublicReviews());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_version_doi()
     {
         $with = $this->builder

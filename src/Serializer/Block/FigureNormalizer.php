@@ -7,10 +7,10 @@ use eLife\ApiSdk\Model\AssetFile;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Figure;
 use eLife\ApiSdk\Model\Block\FigureAsset;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,7 +19,7 @@ final class FigureNormalizer implements NormalizerInterface, DenormalizerInterfa
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Figure
+    public function denormalize($data, $type, $format = null, array $context = []) : Figure
     {
         return new Figure(...array_map(function (array $asset) {
             return new FigureAsset(
@@ -33,7 +33,7 @@ final class FigureNormalizer implements NormalizerInterface, DenormalizerInterfa
         }, $data['assets']));
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Figure::class === $type
@@ -42,13 +42,13 @@ final class FigureNormalizer implements NormalizerInterface, DenormalizerInterfa
     }
 
     /**
-     * @param Figure $object
+     * @param Figure $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         return [
             'type' => 'figure',
-            'assets' => $object->getAssets()->map(function (FigureAsset $asset) {
+            'assets' => $data->getAssets()->map(function (FigureAsset $asset) {
                 $data = $this->normalizer->normalize($asset->getAsset());
 
                 if ($asset->getDoi()) {
@@ -68,8 +68,16 @@ final class FigureNormalizer implements NormalizerInterface, DenormalizerInterfa
         ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Figure;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Figure::class => false,
+            Block::class => false,
+        ];
     }
 }

@@ -5,54 +5,49 @@ namespace test\eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\OnBehalfOfAuthor;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class OnBehalfOfAuthorNormalizerTest extends TestCase
 {
     /** @var OnBehalfOfAuthorNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new OnBehalfOfAuthorNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_on_behalf_of_authors($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $onBehalfOfAuthor = new OnBehalfOfAuthor('foo');
 
         return [
             'on-behalf-of author' => [$onBehalfOfAuthor, null, true],
             'on-behalf-of author with format' => [$onBehalfOfAuthor, 'foo', true],
-            'non-on-behalf-of author' => [$this, null, false],
+            'non-on-behalf-of author' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_normalize_on_behalf_of_authors()
     {
         $expected = [
@@ -63,36 +58,30 @@ final class OnBehalfOfAuthorNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize(new OnBehalfOfAuthor('foo')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_on_behalf_of_authors($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'on-behalf-of author' => [[], OnBehalfOfAuthor::class, [], true],
             'author entry that is an on-behalf-of' => [['type' => 'on-behalf-of'], AuthorEntry::class, [], true],
             'author entry that isn\'t an on-behalf-of' => [['type' => 'foo'], AuthorEntry::class, [], false],
-            'non-on-behalf-of author' => [[], get_class($this), [], false],
+            'non-on-behalf-of author' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_denormalize_on_behalf_of_authors()
     {
         $json = [

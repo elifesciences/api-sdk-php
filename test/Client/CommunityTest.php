@@ -9,7 +9,10 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Community;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class CommunityTest extends ApiTestCase
 {
@@ -18,25 +21,19 @@ final class CommunityTest extends ApiTestCase
     /** @var Community */
     private $community;
 
-    /**
-     * @before
-     */
-    protected function setUpCommunity()
+    #[Before]
+    protected function setUpCommunity(): void
     {
         $this->community = (new ApiSdk($this->getHttpClient()))->community();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->community);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockCommunityListCall(1, 1, 200);
@@ -49,9 +46,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockCommunityListCall(1, 1, 10);
@@ -60,9 +55,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(10, $this->community->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockCommunityListCall(1, 1, 10);
@@ -78,9 +71,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockCommunityListCall(1, 1, 1);
@@ -97,9 +88,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(null, $this->community[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -107,9 +96,7 @@ final class CommunityTest extends ApiTestCase
         $this->community[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->mockCommunityListCall(1, 1, 5, true, ['subject']);
@@ -120,9 +107,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_subject()
     {
         $this->mockCommunityListCall(1, 1, 10);
@@ -134,9 +119,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(10, $this->community->forSubject('subject')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_subject()
     {
         $this->mockCommunityListCall(1, 1, 200);
@@ -152,9 +135,7 @@ final class CommunityTest extends ApiTestCase
         $this->community->forSubject('subject')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -165,9 +146,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame([0, 1, 'model-1', 'model-2', 'model-3', 'model-4', 'model-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -178,9 +157,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(['model-1', 'model-2', 'model-3', 'model-4', 'model-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -191,9 +168,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(['model-1', 'model-2', 'model-4', 'model-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -204,9 +179,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(['model-1', 'model-2', 2, 'model-3', 'model-4', 'model-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -217,10 +190,8 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(['model-1', 'model-2', 2, 'model-4', 'model-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -233,10 +204,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockCommunityListCall(1, 1, 3);
@@ -249,9 +217,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(['model-1', 'model-2', 'model-3'], $this->community->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -266,9 +232,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -281,17 +245,13 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(115, $this->community->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->community, $this->community->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockCommunityListCall(1, 1, 5);
@@ -306,9 +266,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockCommunityListCall(1, 1, 5, false);
@@ -319,9 +277,7 @@ final class CommunityTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockCommunityListCall(1, 1, 10);
@@ -331,9 +287,7 @@ final class CommunityTest extends ApiTestCase
         $this->assertSame(10, $this->community->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockCommunityListCall(1, 1, 200);

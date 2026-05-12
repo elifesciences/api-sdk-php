@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class AppendixTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $appendix = new Appendix(
@@ -34,9 +33,7 @@ final class AppendixTest extends TestCase
         $this->assertSame('id', $appendix->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $appendix = new Appendix(
@@ -55,9 +52,7 @@ final class AppendixTest extends TestCase
         $this->assertSame('title', $appendix->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $appendix = new Appendix(
@@ -76,9 +71,7 @@ final class AppendixTest extends TestCase
         $this->assertEquals($content, $appendix->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new Appendix(

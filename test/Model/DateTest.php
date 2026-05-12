@@ -3,6 +3,8 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Date;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\TimezoneAwareTestCase;
 
@@ -10,9 +12,7 @@ final class DateTest extends TestCase
 {
     use TimezoneAwareTestCase;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_year()
     {
         $date = new Date(2000);
@@ -20,9 +20,7 @@ final class DateTest extends TestCase
         $this->assertSame(2000, $date->getYear());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_month()
     {
         $with = new Date(2000, 1);
@@ -32,9 +30,7 @@ final class DateTest extends TestCase
         $this->assertNull($withOut->getMonth());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_day()
     {
         $with = new Date(2000, 1, 1);
@@ -44,10 +40,8 @@ final class DateTest extends TestCase
         $this->assertNull($withOut->getDay());
     }
 
-    /**
-     * @test
-     * @dataProvider createStringProvider
-     */
+    #[Test]
+    #[DataProvider('createStringProvider')]
     public function it_can_be_created_from_a_string(string $string, int $year, int $month = null, int $day = null)
     {
         $date = Date::fromString($string);
@@ -57,7 +51,7 @@ final class DateTest extends TestCase
         $this->assertSame($day, $date->getDay());
     }
 
-    public function createStringProvider() : array
+    public static function createStringProvider() : array
     {
         return [
             'day' => ['2000-01-01', 2000, 1, 1],
@@ -66,16 +60,14 @@ final class DateTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider formatStringProvider
-     */
+    #[Test]
+    #[DataProvider('formatStringProvider')]
     public function it_can_be_cast_to_a_string(string $date)
     {
         $this->assertSame($date, Date::fromString($date)->toString());
     }
 
-    public function formatStringProvider() : array
+    public static function formatStringProvider() : array
     {
         return [
             'day' => ['2000-01-01'],
@@ -84,10 +76,8 @@ final class DateTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider formatProvider
-     */
+    #[Test]
+    #[DataProvider('formatProvider')]
     public function it_can_be_formated(string $date, string $expected)
     {
         $date = Date::fromString($date);
@@ -95,7 +85,7 @@ final class DateTest extends TestCase
         $this->assertSame($expected, $date->format());
     }
 
-    public function formatProvider() : array
+    public static function formatProvider() : array
     {
         return [
             'day' => ['2000-01-01', 'January 1, 2000'],
@@ -104,10 +94,8 @@ final class DateTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider timezoneProvider
-     */
+    #[Test]
+    #[DataProvider('timezoneProvider')]
     public function it_works_in_different_timezones(string $timezone = null, string $string, string $format)
     {
         if ($timezone) {
@@ -119,7 +107,7 @@ final class DateTest extends TestCase
         $this->assertEquals($format, $date->format());
     }
 
-    public function timezoneProvider() : array
+    public static function timezoneProvider() : array
     {
         return [
             'UTC' => [null, '2011-12-30', 'December 30, 2011'],

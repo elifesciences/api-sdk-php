@@ -4,7 +4,7 @@ namespace test\eLife\ApiSdk\Client;
 
 trait SlicingTestCase
 {
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [

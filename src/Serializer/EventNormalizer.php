@@ -15,17 +15,22 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class EventNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(EventsClient $eventsClient)
     {
@@ -42,7 +47,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Event
+    public function denormalize($data, $type, $format = null, array $context = []) : Event
     {
         if (!empty($context['snippet'])) {
             $event = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -85,7 +90,7 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Event::class === $type
@@ -93,56 +98,69 @@ final class EventNormalizer implements NormalizerInterface, DenormalizerInterfac
             Model::class === $type && 'event' === ($data['type'] ?? 'unknown');
     }
 
+
     /**
-     * @param Event $object
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'id' => $object->getId(),
-            'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
-            'starts' => $object->getStarts()->format(ApiSdk::DATE_FORMAT),
-            'ends' => $object->getEnds()->format(ApiSdk::DATE_FORMAT),
+        $arr = [
+            'id' => $data->getId(),
+            'title' => $data->getTitle(),
+            'published' => $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
+            'starts' => $data->getStarts()->format(ApiSdk::DATE_FORMAT),
+            'ends' => $data->getEnds()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'event';
+            $arr['type'] = 'event';
         }
 
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
-        if ($object->getTimeZone()) {
-            $data['timezone'] = $object->getTimeZone()->getName();
+        if ($data->getTimeZone()) {
+            $arr['timezone'] = $data->getTimeZone()->getName();
         }
 
-        if ($object->getUri()) {
-            $data['uri'] = $object->getUri();
+        if ($data->getUri()) {
+            $arr['uri'] = $data->getUri();
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getContent()->notEmpty()) {
-                $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+            if ($data->getContent()->notEmpty()) {
+                $arr['content'] = $data->getContent()->map(function (Block $block) use ($format, $context) {
                     return $this->normalizer->normalize($block, $format, $context);
                 })->toArray();
             }
 
-            if ($object->getSocialImage()) {
-                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            if ($data->getSocialImage()) {
+                $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Event;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Event::class => false,
+            Model::class => false,
+        ];
     }
 }

@@ -3,14 +3,13 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Bioprotocol;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class BioprotocolTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_section_id()
     {
         $bioprotocol = Builder::for(Bioprotocol::class)
@@ -20,9 +19,7 @@ final class BioprotocolTest extends TestCase
         $this->assertSame('sectionId', $bioprotocol->getSectionId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $bioprotocol = Builder::for(Bioprotocol::class)
@@ -32,9 +29,7 @@ final class BioprotocolTest extends TestCase
         $this->assertSame('title', $bioprotocol->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_status()
     {
         $bioprotocol = Builder::for(Bioprotocol::class)
@@ -44,9 +39,7 @@ final class BioprotocolTest extends TestCase
         $this->assertTrue($bioprotocol->getStatus());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $bioprotocol = Builder::for(Bioprotocol::class)

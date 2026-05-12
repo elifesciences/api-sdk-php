@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\Block\Box;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class BoxTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $box = new Box(null, null, null, 'title', new EmptySequence());
@@ -23,9 +22,7 @@ final class BoxTest extends TestCase
         $this->assertInstanceOf(Block::class, $box);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new Box('10.1000/182', null, null, 'title', new EmptySequence());
@@ -36,9 +33,7 @@ final class BoxTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new Box(null, 'id', null, 'title', new EmptySequence());
@@ -49,9 +44,7 @@ final class BoxTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_label()
     {
         $with = new Box(null, null, 'label', 'title', new EmptySequence());
@@ -61,9 +54,7 @@ final class BoxTest extends TestCase
         $this->assertNull($withOut->getLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $box = new Box(null, null, null, 'title', new EmptySequence());
@@ -71,9 +62,7 @@ final class BoxTest extends TestCase
         $this->assertSame('title', $box->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = new ArraySequence([new Box(null, null, null, 'sub-title', new EmptySequence())]);

@@ -11,19 +11,20 @@ use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\Reference\PatentReferenceNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PatentReferenceNormalizerTest extends TestCase
 {
     /** @var PatentReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new PatentReferenceNormalizer();
 
@@ -34,24 +35,20 @@ final class PatentReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_patent_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new PatentReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('preferred name', 'index name'))], false, [], false, 'title', 'type',
@@ -60,20 +57,18 @@ final class PatentReferenceNormalizerTest extends TestCase
         return [
             'patent reference' => [$reference, null, true],
             'patent reference with format' => [$reference, 'foo', true],
-            'non-patent reference' => [$this, null, false],
+            'non-patent reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_patent_references(PatentReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -140,43 +135,37 @@ final class PatentReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_patent_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'patent reference' => [[], PatentReference::class, [], true],
             'reference that is a patent' => [['type' => 'patent'], Reference::class, [], true],
             'reference that isn\'t a patent' => [['type' => 'foo'], Reference::class, [], false],
-            'non-patent reference' => [[], get_class($this), [], false],
+            'non-patent reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_patent_references(array $json, PatentReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, PatentReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

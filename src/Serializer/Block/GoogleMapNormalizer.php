@@ -4,10 +4,10 @@ namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\GoogleMap;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -16,7 +16,7 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : GoogleMap
+    public function denormalize($data, $type, $format = null, array $context = []) : GoogleMap
     {
         return new GoogleMap(
             $data['id'],
@@ -24,7 +24,7 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             GoogleMap::class === $type
@@ -33,21 +33,27 @@ final class GoogleMapNormalizer implements NormalizerInterface, DenormalizerInte
     }
 
     /**
-     * @param GoogleMap $object
+     * @param GoogleMap $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        return [
             'type' => 'google-map',
-            'id' => $object->getId(),
-            'title' => $object->getTitle(),
+            'id' => $data->getId(),
+            'title' => $data->getTitle(),
         ];
-
-        return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof GoogleMap;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            GoogleMap::class => false,
+            Block::class => false,
+        ];
     }
 }

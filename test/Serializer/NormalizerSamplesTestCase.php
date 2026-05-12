@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function file_get_contents;
 use function gettype;
 use function is_array;
@@ -16,10 +18,8 @@ trait NormalizerSamplesTestCase
     /** @var NormalizerInterface&DenormalizerInterface */
     private $normalizer;
 
-    /**
-     * @test
-     * @dataProvider sampleProvider
-     */
+    #[Test]
+    #[DataProvider('sampleProvider')]
     final public function it_denormalize_samples(string $original, array $context = [])
     {
         $denormalized = $this->normalizer->denormalize(json_decode($original, true), $this->class(), null, $context);
@@ -28,9 +28,9 @@ trait NormalizerSamplesTestCase
         $this->assertEquals(json_decode($original, true), $normalized);
     }
 
-    final public function sampleProvider()
+    final public static function sampleProvider()
     {
-        foreach ($this->samples() as $path) {
+        foreach (self::samples() as $path) {
             if (is_array($path)) {
                 list($path, $context) = $path;
             } else {
@@ -75,5 +75,5 @@ trait NormalizerSamplesTestCase
 
     abstract protected function class() : string;
 
-    abstract protected function samples();
+    abstract protected static function samples();
 }

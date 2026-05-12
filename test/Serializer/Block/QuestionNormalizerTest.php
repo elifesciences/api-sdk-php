@@ -8,19 +8,20 @@ use eLife\ApiSdk\Model\Block\Question;
 use eLife\ApiSdk\Serializer\Block\ParagraphNormalizer;
 use eLife\ApiSdk\Serializer\Block\QuestionNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class QuestionNormalizerTest extends TestCase
 {
     /** @var QuestionNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new QuestionNormalizer();
 
@@ -30,37 +31,31 @@ final class QuestionNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_questions($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $question = new Question('question', [new Paragraph('answer')]);
 
         return [
             'question' => [$question, null, true],
             'question with format' => [$question, 'foo', true],
-            'non-question' => [$this, null, false],
+            'non-question' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_normalize_questions()
     {
         $question = new Question('question', [new Paragraph('answer')]);
@@ -78,36 +73,30 @@ final class QuestionNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($question));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_questions($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'question' => [[], Question::class, [], true],
             'block that is a question' => [['type' => 'question'], Block::class, [], true],
             'block that isn\'t a question' => [['type' => 'foo'], Block::class, [], false],
-            'non-question' => [[], get_class($this), [], false],
+            'non-question' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_denormalize_questions()
     {
         $json = [

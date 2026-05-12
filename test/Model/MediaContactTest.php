@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class MediaContactTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_person_details()
     {
         $mediaContact = new MediaContact($details = new PersonDetails('Person', 'Person'));
@@ -19,9 +18,7 @@ final class MediaContactTest extends TestCase
         $this->assertEquals($details, $mediaContact->getDetails());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_affiliations()
     {
         $with = new MediaContact(new PersonDetails('Person', 'Person'), $affiliations = [new Place(['Somewhere'])]);
@@ -31,9 +28,7 @@ final class MediaContactTest extends TestCase
         $this->assertEmpty($withOut->getAffiliations());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_email_addresses()
     {
         $with = new MediaContact(new PersonDetails('Person', 'Person'), [], $emailAddresses = ['foo@example.com']);
@@ -43,9 +38,7 @@ final class MediaContactTest extends TestCase
         $this->assertEmpty($withOut->getEmailAddresses());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_phone_numbers()
     {
         $with = new MediaContact(new PersonDetails('Person', 'Person'), [], [], $phoneNumbers = ['+447700900415']);

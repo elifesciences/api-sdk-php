@@ -9,14 +9,13 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\Profile;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\Image;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ProfileTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $profile = new Profile(Builder::for(Image::class)->__invoke(), new EmptySequence());
@@ -24,9 +23,7 @@ final class ProfileTest extends TestCase
         $this->assertInstanceOf(Block::class, $profile);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_image()
     {
         $profile = new Profile($image = Builder::for(Image::class)->__invoke(), new EmptySequence());
@@ -34,9 +31,7 @@ final class ProfileTest extends TestCase
         $this->assertEquals($image, $profile->getImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = new ArraySequence([new Paragraph('content')]);

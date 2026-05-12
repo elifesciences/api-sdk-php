@@ -13,12 +13,14 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\LabsPostNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class LabsPostNormalizerTest extends ApiTestCase
 {
@@ -27,10 +29,8 @@ final class LabsPostNormalizerTest extends ApiTestCase
     /** @var LabsPostNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new LabsPostNormalizer(new LabsClient($this->getHttpClient()));
@@ -38,76 +38,64 @@ final class LabsPostNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_labs_posts($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $labsPost = new LabsPost('80000001', 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            $thumbnail, rejection_for('No social image'), new PromiseSequence(rejection_for('Full Labs post should not be unwrapped'))
+            $thumbnail, Create::rejectionFor('No social image'), new PromiseSequence(Create::rejectionFor('Full Labs post should not be unwrapped'))
         );
 
         return [
             'Labs post' => [$labsPost, null, true],
             'Labs post with format' => [$labsPost, 'foo', true],
-            'non-Labs post' => [$this, null, false],
+            'non-Labs post' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_labs_posts(LabsPost $labsPost, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_labs_posts(LabsPost $labsPost, array $context, array $expected, callable $extra = null)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($labsPost, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_labs_posts($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'Labs post' => [[], LabsPost::class, [], true],
             'Labs post by type' => [['type' => 'labs-post'], Model::class, [], true],
-            'non-Labs post' => [[], get_class($this), [], false],
+            'non-Labs post' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_labs_posts(
         LabsPost $expected,
         array $context,
@@ -123,7 +111,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
@@ -132,7 +120,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new LabsPost('80000001', 'title', $published, $updated, 'impact statement', $thumbnail, promise_for($socialImage),
+                new LabsPost('80000001', 'title', $published, $updated, 'impact statement', $thumbnail, Create::promiseFor($socialImage),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -178,7 +166,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new LabsPost('80000001', 'title', $published, null, null, $thumbnail, promise_for(null),
+                new LabsPost('80000001', 'title', $published, null, null, $thumbnail, Create::promiseFor(null),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -210,7 +198,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new LabsPost('80000001', 'Labs post 1 title', $published, $updated, 'Labs post 1 impact statement',
-                    $thumbnail, promise_for(null), new ArraySequence([new Paragraph('Labs post 80000001 text')])),
+                    $thumbnail, Create::promiseFor(null), new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => '80000001',
@@ -240,7 +228,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new LabsPost('80000001', 'Labs post 1 title', $published, null, null, $thumbnail, promise_for(null),
+                new LabsPost('80000001', 'Labs post 1 title', $published, null, null, $thumbnail, Create::promiseFor(null),
                     new ArraySequence([new Paragraph('Labs post 80000001 text')])),
                 ['snippet' => true],
                 [
@@ -275,7 +263,7 @@ final class LabsPostNormalizerTest extends ApiTestCase
         return LabsPost::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='labs-post']";
         yield __DIR__.'/../../vendor/elife/api/dist/samples/labs-post/v2/*.json';

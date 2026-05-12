@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\HasCaption;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class AssetFileTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_asset()
     {
         $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
@@ -23,9 +22,7 @@ final class AssetFileTest extends TestCase
         $this->assertInstanceOf(HasCaption::class, $file);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new AssetFile('10.1000/182', 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
@@ -35,9 +32,7 @@ final class AssetFileTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
@@ -45,9 +40,7 @@ final class AssetFileTest extends TestCase
         $this->assertSame('id', $file->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_label()
     {
         $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
@@ -55,9 +48,7 @@ final class AssetFileTest extends TestCase
         $this->assertSame('label', $file->getLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_title()
     {
         $with = new AssetFile(null, 'id', 'label', 'title', new EmptySequence(), new EmptySequence(), new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));
@@ -67,9 +58,7 @@ final class AssetFileTest extends TestCase
         $this->assertNull($withOut->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_caption()
     {
         $caption = new ArraySequence([new Paragraph('caption')]);
@@ -80,9 +69,7 @@ final class AssetFileTest extends TestCase
         $this->assertEmpty($withOut->getCaption());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_attribution()
     {
         $attribution = new ArraySequence(['attribution']);
@@ -94,9 +81,7 @@ final class AssetFileTest extends TestCase
         $this->assertEmpty($withOut->getAttribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_file()
     {
         $file = new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), $theFile = new File('image/jpeg', 'http://www.example.com/image.jpg', 'image.jpg'));

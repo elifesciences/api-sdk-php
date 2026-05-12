@@ -6,10 +6,11 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\Footnote;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -18,7 +19,7 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Table
+    public function denormalize($data, $type, $format = null, array $context = []) : Table
     {
         return new Table(
             $data['id'] ?? null,
@@ -40,7 +41,7 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Table::class === $type
@@ -49,35 +50,36 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
     }
 
     /**
-     * @param Table $object
+     * @param Table $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'table',
-            'tables' => $object->getTables(),
+            'tables' => $data->getTables(),
         ];
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
+        if ($data->getTitle()) {
+            $arr['title'] = $data->getTitle();
         }
 
-        if ($object->getCaption()->notEmpty()) {
-            $data['caption'] = $object->getCaption()->map(function (Block $block) {
+        if ($data->getCaption()->notEmpty()) {
+            $arr['caption'] = $data->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
         }
 
-        if ($object->getAttribution()->notEmpty()) {
-            $data['attribution'] = $object->getAttribution()->toArray();
+        if ($data->getAttribution()->notEmpty()) {
+            $arr['attribution'] = $data->getAttribution()->toArray();
         }
 
-        if (count($object->getFootnotes())) {
-            $data['footnotes'] = array_map(function (Footnote $footnote) {
+        if (count($data->getFootnotes())) {
+            $arr['footnotes'] = array_map(function (Footnote $footnote) {
                 $data = [
                     'text' => $footnote->getText()->map(function (Block $block) {
                         return $this->normalizer->normalize($block);
@@ -93,14 +95,22 @@ final class TableNormalizer implements NormalizerInterface, DenormalizerInterfac
                 }
 
                 return $data;
-            }, $object->getFootnotes());
+            }, $data->getFootnotes());
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Table;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Table::class => false,
+            Block::class => false,
+        ];
     }
 }

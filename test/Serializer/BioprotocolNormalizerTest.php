@@ -4,10 +4,13 @@ namespace test\eLife\ApiSdk\Serializer;
 
 use eLife\ApiSdk\Model\Bioprotocol;
 use eLife\ApiSdk\Serializer\BioprotocolNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class BioprotocolNormalizerTest extends TestCase
 {
@@ -16,80 +19,66 @@ final class BioprotocolNormalizerTest extends TestCase
     /** @var BioprotocolNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new BioprotocolNormalizer();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_bioprotocols($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $bioprotocol = Builder::for(Bioprotocol::class)->__invoke();
 
         return [
             'bioprotocol' => [$bioprotocol, null, true],
             'bioprotocol with format' => [$bioprotocol, 'foo', true],
-            'non-bioprotocol' => [$this, null, false],
+            'non-bioprotocol' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_bioprotocols(Bioprotocol $bioprotocol, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($bioprotocol));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_bioprotocols($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'bioprotocol' => [[], Bioprotocol::class, [], true],
-            'non-bioprotocol' => [[], get_class($this), [], false],
+            'non-bioprotocol' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_bioprotocols(Bioprotocol $expected, array $json)
     {
         $actual = $this->normalizer->denormalize($json, Bioprotocol::class);
@@ -97,7 +86,7 @@ final class BioprotocolNormalizerTest extends TestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -122,7 +111,7 @@ final class BioprotocolNormalizerTest extends TestCase
         return Bioprotocol::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/bioprotocol/v1/*.json#items';
     }

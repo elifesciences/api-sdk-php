@@ -7,10 +7,11 @@ use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\DataReference;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,7 +20,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : DataReference
+    public function denormalize($data, $type, $format = null, array $context = []) : DataReference
     {
         return new DataReference(
             $data['id'],
@@ -48,7 +49,7 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             DataReference::class === $type
@@ -57,78 +58,87 @@ final class DataReferenceNormalizer implements NormalizerInterface, Denormalizer
     }
 
     /**
-     * @param DataReference $object
+     * @param DataReference $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'data',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
-            'title' => $object->getTitle(),
-            'source' => $object->getSource(),
+            'id' => $data->getId(),
+            'date' => $data->getDate()->toString(),
+            'title' => $data->getTitle(),
+            'source' => $data->getSource(),
         ];
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
+        if ($data->getDiscriminator()) {
+            $arr['discriminator'] = $data->getDiscriminator();
         }
 
-        if ($object->getAuthors()) {
-            $data['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {
+        if ($data->getAuthors()) {
+            $arr['authors'] = array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
-            }, $object->getAuthors());
+            }, $data->getAuthors());
         }
 
-        if ($object->authorsEtAl()) {
-            $data['authorsEtAl'] = $object->authorsEtAl();
+        if ($data->authorsEtAl()) {
+            $arr['authorsEtAl'] = $data->authorsEtAl();
         }
 
-        if ($object->getCompilers()) {
-            $data['compilers'] = array_map(function (AuthorEntry $compiler) use ($format, $context) {
+        if ($data->getCompilers()) {
+            $arr['compilers'] = array_map(function (AuthorEntry $compiler) use ($format, $context) {
                 return $this->normalizer->normalize($compiler, $format, ['type' => true] + $context);
-            }, $object->getCompilers());
+            }, $data->getCompilers());
         }
 
-        if ($object->compilersEtAl()) {
-            $data['compilersEtAl'] = $object->compilersEtAl();
+        if ($data->compilersEtAl()) {
+            $arr['compilersEtAl'] = $data->compilersEtAl();
         }
 
-        if ($object->getCurators()) {
-            $data['curators'] = array_map(function (AuthorEntry $curator) use ($format, $context) {
+        if ($data->getCurators()) {
+            $arr['curators'] = array_map(function (AuthorEntry $curator) use ($format, $context) {
                 return $this->normalizer->normalize($curator, $format, ['type' => true] + $context);
-            }, $object->getCurators());
+            }, $data->getCurators());
         }
 
-        if ($object->curatorsEtAl()) {
-            $data['curatorsEtAl'] = $object->curatorsEtAl();
+        if ($data->curatorsEtAl()) {
+            $arr['curatorsEtAl'] = $data->curatorsEtAl();
         }
 
-        if ($object->getDataId()) {
-            $data['dataId'] = $object->getDataId();
+        if ($data->getDataId()) {
+            $arr['dataId'] = $data->getDataId();
         }
 
-        if ($object->getAssigningAuthority()) {
-            $data['assigningAuthority'] = $this->normalizer->normalize($object->getAssigningAuthority(), $format,
+        if ($data->getAssigningAuthority()) {
+            $arr['assigningAuthority'] = $this->normalizer->normalize($data->getAssigningAuthority(), $format,
                 $context);
         }
 
-        if ($object->getSpecificUse()) {
-            $data['specificUse'] = $object->getSpecificUse();
+        if ($data->getSpecificUse()) {
+            $arr['specificUse'] = $data->getSpecificUse();
         }
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
+        if ($data->getDoi()) {
+            $arr['doi'] = $data->getDoi();
         }
 
-        if ($object->getUri()) {
-            $data['uri'] = $object->getUri();
+        if ($data->getUri()) {
+            $arr['uri'] = $data->getUri();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof DataReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            DataReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

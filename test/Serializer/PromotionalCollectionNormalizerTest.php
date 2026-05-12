@@ -22,10 +22,13 @@ use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PromotionalCollectionNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PromotionalCollectionNormalizerTest extends ApiTestCase
 {
@@ -34,10 +37,8 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
     /** @var PromotionalCollectionNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new PromotionalCollectionNormalizer(new PromotionalCollectionsClient($this->getHttpClient()));
@@ -45,73 +46,66 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_promotional_collections($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $promotionalCollection = Builder::for(PromotionalCollection::class)->__invoke();
 
         return [
             'promotional-collection' => [$promotionalCollection, null, true],
             'promotional-collection with format' => [$promotionalCollection, 'foo', true],
-            'non-promotional-collection' => [$this, null, false],
+            'non-promotional-collection' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalizes_promotional_collections(PromotionalCollection $promotionalCollection, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalizes_promotional_collections(
+        PromotionalCollection $promotionalCollection,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ) : void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($promotionalCollection, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_promotional_collections($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'promotional-collection' => [[], PromotionalCollection::class, [], true],
             'promotional-collection by type' => [['type' => 'promotional-collection'], Model::class, [], true],
-            'non-promotional-collection' => [[], get_class($this), [], false],
+            'non-promotional-collection' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalizes_promotional_collections(
         PromotionalCollection $expected,
         array $context,
@@ -129,7 +123,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -799,7 +793,7 @@ final class PromotionalCollectionNormalizerTest extends ApiTestCase
         return PromotionalCollection::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/promotional-collection-list/v1/*.json#items';

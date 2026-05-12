@@ -14,12 +14,14 @@ use eLife\ApiSdk\Model\Event;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class EventNormalizerTest extends ApiTestCase
 {
@@ -28,10 +30,8 @@ final class EventNormalizerTest extends ApiTestCase
     /** @var EventNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new EventNormalizer(new EventsClient($this->getHttpClient()));
@@ -39,75 +39,63 @@ final class EventNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_events($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $event = new Event('id', 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), null, null,
-            rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Event content should not be unwrapped')));
+            Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Event content should not be unwrapped')));
 
         return [
             'event' => [$event, null, true],
             'event with format' => [$event, 'foo', true],
-            'non-event' => [$this, null, false],
+            'non-event' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_events(Event $event, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_events(Event $event, array $context, array $expected, callable $extra = null)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($event, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_events($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'event' => [[], Event::class, [], true],
             'event by type' => [['type' => 'event'], Model::class, [], true],
-            'non-event' => [[], get_class($this), [], false],
+            'non-event' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_events(
         Event $expected,
         array $context,
@@ -123,7 +111,7 @@ final class EventNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
@@ -134,7 +122,7 @@ final class EventNormalizerTest extends ApiTestCase
         return [
             'complete with content' => [
                 new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, null,
-                    promise_for(Builder::for(Image::class)->sample('social')),
+                    Create::promiseFor(Builder::for(Image::class)->sample('social')),
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -171,7 +159,7 @@ final class EventNormalizerTest extends ApiTestCase
             ],
             'complete with uri' => [
                 new Event('id', 'title', 'impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/',
-                    promise_for(Builder::for(Image::class)->sample('social')), new EmptySequence()),
+                    Create::promiseFor(Builder::for(Image::class)->sample('social')), new EmptySequence()),
                 [],
                 [
                     'id' => 'id',
@@ -201,7 +189,7 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Event('id', 'title', null, $published, null, $starts, $ends, null, null, promise_for(null), new ArraySequence([new Paragraph('text')])),
+                new Event('id', 'title', null, $published, null, $starts, $ends, null, null, Create::promiseFor(null), new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -218,7 +206,7 @@ final class EventNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet with content' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null, promise_for(Builder::for(Image::class)->sample('social')),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, null, Create::promiseFor(Builder::for(Image::class)->sample('social')),
                     new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
@@ -237,7 +225,7 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
             'complete snippet with uri' => [
-                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', promise_for(Builder::for(Image::class)->sample('social')), new EmptySequence()),
+                new Event('event1', 'Event event1 title', 'Event event1 impact statement', $published, $updated, $starts, $ends, $timezone, 'http://www.example.com/', Create::promiseFor(Builder::for(Image::class)->sample('social')), new EmptySequence()),
                 ['snippet' => true, 'type' => true],
                 [
                     'id' => 'event1',
@@ -256,7 +244,7 @@ final class EventNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new Event('event1', 'Event event1 title', null, $published, null, $starts, $ends, null, null, promise_for(null),
+                new Event('event1', 'Event event1 title', null, $published, null, $starts, $ends, null, null, Create::promiseFor(null),
                     new ArraySequence([new Paragraph('Event event1 text')])),
                 ['snippet' => true],
                 [
@@ -278,7 +266,7 @@ final class EventNormalizerTest extends ApiTestCase
         return Event::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/event/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/event-list/v1/*.json#items';

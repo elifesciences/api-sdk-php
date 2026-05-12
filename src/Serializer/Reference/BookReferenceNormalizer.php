@@ -4,8 +4,8 @@ namespace eLife\ApiSdk\Serializer\Reference;
 
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\BookReference;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -33,7 +33,7 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             BookReference::class === $type
@@ -51,8 +51,16 @@ final class BookReferenceNormalizer implements NormalizerInterface, Denormalizer
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof BookReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            BookReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

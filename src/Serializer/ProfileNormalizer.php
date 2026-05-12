@@ -13,15 +13,20 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
 use GuzzleHttp\Promise\PromiseInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(ProfilesClient $profilesClient)
     {
@@ -38,7 +43,7 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Profile
+    public function denormalize($data, $type, $format = null, array $context = []) : Profile
     {
         if (!empty($context['snippet'])) {
             $profile = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -78,38 +83,46 @@ final class ProfileNormalizer implements NormalizerInterface, DenormalizerInterf
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Profile::class === $type;
     }
 
     /**
-     * @param Profile $object
+     * @param Profile $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = $this->normalizer->normalize($object->getDetails(), $format, $context);
+        $arr = $this->normalizer->normalize($data->getDetails(), $format, $context);
 
-        $data['id'] = $object->getId();
+        $arr['id'] = $data->getId();
 
         if (empty($context['snippet'])) {
-            if ($object->getAffiliations()->notEmpty()) {
-                $data['affiliations'] = $object->getAffiliations()->map(function (AccessControl $accessControl) use ($format, $context) {
+            if ($data->getAffiliations()->notEmpty()) {
+                $arr['affiliations'] = $data->getAffiliations()->map(function (AccessControl $accessControl) use ($format, $context) {
                     return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
-            if ($object->getEmailAddresses()->notEmpty()) {
-                $data['emailAddresses'] = $object->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
+            if ($data->getEmailAddresses()->notEmpty()) {
+                $arr['emailAddresses'] = $data->getEmailAddresses()->map(function (AccessControl $accessControl) use ($format, $context) {
                     return $this->normalizer->normalize($accessControl, $format, $context);
                 })->toArray();
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Profile;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Profile::class => false,
+        ];
     }
 }

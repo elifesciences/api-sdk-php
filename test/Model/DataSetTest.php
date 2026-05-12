@@ -8,14 +8,13 @@ use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class DataSetTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $dataSet = Builder::for(DataSet::class)
@@ -26,9 +25,7 @@ final class DataSetTest extends TestCase
         $this->assertSame('id', $dataSet->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $dataSet = Builder::for(DataSet::class)
@@ -38,9 +35,7 @@ final class DataSetTest extends TestCase
         $this->assertEquals($date, $dataSet->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $dataSet = Builder::for(DataSet::class)
@@ -50,9 +45,7 @@ final class DataSetTest extends TestCase
         $this->assertEquals($authors, $dataSet->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_more_authors()
     {
         $dataSet = Builder::for(DataSet::class)
@@ -62,9 +55,7 @@ final class DataSetTest extends TestCase
         $this->assertTrue($dataSet->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $dataSet = Builder::for(DataSet::class)
@@ -74,9 +65,7 @@ final class DataSetTest extends TestCase
         $this->assertSame('title', $dataSet->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_data_id()
     {
         $with = Builder::for(DataSet::class)
@@ -90,9 +79,7 @@ final class DataSetTest extends TestCase
         $this->assertNull($withOut->getDataId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_details()
     {
         $with = Builder::for(DataSet::class)
@@ -106,9 +93,7 @@ final class DataSetTest extends TestCase
         $this->assertNull($withOut->getDetails());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = Builder::for(DataSet::class)
@@ -123,9 +108,7 @@ final class DataSetTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $with = Builder::for(DataSet::class)

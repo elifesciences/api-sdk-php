@@ -17,12 +17,14 @@ use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Serializer\InterviewNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class InterviewNormalizerTest extends ApiTestCase
 {
@@ -31,10 +33,8 @@ final class InterviewNormalizerTest extends ApiTestCase
     /** @var InterviewNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new InterviewNormalizer(new InterviewsClient($this->getHttpClient()));
@@ -42,78 +42,71 @@ final class InterviewNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_interviews($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
-            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
-        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, rejection_for('No social image'),
-            new PromiseSequence(rejection_for('Full interview should not be unwrapped'))
+            new PromiseSequence(Create::rejectionFor('Full interviewee should not be unwrapped')));
+        $interview = new Interview('id', $interviewee, 'title', new DateTimeImmutable('now', new DateTimeZone('Z')), null, null, null, Create::rejectionFor('No social image'),
+            new PromiseSequence(Create::rejectionFor('Full interview should not be unwrapped'))
         );
 
         return [
             'interview' => [$interview, null, true],
             'interview with format' => [$interview, 'foo', true],
-            'non-interview' => [$this, null, false],
+            'non-interview' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_interviews(Interview $interview, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_interviews(
+        Interview $interview,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($interview, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_interviews($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'interview' => [[], Interview::class, [], true],
             'interview by type' => [['type' => 'interview'], Model::class, [], true],
-            'non-interview' => [[], get_class($this), [], false],
+            'non-interview' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_interviews(
         Interview $expected,
         array $context,
@@ -129,7 +122,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $socialImage = Builder::for(Image::class)->sample('social');
@@ -141,7 +134,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'title',
-                    $published, $updated, 'impact statement', $thumbnail, promise_for($socialImage), new ArraySequence([new Paragraph('text')])
+                    $published, $updated, 'impact statement', $thumbnail, Create::promiseFor($socialImage), new ArraySequence([new Paragraph('text')])
                 ),
                 [],
                 [
@@ -202,7 +195,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum' => [
                 new Interview('id',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'title', $published, null, null, null, promise_for(null), new ArraySequence([new Paragraph('text')])),
+                    'title', $published, null, null, null, Create::promiseFor(null), new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -226,7 +219,7 @@ final class InterviewNormalizerTest extends ApiTestCase
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097'),
                         new ArraySequence([new IntervieweeCvLine('date', 'text')])), 'Interview 1 title', $published, $updated,
-                    'Interview 1 impact statement', $thumbnail, promise_for($socialImage), new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 impact statement', $thumbnail, Create::promiseFor($socialImage), new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true, 'type' => true],
                 [
@@ -266,7 +259,7 @@ final class InterviewNormalizerTest extends ApiTestCase
             'minimum snippet' => [
                 $interview = new Interview('interview1',
                     new Interviewee(new PersonDetails('preferred name', 'index name'), new EmptySequence()),
-                    'Interview 1 title', $published, null, null, null, promise_for(null), new ArraySequence([new Paragraph('Interview interview1 text')])
+                    'Interview 1 title', $published, null, null, null, Create::promiseFor(null), new ArraySequence([new Paragraph('Interview interview1 text')])
                 ),
                 ['snippet' => true],
                 [
@@ -292,7 +285,7 @@ final class InterviewNormalizerTest extends ApiTestCase
         return Interview::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/interview/v2/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/interview-list/v1/*.json#items';

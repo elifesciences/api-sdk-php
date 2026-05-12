@@ -9,7 +9,11 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class SubjectsTest extends ApiTestCase
 {
@@ -18,25 +22,19 @@ final class SubjectsTest extends ApiTestCase
     /** @var Subjects */
     private $subjects;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpSubjects()
     {
         $this->subjects = (new ApiSdk($this->getHttpClient()))->subjects();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->subjects);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockSubjectListCall(1, 1, 200);
@@ -49,9 +47,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockSubjectListCall(1, 1, 10);
@@ -60,9 +56,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(10, $this->subjects->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockSubjectListCall(1, 1, 10);
@@ -78,9 +72,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockSubjectListCall(1, 1, 1);
@@ -97,9 +89,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(null, $this->subjects[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -107,9 +97,7 @@ final class SubjectsTest extends ApiTestCase
         $this->subjects[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_subject()
     {
         $this->mockSubjectCall(7);
@@ -120,9 +108,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame('subject7', $subject->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -133,9 +119,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame([0, 1, 'subject1', 'subject2', 'subject3', 'subject4', 'subject5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -146,9 +130,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(['subject1', 'subject2', 'subject3', 'subject4', 'subject5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -159,9 +141,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(['subject1', 'subject2', 'subject4', 'subject5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -172,9 +152,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(['subject1', 'subject2', 2, 'subject3', 'subject4', 'subject5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -185,10 +163,8 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(['subject1', 'subject2', 2, 'subject4', 'subject5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -201,10 +177,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockSubjectListCall(1, 1, 3);
@@ -217,9 +190,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(['subject1', 'subject2', 'subject3'], $this->subjects->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -234,9 +205,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -249,17 +218,13 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(115, $this->subjects->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->subjects, $this->subjects->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockSubjectListCall(1, 1, 5);
@@ -274,9 +239,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockSubjectListCall(1, 1, 5, false);
@@ -287,9 +250,7 @@ final class SubjectsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockSubjectListCall(1, 1, 10);
@@ -299,9 +260,7 @@ final class SubjectsTest extends ApiTestCase
         $this->assertSame(10, $this->subjects->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockSubjectListCall(1, 1, 200);

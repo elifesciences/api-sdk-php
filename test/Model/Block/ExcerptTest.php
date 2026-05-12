@@ -6,13 +6,12 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Excerpt;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ExcerptTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $excerpt = new Excerpt(new ArraySequence([new Paragraph('foo')]));
@@ -20,9 +19,7 @@ final class ExcerptTest extends TestCase
         $this->assertInstanceOf(Block::class, $excerpt);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $excerpt = new Excerpt($content = new ArraySequence([new Paragraph('foo')]));
@@ -30,9 +27,7 @@ final class ExcerptTest extends TestCase
         $this->assertEquals($content, $excerpt->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_citation()
     {
         $with = new Excerpt(new ArraySequence([new Paragraph('foo')]), 'bar');

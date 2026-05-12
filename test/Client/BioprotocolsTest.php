@@ -6,25 +6,23 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Bioprotocols;
 use eLife\ApiSdk\Model\Bioprotocol;
 use eLife\ApiSdk\Model\Identifier;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class BioprotocolsTest extends ApiTestCase
 {
     /** @var Bioprotocols */
-    private $bioprotocols;
+    private Bioprotocols $bioprotocols;
 
-    /**
-     * @before
-     */
-    protected function setUpBioprotocols()
+    #[Before]
+    protected function setUpBioprotocols(): void
     {
         $this->bioprotocols = (new ApiSdk($this->getHttpClient()))->bioprotocols();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_array()
     {
         $this->mockBioprotocolsCall('article', '09560');

@@ -6,10 +6,10 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -18,7 +18,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : PatentReference
+    public function denormalize($data, $type, $format = null, array $context = []) : PatentReference
     {
         return new PatentReference(
             $data['id'],
@@ -40,7 +40,7 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             PatentReference::class === $type
@@ -49,53 +49,61 @@ final class PatentReferenceNormalizer implements NormalizerInterface, Denormaliz
     }
 
     /**
-     * @param PatentReference $object
+     * @param PatentReference $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'patent',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
+            'id' => $data->getId(),
+            'date' => $data->getDate()->toString(),
             'inventors' => array_map(function (AuthorEntry $inventors) use ($format, $context) {
                 return $this->normalizer->normalize($inventors, $format, ['type' => true] + $context);
-            }, $object->getInventors()),
-            'title' => $object->getTitle(),
-            'patentType' => $object->getPatentType(),
-            'country' => $object->getCountry(),
+            }, $data->getInventors()),
+            'title' => $data->getTitle(),
+            'patentType' => $data->getPatentType(),
+            'country' => $data->getCountry(),
         ];
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
+        if ($data->getDiscriminator()) {
+            $arr['discriminator'] = $data->getDiscriminator();
         }
 
-        if ($object->inventorsEtAl()) {
-            $data['inventorsEtAl'] = $object->inventorsEtAl();
+        if ($data->inventorsEtAl()) {
+            $arr['inventorsEtAl'] = $data->inventorsEtAl();
         }
 
-        if ($object->getAssignees()) {
-            $data['assignees'] = array_map(function (AuthorEntry $assignees) use ($format, $context) {
+        if ($data->getAssignees()) {
+            $arr['assignees'] = array_map(function (AuthorEntry $assignees) use ($format, $context) {
                 return $this->normalizer->normalize($assignees, $format, ['type' => true] + $context);
-            }, $object->getAssignees());
+            }, $data->getAssignees());
         }
 
-        if ($object->assigneesEtAl()) {
-            $data['assigneesEtAl'] = $object->assigneesEtAl();
+        if ($data->assigneesEtAl()) {
+            $arr['assigneesEtAl'] = $data->assigneesEtAl();
         }
 
-        if ($object->getNumber()) {
-            $data['number'] = $object->getNumber();
+        if ($data->getNumber()) {
+            $arr['number'] = $data->getNumber();
         }
 
-        if ($object->getUri()) {
-            $data['uri'] = $object->getUri();
+        if ($data->getUri()) {
+            $arr['uri'] = $data->getUri();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof PatentReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PatentReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

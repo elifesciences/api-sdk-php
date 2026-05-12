@@ -15,13 +15,17 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(SubjectsClient $subjectsClient)
     {
@@ -38,7 +42,7 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Subject
+    public function denormalize($data, $type, $format = null, array $context = []) : Subject
     {
         if (!empty($context['snippet'])) {
             $subject = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -85,44 +89,51 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Subject::class === $type;
     }
 
     /**
-     * @param Subject $object
+     * @param Subject $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'id' => $object->getId(),
-            'name' => $object->getName(),
+        $arr = [
+            'id' => $data->getId(),
+            'name' => $data->getName(),
         ];
 
         if (empty($context['snippet'])) {
-            $data['image'] = [
-                'banner' => $this->normalizer->normalize($object->getBanner(), $format, $context),
-                'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
+            $arr['image'] = [
+                'banner' => $this->normalizer->normalize($data->getBanner(), $format, $context),
+                'thumbnail' => $this->normalizer->normalize($data->getThumbnail(), $format, $context),
             ];
 
-            if ($object->getImpactStatement()) {
-                $data['impactStatement'] = $object->getImpactStatement();
+            if ($data->getImpactStatement()) {
+                $arr['impactStatement'] = $data->getImpactStatement();
             }
 
-            if ($object->getAimsAndScope()->notEmpty()) {
-                $data['aimsAndScope'] = $object->getAimsAndScope()
+            if ($data->getAimsAndScope()->notEmpty()) {
+                $arr['aimsAndScope'] = $data->getAimsAndScope()
                     ->map(function (Block\Paragraph $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Subject;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Subject::class => true,
+        ];
     }
 }

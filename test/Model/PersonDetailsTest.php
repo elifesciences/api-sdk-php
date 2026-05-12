@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\PersonDetails;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PersonDetailsTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_preferred_name()
     {
         $person = new PersonDetails('preferred name', 'index name');
@@ -17,9 +16,7 @@ final class PersonDetailsTest extends TestCase
         $this->assertSame('preferred name', $person->getPreferredName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_index_name()
     {
         $person = new PersonDetails('preferred name', 'index name');
@@ -27,9 +24,7 @@ final class PersonDetailsTest extends TestCase
         $this->assertSame('index name', $person->getIndexName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_orcid()
     {
         $with = new PersonDetails('preferred name', 'index name', '0000-0002-1825-0097');

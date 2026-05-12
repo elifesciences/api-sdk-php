@@ -14,20 +14,21 @@ use eLife\ApiSdk\Serializer\Block\VideoNormalizer;
 use eLife\ApiSdk\Serializer\FileNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\NormalizerAwareSerializer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class VideoNormalizerTest extends TestCase
 {
     /** @var VideoNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new VideoNormalizer();
 
@@ -39,24 +40,20 @@ final class VideoNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_videos($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
         $video = new Video(null, null, new EmptySequence(), new EmptySequence(), $sources, null, 200, 100);
@@ -64,20 +61,18 @@ final class VideoNormalizerTest extends TestCase
         return [
             'video' => [$video, null, true],
             'video with format' => [$video, 'foo', true],
-            'non-box' => [$this, null, false],
+            'non-box' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_videos(Video $video, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($video));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -140,43 +135,37 @@ final class VideoNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_videos($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'video' => [[], Video::class, [], true],
             'block that is a video' => [['type' => 'video'], Block::class, [], true],
             'block that isn\'t a video' => [['type' => 'foo'], Block::class, [], false],
-            'non-video' => [[], get_class($this), [], false],
+            'non-video' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_videos(array $json, Video $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, Video::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

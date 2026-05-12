@@ -10,10 +10,13 @@ use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Serializer\HighlightNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class HighlightNormalizerTest extends ApiTestCase
 {
@@ -22,10 +25,8 @@ final class HighlightNormalizerTest extends ApiTestCase
     /** @var HighlightNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new HighlightNormalizer();
@@ -33,72 +34,65 @@ final class HighlightNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_highlights($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $highlight = new Highlight('title', null, Builder::dummy(ArticleVoR::class), 'impactStatement');
 
         return [
             'Highlight' => [$highlight, null, true],
             'Highlight with format' => [$highlight, 'foo', true],
-            'non-Highlight' => [$this, null, false],
+            'non-Highlight' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_highlights(Highlight $highlight, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_highlights(
+        Highlight $highlight,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($highlight, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_highlights($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'Highlight' => [[], Highlight::class, [], true],
-            'non-Highlight' => [[], get_class($this), [], false],
+            'non-Highlight' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_highlights(
         Highlight $expected,
         array $context,
@@ -114,7 +108,7 @@ final class HighlightNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $date = new DateTimeImmutable('now', new DateTimeZone('Z'));
         $image = Builder::for(Image::class)->sample('thumbnail');
@@ -187,7 +181,7 @@ final class HighlightNormalizerTest extends ApiTestCase
         return Highlight::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/highlight-list/v3/*.json#items';
     }

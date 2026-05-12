@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\IntervieweeCvLine;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class IntervieweeCvLineTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $cvLine = new IntervieweeCvLine('date', 'text');
@@ -17,9 +16,7 @@ final class IntervieweeCvLineTest extends TestCase
         $this->assertSame('date', $cvLine->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_text()
     {
         $cvLine = new IntervieweeCvLine('date', 'text');

@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\PatentReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PatentReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -24,9 +23,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -37,9 +34,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new PatentReference('id', $date = new Date(2000), null,
@@ -49,9 +44,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new PatentReference('id', new Date(2000), 'a',
@@ -65,9 +58,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_inventors()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -78,9 +69,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertEquals($inventors, $reference->getInventors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_inventors()
     {
         $with = new PatentReference('id', new Date(2000), null,
@@ -94,9 +83,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertFalse($withOut->inventorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_assignees()
     {
         $with = new PatentReference('id', new Date(2000), null,
@@ -112,9 +99,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertEmpty($withOut->getAssignees());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_assignees()
     {
         $with = new PatentReference('id', new Date(2000), null,
@@ -128,9 +113,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertFalse($withOut->inventorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -140,9 +123,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertSame('title', $reference->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_type()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -152,9 +133,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertSame('type', $reference->getPatentType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_country()
     {
         $reference = new PatentReference('id', new Date(2000), null,
@@ -164,9 +143,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertSame('country', $reference->getCountry());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_number()
     {
         $with = new PatentReference('id', new Date(2000), null,
@@ -180,9 +157,7 @@ final class PatentReferenceTest extends TestCase
         $this->assertNull($withOut->getNumber());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new PatentReference('id', new Date(2000), null,

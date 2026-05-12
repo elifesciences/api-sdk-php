@@ -8,10 +8,11 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
 use eLife\ApiSdk\Model\Reference\ReferencePages;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -20,7 +21,7 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : ConferenceProceedingReference
+    public function denormalize($data, $type, $format = null, array $context = []) : ConferenceProceedingReference
     {
         return new ConferenceProceedingReference(
             $data['id'],
@@ -40,7 +41,7 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             ConferenceProceedingReference::class === $type
@@ -49,46 +50,55 @@ final class ConferenceProceedingReferenceNormalizer implements NormalizerInterfa
     }
 
     /**
-     * @param ConferenceProceedingReference $object
+     * @param ConferenceProceedingReference $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'conference-proceeding',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
+            'id' => $data->getId(),
+            'date' => $data->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
-            }, $object->getAuthors()),
-            'articleTitle' => $object->getArticleTitle(),
-            'conference' => $this->normalizer->normalize($object->getConference(), $format, $context),
+            }, $data->getAuthors()),
+            'articleTitle' => $data->getArticleTitle(),
+            'conference' => $this->normalizer->normalize($data->getConference(), $format, $context),
         ];
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
+        if ($data->getDiscriminator()) {
+            $arr['discriminator'] = $data->getDiscriminator();
         }
 
-        if ($object->authorsEtAl()) {
-            $data['authorsEtAl'] = $object->authorsEtAl();
+        if ($data->authorsEtAl()) {
+            $arr['authorsEtAl'] = $data->authorsEtAl();
         }
 
-        if ($object->getPages()) {
-            $data['pages'] = $this->normalizer->normalize($object->getPages(), $format, $context);
+        if ($data->getPages()) {
+            $arr['pages'] = $this->normalizer->normalize($data->getPages(), $format, $context);
         }
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
+        if ($data->getDoi()) {
+            $arr['doi'] = $data->getDoi();
         }
 
-        if ($object->getUri()) {
-            $data['uri'] = $object->getUri();
+        if ($data->getUri()) {
+            $arr['uri'] = $data->getUri();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ConferenceProceedingReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ConferenceProceedingReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

@@ -4,15 +4,16 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Identifier;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Traversable;
 
 final class IdentifierTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider identifierProvider
-     */
+
+    #[Test]
+    #[DataProvider('identifierProvider')]
     public function it_has_a_type(string $method, string $type, $id)
     {
         $identifier = Identifier::{$method}($id);
@@ -20,10 +21,8 @@ final class IdentifierTest extends TestCase
         $this->assertSame($type, $identifier->getType());
     }
 
-    /**
-     * @test
-     * @dataProvider identifierProvider
-     */
+    #[Test]
+    #[DataProvider('identifierProvider')]
     public function it_has_an_id(string $method, string $type, $id)
     {
         $identifier = Identifier::{$method}($id);
@@ -31,10 +30,8 @@ final class IdentifierTest extends TestCase
         $this->assertSame((string) $id, $identifier->getId());
     }
 
-    /**
-     * @test
-     * @dataProvider identifierProvider
-     */
+    #[Test]
+    #[DataProvider('identifierProvider')]
     public function it_can_be_created_from_a_string(string $method, string $type, $id)
     {
         $identifier = Identifier::fromString("$type/$id");
@@ -43,7 +40,7 @@ final class IdentifierTest extends TestCase
         $this->assertSame((string) $id, $identifier->getId());
     }
 
-    public function identifierProvider() : Traversable
+    public static function identifierProvider() : Traversable
     {
         $examples = [
             'annual-report' => 2017,
@@ -70,10 +67,8 @@ final class IdentifierTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider invalidStringProvider
-     */
+    #[Test]
+    #[DataProvider('invalidStringProvider')]
     public function it_cannot_be_created_from_invalid_strings(string $input)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -81,7 +76,7 @@ final class IdentifierTest extends TestCase
         Identifier::fromString($input);
     }
 
-    public function invalidStringProvider() : Traversable
+    public static function invalidStringProvider() : Traversable
     {
         yield 'empty string' => [''];
         yield 'plain string' => ['foo'];

@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\HasDoi;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ArticleSectionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = new ArraySequence([new Paragraph('content')]);
@@ -23,9 +22,7 @@ final class ArticleSectionTest extends TestCase
         $this->assertEquals($content, $articleSection->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new ArticleSection(new EmptySequence(), '10.1000/182');
@@ -36,9 +33,7 @@ final class ArticleSectionTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new ArticleSection(new EmptySequence(), null, 'id');

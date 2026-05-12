@@ -5,15 +5,20 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Highlight;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class HighlightNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Highlight
+    public function denormalize($data, $type, $format = null, array $context = []) : Highlight
     {
         if (!empty($data['image'])) {
             $data['image'] = $this->denormalizer->denormalize($data['image'], Image::class, $format, $context);
@@ -29,33 +34,45 @@ final class HighlightNormalizer implements NormalizerInterface, DenormalizerInte
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Highlight::class === $type;
     }
 
+
     /**
-     * @param Highlight $object
+     * @param Highlight $data
+     * @param $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
-        $data = [
-            'title' => $object->getTitle(),
-            'item' => $normalizationHelper->normalizeToSnippet($object->getItem(), ['type' => true] + $context),
-            'impactStatement' => $object->getImpactStatement(),
+        $arr = [
+            'title' => $data->getTitle(),
+            'item' => $normalizationHelper->normalizeToSnippet($data->getItem(), ['type' => true] + $context),
+            'impactStatement' => $data->getImpactStatement(),
         ];
 
-        if ($object->getThumbnail()) {
-            $data['image'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        if ($data->getThumbnail()) {
+            $arr['image'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Highlight;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Highlight::class => true,
+        ];
     }
 }

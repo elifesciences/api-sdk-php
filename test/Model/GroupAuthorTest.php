@@ -8,12 +8,11 @@ use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\GroupAuthor;
 use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
+use PHPUnit\Framework\Attributes\Test;
 
 final class GroupAuthorTest extends AuthorTest
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_name()
     {
         $author = new GroupAuthor('name', new EmptySequence());
@@ -22,9 +21,7 @@ final class GroupAuthorTest extends AuthorTest
         $this->assertSame('name', $author->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_people()
     {
         $with = new GroupAuthor('name',
@@ -35,9 +32,7 @@ final class GroupAuthorTest extends AuthorTest
         $this->assertEmpty($withOut->getPeople());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_groups()
     {
         $with = new GroupAuthor('name', new EmptySequence(),

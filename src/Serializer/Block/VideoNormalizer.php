@@ -7,10 +7,10 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Video;
 use eLife\ApiSdk\Model\Block\VideoSource;
 use eLife\ApiSdk\Model\Image;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,7 +19,7 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Video
+    public function denormalize($data, $type, $format = null, array $context = []) : Video
     {
         $data['placeholder'] = !empty($data['placeholder']) ? $this->denormalizer->denormalize($data['placeholder'], Image::class) : null;
 
@@ -40,7 +40,7 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Video::class === $type
@@ -49,57 +49,65 @@ final class VideoNormalizer implements NormalizerInterface, DenormalizerInterfac
     }
 
     /**
-     * @param Video $object
+     * @param Video $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'video',
             'sources' => array_map(function (VideoSource $source) {
                 return [
                     'mediaType' => $source->getMediaType(),
                     'uri' => $source->getUri(),
                 ];
-            }, $object->getSources()),
-            'width' => $object->getWidth(),
-            'height' => $object->getHeight(),
+            }, $data->getSources()),
+            'width' => $data->getWidth(),
+            'height' => $data->getHeight(),
         ];
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
+        if ($data->getTitle()) {
+            $arr['title'] = $data->getTitle();
         }
 
-        if ($object->getCaption()->notEmpty()) {
-            $data['caption'] = $object->getCaption()->map(function (Block $block) {
+        if ($data->getCaption()->notEmpty()) {
+            $arr['caption'] = $data->getCaption()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray();
         }
 
-        if ($object->getAttribution()->notEmpty()) {
-            $data['attribution'] = $object->getAttribution()->toArray();
+        if ($data->getAttribution()->notEmpty()) {
+            $arr['attribution'] = $data->getAttribution()->toArray();
         }
 
-        if ($object->getPlaceholder()) {
-            $data['placeholder'] = $this->normalizer->normalize($object->getPlaceholder());
+        if ($data->getPlaceholder()) {
+            $arr['placeholder'] = $this->normalizer->normalize($data->getPlaceholder());
         }
 
-        if ($object->isAutoplay()) {
-            $data['autoplay'] = $object->isAutoplay();
+        if ($data->isAutoplay()) {
+            $arr['autoplay'] = $data->isAutoplay();
         }
 
-        if ($object->isLoop()) {
-            $data['loop'] = $object->isLoop();
+        if ($data->isLoop()) {
+            $arr['loop'] = $data->isLoop();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Video;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Video::class => false,
+            Block::class => false,
+        ];
     }
 }

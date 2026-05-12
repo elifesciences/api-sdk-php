@@ -11,10 +11,13 @@ use eLife\ApiSdk\Model\Copyright;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ArticlePoANormalizerTest extends ApiTestCase
 {
@@ -23,10 +26,8 @@ final class ArticlePoANormalizerTest extends ApiTestCase
     /** @var ArticlePoANormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new ArticlePoANormalizer(new ArticlesClient($this->getHttpClient()));
@@ -34,74 +35,67 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_article_poas($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $articlePoA = Builder::for(ArticlePoA::class)->__invoke();
 
         return [
             'article poa' => [$articlePoA, null, true],
             'article poa with format' => [$articlePoA, 'foo', true],
-            'non-article poa' => [$this, null, false],
+            'non-article poa' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_article_poas(ArticlePoA $articlePoA, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_article_poas(
+        ArticlePoA $articlePoA,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertSame($expected, $this->normalizer->normalize($articlePoA, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_article_poas($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'article poa' => [[], ArticlePoA::class, [], true],
             'article poa by article type' => [['type' => 'research-article', 'status' => 'poa'], Article::class, [], true],
             'article poa by model type' => [['type' => 'research-article', 'status' => 'poa'], Model::class, [], true],
-            'non-article poa' => [[], get_class($this), [], false],
+            'non-article poa' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_article_poas(
         ArticlePoA $expected,
         array $context,
@@ -119,7 +113,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -474,7 +468,7 @@ final class ArticlePoANormalizerTest extends ApiTestCase
         return ArticlePoA::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-list/v1/first-page.json#items[?status=='poa']";
         yield __DIR__."/../../vendor/elife/api/dist/samples/article-related/v2/*.json#[?status=='poa']";

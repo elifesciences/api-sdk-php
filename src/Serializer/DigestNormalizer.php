@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use function array_merge;
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiClient\DigestsClient;
@@ -18,13 +19,17 @@ use eLife\ApiSdk\Model\Subject;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class DigestNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(DigestsClient $digestsClient)
     {
@@ -41,7 +46,7 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Digest
+    public function denormalize($data, $type, $format = null, array $context = []) : Digest
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
@@ -80,50 +85,55 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
         );
     }
 
+
     /**
-     * @param Digest $object
+     * @param Digest $data
+     * @param $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
-        $data = [];
+        $arr = [];
         if (!empty($context['type'])) {
-            $data['type'] = 'digest';
+            $arr['type'] = 'digest';
         }
-        $data['id'] = $object->getId();
-        $data['title'] = $object->getTitle();
-        $data['stage'] = $object->getStage();
-        if ($object->getPublishedDate()) {
-            $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        $arr['id'] = $data->getId();
+        $arr['title'] = $data->getTitle();
+        $arr['stage'] = $data->getStage();
+        if ($data->getPublishedDate()) {
+            $arr['published'] = $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         }
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
-        $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        $arr['image']['thumbnail'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
 
-        if ($object->getSocialImage()) {
-            $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+        if ($data->getSocialImage()) {
+            $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
         }
-        if (!$object->getSubjects()->isEmpty()) {
-            $data['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($object->getSubjects(), $context);
+        if (!$data->getSubjects()->isEmpty()) {
+            $arr['subjects'] = $normalizationHelper->normalizeSequenceToSnippets($data->getSubjects(), $context);
         }
 
         if (empty($context['snippet'])) {
             $typeContext = array_merge($context, ['type' => true]);
 
-            $data['content'] = $normalizationHelper->normalizeSequenceToSnippets($object->getContent(), $typeContext);
-            $data['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($object->getRelatedContent(), $typeContext);
+            $arr['content'] = $normalizationHelper->normalizeSequenceToSnippets($data->getContent(), $typeContext);
+            $arr['relatedContent'] = $normalizationHelper->normalizeSequenceToSnippets($data->getRelatedContent(), $typeContext);
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Digest::class === $type
@@ -131,8 +141,16 @@ final class DigestNormalizer implements NormalizerInterface, DenormalizerInterfa
             'digest' === ($data['type'] ?? 'unknown');
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Digest;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Digest::class => false,
+            Model::class => false,
+        ];
     }
 }

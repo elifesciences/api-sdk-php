@@ -18,12 +18,14 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PodcastEpisodeNormalizerTest extends ApiTestCase
 {
@@ -32,10 +34,8 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
     /** @var PodcastEpisodeNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new PodcastEpisodeNormalizer(new PodcastClient($this->getHttpClient()));
@@ -43,76 +43,69 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_podcast_episodes($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
-        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, rejection_for('No banner'), Builder::dummy(Image::class), rejection_for('No social image'),
+        $podcastEpisode = new PodcastEpisode(1, 'title', null, new DateTimeImmutable('now', new DateTimeZone('Z')), null, Create::rejectionFor('No banner'), Builder::dummy(Image::class), Create::rejectionFor('No social image'),
             [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
-            new PromiseSequence(rejection_for('Subjects should not be unwrapped')),
-            new PromiseSequence(rejection_for('Chapters should not be unwrapped')));
+            new PromiseSequence(Create::rejectionFor('Subjects should not be unwrapped')),
+            new PromiseSequence(Create::rejectionFor('Chapters should not be unwrapped')));
 
         return [
             'podcast episode' => [$podcastEpisode, null, true],
             'podcast episode with format' => [$podcastEpisode, 'foo', true],
-            'non-podcast episode' => [$this, null, false],
+            'non-podcast episode' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_podcast_episodes(PodcastEpisode $podcastEpisode, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_podcast_episodes(
+        PodcastEpisode $podcastEpisode,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ) : void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($podcastEpisode, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_podcast_episodes($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'podcast episode' => [[], PodcastEpisode::class, [], true],
             'podcast episode by type' => [['type' => 'podcast-episode'], Model::class, [], true],
-            'non-podcast episode' => [[], get_class($this), [], false],
+            'non-podcast episode' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_podcast_episodes(
         PodcastEpisode $expected,
         array $context,
@@ -133,7 +126,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
@@ -144,7 +137,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         return [
             'complete' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
-                    promise_for($banner), $thumbnail, promise_for($socialImage),
+                    Create::promiseFor($banner), $thumbnail, Create::promiseFor($socialImage),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement',
@@ -333,9 +326,9 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                     null,
                     $published,
                     null,
-                    promise_for($banner),
+                    Create::promiseFor($banner),
                     $thumbnail,
-                    promise_for(null),
+                    Create::promiseFor(null),
                     [
                         new PodcastEpisodeSource(
                             'audio/mpeg',
@@ -402,7 +395,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $published, $updated,
-                    promise_for($banner), $thumbnail, promise_for($socialImage),
+                    Create::promiseFor($banner), $thumbnail, Create::promiseFor($socialImage),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', 'Long chapter title', 0, 'Chapter impact statement', new ArraySequence([
@@ -444,7 +437,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, promise_for($banner), $thumbnail, promise_for(null),
+                new PodcastEpisode(1, 'Podcast episode 1 title', null, $published, null, Create::promiseFor($banner), $thumbnail, Create::promiseFor(null),
                     [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                     new ArraySequence([
                         new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),
@@ -488,7 +481,7 @@ final class PodcastEpisodeNormalizerTest extends ApiTestCase
         return PodcastEpisode::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__."/../../vendor/elife/api/dist/samples/community-list/v1/*.json#items[?type=='podcast-episode']";
         yield __DIR__.'/../../vendor/elife/api/dist/samples/podcast-episode/v1/*.json';

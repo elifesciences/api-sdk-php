@@ -5,15 +5,20 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Address;
 use eLife\ApiSdk\Model\Author;
 use eLife\ApiSdk\Model\Place;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    final public function denormalize($data, $class, $format = null, array $context = []) : Author
+    final public function denormalize($data, $type, $format = null, array $context = []) : Author
     {
         $data['affiliations'] = array_map(function (array $affiliation) use ($format, $context) {
             return $this->denormalizer->denormalize($affiliation, Place::class, $format, $context);
@@ -23,52 +28,57 @@ abstract class AuthorNormalizer implements NormalizerInterface, DenormalizerInte
             return $this->denormalizer->denormalize($address, Address::class, $format, $context);
         }, $data['postalAddresses'] ?? []);
 
-        return $this->denormalizeAuthor($data, $class, $format, $context);
+        return $this->denormalizeAuthor($data, $type, $format, $context);
     }
 
+
     /**
-     * @param Author $object
+     * @param Author $data
+     * @param $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
-    final public function normalize($object, $format = null, array $context = []) : array
+    final public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [];
+        $arr = [];
 
-        if (count($object->getAdditionalInformation())) {
-            $data['additionalInformation'] = $object->getAdditionalInformation();
+        if (count($data->getAdditionalInformation())) {
+            $arr['additionalInformation'] = $data->getAdditionalInformation();
         }
 
-        if (count($object->getAffiliations())) {
-            $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {
+        if (count($data->getAffiliations())) {
+            $arr['affiliations'] = array_map(function (Place $place) use ($format, $context) {
                 return $this->normalizer->normalize($place, $format, $context);
-            }, $object->getAffiliations());
+            }, $data->getAffiliations());
         }
 
-        if ($object->getCompetingInterests()) {
-            $data['competingInterests'] = $object->getCompetingInterests();
+        if ($data->getCompetingInterests()) {
+            $arr['competingInterests'] = $data->getCompetingInterests();
         }
-        if ($object->getContribution()) {
-            $data['contribution'] = $object->getContribution();
-        }
-
-        if (count($object->getEmailAddresses())) {
-            $data['emailAddresses'] = $object->getEmailAddresses();
+        if ($data->getContribution()) {
+            $arr['contribution'] = $data->getContribution();
         }
 
-        if (count($object->getEqualContributionGroups())) {
-            $data['equalContributionGroups'] = $object->getEqualContributionGroups();
+        if (count($data->getEmailAddresses())) {
+            $arr['emailAddresses'] = $data->getEmailAddresses();
         }
 
-        if (count($object->getPhoneNumbers())) {
-            $data['phoneNumbers'] = $object->getPhoneNumbers();
+        if (count($data->getEqualContributionGroups())) {
+            $arr['equalContributionGroups'] = $data->getEqualContributionGroups();
         }
 
-        if (count($object->getPostalAddresses())) {
-            $data['postalAddresses'] = array_map(function (Address $address) use ($format, $context) {
+        if (count($data->getPhoneNumbers())) {
+            $arr['phoneNumbers'] = $data->getPhoneNumbers();
+        }
+
+        if (count($data->getPostalAddresses())) {
+            $arr['postalAddresses'] = array_map(function (Address $address) use ($format, $context) {
                 return $this->normalizer->normalize($address, $format, $context);
-            }, $object->getPostalAddresses());
+            }, $data->getPostalAddresses());
         }
 
-        return $this->normalizeAuthor($object, $data, $format, $context);
+        return $this->normalizeAuthor($data, $arr, $format, $context);
     }
 
     abstract protected function denormalizeAuthor(

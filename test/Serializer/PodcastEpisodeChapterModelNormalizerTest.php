@@ -14,21 +14,22 @@ use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeChapterModel;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use eLife\ApiSdk\Serializer\PodcastEpisodeChapterModelNormalizer;
-use function GuzzleHttp\Promise\promise_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
 {
     /** @var PodcastEpisodeChapterModelNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new PodcastEpisodeChapterModelNormalizer();
@@ -36,73 +37,66 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_podcast_episode_chapter_models($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $model = new PodcastEpisodeChapterModel(Builder::dummy(PodcastEpisode::class), new PodcastEpisodeChapter(1, 'title', null, 0, null, new EmptySequence()));
 
         return [
             'podcast episode chapter model' => [$model, null, true],
             'podcast episode chapter model with format' => [$model, 'foo', true],
-            'non-podcast episode chapter model' => [$this, null, false],
+            'non-podcast episode chapter model' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_podcast_episode_chapter_models(PodcastEpisodeChapterModel $model, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_podcast_episode_chapter_models(
+        PodcastEpisodeChapterModel $model,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ) : void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($model, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_podcast_episode_chapter_models($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'podcast episode chapter model' => [[], PodcastEpisodeChapterModel::class, [], true],
             'podcast episode chapter model by type' => [['type' => 'podcast-episode-chapter'], Model::class, [], true],
-            'non-podcast episode chapter model' => [[], get_class($this), [], false],
+            'non-podcast episode chapter model' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_podcast_episode_chapter_models(
         PodcastEpisodeChapterModel $expected,
         array $context,
@@ -118,7 +112,7 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $date = new DateTimeImmutable('2000-01-01', new DateTimeZone('Z'));
         $banner = Builder::for(Image::class)->sample('banner');
@@ -128,7 +122,7 @@ final class PodcastEpisodeChapterModelNormalizerTest extends ApiTestCase
             [
                 new PodcastEpisodeChapterModel(
                     new PodcastEpisode(1, 'Podcast episode 1 title', 'Podcast episode 1 impact statement', $date, null,
-                        promise_for($banner), $thumbnail, promise_for(null),
+                        Create::promiseFor($banner), $thumbnail, Create::promiseFor(null),
                         [new PodcastEpisodeSource('audio/mpeg', 'https://www.example.com/episode.mp3')],
                         new ArraySequence([
                             $chapter = new PodcastEpisodeChapter(1, 'Chapter title', null, 0, null, new EmptySequence()),

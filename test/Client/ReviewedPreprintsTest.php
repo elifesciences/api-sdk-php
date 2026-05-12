@@ -12,7 +12,11 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class ReviewedPreprintsTest extends ApiTestCase
 {
@@ -21,25 +25,19 @@ final class ReviewedPreprintsTest extends ApiTestCase
     /** @var ReviewedPreprints */
     private $reviewedPreprints;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpReviewedPreprints()
     {
         $this->reviewedPreprints = (new ApiSdk($this->getHttpClient()))->reviewedPreprints();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->reviewedPreprints);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockReviewedPreprintListCall(1, 1, 200);
@@ -52,9 +50,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10);
@@ -63,9 +59,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(10, $this->reviewedPreprints->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10);
@@ -81,9 +75,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_reviewed_preprint()
     {
         $this->mockReviewedPreprintCall('reviewed-preprint-7', true);
@@ -102,9 +94,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
             $reviewedPreprint->getSubjects()[0]->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockReviewedPreprintListCall(1, 1, 1);
@@ -121,9 +111,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(null, $this->reviewedPreprints[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -131,9 +119,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->reviewedPreprints[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -143,9 +129,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
 
         $this->assertSame([0, 1, 'reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5'], $values->toArray());
     }
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_use_published_dates()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10, true);
@@ -158,9 +142,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_start_date()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10, true, 'date', 'default', new DateTimeImmutable('2017-01-02'));
@@ -172,9 +154,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_end_date()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10, true, 'date', 'default', null, new DateTimeImmutable('2017-01-02'));
@@ -186,9 +166,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -199,9 +177,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(['reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3', 'reviewed-preprint-4', 'reviewed-preprint-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -214,9 +190,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         ], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -229,9 +203,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         ], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -244,10 +216,8 @@ final class ReviewedPreprintsTest extends ApiTestCase
         ], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -260,10 +230,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockReviewedPreprintListCall(1, 1, 3);
@@ -276,9 +243,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(['reviewed-preprint-1', 'reviewed-preprint-2', 'reviewed-preprint-3'], $this->reviewedPreprints->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -293,9 +258,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -308,17 +271,13 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(115, $this->reviewedPreprints->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->reviewedPreprints, $this->reviewedPreprints->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5);
@@ -333,9 +292,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockReviewedPreprintListCall(1, 1, 5, false);
@@ -346,9 +303,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockReviewedPreprintListCall(1, 1, 10);
@@ -358,9 +313,7 @@ final class ReviewedPreprintsTest extends ApiTestCase
         $this->assertSame(10, $this->reviewedPreprints->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockReviewedPreprintListCall(1, 1, 200);

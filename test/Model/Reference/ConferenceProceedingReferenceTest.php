@@ -11,13 +11,12 @@ use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ConferenceProceedingReference;
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ConferenceProceedingReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -27,9 +26,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -40,9 +37,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_date()
     {
         $reference = new ConferenceProceedingReference('id', $date = new Date(2000), null,
@@ -52,9 +47,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), 'a',
@@ -68,9 +61,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_authors()
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -80,9 +71,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertEquals($authors, $reference->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_further_authors()
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -96,9 +85,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertFalse($withOut->authorsEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_title()
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -108,9 +95,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertSame('title', $reference->getArticleTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_conference()
     {
         $reference = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -120,9 +105,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertEquals($conference, $reference->getConference());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_pages()
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -136,9 +119,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertNull($withOut->getPages());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,
@@ -153,9 +134,7 @@ final class ConferenceProceedingReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new ConferenceProceedingReference('id', new Date(2000), null,

@@ -12,34 +12,31 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Collection;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class CollectionsTest extends ApiTestCase
 {
     use SlicingTestCase;
 
     /** @var Collections */
-    private $collections;
+    private Collections $collections;
 
-    /**
-     * @before
-     */
-    protected function setUpCollections()
+    #[Before]
+    protected function setUpCollections(): void
     {
         $this->collections = (new ApiSdk($this->getHttpClient()))->collections();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->collections);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockCollectionListCall(1, 1, 200);
@@ -52,9 +49,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockCollectionListCall(1, 1, 10);
@@ -63,9 +58,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(10, $this->collections->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockCollectionListCall(1, 1, 10);
@@ -81,9 +74,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockCollectionListCall(1, 1, 1);
@@ -100,9 +91,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(null, $this->collections[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -110,9 +99,7 @@ final class CollectionsTest extends ApiTestCase
         $this->collections[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_collection()
     {
         $this->mockCollectionCall('tropical-disease', true);
@@ -135,9 +122,7 @@ final class CollectionsTest extends ApiTestCase
             $collection->getSubjects()[0]->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->mockCollectionListCall(1, 1, 5, true, ['subject']);
@@ -148,9 +133,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_subject()
     {
         $this->mockCollectionListCall(1, 1, 10);
@@ -162,9 +145,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(4, $this->collections->forSubject('subject')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_subject()
     {
         $this->mockCollectionListCall(1, 1, 200);
@@ -180,9 +161,7 @@ final class CollectionsTest extends ApiTestCase
         $this->collections->forSubject('subject')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_contents()
     {
         $this->mockCollectionListCall(1, 1, 5, true, [], ['article/1234', 'interview/5678']);
@@ -193,9 +172,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_contents()
     {
         $this->mockCollectionListCall(1, 1, 10);
@@ -207,9 +184,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(4, $this->collections->containing(Identifier::article('1234'), Identifier::interview('5678'))->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_contents()
     {
         $this->mockCollectionListCall(1, 1, 200);
@@ -225,9 +200,7 @@ final class CollectionsTest extends ApiTestCase
         $this->collections->containing(Identifier::article('1234'), Identifier::interview('5678'))->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -238,9 +211,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -251,9 +222,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -264,9 +233,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -277,9 +244,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -290,10 +255,8 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -306,7 +269,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [
@@ -338,10 +301,7 @@ final class CollectionsTest extends ApiTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockCollectionListCall(1, 1, 3);
@@ -357,9 +317,7 @@ final class CollectionsTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -374,9 +332,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -389,17 +345,13 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(115, $this->collections->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->collections, $this->collections->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockCollectionListCall(1, 1, 5);
@@ -414,9 +366,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockCollectionListCall(1, 1, 5, false);
@@ -427,9 +377,7 @@ final class CollectionsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockCollectionListCall(1, 1, 10);
@@ -439,9 +387,7 @@ final class CollectionsTest extends ApiTestCase
         $this->assertSame(10, $this->collections->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockCollectionListCall(1, 1, 200);

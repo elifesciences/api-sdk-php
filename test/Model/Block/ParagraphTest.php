@@ -4,13 +4,12 @@ namespace test\eLife\ApiSdk\Model\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ParagraphTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $paragraph = new Paragraph('foo');
@@ -18,9 +17,7 @@ final class ParagraphTest extends TestCase
         $this->assertInstanceOf(Block::class, $paragraph);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_text()
     {
         $paragraph = new Paragraph('foo');

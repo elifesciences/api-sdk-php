@@ -14,17 +14,22 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(LabsClient $labsClient)
     {
@@ -41,7 +46,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : LabsPost
+    public function denormalize($data, $type, $format = null, array $context = []) : LabsPost
     {
         if (!empty($context['snippet'])) {
             $post = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -85,7 +90,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             LabsPost::class === $type
@@ -94,46 +99,55 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * @param LabsPost $object
+     * @param LabsPost $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'id' => $object->getId(),
-            'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
+        $arr = [
+            'id' => $data->getId(),
+            'title' => $data->getTitle(),
+            'published' => $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
             'image' => [
-                'thumbnail' => $this->normalizer->normalize($object->getThumbnail(), $format, $context),
+                'thumbnail' => $this->normalizer->normalize($data->getThumbnail(), $format, $context),
             ],
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'labs-post';
+            $arr['type'] = 'labs-post';
         }
 
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
         if (empty($context['snippet'])) {
-            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+            $arr['content'] = $data->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
 
-            if ($object->getSocialImage()) {
-                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            if ($data->getSocialImage()) {
+                $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof LabsPost;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            LabsPost::class => false,
+            Model::class => false,
+        ];
     }
 }

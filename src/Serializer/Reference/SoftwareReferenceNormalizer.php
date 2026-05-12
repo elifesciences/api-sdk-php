@@ -7,10 +7,11 @@ use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\SoftwareReference;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -19,7 +20,7 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : SoftwareReference
+    public function denormalize($data, $type, $format = null, array $context = []) : SoftwareReference
     {
         return new SoftwareReference(
             $data['id'],
@@ -36,7 +37,7 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             SoftwareReference::class === $type
@@ -45,42 +46,51 @@ final class SoftwareReferenceNormalizer implements NormalizerInterface, Denormal
     }
 
     /**
-     * @param SoftwareReference $object
+     * @param SoftwareReference $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'software',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
+            'id' => $data->getId(),
+            'date' => $data->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
-            }, $object->getAuthors()),
-            'title' => $object->getTitle(),
-            'publisher' => $this->normalizer->normalize($object->getPublisher(), $format, $context),
+            }, $data->getAuthors()),
+            'title' => $data->getTitle(),
+            'publisher' => $this->normalizer->normalize($data->getPublisher(), $format, $context),
         ];
 
-        if ($object->authorsEtAl()) {
-            $data['authorsEtAl'] = $object->authorsEtAl();
+        if ($data->authorsEtAl()) {
+            $arr['authorsEtAl'] = $data->authorsEtAl();
         }
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
+        if ($data->getDiscriminator()) {
+            $arr['discriminator'] = $data->getDiscriminator();
         }
 
-        if ($object->getVersion()) {
-            $data['version'] = $object->getVersion();
+        if ($data->getVersion()) {
+            $arr['version'] = $data->getVersion();
         }
 
-        if ($object->getUri()) {
-            $data['uri'] = $object->getUri();
+        if ($data->getUri()) {
+            $arr['uri'] = $data->getUri();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof SoftwareReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            SoftwareReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

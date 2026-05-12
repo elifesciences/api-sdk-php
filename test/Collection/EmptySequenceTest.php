@@ -6,13 +6,13 @@ use BadMethodCallException;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class EmptySequenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $collection = new EmptySequence();
@@ -20,9 +20,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertInstanceOf(Sequence::class, $collection);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_cannot_be_traversed()
     {
         $collection = new EmptySequence();
@@ -32,9 +30,7 @@ final class EmptySequenceTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $collection = new EmptySequence();
@@ -44,9 +40,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame(0, $collection->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $collection = new EmptySequence();
@@ -54,9 +48,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame([], $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $collection = new EmptySequence();
@@ -65,9 +57,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame(null, $collection[1]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $collection = new EmptySequence();
@@ -77,9 +67,7 @@ final class EmptySequenceTest extends TestCase
         $collection[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $collection = new EmptySequence();
@@ -90,9 +78,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame([0, 1], $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $collection = new EmptySequence();
@@ -103,9 +89,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame([0, 1], $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_not_have_values_dropped()
     {
         $collection = new EmptySequence();
@@ -113,9 +97,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->drop(1, 3));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $collection = new EmptySequence();
@@ -126,9 +108,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame(['foo', 'bar'], $collection->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $collection = new EmptySequence();
@@ -139,10 +119,8 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame(['foo'], $collection->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null)
     {
         $collection = new EmptySequence();
@@ -150,7 +128,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->slice($offset, $length));
     }
 
-    public function sliceProvider() : array
+    public static function sliceProvider() : array
     {
         return [
             'offset 1, length 1' => [1, 1],
@@ -159,10 +137,7 @@ final class EmptySequenceTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_cannot_be_mapped()
     {
         $collection = new EmptySequence();
@@ -174,9 +149,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->map($map));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_cannot_be_filtered()
     {
         $collection = new EmptySequence();
@@ -184,9 +157,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->filter());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_with_a_callback()
     {
         $collection = new EmptySequence();
@@ -198,9 +169,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->filter($filter));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $collection = new EmptySequence();
@@ -212,9 +181,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertSame(100, $collection->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $collection = new EmptySequence();
@@ -222,9 +189,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->sort());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_flattened()
     {
         $collection = new EmptySequence();
@@ -232,9 +197,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted_with_a_callback()
     {
         $collection = new EmptySequence();
@@ -246,9 +209,7 @@ final class EmptySequenceTest extends TestCase
         $this->assertEquals($collection, $collection->sort($sort));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $collection = new EmptySequence();

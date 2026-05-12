@@ -10,7 +10,10 @@ use eLife\ApiSdk\Client\Events;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class EventsTest extends ApiTestCase
 {
@@ -19,25 +22,19 @@ final class EventsTest extends ApiTestCase
     /** @var Events */
     private $events;
 
-    /**
-     * @before
-     */
-    protected function setUpEvents()
+    #[Before]
+    protected function setUpEvents() : void
     {
         $this->events = (new ApiSdk($this->getHttpClient()))->events();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->events);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockEventListCall(1, 1, 200);
@@ -50,9 +47,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockEventListCall(1, 1, 10);
@@ -61,9 +56,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(10, $this->events->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockEventListCall(1, 1, 10);
@@ -79,9 +72,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockEventListCall(1, 1, 1);
@@ -98,9 +89,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(null, $this->events[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -108,9 +97,7 @@ final class EventsTest extends ApiTestCase
         $this->events[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_an_event()
     {
         $this->mockEventCall('event7');
@@ -124,9 +111,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame('Event event7 text', $event->getContent()[0]->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 5, true, 'open');
@@ -137,9 +122,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 10);
@@ -151,9 +134,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(10, $this->events->show('open')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_open_and_closed()
     {
         $this->mockEventListCall(1, 1, 200);
@@ -169,9 +150,7 @@ final class EventsTest extends ApiTestCase
         $this->events->show('open')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -182,9 +161,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame([0, 1, 'event1', 'event2', 'event3', 'event4', 'event5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -195,9 +172,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(['event1', 'event2', 'event3', 'event4', 'event5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -208,9 +183,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(['event1', 'event2', 'event4', 'event5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -221,9 +194,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(['event1', 'event2', 2, 'event3', 'event4', 'event5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -234,10 +205,8 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(['event1', 'event2', 2, 'event4', 'event5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -250,10 +219,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockEventListCall(1, 1, 3);
@@ -266,9 +232,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(['event1', 'event2', 'event3'], $this->events->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -283,9 +247,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -298,17 +260,13 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(115, $this->events->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->events, $this->events->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockEventListCall(1, 1, 5);
@@ -323,9 +281,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockEventListCall(1, 1, 5, false);
@@ -336,9 +292,7 @@ final class EventsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockEventListCall(1, 1, 10);
@@ -348,9 +302,7 @@ final class EventsTest extends ApiTestCase
         $this->assertSame(10, $this->events->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockEventListCall(1, 1, 200);

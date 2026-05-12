@@ -7,6 +7,8 @@ use Csa\GuzzleHttp\Middleware\Cache\CacheMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+use PHPUnit\Framework\Attributes\Before as Before;
+
 final class InMemoryStorageAdapter implements StorageAdapterInterface
 {
     private $array = [];

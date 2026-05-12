@@ -5,15 +5,20 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\MediaContact;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class MediaContactNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : MediaContact
+    public function denormalize($data, $type, $format = null, array $context = []) : MediaContact
     {
         $data['affiliations'] = array_map(function (array $affiliation) use ($format, $context) {
             return $this->denormalizer->denormalize($affiliation, Place::class, $format, $context);
@@ -27,37 +32,45 @@ final class MediaContactNormalizer implements NormalizerInterface, DenormalizerI
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return MediaContact::class === $type;
     }
 
     /**
-     * @param MediaContact $object
+     * @param MediaContact $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = $this->normalizer->normalize($object->getDetails());
+        $arr = $this->normalizer->normalize($data->getDetails());
 
-        if (count($object->getAffiliations())) {
-            $data['affiliations'] = array_map(function (Place $place) use ($format, $context) {
+        if (count($data->getAffiliations())) {
+            $arr['affiliations'] = array_map(function (Place $place) use ($format, $context) {
                 return $this->normalizer->normalize($place, $format, $context);
-            }, $object->getAffiliations());
+            }, $data->getAffiliations());
         }
 
-        if (count($object->getEmailAddresses())) {
-            $data['emailAddresses'] = $object->getEmailAddresses();
+        if (count($data->getEmailAddresses())) {
+            $arr['emailAddresses'] = $data->getEmailAddresses();
         }
 
-        if (count($object->getPhoneNumbers())) {
-            $data['phoneNumbers'] = $object->getPhoneNumbers();
+        if (count($data->getPhoneNumbers())) {
+            $arr['phoneNumbers'] = $data->getPhoneNumbers();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof MediaContact;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            MediaContact::class => true,
+        ];
     }
 }

@@ -9,14 +9,14 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Interviewee;
 use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\PersonDetails;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function GuzzleHttp\Promise\rejection_for;
 use PHPUnit\Framework\TestCase;
 
 final class IntervieweeTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_person()
     {
         $person = new PersonDetails('preferred name', 'index name');
@@ -26,10 +26,8 @@ final class IntervieweeTest extends TestCase
         $this->assertEquals($person, $interviewee->getPerson());
     }
 
-    /**
-     * @test
-     * @dataProvider cvLinesProvider
-     */
+    #[Test]
+    #[DataProvider('cvLinesProvider')]
     public function it_may_have_cv_lines(Sequence $cvLines, array $expected)
     {
         $person = new PersonDetails('preferred name', 'index name');
@@ -38,7 +36,7 @@ final class IntervieweeTest extends TestCase
         $this->assertEquals($expected, $interviewee->getCvLines()->toArray());
     }
 
-    public function cvLinesProvider() : array
+    public static function cvLinesProvider() : array
     {
         $cvLines = [new IntervieweeCvLine('date', 'text')];
 

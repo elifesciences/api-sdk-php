@@ -19,6 +19,7 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -31,9 +32,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->builder = Builder::for(ReviewedPreprint::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $reviewedPreprint = $this->builder->__invoke();
@@ -41,9 +40,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertInstanceOf(Model::class, $reviewedPreprint);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reviewedPreprint = $this->builder
@@ -54,9 +51,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertSame('14107', $reviewedPreprint->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_stage()
     {
         $reviewedPreprint = $this->builder
@@ -66,9 +61,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertSame(ReviewedPreprint::STAGE_PREVIEW, $reviewedPreprint->getStage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_doi()
     {
         $with = $this->builder
@@ -83,9 +76,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_an_author_line()
     {
         $with = $this->builder
@@ -99,9 +90,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getAuthorLine());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_title_prefix()
     {
         $with = $this->builder
@@ -115,9 +104,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getTitlePrefix());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reviewedPreprint = $this->builder
@@ -127,9 +114,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertSame('title', $reviewedPreprint->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_published_date()
     {
         $with = $this->builder
@@ -144,9 +129,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_status_date()
     {
         $with = $this->builder
@@ -160,9 +143,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getStatusDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_reviewed_date()
     {
         $with = $this->builder
@@ -177,9 +158,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getReviewedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_version_date()
     {
         $with = $this->builder
@@ -193,9 +172,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getVersionDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_status()
     {
         $reviewedPreprint = $this->builder
@@ -205,9 +182,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertSame('status', $reviewedPreprint->getStatus());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_volume()
     {
         $with = $this->builder
@@ -221,9 +196,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getVolume());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_version()
     {
         $with = $this->builder
@@ -237,9 +210,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getVersion());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_an_elocation_id()
     {
         $with = $this->builder
@@ -253,9 +224,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getElocationId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_pdf()
     {
         $with = $this->builder
@@ -270,9 +239,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getPdf());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_subjects()
     {
         $with = $this->builder
@@ -287,9 +254,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertEmpty($withOut->getSubjects());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_curation_labels()
     {
         $with = $this->builder
@@ -304,9 +269,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertEmpty($withOut->getCurationLabels());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_thumbnail()
     {
         $with = $this->builder
@@ -321,9 +284,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getThumbnail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_index_content()
     {
         $with = $this->builder
@@ -337,9 +298,7 @@ final class ReviewedPreprintTest extends TestCase
         $this->assertNull($withOut->getIndexContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_elife_assessment()
     {
         $elifeAssessment = Builder::dummy(ElifeAssessment::class);

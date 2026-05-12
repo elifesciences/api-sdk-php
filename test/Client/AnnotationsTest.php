@@ -9,35 +9,32 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Annotations;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Annotation;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class AnnotationsTest extends ApiTestCase
 {
     use SlicingTestCase;
 
     /** @var Annotations */
-    private $annotations;
+    private Annotations $annotations;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpAnnotationss()
     {
         $this->annotations = (new ApiSdk($this->getHttpClient()))->annotations();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $list = $this->annotations->list('username');
         $this->assertInstanceOf(Sequence::class, $list);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_access_level()
     {
         $list = $this->annotations->list('username', 'restricted');
@@ -47,9 +44,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertFalse($list->isEmpty());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $list = $this->annotations->list('username');
@@ -64,9 +59,7 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $list = $this->annotations->list('username');
@@ -77,9 +70,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(10, $list->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $list = $this->annotations->list('username');
@@ -97,9 +88,7 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $list = $this->annotations->list('username');
@@ -118,9 +107,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(null, $list[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $list = $this->annotations->list('username');
@@ -130,9 +117,7 @@ final class AnnotationsTest extends ApiTestCase
         $list[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $list = $this->annotations->list('username');
@@ -145,9 +130,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame([0, 1, 'annotation-1', 'annotation-2', 'annotation-3', 'annotation-4', 'annotation-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $list = $this->annotations->list('username');
@@ -160,9 +143,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(['annotation-1', 'annotation-2', 'annotation-3', 'annotation-4', 'annotation-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $list = $this->annotations->list('username');
@@ -175,9 +156,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(['annotation-1', 'annotation-2', 'annotation-4', 'annotation-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $list = $this->annotations->list('username');
@@ -190,9 +169,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(['annotation-1', 'annotation-2', 2, 'annotation-3', 'annotation-4', 'annotation-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $list = $this->annotations->list('username');
@@ -205,10 +182,8 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(['annotation-1', 'annotation-2', 2, 'annotation-4', 'annotation-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         $list = $this->annotations->list('username');
@@ -223,10 +198,8 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+
+    #[Test]
     public function it_can_be_mapped()
     {
         $list = $this->annotations->list('username');
@@ -241,9 +214,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(['annotation-1', 'annotation-2', 'annotation-3'], $list->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $list = $this->annotations->list('username');
@@ -260,9 +231,7 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $list = $this->annotations->list('username');
@@ -277,9 +246,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(115, $list->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $list = $this->annotations->list('username');
@@ -287,9 +254,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame($list, $list->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $list = $this->annotations->list('username');
@@ -306,9 +271,7 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $list = $this->annotations->list('username');
@@ -321,9 +284,7 @@ final class AnnotationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $list = $this->annotations->list('username');
@@ -335,9 +296,7 @@ final class AnnotationsTest extends ApiTestCase
         $this->assertSame(10, $list->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $list = $this->annotations->list('username');

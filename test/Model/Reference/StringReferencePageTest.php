@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Reference\StringReferencePage;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class StringReferencePageTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_string()
     {
         $page = new StringReferencePage('foo');

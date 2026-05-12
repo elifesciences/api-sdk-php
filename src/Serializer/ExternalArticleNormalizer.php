@@ -6,13 +6,17 @@ use eLife\ApiSdk\Model\ExternalArticle;
 use eLife\ApiSdk\Model\Model;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class ExternalArticleNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use NormalizerAwareTrait;
     use DenormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : ExternalArticle
+    public function denormalize($data, $type, $format = null, array $context = []) : ExternalArticle
     {
         return new ExternalArticle(
             $data['articleTitle'],
@@ -22,34 +26,42 @@ final class ExternalArticleNormalizer implements NormalizerInterface, Denormaliz
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             ExternalArticle::class === $type ||
             (is_a($type, Model::class, true) && 'external-article' === ($data['type'] ?? 'unknown'));
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ExternalArticle;
     }
 
     /**
-     * @param ExternalArticle $object
+     * @param ExternalArticle $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'articleTitle' => $object->getTitle(),
-            'journal' => $object->getJournal(),
-            'authorLine' => $object->getAuthorLine(),
-            'uri' => $object->getUri(),
+        $arr = [
+            'articleTitle' => $data->getTitle(),
+            'journal' => $data->getJournal(),
+            'authorLine' => $data->getAuthorLine(),
+            'uri' => $data->getUri(),
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'external-article';
+            $arr['type'] = 'external-article';
         }
 
-        return $data;
+        return $arr;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ExternalArticle::class => false,
+            Model::class => false,
+        ];
     }
 }

@@ -6,6 +6,8 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\ArticleSection;
 use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Block\Paragraph;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -13,17 +15,13 @@ final class ElifeAssessmentTest extends TestCase
 {
     private $builder;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function set_up()
     {
         $this->builder = Builder::for(ElifeAssessment::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $title = 'eLife Assessment';
@@ -34,9 +32,7 @@ final class ElifeAssessmentTest extends TestCase
         $this->assertSame($title, $assessment->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_section()
     {
         $articleSection = new ArticleSection(new ArraySequence([new Paragraph('eLife assessment')]));
@@ -47,9 +43,7 @@ final class ElifeAssessmentTest extends TestCase
         $this->assertSame($articleSection, $assessment->getArticleSection());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_significance_terms()
     {
         $with = $this->builder
@@ -63,9 +57,7 @@ final class ElifeAssessmentTest extends TestCase
         $this->assertNull($withOut->getSignificance());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_strength_terms()
     {
         $with = $this->builder

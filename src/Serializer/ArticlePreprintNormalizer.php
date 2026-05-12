@@ -8,13 +8,17 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ArticlePreprint;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class ArticlePreprintNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : ArticlePreprint
+    public function denormalize($data, $type, $format = null, array $context = []) : ArticlePreprint
     {
         return new ArticlePreprint(
             $data['description'],
@@ -23,7 +27,7 @@ final class ArticlePreprintNormalizer implements NormalizerInterface, Denormaliz
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return ArticlePreprint::class === $type
             ||
@@ -31,22 +35,28 @@ final class ArticlePreprintNormalizer implements NormalizerInterface, Denormaliz
     }
 
     /**
-     * @param ArticlePreprint $object
+     * @param ArticlePreprint $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        return [
             'status' => 'preprint',
-            'description' => $object->getDescription(),
-            'uri' => $object->getUri(),
-            'date' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
+            'description' => $data->getDescription(),
+            'uri' => $data->getUri(),
+            'date' => $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
         ];
-
-        return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ArticlePreprint;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ArticlePreprint::class => false,
+            Model::class => false,
+        ];
     }
 }

@@ -31,13 +31,17 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 abstract class ArticleVersionNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(ArticlesClient $articlesClient)
     {
@@ -97,7 +101,7 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         return null;
     }
 
-    final public function denormalize($data, $class, $format = null, array $context = []) : ArticleVersion
+    final public function denormalize($data, $type, $format = null, array $context = []) : ArticleVersion
     {
         if (!empty($context['snippet'])) {
             $complete = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -264,64 +268,64 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         $data['versionDate'] = !empty($data['versionDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['versionDate']) : null;
         $data['statusDate'] = !empty($data['statusDate']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['statusDate']) : null;
 
-        return $this->denormalizeArticle($data, $complete, $class, $format, $context);
+        return $this->denormalizeArticle($data, $complete, $type, $format, $context);
     }
 
     /**
-     * @param ArticleVersion $object
+     * @param ArticleVersion $data
      */
-    final public function normalize($object, $format = null, array $context = []) : array
+    final public function normalize($data, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
-        $data = [
-            'id' => $object->getId(),
-            'stage' => $object->getStage(),
-            'version' => $object->getVersion(),
-            'type' => $object->getType(),
-            'doi' => $object->getDoi(),
-            'title' => $object->getTitle(),
-            'volume' => $object->getVolume(),
-            'elocationId' => $object->getElocationId(),
+        $arr = [
+            'id' => $data->getId(),
+            'stage' => $data->getStage(),
+            'version' => $data->getVersion(),
+            'type' => $data->getType(),
+            'doi' => $data->getDoi(),
+            'title' => $data->getTitle(),
+            'volume' => $data->getVolume(),
+            'elocationId' => $data->getElocationId(),
         ];
 
-        if ($object->getPublishedDate()) {
-            $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getPublishedDate()) {
+            $arr['published'] = $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         }
-        if ($object->getVersionDate()) {
-            $data['versionDate'] = $object->getVersionDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getVersionDate()) {
+            $arr['versionDate'] = $data->getVersionDate()->format(ApiSdk::DATE_FORMAT);
         }
-        if ($object->getStatusDate()) {
-            $data['statusDate'] = $object->getStatusDate()->format(ApiSdk::DATE_FORMAT);
-        }
-
-        if ($object->getTitlePrefix()) {
-            $data['titlePrefix'] = $object->getTitlePrefix();
+        if ($data->getStatusDate()) {
+            $arr['statusDate'] = $data->getStatusDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getAuthorLine()) {
-            $data['authorLine'] = $object->getAuthorLine();
+        if ($data->getTitlePrefix()) {
+            $arr['titlePrefix'] = $data->getTitlePrefix();
         }
 
-        if ($object->getPdf()) {
-            $data['pdf'] = $object->getPdf();
+        if ($data->getAuthorLine()) {
+            $arr['authorLine'] = $data->getAuthorLine();
         }
 
-        if (!$object->getSubjects()->isEmpty()) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
+        if ($data->getPdf()) {
+            $arr['pdf'] = $data->getPdf();
+        }
+
+        if (!$data->getSubjects()->isEmpty()) {
+            $arr['subjects'] = $data->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 
                 return $this->normalizer->normalize($subject, $format, $context);
             })->toArray();
         }
 
-        if (!empty($object->getResearchOrganisms())) {
-            $data['researchOrganisms'] = $object->getResearchOrganisms();
+        if (!empty($data->getResearchOrganisms())) {
+            $arr['researchOrganisms'] = $data->getResearchOrganisms();
         }
 
-        if ($object->getAbstract()) {
-            $data['abstract'] = [
-                'content' => $object->getAbstract()->getContent()->map(function (Block $block) use (
+        if ($data->getAbstract()) {
+            $arr['abstract'] = [
+                'content' => $data->getAbstract()->getContent()->map(function (Block $block) use (
                     $format,
                     $context
                 ) {
@@ -329,59 +333,59 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                 })->toArray(),
             ];
 
-            if ($object->getAbstract()->getDoi()) {
-                $data['abstract']['doi'] = $object->getAbstract()->getDoi();
+            if ($data->getAbstract()->getDoi()) {
+                $arr['abstract']['doi'] = $data->getAbstract()->getDoi();
             }
         }
 
-        if ($object->getThumbnail()) {
-            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        if ($data->getThumbnail()) {
+            $arr['image']['thumbnail'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
         }
 
-        if ($object->getSocialImage()) {
-            $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+        if ($data->getSocialImage()) {
+            $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getXml()) {
-                $data['xml'] = $object->getXml();
+            if ($data->getXml()) {
+                $arr['xml'] = $data->getXml();
             }
 
-            $data['copyright'] = [
-                'license' => $object->getCopyright()->getLicense(),
-                'statement' => $object->getCopyright()->getStatement(),
+            $arr['copyright'] = [
+                'license' => $data->getCopyright()->getLicense(),
+                'statement' => $data->getCopyright()->getStatement(),
             ];
 
-            if ($object->getCopyright()->getHolder()) {
-                $data['copyright']['holder'] = $object->getCopyright()->getHolder();
+            if ($data->getCopyright()->getHolder()) {
+                $arr['copyright']['holder'] = $data->getCopyright()->getHolder();
             }
 
-            if ($object->getAuthors()->notEmpty()) {
-                $data['authors'] = $object->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
+            if ($data->getAuthors()->notEmpty()) {
+                $arr['authors'] = $data->getAuthors()->map(function (AuthorEntry $author) use ($format, $context) {
                     return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
                 })->toArray();
             }
 
-            if ($object->getReviewers()->notEmpty()) {
-                $data['reviewers'] = $object->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {
+            if ($data->getReviewers()->notEmpty()) {
+                $arr['reviewers'] = $data->getReviewers()->map(function (Reviewer $reviewer) use ($format, $context) {
                     return $this->normalizer->normalize($reviewer, $format, $context);
                 })->toArray();
             }
 
-            if ($object->getIssue()) {
-                $data['issue'] = $object->getIssue();
+            if ($data->getIssue()) {
+                $arr['issue'] = $data->getIssue();
             }
 
-            if (!$object->getEthics()->isEmpty()) {
-                $data['ethics'] = $object->getEthics()
+            if (!$data->getEthics()->isEmpty()) {
+                $arr['ethics'] = $data->getEthics()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
             }
 
-            if ($object->getFunding()) {
-                if ($object->getFunding()->getAwards()->notEmpty()) {
-                    $data['funding']['awards'] = $object->getFunding()->getAwards()
+            if ($data->getFunding()) {
+                if ($data->getFunding()->getAwards()->notEmpty()) {
+                    $arr['funding']['awards'] = $data->getFunding()->getAwards()
                         ->map(function (FundingAward $award) use ($format, $context) {
                             $source = $this->normalizer->normalize($award->getSource()->getPlace(), $format, $context);
                             if ($award->getSource()->getFunderId()) {
@@ -415,41 +419,45 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
                             return $data;
                         })->toArray();
                 }
-                $data['funding']['statement'] = $object->getFunding()->getStatement();
+                $arr['funding']['statement'] = $data->getFunding()->getStatement();
             }
 
-            if ($object->getDataAvailability()->notEmpty()) {
-                $data['dataSets']['availability'] = $object->getDataAvailability()
+            if ($data->getDataAvailability()->notEmpty()) {
+                $arr['dataSets']['availability'] = $data->getDataAvailability()
                     ->map(function (Block $block) use ($format, $context) {
                         return $this->normalizer->normalize($block, $format, $context);
                     })->toArray();
             }
 
-            if ($object->getGeneratedDataSets()->notEmpty()) {
-                $data['dataSets']['generated'] = $object->getGeneratedDataSets()
+            if ($data->getGeneratedDataSets()->notEmpty()) {
+                $arr['dataSets']['generated'] = $data->getGeneratedDataSets()
                     ->map(function (DataSet $dataSet) use ($format, $context) {
                         return $this->normalizer->normalize($dataSet, $format, $context);
                     })->toArray();
             }
 
-            if ($object->getUsedDataSets()->notEmpty()) {
-                $data['dataSets']['used'] = $object->getUsedDataSets()
+            if ($data->getUsedDataSets()->notEmpty()) {
+                $arr['dataSets']['used'] = $data->getUsedDataSets()
                     ->map(function (DataSet $dataSet) use ($format, $context) {
                         return $this->normalizer->normalize($dataSet, $format, $context);
                     })->toArray();
             }
 
-            if ($object->getAdditionalFiles()->notEmpty()) {
-                $data['additionalFiles'] = $object->getAdditionalFiles()
+            if ($data->getAdditionalFiles()->notEmpty()) {
+                $arr['additionalFiles'] = $data->getAdditionalFiles()
                     ->map(function (AssetFile $file) use ($format, $context) {
                         return $this->normalizer->normalize($file, $format, $context);
                     })->toArray();
             }
         }
 
-        return $this->normalizeArticle($object, $data, $format, $context);
+        return $this->normalizeArticle($data, $arr, $format, $context);
     }
 
+    /**
+     * @param $type
+     * @return bool
+     */
     final protected function isArticleType($type)
     {
         return in_array($type, [
@@ -471,6 +479,14 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
         ], true);
     }
 
+    /**
+     * @param $data
+     * @param PromiseInterface|null $article
+     * @param string $class
+     * @param string|null $format
+     * @param array $context
+     * @return ArticleVersion
+     */
     abstract protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,

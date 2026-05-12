@@ -4,14 +4,13 @@ namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Article;
 use eLife\ApiSdk\Model\ExternalArticle;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ExternalArticleTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_article()
     {
         $article = Builder::for(ExternalArticle::class)
@@ -20,9 +19,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertInstanceOf(Article::class, $article);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_title()
     {
         $article = Builder::for(ExternalArticle::class)
@@ -32,9 +29,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertSame('foo', $article->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_type()
     {
         /** @var ExternalArticle $article */
@@ -44,9 +39,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertSame('external-article', $article->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_article_id()
     {
         /** @var ExternalArticle $article */
@@ -57,9 +50,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertSame('external-64d4ba4ded4ab0e4c9e67550ff9520735adb2bfe', $article->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_author_line()
     {
         $article = Builder::for(ExternalArticle::class)
@@ -69,9 +60,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertSame('foo', $article->getAuthorLine());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_journal()
     {
         $article = Builder::for(ExternalArticle::class)
@@ -81,9 +70,7 @@ final class ExternalArticleTest extends TestCase
         $this->assertSame('foo', $article->getJournal());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $article = Builder::for(ExternalArticle::class)

@@ -6,10 +6,11 @@ use eLife\ApiSdk\Model\AuthorEntry;
 use eLife\ApiSdk\Model\Date;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\WebReference;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -18,7 +19,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : WebReference
+    public function denormalize($data, $type, $format = null, array $context = []) : WebReference
     {
         return new WebReference(
             $data['id'],
@@ -35,7 +36,7 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             WebReference::class === $type
@@ -44,42 +45,51 @@ final class WebReferenceNormalizer implements NormalizerInterface, DenormalizerI
     }
 
     /**
-     * @param WebReference $object
+     * @param WebReference $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'web',
-            'id' => $object->getId(),
-            'date' => $object->getDate()->toString(),
+            'id' => $data->getId(),
+            'date' => $data->getDate()->toString(),
             'authors' => array_map(function (AuthorEntry $author) use ($format, $context) {
                 return $this->normalizer->normalize($author, $format, ['type' => true] + $context);
-            }, $object->getAuthors()),
-            'title' => $object->getTitle(),
-            'uri' => $object->getUri(),
+            }, $data->getAuthors()),
+            'title' => $data->getTitle(),
+            'uri' => $data->getUri(),
         ];
 
-        if ($object->getDiscriminator()) {
-            $data['discriminator'] = $object->getDiscriminator();
+        if ($data->getDiscriminator()) {
+            $arr['discriminator'] = $data->getDiscriminator();
         }
 
-        if ($object->authorsEtAl()) {
-            $data['authorsEtAl'] = $object->authorsEtAl();
+        if ($data->authorsEtAl()) {
+            $arr['authorsEtAl'] = $data->authorsEtAl();
         }
 
-        if ($object->getWebsite()) {
-            $data['website'] = $object->getWebsite();
+        if ($data->getWebsite()) {
+            $arr['website'] = $data->getWebsite();
         }
 
-        if ($object->getAccessed()) {
-            $data['accessed'] = $object->getAccessed()->toString();
+        if ($data->getAccessed()) {
+            $arr['accessed'] = $data->getAccessed()->toString();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof WebReference;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            WebReference::class => false,
+            Reference::class => false,
+        ];
     }
 }

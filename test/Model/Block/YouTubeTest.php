@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Block\YouTube;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class YouTubeTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $video = new YouTube('foo', null, new EmptySequence(), 300, 200);
@@ -22,9 +21,7 @@ final class YouTubeTest extends TestCase
         $this->assertInstanceOf(Block::class, $video);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $video = new YouTube('foo', null, new EmptySequence(), 300, 200);
@@ -33,9 +30,7 @@ final class YouTubeTest extends TestCase
         $this->assertSame('foo', $video->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_title()
     {
         $with = new YouTube('foo', 'title', new EmptySequence(), 300, 200);
@@ -45,9 +40,7 @@ final class YouTubeTest extends TestCase
         $this->assertNull($withOut->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_caption()
     {
         $caption = new ArraySequence([new Paragraph('caption')]);
@@ -58,9 +51,7 @@ final class YouTubeTest extends TestCase
         $this->assertEmpty($withOut->getCaption());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_width()
     {
         $video = new YouTube('foo', null, new EmptySequence(), 300, 200);
@@ -68,9 +59,7 @@ final class YouTubeTest extends TestCase
         $this->assertSame(300, $video->getWidth());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_height()
     {
         $video = new YouTube('foo', null, new EmptySequence(), 300, 200);

@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model\Reference;
 
 use eLife\ApiSdk\Model\Reference\ReferencePageRange;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ReferencePageRangeTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_first_page()
     {
         $page = new ReferencePageRange('foo', 'bar', 'foo, bar');
@@ -17,9 +16,7 @@ final class ReferencePageRangeTest extends TestCase
         $this->assertSame('foo', $page->getFirst());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_last_page()
     {
         $page = new ReferencePageRange('foo', 'bar', 'foo, bar');
@@ -27,9 +24,7 @@ final class ReferencePageRangeTest extends TestCase
         $this->assertSame('bar', $page->getLast());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_range()
     {
         $page = new ReferencePageRange('foo', 'bar', 'foo, bar');
@@ -37,9 +32,7 @@ final class ReferencePageRangeTest extends TestCase
         $this->assertSame('foo, bar', $page->getRange());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_string()
     {
         $single = new ReferencePageRange('foo', 'foo', 'foo');

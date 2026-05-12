@@ -9,12 +9,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class CodeNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : Code
+    public function denormalize($data, $type, $format = null, array $context = []) : Code
     {
         return new Code($data['code'], $data['language'] ?? null);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Code::class === $type
@@ -23,24 +23,32 @@ final class CodeNormalizer implements NormalizerInterface, DenormalizerInterface
     }
 
     /**
-     * @param Code $object
+     * @param Code $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'code',
-            'code' => $object->getCode(),
+            'code' => $data->getCode(),
         ];
 
-        if ($object->getLanguage()) {
-            $data['language'] = $object->getLanguage();
+        if ($data->getLanguage()) {
+            $arr['language'] = $data->getLanguage();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Code;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Code::class => false,
+            Block::class => false,
+        ];
     }
 }

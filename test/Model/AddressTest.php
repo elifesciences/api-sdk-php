@@ -5,14 +5,13 @@ namespace test\eLife\ApiSdk\Model;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\Address;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class AddressTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_formatted_address()
     {
         $address = Builder::for(Address::class)
@@ -22,9 +21,7 @@ final class AddressTest extends TestCase
         $this->assertSame($sequence, $address->getFormatted());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_street_address()
     {
         $with = Builder::for(Address::class)
@@ -38,9 +35,7 @@ final class AddressTest extends TestCase
         $this->assertEmpty($withOut->getStreetAddress());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_locality()
     {
         $with = Builder::for(Address::class)
@@ -54,9 +49,7 @@ final class AddressTest extends TestCase
         $this->assertEmpty($withOut->getLocality());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_area()
     {
         $with = Builder::for(Address::class)
@@ -70,9 +63,7 @@ final class AddressTest extends TestCase
         $this->assertEmpty($withOut->getArea());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_country()
     {
         $with = Builder::for(Address::class)
@@ -86,9 +77,7 @@ final class AddressTest extends TestCase
         $this->assertNull($withOut->getCountry());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_postal_code()
     {
         $with = Builder::for(Address::class)
@@ -102,9 +91,7 @@ final class AddressTest extends TestCase
         $this->assertNull($withOut->getPostalCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_a_string()
     {
         $address = Builder::for(Address::class)

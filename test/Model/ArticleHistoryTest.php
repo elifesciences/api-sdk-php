@@ -8,14 +8,13 @@ use eLife\ApiSdk\Model\ArticleHistory;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticlePreprint;
 use eLife\ApiSdk\Model\Date;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ArticleHistoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_received_date()
     {
         $with = new ArticleHistory($date = Date::fromString('2016-01-01'), null, null, new ArraySequence([Builder::dummy(ArticlePoA::class)]));
@@ -25,9 +24,7 @@ final class ArticleHistoryTest extends TestCase
         $this->assertNull($withOut->getReceived());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_accepted_date()
     {
         $with = new ArticleHistory(null, $date = Date::fromString('2016-01-01'), null, new ArraySequence([Builder::dummy(ArticlePoA::class)]));
@@ -37,9 +34,7 @@ final class ArticleHistoryTest extends TestCase
         $this->assertNull($withOut->getAccepted());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_sent_for_review_date()
     {
         $with = new ArticleHistory(null, null, $date = Date::fromString('2016-01-01'), new ArraySequence([Builder::dummy(ArticlePoA::class)]));
@@ -49,9 +44,7 @@ final class ArticleHistoryTest extends TestCase
         $this->assertNull($withOut->getSentForReview());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_versions()
     {
         $history = new ArticleHistory(null, null, null, $versions = new ArraySequence([Builder::dummy(ArticlePoA::class), Builder::dummy(ArticlePreprint::class)]));

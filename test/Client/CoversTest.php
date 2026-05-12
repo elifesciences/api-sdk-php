@@ -10,7 +10,10 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\Covers;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Cover;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class CoversTest extends ApiTestCase
 {
@@ -19,10 +22,8 @@ final class CoversTest extends ApiTestCase
     /** @var Covers */
     private $covers;
 
-    /**
-     * @before
-     */
-    protected function setUpCovers()
+    #[Before]
+    protected function setUpCovers(): void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->covers = new Covers(
@@ -31,17 +32,13 @@ final class CoversTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->covers);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockCoverListCall(1, 1, 200);
@@ -54,9 +51,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockCoverListCall(1, 1, 10);
@@ -65,9 +60,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(10, $this->covers->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockCoverListCall(1, 1, 10);
@@ -83,9 +76,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockCoverListCall(1, 1, 1);
@@ -102,9 +93,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(null, $this->covers[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -112,9 +101,7 @@ final class CoversTest extends ApiTestCase
         $this->covers[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_use_published_dates()
     {
         $this->mockCoverListCall(1, 1, 10, true, 'date', 'published');
@@ -126,9 +113,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_start_date()
     {
         $this->mockCoverListCall(1, 1, 10, true, 'date', 'default', new DateTimeImmutable('2017-01-02'));
@@ -140,9 +125,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_end_date()
     {
         $this->mockCoverListCall(1, 1, 10, true, 'date', 'default', null, new DateTimeImmutable('2017-01-02'));
@@ -154,9 +137,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering()
     {
         $this->mockCoverListCall(1, 1, 10);
@@ -166,9 +147,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(4, $this->covers->startDate(new DateTimeImmutable('2017-01-02'))->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -179,9 +158,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame([0, 1, 'Cover 1 title', 'Cover 2 title', 'Cover 3 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -192,9 +169,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(['Cover 1 title', 'Cover 2 title', 'Cover 3 title', 'Cover 4 title', 'Cover 5 title', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -205,9 +180,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(['Cover 1 title', 'Cover 2 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -218,9 +191,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(['Cover 1 title', 'Cover 2 title', 2, 'Cover 3 title', 'Cover 4 title', 'Cover 5 title'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -231,10 +202,8 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(['Cover 1 title', 'Cover 2 title', 2, 'Cover 4 title', 'Cover 5 title'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -247,10 +216,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockCoverListCall(1, 1, 3);
@@ -264,9 +230,7 @@ final class CoversTest extends ApiTestCase
             $this->covers->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -283,9 +247,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -300,17 +262,13 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(115, $this->covers->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->covers, $this->covers->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted_by_page_views()
     {
         $this->mockCoverListCall(1, 1, 10, true, 'page-views');
@@ -321,9 +279,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockCoverListCall(1, 1, 5);
@@ -341,9 +297,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockCoverListCall(1, 1, 5, false);
@@ -354,9 +308,7 @@ final class CoversTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockCoverListCall(1, 1, 10);
@@ -366,9 +318,7 @@ final class CoversTest extends ApiTestCase
         $this->assertSame(10, $this->covers->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockCoverListCall(1, 1, 200);
@@ -384,9 +334,7 @@ final class CoversTest extends ApiTestCase
         $this->covers->reverse()->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_current_covers()
     {
         $this->mockCurrentCoverListCall(3);

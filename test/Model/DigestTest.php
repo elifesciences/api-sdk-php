@@ -22,6 +22,8 @@ use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function GuzzleHttp\Promise\rejection_for;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
@@ -35,9 +37,7 @@ final class DigestTest extends TestCase
         $this->builder = Builder::for(Digest::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $digest = $this->builder->__invoke();
@@ -45,9 +45,7 @@ final class DigestTest extends TestCase
         $this->assertInstanceOf(Model::class, $digest);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $digest = $this->builder
@@ -58,9 +56,7 @@ final class DigestTest extends TestCase
         $this->assertEquals(Identifier::digest('id'), $digest->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $digest = $this->builder
@@ -71,9 +67,7 @@ final class DigestTest extends TestCase
         $this->assertSame('id', $digest->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $digest = $this->builder
@@ -83,9 +77,7 @@ final class DigestTest extends TestCase
         $this->assertSame('title', $digest->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -100,9 +92,7 @@ final class DigestTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_stage()
     {
         $digest = $this->builder
@@ -113,9 +103,7 @@ final class DigestTest extends TestCase
         $this->assertSame('published', $digest->getStage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_published_date()
     {
         $with = $this->builder
@@ -130,9 +118,7 @@ final class DigestTest extends TestCase
         $this->assertNull($withOut->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_updated_date()
     {
         $with = $this->builder
@@ -147,9 +133,7 @@ final class DigestTest extends TestCase
         $this->assertNull($withOut->getUpdatedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_thumbnail()
     {
         $digest = $this->builder
@@ -160,10 +144,8 @@ final class DigestTest extends TestCase
         $this->assertEquals($image, $digest->getThumbnail());
     }
 
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
+    #[Test]
+    #[DataProvider('subjectsProvider')]
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $digest = $this->builder
@@ -174,7 +156,7 @@ final class DigestTest extends TestCase
         $this->assertEquals($expected, $digest->getSubjects()->toArray());
     }
 
-    public function subjectsProvider() : array
+    public static function subjectsProvider() : array
     {
         $subjects = [
             new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
@@ -197,9 +179,7 @@ final class DigestTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $digest = $this->builder

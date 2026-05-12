@@ -9,12 +9,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class OnBehalfOfAuthorNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : OnBehalfOfAuthor
+    public function denormalize($data, $type, $format = null, array $context = []) : OnBehalfOfAuthor
     {
         return new OnBehalfOfAuthor($data['onBehalfOf']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             OnBehalfOfAuthor::class === $type
@@ -23,18 +23,26 @@ final class OnBehalfOfAuthorNormalizer implements NormalizerInterface, Denormali
     }
 
     /**
-     * @param OnBehalfOfAuthor $object
+     * @param OnBehalfOfAuthor $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         return [
             'type' => 'on-behalf-of',
-            'onBehalfOf' => $object->toString(),
+            'onBehalfOf' => $data->toString(),
         ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof OnBehalfOfAuthor;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            OnBehalfOfAuthor::class => false,
+            AuthorEntry::class => false,
+        ];
     }
 }

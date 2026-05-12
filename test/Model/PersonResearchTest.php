@@ -8,15 +8,15 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function GuzzleHttp\Promise\rejection_for;
 use PHPUnit\Framework\TestCase;
 
 final class PersonResearchTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
+    #[Test]
+    #[DataProvider('subjectsProvider')]
     public function it_may_have_expertises(Sequence $expertises = null, array $expected)
     {
         $research = new PersonResearch($expertises, [], []);
@@ -24,7 +24,7 @@ final class PersonResearchTest extends TestCase
         $this->assertEquals($expected, $research->getExpertises()->toArray());
     }
 
-    public function subjectsProvider() : array
+    public static function subjectsProvider() : array
     {
         $subjects = [
             new Subject('subject1', 'Subject 1', rejection_for('No impact statement'), new PromiseSequence(rejection_for('No aims and scope')),
@@ -45,9 +45,7 @@ final class PersonResearchTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_focuses()
     {
         $with = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), ['focus'],
@@ -58,9 +56,7 @@ final class PersonResearchTest extends TestCase
         $this->assertEmpty($withOut->getFocuses());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_organisms()
     {
         $with = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), [],

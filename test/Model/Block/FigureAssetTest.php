@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\Block\FigureAsset;
 use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\HasDoi;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FigureAssetTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new FigureAsset('10.7554/eLife.14107', 'label', new EmptySequence(), new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], []));
@@ -26,9 +25,7 @@ final class FigureAssetTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_label()
     {
         $figureAsset = new FigureAsset(null, 'label', new EmptySequence(), new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], []));
@@ -36,9 +33,7 @@ final class FigureAssetTest extends TestCase
         $this->assertSame('label', $figureAsset->getLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_source_data()
     {
         $sourceData = new ArraySequence([new AssetFile(null, 'id', 'label', null, new EmptySequence(), new EmptySequence(), new File('text/csv', 'http://www.example.com/data.csv', 'data.csv'))]);

@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\Block\Table;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Model\HasAttribution;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class TableTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
@@ -23,9 +22,7 @@ final class TableTest extends TestCase
         $this->assertInstanceOf(BlockWithCaption::class, $table);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new Table('id', null, new EmptySequence(), new EmptySequence(), [], [], []);
@@ -35,9 +32,7 @@ final class TableTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_title()
     {
         $with = new Table(null, 'title', new EmptySequence(), new EmptySequence(), [], [], []);
@@ -47,9 +42,7 @@ final class TableTest extends TestCase
         $this->assertNull($withOut->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_caption()
     {
         $with = new Table(null, null, $caption = new ArraySequence([new Paragraph('foo')]), new EmptySequence(), [], [], []);
@@ -59,9 +52,7 @@ final class TableTest extends TestCase
         $this->assertEmpty($withOut->getCaption());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_attribution()
     {
         $attribution = new ArraySequence(['attribution']);
@@ -73,9 +64,7 @@ final class TableTest extends TestCase
         $this->assertEmpty($withOut->getAttribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_tables()
     {
         $table = new Table(null, null, new EmptySequence(), new EmptySequence(), ['<table></table>'], [], []);
@@ -83,9 +72,7 @@ final class TableTest extends TestCase
         $this->assertSame(['<table></table>'], $table->getTables());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_footnotes()
     {
         $with = new Table(null, null, new EmptySequence(), new EmptySequence(), [], $footnotes = [new Footnote(null, null, new ArraySequence([new Paragraph('foo')]))], []);

@@ -5,10 +5,10 @@ namespace eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Box;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,7 +17,7 @@ final class BoxNormalizer implements NormalizerInterface, DenormalizerInterface,
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Box
+    public function denormalize($data, $type, $format = null, array $context = []) : Box
     {
         $data['content'] = new ArraySequence(array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
@@ -26,7 +26,7 @@ final class BoxNormalizer implements NormalizerInterface, DenormalizerInterface,
         return new Box($data['doi'] ?? null, $data['id'] ?? null, $data['label'] ?? null, $data['title'], $data['content']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Box::class === $type
@@ -35,35 +35,43 @@ final class BoxNormalizer implements NormalizerInterface, DenormalizerInterface,
     }
 
     /**
-     * @param Box $object
+     * @param Box $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'type' => 'box',
-            'title' => $object->getTitle(),
-            'content' => $object->getContent()->map(function (Block $block) {
+            'title' => $data->getTitle(),
+            'content' => $data->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray(),
         ];
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
+        if ($data->getDoi()) {
+            $arr['doi'] = $data->getDoi();
         }
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        if ($object->getLabel()) {
-            $data['label'] = $object->getLabel();
+        if ($data->getLabel()) {
+            $arr['label'] = $data->getLabel();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Box;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Box::class => false,
+            Block::class => false,
+        ];
     }
 }

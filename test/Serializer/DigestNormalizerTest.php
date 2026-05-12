@@ -2,6 +2,8 @@
 
 namespace test\eLife\ApiSdk\Serializer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function call_user_func;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -15,12 +17,12 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\DigestNormalizer;
-use function get_class;
-use function GuzzleHttp\Promise\promise_for;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class DigestNormalizerTest extends ApiTestCase
 {
@@ -29,10 +31,8 @@ final class DigestNormalizerTest extends ApiTestCase
     /** @var DigestNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new DigestNormalizer(new DigestsClient($this->getHttpClient()));
@@ -40,73 +40,61 @@ final class DigestNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_digests($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $digest = Builder::dummy(Digest::class);
 
         return [
             'digest' => [$digest, null, true],
             'digest with format' => [$digest, 'foo', true],
-            'non-digest' => [$this, null, false],
+            'non-digest' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_digests(Digest $digest, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_digests(Digest $digest, array $context, array $expected, callable $extra = null)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($digest, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_digests($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'digest' => [[], Digest::class, [], true],
             'digest by type' => [['type' => 'digest'], Model::class, [], true],
-            'non-digest' => [[], get_class($this), [], false],
+            'non-digest' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_digests(
         Digest $expected,
         array $context,
@@ -124,7 +112,7 @@ final class DigestNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('now', new DateTimeZone('Z'));
@@ -132,8 +120,8 @@ final class DigestNormalizerTest extends ApiTestCase
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
         $socialImage = Builder::for(Image::class)->sample('social');
         $content = new Paragraph('Digest 1 text');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            new EmptySequence(), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+            new EmptySequence(), Create::promiseFor($banner), Create::promiseFor($thumbnail));
         $article = Builder::for(ArticleVoR::class)->sample('homo-naledi');
 
         return [
@@ -472,7 +460,7 @@ final class DigestNormalizerTest extends ApiTestCase
         return Digest::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/digest/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/digest-list/v1/*.json#items';

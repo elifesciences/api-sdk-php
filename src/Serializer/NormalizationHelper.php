@@ -6,6 +6,7 @@ use eLife\ApiClient\Result;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\Sequence;
 use GuzzleHttp\Promise\PromiseInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,17 +18,17 @@ final class NormalizationHelper
     /**
      * @var NormalizerInterface
      */
-    private $normalizer;
+    private NormalizerInterface $normalizer;
 
     /**
      * @var DenormalizerInterface
      */
-    private $denormalizer;
+    private DenormalizerInterface $denormalizer;
 
     /**
      * @var string|null
      */
-    private $format;
+    private ?string $format;
 
     public function __construct(NormalizerInterface $normalizer, DenormalizerInterface $denormalizer, string $format = null)
     {
@@ -88,6 +89,9 @@ final class NormalizationHelper
         })->toArray();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function normalizeToSnippet($object, array $context = []) : array
     {
         $context['snippet'] = true;

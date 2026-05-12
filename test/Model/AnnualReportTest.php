@@ -7,13 +7,12 @@ use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\HasImpactStatement;
 use eLife\ApiSdk\Model\HasPdf;
 use eLife\ApiSdk\Model\Identifier;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class AnnualReportTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
@@ -22,9 +21,7 @@ final class AnnualReportTest extends TestCase
         $this->assertEquals(Identifier::annualReport(2012), $annualReport->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_year()
     {
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
@@ -32,9 +29,7 @@ final class AnnualReportTest extends TestCase
         $this->assertSame(2012, $annualReport->getYear());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_uri()
     {
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
@@ -42,9 +37,7 @@ final class AnnualReportTest extends TestCase
         $this->assertSame('http://www.example.com/2012', $annualReport->getUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_pdf()
     {
         $with = new AnnualReport(2012, 'http://www.example.com/2012', 'http://www.example.com/2012/assets/annual-report-2012.pdf', 'title', null);
@@ -55,9 +48,7 @@ final class AnnualReportTest extends TestCase
         $this->assertNull($withOut->getPdf());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $annualReport = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', null);
@@ -65,9 +56,7 @@ final class AnnualReportTest extends TestCase
         $this->assertSame('title', $annualReport->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = new AnnualReport(2012, 'http://www.example.com/2012', null, 'title', 'impact statement');

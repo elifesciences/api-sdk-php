@@ -18,13 +18,17 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(JobAdvertsClient $jobAdvertsClient)
     {
@@ -41,7 +45,7 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []) : JobAdvert
+    public function denormalize($data, $type, $format = null, array $context = []) : JobAdvert
     {
         if (!empty($context['snippet'])) {
             $jobAdvert = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -82,7 +86,7 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             JobAdvert::class === $type
@@ -91,46 +95,54 @@ final class JobAdvertNormalizer implements NormalizerInterface, DenormalizerInte
     }
 
     /**
-     * @param JobAdvert $object
+     * @param JobAdvert $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'id' => $object->getId(),
-            'title' => $object->getTitle(),
-            'published' => $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
-            'closingDate' => $object->getClosingDate()->format(ApiSdk::DATE_FORMAT),
+        $arr = [
+            'id' => $data->getId(),
+            'title' => $data->getTitle(),
+            'published' => $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT),
+            'closingDate' => $data->getClosingDate()->format(ApiSdk::DATE_FORMAT),
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'job-advert';
+            $arr['type'] = 'job-advert';
         }
 
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getContent()->notEmpty()) {
-                $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+            if ($data->getContent()->notEmpty()) {
+                $arr['content'] = $data->getContent()->map(function (Block $block) use ($format, $context) {
                     return $this->normalizer->normalize($block, $format, $context);
                 })->toArray();
             }
 
-            if ($object->getSocialImage()) {
-                $data['image']['social'] = $this->normalizer->normalize($object->getSocialImage(), $format, $context);
+            if ($data->getSocialImage()) {
+                $arr['image']['social'] = $this->normalizer->normalize($data->getSocialImage(), $format, $context);
             }
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof JobAdvert;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            JobAdvert::class => false,
+            Model::class => false,
+        ];
     }
 }

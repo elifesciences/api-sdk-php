@@ -16,12 +16,14 @@ use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class PersonNormalizerTest extends ApiTestCase
 {
@@ -30,10 +32,8 @@ final class PersonNormalizerTest extends ApiTestCase
     /** @var PersonNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new PersonNormalizer(new PeopleClient($this->getHttpClient()));
@@ -41,76 +41,64 @@ final class PersonNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_people($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
-        $person = new Person('id', new PersonDetails('preferred name', 'index name'), rejection_for('Given names should not be unwrapped'),
-            rejection_for('Surname should not be unwrapped'), 'senior-editor', 'title', null,
-            new PromiseSequence(rejection_for('Affiliations should not be unwrapped')), rejection_for('Research should not be unwrapped'),
-            new PromiseSequence(rejection_for('Profile should not be unwrapped')),
-            rejection_for('Competing interests should not be unwrapped'), new PromiseSequence(rejection_for('Email addresses should not be unwrapped')));
+        $person = new Person('id', new PersonDetails('preferred name', 'index name'), Create::rejectionFor('Given names should not be unwrapped'),
+            Create::rejectionFor('Surname should not be unwrapped'), 'senior-editor', 'title', null,
+            new PromiseSequence(Create::rejectionFor('Affiliations should not be unwrapped')), Create::rejectionFor('Research should not be unwrapped'),
+            new PromiseSequence(Create::rejectionFor('Profile should not be unwrapped')),
+            Create::rejectionFor('Competing interests should not be unwrapped'), new PromiseSequence(Create::rejectionFor('Email addresses should not be unwrapped')));
 
         return [
             'person' => [$person, null, true],
             'person with format' => [$person, 'foo', true],
-            'non-person' => [$this, null, false],
+            'non-person' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_people(Person $person, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_people(Person $person, array $context, array $expected, callable $extra = null)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($person, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_people($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'person' => [[], Person::class, [], true],
-            'non-person' => [[], get_class($this), [], false],
+            'non-person' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_people(
         Person $expected,
         array $context,
@@ -128,20 +116,20 @@ final class PersonNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $banner = Builder::for(Image::class)->sample('banner');
         $thumbnail = Builder::for(Image::class)->sample('thumbnail');
-        $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
-            new EmptySequence(), promise_for($banner), promise_for($thumbnail));
+        $subject = new Subject('subject1', 'Subject 1 name', Create::promiseFor('Subject subject1 impact statement'),
+            new EmptySequence(), Create::promiseFor($banner), Create::promiseFor($thumbnail));
 
         return [
             'complete' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    promise_for('Given names'), promise_for('Surname'), 'senior-editor', 'Senior Editor', $thumbnail,
-                    new ArraySequence([new Place(['affiliation'])]), promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
+                    Create::promiseFor('Given names'), Create::promiseFor('Surname'), 'senior-editor', 'Senior Editor', $thumbnail,
+                    new ArraySequence([new Place(['affiliation'])]), Create::promiseFor(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('Person 1 profile text')]),
-                    promise_for('Person 1 competing interests'), new ArraySequence([
+                    Create::promiseFor('Person 1 competing interests'), new ArraySequence([
                         new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
                         new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
                     ])),
@@ -204,9 +192,9 @@ final class PersonNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), promise_for(null),
-                    promise_for(null), 'senior-editor', 'Senior Editor', null, new EmptySequence(), promise_for(null),
-                    new EmptySequence(), promise_for(null), new EmptySequence()),
+                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), Create::promiseFor(null),
+                    Create::promiseFor(null), 'senior-editor', 'Senior Editor', null, new EmptySequence(), Create::promiseFor(null),
+                    new EmptySequence(), Create::promiseFor(null), new EmptySequence()),
                 [],
                 [
                     'name' => [
@@ -222,11 +210,11 @@ final class PersonNormalizerTest extends ApiTestCase
             ],
             'complete snippet' => [
                 new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index', '0000-0002-1825-0097'),
-                    promise_for('person1 given'), promise_for('person1 surname'), 'senior-editor', 'Senior Editor',
+                    Create::promiseFor('person1 given'), Create::promiseFor('person1 surname'), 'senior-editor', 'Senior Editor',
                     $thumbnail, new ArraySequence([new Place(['affiliation'])]),
-                    promise_for(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
+                    Create::promiseFor(new PersonResearch(new ArraySequence([$subject]), ['Focus'], ['Organism'])),
                     new ArraySequence([new Paragraph('person1 profile text')]),
-                    promise_for('person1 competing interests'), new ArraySequence([
+                    Create::promiseFor('person1 competing interests'), new ArraySequence([
                         new AccessControl('foo@example.com', AccessControl::ACCESS_PUBLIC),
                         new AccessControl('secret@example.com', AccessControl::ACCESS_RESTRICTED),
                     ])),
@@ -261,9 +249,9 @@ final class PersonNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), promise_for(null),
-                    promise_for(null), 'senior-editor',
-                    'Senior Editor', null, new EmptySequence(), promise_for(null), new EmptySequence(), promise_for(null),
+                new Person('person1', new PersonDetails('Person 1 preferred', 'Person 1 index'), Create::promiseFor(null),
+                    Create::promiseFor(null), 'senior-editor',
+                    'Senior Editor', null, new EmptySequence(), Create::promiseFor(null), new EmptySequence(), Create::promiseFor(null),
                     new EmptySequence()),
                 ['snippet' => true],
                 [
@@ -289,7 +277,7 @@ final class PersonNormalizerTest extends ApiTestCase
         return Person::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/person/v1/*.json';
         yield [__DIR__.'/../../vendor/elife/api/dist/samples/person-list/v1/*.json#items', ['snippet' => false]];

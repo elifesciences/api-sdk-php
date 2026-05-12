@@ -16,12 +16,22 @@ use eLife\ApiSdk\Model\ElifeAssessment;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
 final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 {
+    /**
+     * @param $data
+     * @param PromiseInterface|null $article
+     * @param string $class
+     * @param string|null $format
+     * @param array $context
+     * @return ArticleVersion
+     * @throws ExceptionInterface
+     */
     protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,
@@ -303,7 +313,14 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    /**
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             ArticleVoR::class === $type
@@ -313,8 +330,14 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
             is_a($type, Model::class, true) && $this->isArticleType($data['type'] ?? 'unknown') && 'vor' === ($data['status'] ?? 'unknown');
     }
 
+
     /**
-     * @param ArticleVoR $article
+     * @param ArticleVersion $article
+     * @param array $data
+     * @param string|null $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
     protected function normalizeArticle(
         ArticleVersion $article,
@@ -504,8 +527,17 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ArticleVoR;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ArticleVoR::class => false,
+            ArticleVersion::class => false,
+            Model::class => false,
+        ];
     }
 }

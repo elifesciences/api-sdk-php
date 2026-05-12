@@ -12,10 +12,13 @@ use eLife\ApiSdk\Model\Annotation;
 use eLife\ApiSdk\Model\AnnotationDocument;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Serializer\AnnotationNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use function GuzzleHttp\Promise\rejection_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class AnnotationNormalizerTest extends ApiTestCase
 {
@@ -24,10 +27,8 @@ final class AnnotationNormalizerTest extends ApiTestCase
     /** @var AnnotationNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new AnnotationNormalizer();
@@ -35,24 +36,20 @@ final class AnnotationNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
-
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_annotations($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
@@ -61,48 +58,40 @@ final class AnnotationNormalizerTest extends ApiTestCase
         return [
             'annotation' => [$annotation, null, true],
             'annotation with format' => [$annotation, 'foo', true],
-            'non-event' => [$this, null, false],
+            'non-event' => [new \stdClass(), null, false],
         ];
     }
-
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_annotations(Annotation $annotation, array $context, array $expected)
     {
         $this->assertEquals($expected, $this->normalizer->normalize($annotation, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_events($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'annotation' => [[], Annotation::class, [], true],
-            'non-annotation' => [[], get_class($this), [], false],
+            'non-annotation' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_annotations(
         Annotation $expected,
         array $context,
@@ -118,7 +107,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $created = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('-2 days', new DateTimeZone('Z'));
@@ -215,7 +204,7 @@ final class AnnotationNormalizerTest extends ApiTestCase
         return Annotation::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/annotation-list/v1/*.json#items';
     }

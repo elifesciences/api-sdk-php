@@ -5,10 +5,10 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\PublicReview;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,7 +17,7 @@ final class PublicReviewNormalizer implements NormalizerInterface, DenormalizerI
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : PublicReview
+    public function denormalize($data, $type, $format = null, array $context = []) : PublicReview
     {
         $data['content'] = new ArraySequence(array_map(function (array $block) {
             return $this->denormalizer->denormalize($block, Block::class);
@@ -26,36 +26,43 @@ final class PublicReviewNormalizer implements NormalizerInterface, DenormalizerI
         return new PublicReview($data['title'], $data['content'], $data['doi'] ?? null, $data['id'] ?? null);
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return PublicReview::class === $type;
     }
 
     /**
-     * @param PublicReview $object
+     * @param PublicReview $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'title' => $object->getTitle(),
-            'content' => $object->getContent()->map(function (Block $block) {
+        $arr = [
+            'title' => $data->getTitle(),
+            'content' => $data->getContent()->map(function (Block $block) {
                 return $this->normalizer->normalize($block);
             })->toArray(),
         ];
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
+        if ($data->getDoi()) {
+            $arr['doi'] = $data->getDoi();
         }
 
-        if ($object->getId()) {
-            $data['id'] = $object->getId();
+        if ($data->getId()) {
+            $arr['id'] = $data->getId();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof PublicReview;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PublicReview::class => false,
+        ];
     }
 }

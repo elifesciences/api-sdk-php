@@ -3,13 +3,12 @@
 namespace test\eLife\ApiSdk\Model;
 
 use eLife\ApiSdk\Model\Copyright;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class CopyrightTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_license()
     {
         $copyright = new Copyright('license', 'statement');
@@ -17,9 +16,7 @@ final class CopyrightTest extends TestCase
         $this->assertSame('license', $copyright->getLicense());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_statement()
     {
         $copyright = new Copyright('license', 'statement');
@@ -27,9 +24,7 @@ final class CopyrightTest extends TestCase
         $this->assertSame('statement', $copyright->getStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_holder()
     {
         $with = new Copyright('license', 'statement', 'holder');

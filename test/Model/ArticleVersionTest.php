@@ -31,6 +31,7 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -39,9 +40,7 @@ abstract class ArticleVersionTest extends TestCase
     /** @var Builder */
     protected $builder;
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_is_an_article()
     {
         $article = $this->builder
@@ -50,9 +49,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertInstanceOf(Article::class, $article);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_an_identifier()
     {
         $article = $this->builder
@@ -63,9 +60,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals(Identifier::article('14107'), $article->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_an_id()
     {
         $article = $this->builder
@@ -76,9 +71,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('14107', $article->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_stage()
     {
         $article = $this->builder
@@ -88,9 +81,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame(ArticleVersion::STAGE_PREVIEW, $article->getStage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_version()
     {
         $article = $this->builder
@@ -100,9 +91,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame(1, $article->getVersion());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_type()
     {
         $article = $this->builder
@@ -112,9 +101,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('research-article', $article->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_be_cited()
     {
         $with = $this->builder
@@ -131,9 +118,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getCiteAs());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_doi()
     {
         $article = $this->builder
@@ -144,9 +129,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('10.7554/eLife.14107', $article->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_an_author_line()
     {
         $with = $this->builder
@@ -160,9 +143,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getAuthorLine());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_title_prefix()
     {
         $with = $this->builder
@@ -180,9 +161,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('Molecular basis for multimerization in the activation of the epidermal growth factor', $withOut->getFullTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_title()
     {
         $article = $this->builder
@@ -192,9 +171,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('Molecular basis for multimerization in the activation of the epidermal growth factor', $article->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_be_published()
     {
         $with = $this->builder
@@ -208,9 +185,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertFalse($withOut->isPublished());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_published_date()
     {
         $with = $this->builder
@@ -225,9 +200,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_version_date()
     {
         $with = $this->builder
@@ -241,9 +214,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getVersionDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_status_date()
     {
         $with = $this->builder
@@ -257,9 +228,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getStatusDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_thumbnail()
     {
         $with = $this->builder
@@ -274,9 +243,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getThumbnail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_social_image()
     {
         $with = $this->builder
@@ -291,9 +258,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getSocialImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_volume()
     {
         $article = $this->builder
@@ -303,9 +268,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame(5, $article->getVolume());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_an_elocation_id()
     {
         $article = $this->builder
@@ -315,9 +278,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertSame('e14107', $article->getElocationId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_a_pdf()
     {
         $with = $this->builder
@@ -332,9 +293,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getPdf());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_xml()
     {
         $with = $this->builder
@@ -348,9 +307,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getXml());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_subjects()
     {
         $subjects = new ArraySequence([Builder::dummy(Subject::class)]);
@@ -363,9 +320,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals($subjects, $article->getSubjects());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_research_organisms()
     {
         $with = $this->builder
@@ -379,9 +334,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEmpty($withOut->getResearchOrganisms());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_an_abstract()
     {
         $with = $this->builder
@@ -395,9 +348,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getAbstract());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_an_issue()
     {
         $with = $this->builder
@@ -411,9 +362,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getIssue());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_has_a_copyright()
     {
         $article = $this->builder
@@ -423,9 +372,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals($copyright, $article->getCopyright());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     final public function it_may_have_authors()
     {
         $with = $this->builder
@@ -439,9 +386,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEmpty($withOut->getAuthors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_ethics()
     {
         $article = $this->builder
@@ -451,9 +396,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals($ethics, $article->getEthics());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_funding()
     {
         $with = $this->builder
@@ -478,9 +421,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertNull($withOut->getFunding());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_data_availability()
     {
         $with = $this->builder
@@ -494,9 +435,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEmpty($withOut->getDataAvailability());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_generated_data_sets()
     {
         $article = $this->builder
@@ -506,9 +445,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals($dataSets, $article->getGeneratedDataSets());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_used_data_sets()
     {
         $article = $this->builder
@@ -518,9 +455,7 @@ abstract class ArticleVersionTest extends TestCase
         $this->assertEquals($dataSets, $article->getUsedDataSets());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_additional_files()
     {
         $article = $this->builder

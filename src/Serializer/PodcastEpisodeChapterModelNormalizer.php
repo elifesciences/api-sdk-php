@@ -8,9 +8,14 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeChapterModel;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use function GuzzleHttp\Promise\promise_for;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use UnexpectedValueException;
 
 final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
@@ -18,7 +23,7 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : PodcastEpisodeChapterModel
+    public function denormalize($data, $type, $format = null, array $context = []) : PodcastEpisodeChapterModel
     {
         $data['episode'] = $this->denormalizer->denormalize($data['episode'], PodcastEpisode::class, $format, ['snippet' => true] + $context);
 
@@ -41,7 +46,7 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
         return new PodcastEpisodeChapterModel($data['episode'], $data['chapter']);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             PodcastEpisodeChapterModel::class === $type
@@ -50,35 +55,44 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
     }
 
     /**
-     * @param PodcastEpisodeChapterModel $object
+     * @param PodcastEpisodeChapterModel $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
         $normalizationHelper = new NormalizationHelper($this->normalizer, $this->denormalizer, $format);
 
         $chapter = [
-            'number' => $object->getChapter()->getNumber(),
-            'title' => $object->getChapter()->getTitle(),
-            'time' => $object->getChapter()->getTime(),
+            'number' => $data->getChapter()->getNumber(),
+            'title' => $data->getChapter()->getTitle(),
+            'time' => $data->getChapter()->getTime(),
         ];
 
-        if ($object->getChapter()->getLongTitle()) {
-            $chapter['longTitle'] = $object->getChapter()->getLongTitle();
+        if ($data->getChapter()->getLongTitle()) {
+            $chapter['longTitle'] = $data->getChapter()->getLongTitle();
         }
 
-        if ($object->getChapter()->getImpactStatement()) {
-            $chapter['impactStatement'] = $object->getChapter()->getImpactStatement();
+        if ($data->getChapter()->getImpactStatement()) {
+            $chapter['impactStatement'] = $data->getChapter()->getImpactStatement();
         }
 
         return [
             'type' => 'podcast-episode-chapter',
-            'episode' => $normalizationHelper->normalizeToSnippet($object->getEpisode()),
+            'episode' => $normalizationHelper->normalizeToSnippet($data->getEpisode()),
             'chapter' => $chapter,
         ];
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof PodcastEpisodeChapterModel;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PodcastEpisodeChapter::class => false,
+            Model::class => false,
+        ];
     }
 }

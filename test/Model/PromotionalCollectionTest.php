@@ -25,6 +25,8 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PromotionalCollection;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -37,9 +39,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->builder = Builder::for(PromotionalCollection::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $promotionalCollection = $this->builder->__invoke();
@@ -47,9 +47,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertInstanceOf(Model::class, $promotionalCollection);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $promotionalCollection = $this->builder
@@ -60,9 +58,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals(Identifier::promotionalCollection('highlights-from-japan'), $promotionalCollection->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $promotionalCollection = $this->builder
@@ -73,9 +69,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertSame('highlights-from-japan', $promotionalCollection->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $promotionalCollection = $this->builder
@@ -84,9 +78,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertSame('Highlights from Japan', $promotionalCollection->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -101,9 +93,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_published_date()
     {
         $promotionalCollection = $this->builder
@@ -114,9 +104,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($publishedDate, $promotionalCollection->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_updated_date()
     {
         $with = $this->builder
@@ -131,9 +119,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertNull($withOut->getUpdatedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_banner()
     {
         $promotionalCollection = $this->builder
@@ -144,9 +130,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($image, $promotionalCollection->getBanner());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_thumbnail()
     {
         $promotionalCollection = $this->builder
@@ -157,9 +141,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($image, $promotionalCollection->getThumbnail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_social_image()
     {
         $with = $this->builder
@@ -174,10 +156,8 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertNull($withOut->getSocialImage());
     }
 
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
+    #[Test]
+    #[DataProvider('subjectsProvider')]
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $promotionalCollection = $this->builder
@@ -188,7 +168,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($expected, $promotionalCollection->getSubjects()->toArray());
     }
 
-    public function subjectsProvider() : array
+    public static function subjectsProvider() : array
     {
         $subjects = [
             Builder::for(Subject::class)
@@ -211,9 +191,7 @@ final class PromotionalCollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_editors()
     {
         $promotionalCollection = $this->builder
@@ -223,9 +201,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($editors, $promotionalCollection->getEditors());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_summary()
     {
         $promotionalCollection = $this->builder
@@ -237,9 +213,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($summary, $promotionalCollection->getSummary());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $promotionalCollection = $this->builder
@@ -251,9 +225,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($content, $promotionalCollection->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_related_content()
     {
         $promotionalCollection = $this->builder
@@ -265,9 +237,7 @@ final class PromotionalCollectionTest extends TestCase
         $this->assertEquals($relatedContent, $promotionalCollection->getRelatedContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_podcast_episodes()
     {
         $promotionalCollection = $this->builder

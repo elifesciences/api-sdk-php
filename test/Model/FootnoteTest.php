@@ -6,13 +6,12 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\Footnote;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FootnoteTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new Footnote('id', null, new ArraySequence([new Paragraph('footnote')]));
@@ -23,9 +22,7 @@ final class FootnoteTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_label()
     {
         $with = new Footnote(null, 'label', new ArraySequence([new Paragraph('footnote')]));
@@ -35,9 +32,7 @@ final class FootnoteTest extends TestCase
         $this->assertNull($withOut->getLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_text()
     {
         $footnote = new Footnote(null, null, $text = new ArraySequence([new Paragraph('footnote')]));

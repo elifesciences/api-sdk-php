@@ -11,7 +11,10 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class BlogArticlesTest extends ApiTestCase
 {
@@ -20,25 +23,19 @@ final class BlogArticlesTest extends ApiTestCase
     /** @var BlogArticles */
     private $blogArticles;
 
-    /**
-     * @before
-     */
-    protected function setUpBlogArticles()
+    #[Before]
+    protected function setUpBlogArticles(): void
     {
         $this->blogArticles = (new ApiSdk($this->getHttpClient()))->blogArticles();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->blogArticles);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockBlogArticleListCall(1, 1, 200);
@@ -51,9 +48,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockBlogArticleListCall(1, 1, 10);
@@ -62,9 +57,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(10, $this->blogArticles->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockBlogArticleListCall(1, 1, 10);
@@ -80,9 +73,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockBlogArticleListCall(1, 1, 1);
@@ -99,9 +90,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(null, $this->blogArticles[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -109,9 +98,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->blogArticles[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_blog_article()
     {
         $this->mockBlogArticleCall(7, true);
@@ -133,9 +120,7 @@ final class BlogArticlesTest extends ApiTestCase
             $blogArticle->getSubjects()[0]->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->mockBlogArticleListCall(1, 1, 5, true, ['subject']);
@@ -146,9 +131,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_subject()
     {
         $this->mockBlogArticleListCall(1, 1, 10);
@@ -160,9 +143,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(10, $this->blogArticles->forSubject('subject')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering_by_subject()
     {
         $this->mockBlogArticleListCall(1, 1, 200);
@@ -178,9 +159,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->blogArticles->forSubject('subject')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -191,9 +170,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame([0, 1, 'blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -204,9 +181,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-3', 'blog-article-4', 'blog-article-5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -217,9 +192,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-4', 'blog-article-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -230,9 +203,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-3', 'blog-article-4', 'blog-article-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -243,10 +214,8 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(['blog-article-1', 'blog-article-2', 2, 'blog-article-4', 'blog-article-5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -259,10 +228,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockBlogArticleListCall(1, 1, 3);
@@ -275,9 +241,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(['blog-article-1', 'blog-article-2', 'blog-article-3'], $this->blogArticles->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -292,9 +256,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -307,17 +269,13 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(115, $this->blogArticles->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->blogArticles, $this->blogArticles->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockBlogArticleListCall(1, 1, 5);
@@ -332,9 +290,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockBlogArticleListCall(1, 1, 5, false);
@@ -345,9 +301,7 @@ final class BlogArticlesTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockBlogArticleListCall(1, 1, 10);
@@ -357,9 +311,7 @@ final class BlogArticlesTest extends ApiTestCase
         $this->assertSame(10, $this->blogArticles->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockBlogArticleListCall(1, 1, 200);

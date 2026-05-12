@@ -10,14 +10,13 @@ use eLife\ApiSdk\Model\Block\VideoSource;
 use eLife\ApiSdk\Model\BlockWithCaption;
 use eLife\ApiSdk\Model\HasAttribution;
 use eLife\ApiSdk\Model\Image;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class VideoTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -26,9 +25,7 @@ final class VideoTest extends TestCase
         $this->assertInstanceOf(BlockWithCaption::class, $video);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -39,9 +36,7 @@ final class VideoTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_title()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -52,9 +47,7 @@ final class VideoTest extends TestCase
         $this->assertNull($withOut->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_caption()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -66,9 +59,7 @@ final class VideoTest extends TestCase
         $this->assertEmpty($withOut->getCaption());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_attribution()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -81,9 +72,7 @@ final class VideoTest extends TestCase
         $this->assertEmpty($withOut->getAttribution());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_sources()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -92,9 +81,7 @@ final class VideoTest extends TestCase
         $this->assertEquals($sources, $video->getSources());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_placeholder()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -105,9 +92,7 @@ final class VideoTest extends TestCase
         $this->assertEmpty($withOut->getPlaceholder());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_width()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -116,9 +101,7 @@ final class VideoTest extends TestCase
         $this->assertEquals(200, $video->getWidth());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_height()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -127,9 +110,7 @@ final class VideoTest extends TestCase
         $this->assertEquals(100, $video->getHeight());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_autoplayed()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];
@@ -138,9 +119,7 @@ final class VideoTest extends TestCase
         $this->assertTrue($video->isAutoplay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_be_looped()
     {
         $sources = [new VideoSource('video/mpeg', 'http://www.example.com/video.mpeg')];

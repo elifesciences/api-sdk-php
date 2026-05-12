@@ -9,6 +9,14 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 final class ArticlePoANormalizer extends ArticleVersionNormalizer
 {
+    /**
+     * @param $data
+     * @param PromiseInterface|null $article
+     * @param string $class
+     * @param string|null $format
+     * @param array $context
+     * @return ArticleVersion
+     */
     protected function denormalizeArticle(
         $data,
         PromiseInterface $article = null,
@@ -50,7 +58,7 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             ArticlePoA::class === $type
@@ -62,6 +70,10 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
 
     /**
      * @param ArticlePoA $article
+     * @param array $data
+     * @param string|null $format
+     * @param array $context
+     * @return array
      */
     protected function normalizeArticle(
         ArticleVersion $article,
@@ -74,8 +86,23 @@ final class ArticlePoANormalizer extends ArticleVersionNormalizer
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof ArticlePoA;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ArticlePoA::class => false,
+            ArticleVersion::class => false,
+            Model::class => false,
+        ];
     }
 }

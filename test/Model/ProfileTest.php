@@ -11,14 +11,13 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Profile;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
 final class ProfileTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $profile = Builder::for(Profile::class)
@@ -27,9 +26,7 @@ final class ProfileTest extends TestCase
         $this->assertInstanceOf(Model::class, $profile);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $profile = Builder::for(Profile::class)
@@ -40,9 +37,7 @@ final class ProfileTest extends TestCase
         $this->assertEquals(Identifier::profile('id'), $profile->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $profile = Builder::for(Profile::class)
@@ -53,9 +48,7 @@ final class ProfileTest extends TestCase
         $this->assertSame('id', $profile->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_details()
     {
         $profile = Builder::for(Profile::class)
@@ -65,9 +58,7 @@ final class ProfileTest extends TestCase
         $this->assertEquals($details, $profile->getDetails());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_affiliations()
     {
         $with = Builder::for(Profile::class)
@@ -82,9 +73,7 @@ final class ProfileTest extends TestCase
         $this->assertCount(0, $withOut->getAffiliations());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_email_addresses()
     {
         $with = Builder::for(Profile::class)

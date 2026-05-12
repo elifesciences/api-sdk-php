@@ -5,13 +5,24 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\AnnualReport;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : AnnualReport
+    /**
+     * @param $data
+     * @param $type
+     * @param $format
+     * @param array $context
+     * @return AnnualReport
+     */
+    public function denormalize($data, $type, $format = null, array $context = []) : AnnualReport
     {
         return new AnnualReport(
             $data['year'],
@@ -22,35 +33,58 @@ final class AnnualReportNormalizer implements NormalizerInterface, DenormalizerI
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    /**
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return AnnualReport::class === $type;
     }
 
     /**
-     * @param AnnualReport $object
+     * @param AnnualReport $data
+     * @param $format
+     * @param array $context
+     * @return array
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'year' => $object->getYear(),
-            'uri' => $object->getUri(),
-            'title' => $object->getTitle(),
+        $arr = [
+            'year' => $data->getYear(),
+            'uri' => $data->getUri(),
+            'title' => $data->getTitle(),
         ];
 
-        if ($object->getPdf()) {
-            $data['pdf'] = $object->getPdf();
+        if ($data->getPdf()) {
+            $arr['pdf'] = $data->getPdf();
         }
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof AnnualReport;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            AnnualReport::class => true,
+        ];
     }
 }

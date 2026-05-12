@@ -5,13 +5,12 @@ namespace test\eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\MathML;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class MathMLTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $mathML = new MathML(null, null, '<math></math>');
@@ -19,9 +18,7 @@ final class MathMLTest extends TestCase
         $this->assertInstanceOf(Block::class, $mathML);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_id()
     {
         $with = new MathML('id', null, '<math></math>');
@@ -32,9 +29,7 @@ final class MathMLTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_label()
     {
         $with = new MathML(null, 'label', '<math></math>');
@@ -44,9 +39,7 @@ final class MathMLTest extends TestCase
         $this->assertNull($withOut->getLabel());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_math_ml()
     {
         $mathML = new MathML(null, null, '<math></math>');

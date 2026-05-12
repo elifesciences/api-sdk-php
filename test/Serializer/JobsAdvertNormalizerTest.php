@@ -14,12 +14,14 @@ use eLife\ApiSdk\Model\JobAdvert;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\JobAdvertNormalizer;
-use function GuzzleHttp\Promise\promise_for;
-use function GuzzleHttp\Promise\rejection_for;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use GuzzleHttp\Promise\Create;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\ApiTestCase;
 use test\eLife\ApiSdk\Builder;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class JobsAdvertNormalizerTest extends ApiTestCase
 {
@@ -28,10 +30,8 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
     /** @var EventNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $apiSdk = new ApiSdk($this->getHttpClient());
         $this->normalizer = new JobAdvertNormalizer(new JobAdvertsClient($this->getHttpClient()));
@@ -39,74 +39,67 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
         $this->normalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_job_adverts($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
-        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', rejection_for('No social image'), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
-            new PromiseSequence(rejection_for('Job advert content should not be unwrapped')));
+        $jobAdvert = new JobAdvert('id', 'title', 'impact statement', Create::rejectionFor('No social image'), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')), new DateTimeImmutable('now', new DateTimeZone('Z')),
+            new PromiseSequence(Create::rejectionFor('Job advert content should not be unwrapped')));
 
         return [
             'job advert' => [$jobAdvert, null, true],
             'job advert with format' => [$jobAdvert, 'foo', true],
-            'non job advert' => [$this, null, false],
+            'non job advert' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
-    public function it_normalize_job_adverts(JobAdvert $jobAdvert, array $context, array $expected)
+    #[Test]
+    #[DataProvider('normalizeProvider')]
+    public function it_normalize_job_adverts(
+        JobAdvert $jobAdvert,
+        array $context,
+        array $expected,
+        callable $extra = null
+    ): void
     {
         $this->assertEquals($expected, $this->normalizer->normalize($jobAdvert, null, $context));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_job_adverts($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'job advert' => [[], JobAdvert::class, [], true],
             'job advert event by type' => [['type' => 'job-advert'], Model::class, [], true],
-            'non job advert' => [[], get_class($this), [], false],
+            'non job advert' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_denormalize_job_adverts(
         JobAdvert $expected,
         array $context,
@@ -122,7 +115,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
         $this->assertObjectsAreEqual($expected, $actual);
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         $published = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updated = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
@@ -130,7 +123,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
 
         return [
             'complete' => [
-                new JobAdvert('id', 'title', 'impact statement', promise_for(Builder::for(Image::class)->sample('social')), $published, $closingDate, $updated,
+                new JobAdvert('id', 'title', 'impact statement', Create::promiseFor(Builder::for(Image::class)->sample('social')), $published, $closingDate, $updated,
                     new ArraySequence([new Paragraph('text')])),
                 [],
                 [
@@ -164,7 +157,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 ],
             ],
             'minimum' => [
-                new JobAdvert('id', 'title', null, promise_for(null), $published, $closingDate, null, new ArraySequence([new Paragraph('text')])),
+                new JobAdvert('id', 'title', null, Create::promiseFor(null), $published, $closingDate, null, new ArraySequence([new Paragraph('text')])),
                 [],
                 [
                     'id' => 'id',
@@ -180,7 +173,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 ],
             ],
             'complete snippet' => [
-                new JobAdvert('job-advert1', 'Job advert job-advert1 title', 'Job advert job-advert1 impact statement', promise_for(null), $published, $closingDate, $updated,
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', 'Job advert job-advert1 impact statement', Create::promiseFor(null), $published, $closingDate, $updated,
                     new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true, 'type' => true],
                 [
@@ -197,7 +190,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
                 },
             ],
             'minimum snippet' => [
-                new JobAdvert('job-advert1', 'Job advert job-advert1 title', null, promise_for(null), $published, $closingDate, null,
+                new JobAdvert('job-advert1', 'Job advert job-advert1 title', null, Create::promiseFor(null), $published, $closingDate, null,
                     new ArraySequence([new Paragraph('Job advert job-advert1 text')])),
                 ['snippet' => true],
                 [
@@ -218,7 +211,7 @@ final class JobsAdvertNormalizerTest extends ApiTestCase
         return JobAdvert::class;
     }
 
-    protected function samples()
+    protected static function samples(): \Generator
     {
         yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert/v1/*.json';
         yield __DIR__.'/../../vendor/elife/api/dist/samples/job-advert-list/v1/*.json#items';

@@ -8,13 +8,12 @@ use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Section;
 use eLife\ApiSdk\Model\HasContent;
 use eLife\ApiSdk\Model\HasId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class SectionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_block()
     {
         $section = new Section('title', null, new EmptySequence());
@@ -22,9 +21,7 @@ final class SectionTest extends TestCase
         $this->assertInstanceOf(Block::class, $section);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $section = new Section('title', null, new EmptySequence());
@@ -42,9 +39,7 @@ final class SectionTest extends TestCase
         $this->assertNull($withOut->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $content = new ArraySequence([new Section('sub-title', null, new EmptySequence())]);

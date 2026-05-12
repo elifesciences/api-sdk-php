@@ -4,10 +4,10 @@ namespace eLife\ApiSdk\Serializer\Block;
 
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Block\Figshare;
-use eLife\ApiSdk\Serializer\DenormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\DenormalizerAwareTrait;
-use eLife\ApiSdk\Serializer\NormalizerAwareInterface;
-use eLife\ApiSdk\Serializer\NormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -16,7 +16,7 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Figshare
+    public function denormalize($data, $type, $format = null, array $context = []) : Figshare
     {
         return new Figshare(
             $data['id'],
@@ -26,7 +26,7 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return
             Figshare::class === $type
@@ -35,23 +35,29 @@ final class FigshareNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * @param Figshare $object
+     * @param Figshare $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        return [
             'type' => 'figshare',
-            'id' => $object->getId(),
-            'title' => $object->getTitle(),
-            'width' => $object->getWidth(),
-            'height' => $object->getHeight(),
+            'id' => $data->getId(),
+            'title' => $data->getTitle(),
+            'width' => $data->getWidth(),
+            'height' => $data->getHeight(),
         ];
-
-        return $data;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Figshare;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Figshare::class => false,
+            Block::class => false,
+        ];
     }
 }

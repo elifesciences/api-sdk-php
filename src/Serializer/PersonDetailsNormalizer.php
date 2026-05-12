@@ -8,37 +8,44 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class PersonDetailsNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize($data, $class, $format = null, array $context = []) : PersonDetails
+    public function denormalize($data, $type, $format = null, array $context = []) : PersonDetails
     {
         return new PersonDetails($data['name']['preferred'], $data['name']['index'], $data['orcid'] ?? null);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return PersonDetails::class === $type;
     }
 
     /**
-     * @param PersonDetails $object
+     * @param PersonDetails $data
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
+        $arr = [
             'name' => [
-                'preferred' => $object->getPreferredName(),
-                'index' => $object->getIndexName(),
+                'preferred' => $data->getPreferredName(),
+                'index' => $data->getIndexName(),
             ],
         ];
 
-        if ($object->getOrcid()) {
-            $data['orcid'] = $object->getOrcid();
+        if ($data->getOrcid()) {
+            $arr['orcid'] = $data->getOrcid();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof PersonDetails;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            PersonDetails::class => true,
+        ];
     }
 }

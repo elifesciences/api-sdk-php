@@ -41,6 +41,8 @@ use GuzzleHttp\Psr7\Response;
 use JsonSchema\Validator;
 use LogicException;
 
+use PHPUnit\Framework\Attributes\Before as Before;
+
 abstract class ApiTestCase extends TestCase
 {
     /** @var InMemoryStorageAdapter */

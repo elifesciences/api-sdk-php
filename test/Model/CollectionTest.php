@@ -25,6 +25,8 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -37,9 +39,7 @@ final class CollectionTest extends TestCase
         $this->builder = Builder::for(Collection::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $collection = $this->builder->__invoke();
@@ -47,9 +47,7 @@ final class CollectionTest extends TestCase
         $this->assertInstanceOf(Model::class, $collection);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $collection = $this->builder
@@ -60,9 +58,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals(Identifier::collection('tropical-disease'), $collection->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $collection = $this->builder
@@ -73,9 +69,7 @@ final class CollectionTest extends TestCase
         $this->assertSame('tropical-disease', $collection->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $collection = $this->builder
@@ -84,9 +78,7 @@ final class CollectionTest extends TestCase
         $this->assertSame('Tropical disease', $collection->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -101,9 +93,7 @@ final class CollectionTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_published_date()
     {
         $collection = $this->builder
@@ -114,9 +104,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($publishedDate, $collection->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_updated_date()
     {
         $with = $this->builder
@@ -131,9 +119,7 @@ final class CollectionTest extends TestCase
         $this->assertNull($withOut->getUpdatedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_banner()
     {
         $collection = $this->builder
@@ -144,9 +130,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($image, $collection->getBanner());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_thumbnail()
     {
         $collection = $this->builder
@@ -157,9 +141,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($image, $collection->getThumbnail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_social_image()
     {
         $with = $this->builder
@@ -174,10 +156,8 @@ final class CollectionTest extends TestCase
         $this->assertNull($withOut->getSocialImage());
     }
 
-    /**
-     * @test
-     * @dataProvider subjectsProvider
-     */
+    #[Test]
+    #[DataProvider('subjectsProvider')]
     public function it_may_have_subjects(Sequence $subjects = null, array $expected)
     {
         $collection = $this->builder
@@ -188,7 +168,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($expected, $collection->getSubjects()->toArray());
     }
 
-    public function subjectsProvider() : array
+    public static function subjectsProvider() : array
     {
         $subjects = [
             Builder::for(Subject::class)
@@ -211,9 +191,7 @@ final class CollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_selected_curator()
     {
         $collection = $this->builder
@@ -225,9 +203,7 @@ final class CollectionTest extends TestCase
         $this->assertTrue($collection->selectedCuratorEtAl());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_curators()
     {
         $collection = $this->builder
@@ -237,9 +213,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($curators, $collection->getCurators());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_summary()
     {
         $collection = $this->builder
@@ -251,9 +225,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($summary, $collection->getSummary());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $collection = $this->builder
@@ -265,9 +237,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($content, $collection->getContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_related_content()
     {
         $collection = $this->builder
@@ -279,9 +249,7 @@ final class CollectionTest extends TestCase
         $this->assertEquals($relatedContent, $collection->getRelatedContent());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_podcast_episodes()
     {
         $collection = $this->builder

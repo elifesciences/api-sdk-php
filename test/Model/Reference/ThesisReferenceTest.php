@@ -9,13 +9,12 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reference;
 use eLife\ApiSdk\Model\Reference\ThesisReference;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class ThesisReferenceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_reference()
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
@@ -25,9 +24,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertInstanceOf(Reference::class, $reference);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $reference = new ThesisReference('id', new Date(2000), null,
@@ -38,9 +35,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertSame('id', $reference->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_date()
     {
         $reference = new ThesisReference('id', $date = new Date(2000), null,
@@ -50,9 +45,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertEquals($date, $reference->getDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_discriminator()
     {
         $with = new ThesisReference('id', new Date(2000), 'a',
@@ -66,9 +59,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertNull($withOut->getDiscriminator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_author()
     {
         $reference = new ThesisReference('id', new Date(2000), null,
@@ -78,9 +69,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertEquals($author, $reference->getAuthor());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
@@ -90,9 +79,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertSame('title', $reference->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_publisher()
     {
         $reference = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'),
@@ -102,9 +89,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertEquals($publisher, $reference->getPublisher());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_doi()
     {
         $with = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'), 'title',
@@ -118,9 +103,7 @@ final class ThesisReferenceTest extends TestCase
         $this->assertNull($withOut->getDoi());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_uri()
     {
         $with = new ThesisReference('id', new Date(2000), null, new PersonDetails('preferred name', 'index name'), 'title',

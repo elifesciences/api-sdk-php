@@ -16,19 +16,20 @@ use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\BookChapterReferenceNormalizer;
 use eLife\ApiSdk\Serializer\Reference\ReferencePagesNormalizer;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use test\eLife\ApiSdk\TestCase;
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class BookChapterReferenceNormalizerTest extends TestCase
 {
     /** @var BookChapterReferenceNormalizer */
     private $normalizer;
 
-    /**
-     * @before
-     */
-    protected function setUpNormalizer()
+    #[Before]
+    protected function setUpNormalizer() : void
     {
         $this->normalizer = new BookChapterReferenceNormalizer();
 
@@ -41,24 +42,20 @@ final class BookChapterReferenceNormalizerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_normalizer()
     {
         $this->assertInstanceOf(NormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canNormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canNormalizeProvider')]
     public function it_can_normalize_book_chapter_references($data, $format, bool $expected)
     {
         $this->assertSame($expected, $this->normalizer->supportsNormalization($data, $format));
     }
 
-    public function canNormalizeProvider() : array
+    public static function canNormalizeProvider() : array
     {
         $reference = new BookChapterReference('id', Date::fromString('2000'), null,
             [new PersonAuthor(new PersonDetails('author preferred name', 'author index name'))], false,
@@ -68,20 +65,18 @@ final class BookChapterReferenceNormalizerTest extends TestCase
         return [
             'book chapter reference' => [$reference, null, true],
             'book chapter reference with format' => [$reference, 'foo', true],
-            'non-book chapter reference' => [$this, null, false],
+            'non-book chapter reference' => [new \stdClass(), null, false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider normalizeProvider
-     */
+    #[Test]
+    #[DataProvider('normalizeProvider')]
     public function it_normalize_book_chapter_references(BookChapterReference $reference, array $expected)
     {
         $this->assertSame($expected, $this->normalizer->normalize($reference));
     }
 
-    public function normalizeProvider() : array
+    public static function normalizeProvider() : array
     {
         return [
             'complete' => [
@@ -173,43 +168,37 @@ final class BookChapterReferenceNormalizerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_denormalizer()
     {
         $this->assertInstanceOf(DenormalizerInterface::class, $this->normalizer);
     }
 
-    /**
-     * @test
-     * @dataProvider canDenormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('canDenormalizeProvider')]
     public function it_can_denormalize_book_chapter_references($data, $format, array $context, bool $expected)
     {
-        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, $context));
+        $this->assertSame($expected, $this->normalizer->supportsDenormalization($data, $format, null, $context));
     }
 
-    public function canDenormalizeProvider() : array
+    public static function canDenormalizeProvider() : array
     {
         return [
             'book chapter reference' => [[], BookChapterReference::class, [], true],
             'reference that is a book chapter' => [['type' => 'book-chapter'], Reference::class, [], true],
             'reference that isn\'t a book chapter' => [['type' => 'foo'], Reference::class, [], false],
-            'non-book chapter reference' => [[], get_class($this), [], false],
+            'non-book chapter reference' => [[], self::class, [], false],
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeProvider')]
     public function it_denormalize_book_chapter_references(array $json, BookChapterReference $expected)
     {
         $this->assertObjectsAreEqual($expected, $this->normalizer->denormalize($json, BookChapterReference::class));
     }
 
-    public function denormalizeProvider() : array
+    public static function denormalizeProvider() : array
     {
         return [
             'complete' => [

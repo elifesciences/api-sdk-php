@@ -5,15 +5,20 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Model\Cover;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class CoverNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Cover
+    public function denormalize($data, $type, $format = null, array $context = []) : Cover
     {
         return new Cover(
             $data['title'],
@@ -23,31 +28,43 @@ final class CoverNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Cover::class === $type;
     }
 
+
     /**
-     * @param Cover $object
+     * @param Cover $data
+     * @param $format
+     * @param array $context
+     * @return array
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'title' => $object->getTitle(),
-            'image' => $this->normalizer->normalize($object->getBanner()),
-            'item' => $this->normalizer->normalize($object->getItem(), null, ['type' => true, 'snippet' => true]),
+        $arr = [
+            'title' => $data->getTitle(),
+            'image' => $this->normalizer->normalize($data->getBanner()),
+            'item' => $this->normalizer->normalize($data->getItem(), null, ['type' => true, 'snippet' => true]),
         ];
 
-        if ($object->getImpactStatement()) {
-            $data['impactStatement'] = $object->getImpactStatement();
+        if ($data->getImpactStatement()) {
+            $arr['impactStatement'] = $data->getImpactStatement();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Cover;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Cover::class => true,
+        ];
     }
 }

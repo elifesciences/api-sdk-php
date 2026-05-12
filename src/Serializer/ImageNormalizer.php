@@ -5,58 +5,71 @@ namespace eLife\ApiSdk\Serializer;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\File;
 use eLife\ApiSdk\Model\Image;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class ImageNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Image
+    public function denormalize($data, $type, $format = null, array $context = []) : Image
     {
         $data['source'] = $this->denormalizer->denormalize($data['source'], File::class);
 
         return new Image($data['alt'], $data['uri'], new ArraySequence($data['attribution'] ?? []), $data['source'], $data['size']['width'], $data['size']['height'], $data['focalPoint']['x'] ?? 50, $data['focalPoint']['y'] ?? 50);
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Image::class === $type;
     }
 
     /**
-     * @param Image $object
+     * @param Image $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'alt' => $object->getAltText(),
-            'uri' => $object->getUri(),
-            'source' => $this->normalizer->normalize($object->getSource()),
+        $arr = [
+            'alt' => $data->getAltText(),
+            'uri' => $data->getUri(),
+            'source' => $this->normalizer->normalize($data->getSource()),
             'size' => [
-                'width' => $object->getWidth(),
-                'height' => $object->getHeight(),
+                'width' => $data->getWidth(),
+                'height' => $data->getHeight(),
             ],
             'focalPoint' => [
-                'x' => $object->getFocalPointX(),
-                'y' => $object->getFocalPointY(),
+                'x' => $data->getFocalPointX(),
+                'y' => $data->getFocalPointY(),
             ],
         ];
 
-        if (50 === $data['focalPoint']['x'] && 50 === $data['focalPoint']['y']) {
-            unset($data['focalPoint']);
+        if (50 === $arr['focalPoint']['x'] && 50 === $arr['focalPoint']['y']) {
+            unset($arr['focalPoint']);
         }
 
-        if ($object->getAttribution()->notEmpty()) {
-            $data['attribution'] = $object->getAttribution()->toArray();
+        if ($data->getAttribution()->notEmpty()) {
+            $arr['attribution'] = $data->getAttribution()->toArray();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Image;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Image::class => true,
+        ];
     }
 }

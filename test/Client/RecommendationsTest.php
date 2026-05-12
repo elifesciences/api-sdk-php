@@ -10,7 +10,11 @@ use eLife\ApiSdk\Client\Recommendations;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\Identifier;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class RecommendationsTest extends ApiTestCase
 {
@@ -19,17 +23,13 @@ final class RecommendationsTest extends ApiTestCase
     /** @var Recommendations */
     private $recommendations;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpRecommendations()
     {
         $this->recommendations = (new ApiSdk($this->getHttpClient()))->recommendations();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -37,9 +37,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertInstanceOf(Sequence::class, $list);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -54,9 +52,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -67,9 +63,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertSame(10, $list->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -87,9 +81,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -108,9 +100,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertSame(null, $list[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -120,10 +110,8 @@ final class RecommendationsTest extends ApiTestCase
         $list[0] = 'foo';
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -138,10 +126,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -156,9 +141,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertSame(['article1', 'article2', 'article3'], $list->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -175,9 +158,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -192,9 +173,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertSame(115, $list->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -211,9 +190,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -226,9 +203,7 @@ final class RecommendationsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));
@@ -240,9 +215,7 @@ final class RecommendationsTest extends ApiTestCase
         $this->assertSame(10, $list->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $list = $this->recommendations->list(Identifier::article('article1'));

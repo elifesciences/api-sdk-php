@@ -7,24 +7,23 @@ use eLife\ApiSdk\Client\Metrics;
 use eLife\ApiSdk\Model\CitationsMetric;
 use eLife\ApiSdk\Model\CitationsMetricSource;
 use eLife\ApiSdk\Model\Identifier;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class MetricsTest extends ApiTestCase
 {
     /** @var Metrics */
     private $metrics;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpMetrics()
     {
         $this->metrics = new Metrics(new MetricsClient($this->getHttpClient()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_citations()
     {
         $this->mockMetricCitationsCall('article', '09560');
@@ -34,9 +33,7 @@ final class MetricsTest extends ApiTestCase
         $this->assertEquals($expected, $this->metrics->citations(Identifier::article('09560'))->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_version_citations()
     {
         $this->mockMetricVersionCitationsCall('article', '09560', 1);
@@ -46,9 +43,7 @@ final class MetricsTest extends ApiTestCase
         $this->assertEquals($expected, $this->metrics->versionCitations(Identifier::article('09560'), 1)->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_total_page_views()
     {
         $this->mockMetricPageViewsCall('article', '09560');
@@ -56,9 +51,7 @@ final class MetricsTest extends ApiTestCase
         $this->assertSame(9560, $this->metrics->totalPageViews(Identifier::article('09560'))->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_total_downloads()
     {
         $this->mockMetricDownloadsCall('article', '09560');

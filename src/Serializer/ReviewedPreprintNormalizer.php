@@ -16,6 +16,10 @@ use function GuzzleHttp\Promise\promise_for;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ElifeAssessment;
 
@@ -25,7 +29,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    private $snippetDenormalizer;
+    private SnippetDenormalizer $snippetDenormalizer;
 
     public function __construct(ReviewedPreprintsClient $reviewedPreprintsClient)
     {
@@ -42,7 +46,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         );
     }
 
-    public function denormalize($data, $class, $format = null, array $context = []): ReviewedPreprint
+    public function denormalize($data, $type, $format = null, array $context = []): ReviewedPreprint
     {
         if (!empty($context['snippet'])) {
             $reviewedPreprint = $this->snippetDenormalizer->denormalizeSnippet($data);
@@ -111,7 +115,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return ReviewedPreprint::class === $type
             ||
@@ -119,105 +123,113 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
     }
 
     /**
-     * @param $object ReviewedPreprint
+     * @param $data ReviewedPreprint
      */
-    public function normalize($object, $format = null, array $context = []): array
+    public function normalize($data, $format = null, array $context = []): array
     {
-        $data = [
-            'id' => $object->getId(),
+        $arr = [
+            'id' => $data->getId(),
         ];
 
         if (!empty($context['type'])) {
-            $data['type'] = 'reviewed-preprint';
+            $arr['type'] = 'reviewed-preprint';
         }
 
-        if ($object->getTitle()) {
-            $data['title'] = $object->getTitle();
+        if ($data->getTitle()) {
+            $arr['title'] = $data->getTitle();
         }
 
-        if ($object->getStatus()) {
-            $data['status'] = $object->getStatus();
+        if ($data->getStatus()) {
+            $arr['status'] = $data->getStatus();
         }
 
-        if ($object->getStage()) {
-            $data['stage'] = $object->getStage();
+        if ($data->getStage()) {
+            $arr['stage'] = $data->getStage();
         }
 
-        if ($object->getDoi()) {
-            $data['doi'] = $object->getDoi();
+        if ($data->getDoi()) {
+            $arr['doi'] = $data->getDoi();
         }
 
-        if ($object->getAuthorLine()) {
-            $data['authorLine'] = $object->getAuthorLine();
+        if ($data->getAuthorLine()) {
+            $arr['authorLine'] = $data->getAuthorLine();
         }
 
-        if ($object->getTitlePrefix()) {
-            $data['titlePrefix'] = $object->getTitlePrefix();
+        if ($data->getTitlePrefix()) {
+            $arr['titlePrefix'] = $data->getTitlePrefix();
         }
 
-        if ($object->getPublishedDate()) {
-            $data['published'] = $object->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getPublishedDate()) {
+            $arr['published'] = $data->getPublishedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getReviewedDate()) {
-            $data['reviewedDate'] = $object->getReviewedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getReviewedDate()) {
+            $arr['reviewedDate'] = $data->getReviewedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getVersionDate()) {
-            $data['versionDate'] = $object->getVersionDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getVersionDate()) {
+            $arr['versionDate'] = $data->getVersionDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getStatusDate()) {
-            $data['statusDate'] = $object->getStatusDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getStatusDate()) {
+            $arr['statusDate'] = $data->getStatusDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getVolume()) {
-            $data['volume'] = $object->getVolume();
+        if ($data->getVolume()) {
+            $arr['volume'] = $data->getVolume();
         }
 
-        if ($object->getElocationId()) {
-            $data['elocationId'] = $object->getElocationId();
+        if ($data->getElocationId()) {
+            $arr['elocationId'] = $data->getElocationId();
         }
 
-        if ($object->getPdf()) {
-            $data['pdf'] = $object->getPdf();
+        if ($data->getPdf()) {
+            $arr['pdf'] = $data->getPdf();
         }
 
-        if (!$object->getSubjects()->isEmpty()) {
-            $data['subjects'] = $object->getSubjects()->map(function (Subject $subject) use ($format, $context) {
+        if (!$data->getSubjects()->isEmpty()) {
+            $arr['subjects'] = $data->getSubjects()->map(function (Subject $subject) use ($format, $context) {
                 $context['snippet'] = true;
 
                 return $this->normalizer->normalize($subject, $format, $context);
             })->toArray();
         }
 
-        if (!empty($object->getCurationLabels())) {
-            $data['curationLabels'] = $object->getCurationLabels();
+        if (!empty($data->getCurationLabels())) {
+            $arr['curationLabels'] = $data->getCurationLabels();
         }
 
-        if (null !== $object->getThumbnail()) {
-            $data['image']['thumbnail'] = $this->normalizer->normalize($object->getThumbnail(), $format, $context);
+        if (null !== $data->getThumbnail()) {
+            $arr['image']['thumbnail'] = $this->normalizer->normalize($data->getThumbnail(), $format, $context);
         }
 
         if (empty($context['snippet'])) {
-            if ($object->getIndexContent()) {
-                $data['indexContent'] = $object->getIndexContent();
+            if ($data->getIndexContent()) {
+                $arr['indexContent'] = $data->getIndexContent();
             }
         }
 
-        if ($object->getVersion()) {
-            $data['version'] = $object->getVersion();
+        if ($data->getVersion()) {
+            $arr['version'] = $data->getVersion();
         }
 
-        if (null !== ($object->getElifeAssessment())) {
-            $data['elifeAssessment'] = $this->normalizer->normalize($object->getElifeAssessment(), $format, $context);
+        if (null !== ($data->getElifeAssessment())) {
+            $arr['elifeAssessment'] = $this->normalizer->normalize($data->getElifeAssessment(), $format, $context);
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $data instanceof ReviewedPreprint;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            ReviewedPreprint::class => false,
+            Model::class => false,
+        ];
     }
 }

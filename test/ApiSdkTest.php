@@ -29,6 +29,9 @@ use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Reference;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Before as Before;
 use Traversable;
 
 final class ApiSdkTest extends ApiTestCase
@@ -36,19 +39,15 @@ final class ApiSdkTest extends ApiTestCase
     /**
      * @var ApiSdk
      */
-    private $apiSdk;
+    private ApiSdk $apiSdk;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpApiSdk()
     {
         $this->apiSdk = new ApiSdk($this->getHttpClient());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_annotations()
     {
         $this->assertInstanceOf(Annotations::class, $this->apiSdk->annotations());
@@ -59,9 +58,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->annotations()->list('foo')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_annual_reports()
     {
         $this->assertInstanceOf(AnnualReports::class, $this->apiSdk->annualReports());
@@ -71,9 +68,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->annualReports()->get(2012)->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_articles()
     {
         $this->assertInstanceOf(Articles::class, $this->apiSdk->articles());
@@ -86,9 +81,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->articles()->getHistory('article7')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_bioprotocols()
     {
         $this->assertInstanceOf(Bioprotocols::class, $this->apiSdk->bioprotocols());
@@ -98,9 +91,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->bioprotocols()->list(Identifier::article('09560'))->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_blog_articles()
     {
         $this->assertInstanceOf(BlogArticles::class, $this->apiSdk->blogArticles());
@@ -111,9 +102,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->blogArticles()->get('blog-article-7')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_collections()
     {
         $this->assertInstanceOf(Collections::class, $this->apiSdk->collections());
@@ -123,9 +112,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->collections()->get('1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_community()
     {
         $this->assertInstanceOf(Community::class, $this->apiSdk->community());
@@ -138,9 +125,7 @@ final class ApiSdkTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_covers()
     {
         $this->assertInstanceOf(Covers::class, $this->apiSdk->covers());
@@ -153,9 +138,7 @@ final class ApiSdkTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_digests()
     {
         $this->assertInstanceOf(Digests::class, $this->apiSdk->digests());
@@ -165,9 +148,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->digests()->get('1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_events()
     {
         $this->assertInstanceOf(Events::class, $this->apiSdk->events());
@@ -177,9 +158,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->events()->get('event7')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_highlights()
     {
         $this->assertInstanceOf(Highlights::class, $this->apiSdk->highlights());
@@ -190,9 +169,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->highlights()->get('foo')->toArray();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_interviews()
     {
         $this->assertInstanceOf(Interviews::class, $this->apiSdk->interviews());
@@ -202,9 +179,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->interviews()->get('interview1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_job_adverts()
     {
         $this->assertInstanceOf(JobAdverts::class, $this->apiSdk->jobAdverts());
@@ -214,9 +189,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->jobAdverts()->get('job-advert7')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_labs_posts()
     {
         $this->assertInstanceOf(LabsPosts::class, $this->apiSdk->labsPosts());
@@ -226,9 +199,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->labsPosts()->get(1)->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_metrics()
     {
         $this->assertInstanceOf(Metrics::class, $this->apiSdk->metrics());
@@ -238,9 +209,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->metrics()->totalPageViews(Identifier::article('09560'))->wait();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_people()
     {
         $this->assertInstanceOf(People::class, $this->apiSdk->people());
@@ -251,9 +220,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->people()->get('person1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_podcast_episodes()
     {
         $this->assertInstanceOf(PodcastEpisodes::class, $this->apiSdk->podcastEpisodes());
@@ -263,9 +230,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->podcastEpisodes()->get(1)->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_press_packages()
     {
         $this->assertInstanceOf(PressPackages::class, $this->apiSdk->pressPackages());
@@ -275,9 +240,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->pressPackages()->get('press-package-7')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_profiles()
     {
         $this->assertInstanceOf(Profiles::class, $this->apiSdk->profiles());
@@ -287,9 +250,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->profiles()->get('profile1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_promotional_collections()
     {
         $this->assertInstanceOf(PromotionalCollections::class, $this->apiSdk->promotionalCollections());
@@ -299,9 +260,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->promotionalCollections()->get('1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_recommendations()
     {
         $this->assertInstanceOf(Recommendations::class, $this->apiSdk->recommendations());
@@ -312,9 +271,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->assertCount(10, $this->apiSdk->recommendations()->list(Identifier::article('12345'))->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_searches()
     {
         $this->assertInstanceOf(Search::class, $this->apiSdk->search());
@@ -325,9 +282,7 @@ final class ApiSdkTest extends ApiTestCase
         $this->assertCount(10, $this->apiSdk->search()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_subjects()
     {
         $this->assertInstanceOf(Subjects::class, $this->apiSdk->subjects());
@@ -337,34 +292,29 @@ final class ApiSdkTest extends ApiTestCase
         $this->apiSdk->getSerializer()->normalize($this->apiSdk->subjects()->get('subject1')->wait());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_support_encoding()
     {
         $this->assertTrue($this->apiSdk->getSerializer()->supportsEncoding('json'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_support_decoding()
     {
         $this->assertTrue($this->apiSdk->getSerializer()->supportsDecoding('json'));
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeBlocksProvider
-     */
+
+    #[Test]
+    #[DataProvider('denormalizeBlocksProvider')]
     public function it_can_denormalize_blocks(string $block)
     {
         $this->assertTrue($this->apiSdk->getSerializer()->supportsDenormalization([], $block));
     }
 
-    public function denormalizeBlocksProvider() : Traversable
+    public static function denormalizeBlocksProvider() : Traversable
     {
-        return $this->classNameProvider(
+        return self::classNameProvider(
             Block\Box::class,
             Block\Button::class,
             Block\Code::class,
@@ -387,18 +337,16 @@ final class ApiSdkTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider denormalizeReferencesProvider
-     */
+    #[Test]
+    #[DataProvider('denormalizeReferencesProvider')]
     public function it_can_denormalize_references(string $reference)
     {
         $this->assertTrue($this->apiSdk->getSerializer()->supportsDenormalization([], $reference));
     }
 
-    public function denormalizeReferencesProvider() : Traversable
+    public static function denormalizeReferencesProvider() : Traversable
     {
-        return $this->classNameProvider(
+        return self::classNameProvider(
             Reference\BookChapterReference::class,
             Reference\BookReference::class,
             Reference\ClinicalTrialReference::class,

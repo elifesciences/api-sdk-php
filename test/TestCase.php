@@ -18,9 +18,11 @@ use ReflectionMethod;
 use RuntimeException;
 use Traversable;
 
+use PHPUnit\Framework\Attributes\Before as Before;
+
 abstract class TestCase extends PHPUnitTestCase
 {
-    final protected function classNameProvider(string ...$classes) : Traversable
+    final protected static function classNameProvider(string ...$classes) : Traversable
     {
         foreach ($classes as $class) {
             yield $class => [$class];

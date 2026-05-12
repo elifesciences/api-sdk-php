@@ -21,6 +21,7 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PressPackage;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -33,9 +34,7 @@ final class PressPackageTest extends TestCase
         $this->builder = Builder::for(PressPackage::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_model()
     {
         $package = $this->builder
@@ -44,9 +43,7 @@ final class PressPackageTest extends TestCase
         $this->assertInstanceOf(Model::class, $package);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_identifier()
     {
         $package = $this->builder
@@ -57,9 +54,7 @@ final class PressPackageTest extends TestCase
         $this->assertEquals(Identifier::pressPackage('id'), $package->getIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_title()
     {
         $package = $this->builder
@@ -69,9 +64,7 @@ final class PressPackageTest extends TestCase
         $this->assertSame('title', $package->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_an_id()
     {
         $package = $this->builder
@@ -82,9 +75,7 @@ final class PressPackageTest extends TestCase
         $this->assertSame('id', $package->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_a_published_date()
     {
         $package = $this->builder
@@ -95,9 +86,7 @@ final class PressPackageTest extends TestCase
         $this->assertEquals($date, $package->getPublishedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_updated_date()
     {
         $with = $this->builder
@@ -112,9 +101,7 @@ final class PressPackageTest extends TestCase
         $this->assertNull($withOut->getUpdatedDate());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_an_impact_statement()
     {
         $with = $this->builder
@@ -129,9 +116,7 @@ final class PressPackageTest extends TestCase
         $this->assertNull($withOut->getImpactStatement());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_a_social_image()
     {
         $with = $this->builder
@@ -146,9 +131,7 @@ final class PressPackageTest extends TestCase
         $this->assertNull($withOut->getSocialImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_may_have_subjects()
     {
         $with = $this->builder
@@ -163,9 +146,7 @@ final class PressPackageTest extends TestCase
         $this->assertEmpty($withOut->getSubjects());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_content()
     {
         $package = $this->builder
@@ -176,9 +157,7 @@ final class PressPackageTest extends TestCase
         $this->assertEquals($content, $package->getContent()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_related_content()
     {
         $with = $this->builder
@@ -195,9 +174,7 @@ final class PressPackageTest extends TestCase
         $this->assertEmpty($withOut->getRelatedContent()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_media_contacts()
     {
         $with = $this->builder
@@ -211,9 +188,7 @@ final class PressPackageTest extends TestCase
         $this->assertEmpty($withOut->getMediaContacts()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_about()
     {
         $with = $this->builder

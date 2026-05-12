@@ -10,7 +10,11 @@ use eLife\ApiSdk\Client\LabsPosts;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Block\Paragraph;
 use eLife\ApiSdk\Model\LabsPost;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 final class LabsPostsTest extends ApiTestCase
 {
@@ -19,25 +23,19 @@ final class LabsPostsTest extends ApiTestCase
     /** @var LabsPosts */
     private $labsPosts;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpLabsPosts()
     {
         $this->labsPosts = (new ApiSdk($this->getHttpClient()))->labsPosts();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->labsPosts);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->mockLabsPostListCall(1, 1, 200);
@@ -50,9 +48,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->mockLabsPostListCall(1, 1, 10);
@@ -61,9 +57,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(10, $this->labsPosts->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->mockLabsPostListCall(1, 1, 10);
@@ -79,9 +73,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockLabsPostListCall(1, 1, 1);
@@ -98,9 +90,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(null, $this->labsPosts[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -108,9 +98,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->labsPosts[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_gets_a_labs_post()
     {
         $this->mockLabsPostCall(7);
@@ -124,9 +112,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame('Labs post 7 text', $labsPost->getContent()[0]->getText());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -137,9 +123,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame([0, 1, '1', '2', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -150,9 +134,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(['1', '2', '3', '4', '5', 0, 1], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -163,9 +145,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(['1', '2', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -176,9 +156,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(['1', '2', 2, '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -189,10 +167,8 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(['1', '2', 2, '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -205,10 +181,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->mockLabsPostListCall(1, 1, 3);
@@ -221,9 +194,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(['1', '2', '3'], $this->labsPosts->map($map)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -238,9 +209,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -253,17 +222,13 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(115, $this->labsPosts->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->labsPosts, $this->labsPosts->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->mockLabsPostListCall(1, 1, 5);
@@ -278,9 +243,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->mockLabsPostListCall(1, 1, 5, false);
@@ -291,9 +254,7 @@ final class LabsPostsTest extends ApiTestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->mockLabsPostListCall(1, 1, 10);
@@ -303,9 +264,7 @@ final class LabsPostsTest extends ApiTestCase
         $this->assertSame(10, $this->labsPosts->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->mockLabsPostListCall(1, 1, 200);

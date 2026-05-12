@@ -8,15 +8,28 @@ use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Model\Annotation;
 use eLife\ApiSdk\Model\AnnotationDocument;
 use eLife\ApiSdk\Model\Block;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
 final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInterface, NormalizerAwareInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
 
-    public function denormalize($data, $class, $format = null, array $context = []) : Annotation
+    /**
+     * @param $data
+     * @param $type
+     * @param $format
+     * @param array $context
+     * @return Annotation
+     * @throws ExceptionInterface
+     */
+    public function denormalize($data, $type, $format = null, array $context = []) : Annotation
     {
         $data['content'] = new ArraySequence($data['content'] ?? []);
 
@@ -38,46 +51,71 @@ final class AnnotationNormalizer implements NormalizerInterface, DenormalizerInt
         );
     }
 
-    public function supportsDenormalization($data, $type, $format = null) : bool
+    /**
+     * @param mixed $data
+     * @param string $type
+     * @param string|null $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []) : bool
     {
         return Annotation::class === $type;
     }
 
     /**
-     * @param Annotation $object
+     * @param Annotation $data
+     * @throws ExceptionInterface
      */
-    public function normalize($object, $format = null, array $context = []) : array
+    public function normalize($data, $format = null, array $context = []) : array
     {
-        $data = [
-            'id' => $object->getId(),
-            'access' => $object->getAccess(),
-            'document' => $this->normalizer->normalize($object->getDocument(), $format, $context),
-            'created' => $object->getCreatedDate()->format(ApiSdk::DATE_FORMAT),
+        $arr = [
+            'id' => $data->getId(),
+            'access' => $data->getAccess(),
+            'document' => $this->normalizer->normalize($data->getDocument(), $format, $context),
+            'created' => $data->getCreatedDate()->format(ApiSdk::DATE_FORMAT),
         ];
 
-        if ($object->getHighlight()) {
-            $data['highlight'] = $object->getHighlight();
+        if ($data->getHighlight()) {
+            $arr['highlight'] = $data->getHighlight();
         }
 
-        if ($object->getUpdatedDate()) {
-            $data['updated'] = $object->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
+        if ($data->getUpdatedDate()) {
+            $arr['updated'] = $data->getUpdatedDate()->format(ApiSdk::DATE_FORMAT);
         }
 
-        if ($object->getAncestors()->notEmpty()) {
-            $data['ancestors'] = $object->getAncestors()->toArray();
+        if ($data->getAncestors()->notEmpty()) {
+            $arr['ancestors'] = $data->getAncestors()->toArray();
         }
 
-        if ($object->getContent()->notEmpty()) {
-            $data['content'] = $object->getContent()->map(function (Block $block) use ($format, $context) {
+        if ($data->getContent()->notEmpty()) {
+            $arr['content'] = $data->getContent()->map(function (Block $block) use ($format, $context) {
                 return $this->normalizer->normalize($block, $format, $context);
             })->toArray();
         }
 
-        return $data;
+        return $arr;
     }
 
-    public function supportsNormalization($data, $format = null) : bool
+    /**
+     * @param $data
+     * @param $format
+     * @param array $context
+     * @return bool
+     */
+    public function supportsNormalization($data, $format = null, array $context = []) : bool
     {
         return $data instanceof Annotation;
+    }
+
+    /**
+     * @param string|null $format
+     * @return true[]
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            Annotation::class => true,
+        ];
     }
 }

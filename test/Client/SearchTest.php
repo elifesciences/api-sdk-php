@@ -16,7 +16,11 @@ use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\ApiTestCase;
+
+use PHPUnit\Framework\Attributes\Before as Before;
 
 class SearchTest extends ApiTestCase
 {
@@ -38,25 +42,19 @@ class SearchTest extends ApiTestCase
     ];
     private $defaultNumberOfResultsToGenerate = 5;
 
-    /**
-     * @before
-     */
+    #[Before]
     protected function setUpSearch()
     {
         $this->search = (new ApiSdk($this->getHttpClient()))->search();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_a_sequence()
     {
         $this->assertInstanceOf(Sequence::class, $this->search);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_traversed()
     {
         $this->expectCountCallContaining([], 200);
@@ -67,9 +65,7 @@ class SearchTest extends ApiTestCase
         $this->assertCount(200, $this->search);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_counted()
     {
         $this->expectCountCallContaining([], 10);
@@ -78,9 +74,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(10, $this->search->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_casts_to_an_array()
     {
         $this->expectCountCallContaining([], 10);
@@ -92,9 +86,7 @@ class SearchTest extends ApiTestCase
         $this->assertCount(10, $array);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_accessed_like_an_array()
     {
         $this->mockSearchCall(1, 1, 1);
@@ -111,9 +103,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(null, $this->search[5]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_is_an_immutable_array()
     {
         $this->expectException(BadMethodCallException::class);
@@ -121,9 +111,7 @@ class SearchTest extends ApiTestCase
         $this->search[0] = 'foo';
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_query()
     {
         $this->expectCountCallContaining(['for' => 'bacteria'], $this->defaultNumberOfResultsToGenerate);
@@ -132,9 +120,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forQuery('bacteria'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_subject()
     {
         $this->expectCountCallContaining(['subject' => ['neuroscience']], $this->defaultNumberOfResultsToGenerate);
@@ -143,9 +129,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forSubject('neuroscience'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_only_filters_by_the_same_subject_once()
     {
         $this->expectCountCallContaining(['subject' => ['biochemistry']], $this->defaultNumberOfResultsToGenerate);
@@ -154,9 +138,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forSubject('biochemistry', 'biochemistry'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_subjects()
     {
         $this->expectCountCallContaining(['subject' => ['biochemistry', 'neuroscience']], $this->defaultNumberOfResultsToGenerate);
@@ -165,9 +147,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forSubject('biochemistry')->forSubject('neuroscience'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_elife_assessment_significance()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
@@ -176,9 +156,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentSignificance('important', 'useful'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_significances()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important', 'useful']], $this->defaultNumberOfResultsToGenerate);
@@ -187,9 +165,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('useful'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_only_filters_by_the_same_elife_assessment_significance_once()
     {
         $this->expectCountCallContaining(['elifeAssessmentSignificance' => ['important']], $this->defaultNumberOfResultsToGenerate);
@@ -199,9 +175,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentSignificance('important')->forElifeAssessmentSignificance('important'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_elifeAssessment_significance()
     {
         $this->expectCountCallContaining([], 5);
@@ -215,9 +189,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(3, $this->search->forElifeAssessmentSignificance('important')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_elife_assessment_strength()
     {
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
@@ -226,9 +198,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentStrength('solid', 'incomplete'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_handle_a_sequence_of_multiple_calls_with_different_elife_assessment_strengths()
     {
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid', 'incomplete']], $this->defaultNumberOfResultsToGenerate);
@@ -237,9 +207,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('incomplete'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_only_filters_by_the_same_elife_assessment_strength_once()
     {
         $this->expectCountCallContaining(['elifeAssessmentStrength' => ['solid']], $this->defaultNumberOfResultsToGenerate);
@@ -249,9 +217,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forElifeAssessmentStrength('solid')->forElifeAssessmentStrength('solid'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering_by_elifeAssessment_strength()
     {
         $this->expectCountCallContaining([], 5);
@@ -266,9 +232,7 @@ class SearchTest extends ApiTestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_type()
     {
         $this->expectCountCallContaining(['type' => ['blog-article']], $this->defaultNumberOfResultsToGenerate);
@@ -277,9 +241,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forType('blog-article'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_use_published_dates()
     {
         $this->expectCountCallContaining(['sort' => 'date', 'useDate' => 'published'], $this->defaultNumberOfResultsToGenerate);
@@ -288,9 +250,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->sortBy('date')->useDate('published'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_start_date()
     {
         $this->expectCountCallContaining(['startDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
@@ -299,9 +259,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->startDate(new DateTimeImmutable('2017-01-02')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered_by_end_date()
     {
         $this->expectCountCallContaining(['endDate' => new DateTimeImmutable('2017-01-02')], $this->defaultNumberOfResultsToGenerate);
@@ -310,9 +268,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->endDate(new DateTimeImmutable('2017-01-02')));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_recounts_when_filtering()
     {
         $this->expectCountCallContaining([], 5);
@@ -323,9 +279,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(4, $this->search->forQuery('bacteria')->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_refreshes_subject_and_types_when_filtering()
     {
         $total = function ($iterator) {
@@ -346,9 +300,7 @@ class SearchTest extends ApiTestCase
         $this->assertNotEquals($oldSubjects, $total($this->search->forQuery('bacteria')->subjects()), 'Subjects are not being refreshed');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_filtering()
     {
         $this->expectCountCallContaining([], 10);
@@ -361,9 +313,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->forQuery('bacteria')->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_prepended()
     {
         $this->expectCountCallContaining([], 5);
@@ -375,9 +325,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(['foo', 'bar', '1', '2', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_appended()
     {
         $this->expectCountCallContaining([], 5);
@@ -388,9 +336,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(['1', '2', '3', '4', '5', 'foo', 'bar'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_dropped()
     {
         $this->expectCountCallContaining([], 5);
@@ -401,9 +347,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(['1', '2', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_inserted()
     {
         $this->expectCountCallContaining([], 5);
@@ -414,9 +358,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '3', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_have_values_set()
     {
         $this->expectCountCallContaining([], 5);
@@ -427,10 +369,8 @@ class SearchTest extends ApiTestCase
         $this->assertSame(['1', '2', 'foo', '4', '5'], $values->toArray());
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
+    #[DataProvider('sliceProvider')]
     public function it_can_be_sliced(int $offset, int $length = null, array $expected, array $calls)
     {
         foreach ($calls as $call) {
@@ -440,10 +380,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOf(Model::class, $this->search->slice($offset, $length));
     }
 
-    /**
-     * @test
-     * @dataProvider sliceProvider
-     */
+    #[Test]
     public function it_can_be_mapped()
     {
         $this->expectCountCallContaining([], 3);
@@ -459,9 +396,7 @@ class SearchTest extends ApiTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_filtered()
     {
         $this->expectCountCallContaining([], 5);
@@ -474,9 +409,7 @@ class SearchTest extends ApiTestCase
         $this->assertEquals(1, count($this->search->filter($filter)));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reduced()
     {
         $this->expectCountCallContaining([], 5);
@@ -489,17 +422,13 @@ class SearchTest extends ApiTestCase
         $this->assertSame(105, $this->search->reduce($reduce, 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_need_to_be_flattened()
     {
         $this->assertSame($this->search, $this->search->flatten());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_sorted()
     {
         $this->expectCountCallContaining(['sort' => 'relevance'], $this->defaultNumberOfResultsToGenerate);
@@ -508,9 +437,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->sortBy('relevance'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_reversed()
     {
         $this->expectCountCallContaining(['descendingOrder' => false], 10);
@@ -519,9 +446,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->reverse());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_recount_when_reversed()
     {
         $this->expectCountCallContaining([], 10);
@@ -531,9 +456,7 @@ class SearchTest extends ApiTestCase
         $this->assertSame(10, $this->search->reverse()->count());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fetches_pages_again_when_reversed()
     {
         $this->expectCountCallContaining([], 10);
@@ -544,9 +467,7 @@ class SearchTest extends ApiTestCase
         $this->assertContainsOnlyInstancesOfModelAndNotEmpty($this->search->reverse()->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_counters_for_types()
     {
         $this->expectCountCallContaining([], 10);
@@ -555,14 +476,12 @@ class SearchTest extends ApiTestCase
         $types = $this->search->types();
         foreach ($types as $type => $counter) {
             $this->assertIsString($type);
-            $this->assertRegexp('/^[a-z-]+$/', $type);
+            $this->assertMatchesRegularExpression('/^[a-z-]+$/', $type);
             $this->assertGreaterThanOrEqual(0, $counter);
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_has_counters_for_subjects()
     {
         $this->expectCountCallContaining([], 10);

@@ -11,7 +11,8 @@ use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Model\Block;
 use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -58,9 +59,9 @@ final class SubjectNormalizer implements NormalizerInterface, DenormalizerInterf
                 return $subject['image'];
             });
         } else {
-            $data['impactStatement'] = promise_for($data['impactStatement'] ?? null);
+            $data['impactStatement'] = Create::promiseFor($data['impactStatement'] ?? null);
             $data['aimsAndScope'] = new ArraySequence($data['aimsAndScope'] ?? []);
-            $data['image'] = promise_for($data['image']);
+            $data['image'] = Create::promiseFor($data['image']);
         }
 
         $data['aimsAndScope'] = $data['aimsAndScope']->map(function (array $block) use ($format, $context) {

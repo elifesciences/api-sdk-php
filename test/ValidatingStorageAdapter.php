@@ -2,33 +2,32 @@
 
 namespace test\eLife\ApiSdk;
 
-use Csa\GuzzleHttp\Middleware\Cache\Adapter\StorageAdapterInterface;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\ApiValidator\MessageValidator;
+use Kevinrob\GuzzleCache\CacheEntry;
+use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-use PHPUnit\Framework\Attributes\Before as Before;
-
-final class ValidatingStorageAdapter implements StorageAdapterInterface
+final class ValidatingStorageAdapter implements CacheStrategyInterface
 {
-    private $storageAdapter;
-    private $validator;
+    private CacheStrategyInterface $storageAdapter;
+    private MessageValidator $validator;
 
-    public function __construct(StorageAdapterInterface $storageAdapter, MessageValidator $validator)
+    public function __construct(CacheStrategyInterface $storageAdapter, MessageValidator $validator)
     {
         $this->storageAdapter = $storageAdapter;
         $this->validator = $validator;
     }
 
-    public function fetch(RequestInterface $request)
+    public function fetch(RequestInterface $request): ?CacheEntry
     {
         return $this->storageAdapter->fetch($request);
     }
 
-    public function save(RequestInterface $request, ResponseInterface $response)
+    public function save(RequestInterface $request, ResponseInterface $response): void
     {
         try {
             $this->validator->validate($request);
@@ -44,13 +43,25 @@ final class ValidatingStorageAdapter implements StorageAdapterInterface
         $this->storageAdapter->save($request, $response);
     }
 
-    private function dumpJsonBody(MessageInterface $message)
+    public function cache(RequestInterface $request, ResponseInterface $response): bool
+    {
+        return $this->storageAdapter->cache($request, $response);
+    }
+
+    public function update(RequestInterface $request, ResponseInterface $response): bool
+    {
+        return $this->storageAdapter->update($request, $response);
+    }
+
+    public function delete(RequestInterface $request): bool
+    {
+        return $this->storageAdapter->delete($request);
+    }
+
+    private function dumpJsonBody(MessageInterface $message): string
     {
         return json_encode(
-            json_decode(
-                (string) $message->getBody(),
-                true
-            ),
+            json_decode((string) $message->getBody(), true),
             JSON_PRETTY_PRINT
         );
     }

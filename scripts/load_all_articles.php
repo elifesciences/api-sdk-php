@@ -26,7 +26,7 @@ $guzzle = new GuzzleHttp\Client([
 
 // Api SDK.
 $client = new eLife\ApiClient\HttpClient\BatchingHttpClient(
-    new eLife\ApiClient\HttpClient\Guzzle6HttpClient($guzzle),
+    new eLife\ApiClient\HttpClient\Guzzle7HttpClient($guzzle),
     20
 );
 $sdk = new eLife\ApiSdk\ApiSdk($client);

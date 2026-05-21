@@ -2,58 +2,51 @@
 
 namespace test\eLife\ApiSdk;
 
-use Csa\GuzzleHttp\Middleware\Cache\Adapter\StorageAdapterInterface;
-use Csa\GuzzleHttp\Middleware\Cache\CacheMiddleware;
+use DateTime;
+use Kevinrob\GuzzleCache\CacheEntry;
+use Kevinrob\GuzzleCache\Strategy\CacheStrategyInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use PHPUnit\Framework\Attributes\Before as Before;
-
-final class InMemoryStorageAdapter implements StorageAdapterInterface
+final class InMemoryStorageAdapter implements CacheStrategyInterface
 {
-    private $array = [];
-    private $requestHeadersBlacklist = [
-        'User-Agent',
-        'Host',
-        CacheMiddleware::DEBUG_HEADER,
-    ];
-    private $responseHeadersBlacklist = [
-        CacheMiddleware::DEBUG_HEADER,
-    ];
+    private array $array = [];
+    private array $requestHeadersBlacklist;
 
-    public function __construct(array $requestHeadersBlacklist = [], array $responseHeadersBlacklist = [])
+    public function __construct(array $requestHeadersBlacklist = [])
     {
-        if (!empty($requestHeadersBlacklist)) {
-            $this->requestHeadersBlacklist = $requestHeadersBlacklist;
-        }
-        if (!empty($responseHeadersBlacklist)) {
-            $this->responseHeadersBlacklist = $responseHeadersBlacklist;
-        }
+        $this->requestHeadersBlacklist = !empty($requestHeadersBlacklist)
+            ? $requestHeadersBlacklist
+            : ['User-Agent', 'Host'];
     }
 
-    public function fetch(RequestInterface $request)
+    public function fetch(RequestInterface $request): ?CacheEntry
     {
-        $key = $this->getKey($request);
-
-        if (empty($this->array[$key])) {
-            return null;
-        }
-
-        return $this->array[$key];
+        return $this->array[$this->getKey($request)] ?? null;
     }
 
-    public function save(RequestInterface $request, ResponseInterface $response)
+    public function save(RequestInterface $request, ResponseInterface $response): void
     {
-        $key = $this->getKey($request);
-
-        foreach ($this->responseHeadersBlacklist as $header) {
-            $response = $response->withoutHeader($header);
-        }
-
-        $this->array[$key] = $response;
+        $this->array[$this->getKey($request)] = new CacheEntry($request, $response, new DateTime('+1 year'));
     }
 
-    private function getKey(RequestInterface $request)
+    public function cache(RequestInterface $request, ResponseInterface $response): bool
+    {
+        return false;
+    }
+
+    public function update(RequestInterface $request, ResponseInterface $response): bool
+    {
+        return false;
+    }
+
+    public function delete(RequestInterface $request): bool
+    {
+        unset($this->array[$this->getKey($request)]);
+        return true;
+    }
+
+    private function getKey(RequestInterface $request): string
     {
         return md5(serialize([
             'method' => $request->getMethod(),

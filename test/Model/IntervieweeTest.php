@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use GuzzleHttp\Promise\Create;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -11,7 +12,7 @@ use eLife\ApiSdk\Model\IntervieweeCvLine;
 use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use function GuzzleHttp\Promise\rejection_for;
+
 use PHPUnit\Framework\TestCase;
 
 final class IntervieweeTest extends TestCase
@@ -21,7 +22,7 @@ final class IntervieweeTest extends TestCase
     {
         $person = new PersonDetails('preferred name', 'index name');
         $interviewee = new Interviewee($person,
-            new PromiseSequence(rejection_for('Full interviewee should not be unwrapped')));
+            new PromiseSequence(Create::rejectionFor('Full interviewee should not be unwrapped')));
 
         $this->assertEquals($person, $interviewee->getPerson());
     }

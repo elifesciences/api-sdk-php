@@ -2,7 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
-use function GuzzleHttp\Promise\all;
+use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Promise\PromiseInterface;
 
 /**
@@ -50,6 +50,6 @@ final class IdentityMap
 
     public function waitForAll() : array
     {
-        return all($this->contents)->wait();
+        return Utils::all($this->contents)->wait();
     }
 }

@@ -17,7 +17,8 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PublicReview;
 use eLife\ApiSdk\Model\Reference;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 
@@ -111,21 +112,21 @@ final class ArticleVoRNormalizer extends ArticleVersionNormalizer
 
             $data['appendices'] = new ArraySequence($data['appendices'] ?? []);
 
-            $data['authorResponse'] = promise_for($data['authorResponse'] ?? null);
+            $data['authorResponse'] = Create::promiseFor($data['authorResponse'] ?? null);
 
             $data['body'] = new ArraySequence($data['body']);
 
-            $data['editorEvaluation'] = promise_for($data['editorEvaluation'] ?? null);
+            $data['editorEvaluation'] = Create::promiseFor($data['editorEvaluation'] ?? null);
 
-            $data['elifeAssessment'] = promise_for($data['elifeAssessment'] ?? null);
+            $data['elifeAssessment'] = Create::promiseFor($data['elifeAssessment'] ?? null);
 
-            $data['recommendationsForAuthors'] = promise_for($data['recommendationsForAuthors'] ?? null);
+            $data['recommendationsForAuthors'] = Create::promiseFor($data['recommendationsForAuthors'] ?? null);
 
-            $data['decisionLetter'] = promise_for($data['decisionLetter'] ?? null);
+            $data['decisionLetter'] = Create::promiseFor($data['decisionLetter'] ?? null);
 
             $data['publicReviews'] = new ArraySequence($data['publicReviews'] ?? []);
 
-            $data['digest'] = promise_for($data['digest'] ?? null);
+            $data['digest'] = Create::promiseFor($data['digest'] ?? null);
 
             $data['keywords'] = new ArraySequence($data['keywords'] ?? []);
 

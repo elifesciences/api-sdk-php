@@ -3,7 +3,7 @@
 namespace test\eLife\ApiSdk;
 
 use ComposerLocator;
-use Csa\GuzzleHttp\Middleware\Cache\MockMiddleware;
+use Kevinrob\GuzzleCache\CacheMiddleware;
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiClient\AnnotationsClient;
 use eLife\ApiSdk\ApiClient\AnnualReportsClient;
@@ -30,7 +30,7 @@ use eLife\ApiSdk\ApiClient\ReviewedPreprintsClient;
 use eLife\ApiSdk\ApiClient\SearchClient;
 use eLife\ApiSdk\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient;
-use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiClient\HttpClient\Guzzle7HttpClient;
 use eLife\ApiClient\MediaType;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
@@ -78,9 +78,9 @@ abstract class ApiTestCase extends TestCase
     private function addMockMiddleware()
     {
         $stack = HandlerStack::create();
-        $stack->push(new MockMiddleware($this->storage, 'replay'));
+        $stack->push(new CacheMiddleware($this->storage));
 
-        $this->httpClient = new Guzzle6HttpClient(new Client([
+        $this->httpClient = new Guzzle7HttpClient(new Client([
             'base_uri' => 'http://api.elifesciences.org',
             'handler' => $stack,
         ]));

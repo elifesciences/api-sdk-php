@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use GuzzleHttp\Promise\Create;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -24,7 +25,7 @@ use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use function GuzzleHttp\Promise\rejection_for;
+
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
@@ -159,12 +160,12 @@ final class DigestTest extends TestCase
     public static function subjectsProvider() : array
     {
         $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('Subject impact statement should not be unwrapped'),
-                new PromiseSequence(rejection_for('Subject aims and scope should not be unwrapped')),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
-            new Subject('subject2', 'Subject 2', rejection_for('Subject impact statement should not be unwrapped'),
-                new PromiseSequence(rejection_for('Subject aims and scope should not be unwrapped')),
-                rejection_for('No banner'), rejection_for('Subject image should not be unwrapped')),
+            new Subject('subject1', 'Subject 1', Create::rejectionFor('Subject impact statement should not be unwrapped'),
+                new PromiseSequence(Create::rejectionFor('Subject aims and scope should not be unwrapped')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('Subject image should not be unwrapped')),
+            new Subject('subject2', 'Subject 2', Create::rejectionFor('Subject impact statement should not be unwrapped'),
+                new PromiseSequence(Create::rejectionFor('Subject aims and scope should not be unwrapped')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('Subject image should not be unwrapped')),
         ];
 
         return [

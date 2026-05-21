@@ -2,6 +2,7 @@
 
 namespace test\eLife\ApiSdk\Model;
 
+use GuzzleHttp\Promise\Create;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -10,7 +11,7 @@ use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Subject;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use function GuzzleHttp\Promise\rejection_for;
+
 use PHPUnit\Framework\TestCase;
 
 final class PersonResearchTest extends TestCase
@@ -27,10 +28,10 @@ final class PersonResearchTest extends TestCase
     public static function subjectsProvider() : array
     {
         $subjects = [
-            new Subject('subject1', 'Subject 1', rejection_for('No impact statement'), new PromiseSequence(rejection_for('No aims and scope')),
-                rejection_for('No banner'), rejection_for('No thumbnail')),
-            new Subject('subject2', 'Subject 2', rejection_for('No impact statement'), new PromiseSequence(rejection_for('No aims and scope')),
-                rejection_for('No banner'), rejection_for('No thumbnail')),
+            new Subject('subject1', 'Subject 1', Create::rejectionFor('No impact statement'), new PromiseSequence(Create::rejectionFor('No aims and scope')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('No thumbnail')),
+            new Subject('subject2', 'Subject 2', Create::rejectionFor('No impact statement'), new PromiseSequence(Create::rejectionFor('No aims and scope')),
+                Create::rejectionFor('No banner'), Create::rejectionFor('No thumbnail')),
         ];
 
         return [
@@ -48,9 +49,9 @@ final class PersonResearchTest extends TestCase
     #[Test]
     public function it_may_have_focuses()
     {
-        $with = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), ['focus'],
+        $with = new PersonResearch(new PromiseSequence(Create::rejectionFor('Expertises should not be unwrapped')), ['focus'],
             []);
-        $withOut = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), [], []);
+        $withOut = new PersonResearch(new PromiseSequence(Create::rejectionFor('Expertises should not be unwrapped')), [], []);
 
         $this->assertSame(['focus'], $with->getFocuses());
         $this->assertEmpty($withOut->getFocuses());
@@ -59,9 +60,9 @@ final class PersonResearchTest extends TestCase
     #[Test]
     public function it_may_have_organisms()
     {
-        $with = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), [],
+        $with = new PersonResearch(new PromiseSequence(Create::rejectionFor('Expertises should not be unwrapped')), [],
             ['organism']);
-        $withOut = new PersonResearch(new PromiseSequence(rejection_for('Expertises should not be unwrapped')), [], []);
+        $withOut = new PersonResearch(new PromiseSequence(Create::rejectionFor('Expertises should not be unwrapped')), [], []);
 
         $this->assertSame(['organism'], $with->getOrganisms());
         $this->assertEmpty($withOut->getOrganisms());

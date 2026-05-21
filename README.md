@@ -44,12 +44,12 @@ To list the Labs Post IDs that appear on the first page of the endpoint:
 
 ```php
 use eLife\ApiSdk\ApiClient\LabsClient;
-use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiClient\HttpClient\Guzzle7HttpClient;
 use eLife\ApiClient\MediaType;
 use GuzzleHttp\Client as Guzzle;
 
 $guzzle = new Guzzle(['base_uri' => 'https://api.elifesciences.org/']);
-$httpClient = new Guzzle6HttpClient($guzzle);
+$httpClient = new Guzzle7HttpClient($guzzle);
 $labsClient = new LabsClient($httpClient);
 
 var_dump($labsClient->listPosts(['Accept' => new MediaType(LabsClient::TYPE_POST_LIST, 1)])->wait()->search('items[*].id'));

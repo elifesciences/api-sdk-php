@@ -4,6 +4,7 @@ namespace test\eLife\ApiSdk\Model;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use GuzzleHttp\Promise\Create;
 use eLife\ApiSdk\Collection\ArraySequence;
 use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Collection\PromiseSequence;
@@ -18,7 +19,7 @@ use eLife\ApiSdk\Model\HasUpdatedDate;
 use eLife\ApiSdk\Model\Identifier;
 use eLife\ApiSdk\Model\Model;
 use PHPUnit\Framework\Attributes\Test;
-use function GuzzleHttp\Promise\rejection_for;
+
 use PHPUnit\Framework\TestCase;
 
 final class AnnotationTest extends TestCase
@@ -26,8 +27,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_is_a_model()
     {
-        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertInstanceOf(Model::class, $annotation);
@@ -36,8 +37,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_has_an_identifier()
     {
-        $annotation = new Annotation($id = 'id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation($id = 'id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasIdentifier::class, $annotation);
@@ -47,8 +48,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_has_an_id()
     {
-        $annotation = new Annotation($id = 'id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation($id = 'id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasId::class, $annotation);
@@ -58,8 +59,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_has_an_access_level()
     {
-        $annotation = new Annotation('id', $access = 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation('id', $access = 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertSame($access, $annotation->getAccess());
@@ -68,8 +69,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_has_a_document()
     {
-        $annotation = new Annotation('id', 'public', $document = new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation('id', 'public', $document = new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertSame($document, $annotation->getDocument());
@@ -84,10 +85,10 @@ final class AnnotationTest extends TestCase
         ];
 
         $with = new Annotation('id1', 'public', new AnnotationDocument('title', 'http://example.com'), new ArraySequence($ancestors), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
         $withOut = new Annotation('id1', 'public', new AnnotationDocument('title', 'http://example.com'), new EmptySequence(), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertSame($ancestors, $with->getAncestors()->toArray());
@@ -98,8 +99,8 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_has_a_created_date()
     {
-        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $annotation = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, $date = new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasCreatedDate::class, $annotation);
@@ -109,11 +110,11 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_may_have_an_updated_date()
     {
-        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')),
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), $date = new DateTimeImmutable('now', new DateTimeZone('Z')),
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
-        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertInstanceOf(HasUpdatedDate::class, $with);
@@ -124,11 +125,11 @@ final class AnnotationTest extends TestCase
     #[Test]
     public function it_may_have_a_highlight()
     {
-        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), $highlight = 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), $highlight = 'Highlighted text', new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
-        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
-            new PromiseSequence(rejection_for('Annotation content should not be unwrapped'))
+        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+            new PromiseSequence(Create::rejectionFor('Annotation content should not be unwrapped'))
         );
 
         $this->assertSame($highlight, $with->getHighlight());
@@ -143,10 +144,10 @@ final class AnnotationTest extends TestCase
             new Block\YouTube('foo', null, new EmptySequence(), 300, 200),
         ];
 
-        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $with = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new ArraySequence($content)
         );
-        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(rejection_for('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
+        $withOut = new Annotation('id', 'public', new AnnotationDocument('title', 'http://example.com'), new PromiseSequence(Create::rejectionFor('Annotation ancestors should not be unwrapped')), null, new DateTimeImmutable('now', new DateTimeZone('Z')), null,
             new EmptySequence()
         );
 

@@ -166,17 +166,17 @@ final class PromiseSequence implements IteratorAggregate, Sequence, PromiseInter
         return $this->promise->getState();
     }
 
-    public function resolve($value)
+    public function resolve($value): void
     {
         throw new LogicException('Cannot resolve a PromiseSequence');
     }
 
-    public function reject($reason)
+    public function reject($reason): void
     {
         throw new LogicException('Cannot reject a PromiseSequence');
     }
 
-    public function cancel()
+    public function cancel(): void
     {
         throw new LogicException('Cannot cancel a PromiseSequence');
     }

@@ -17,7 +17,8 @@ use eLife\ApiSdk\Model\Person;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\Subject;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -63,8 +64,8 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['relatedContent'] = new PromiseSequence($normalizationHelper->selectField($collection, 'relatedContent', []));
             $data['podcastEpisodes'] = new PromiseSequence($normalizationHelper->selectField($collection, 'podcastEpisodes'));
         } else {
-            $data['image']['banner'] = promise_for($data['image']['banner']);
-            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
+            $data['image']['banner'] = Create::promiseFor($data['image']['banner']);
+            $data['image']['social'] = Create::promiseFor($data['image']['social'] ?? null);
             $data['curators'] = new ArraySequence($data['curators']);
             $data['summary'] = new ArraySequence($data['summary'] ?? []);
             $data['content'] = new ArraySequence($data['content']);
@@ -108,7 +109,7 @@ final class CollectionNormalizer implements NormalizerInterface, DenormalizerInt
             $data['impactStatement'] ?? null,
             DateTimeImmutable::createFromFormat(DATE_ATOM, $data['published']),
             !empty($data['updated']) ? DateTimeImmutable::createFromFormat(DATE_ATOM, $data['updated']) : null,
-            promise_for($data['image']['banner']),
+            Create::promiseFor($data['image']['banner']),
             $data['image']['thumbnail'] = $this->denormalizer->denormalize($data['image']['thumbnail'], Image::class, $format, $context),
             $data['image']['social'],
             $data['subjects'],

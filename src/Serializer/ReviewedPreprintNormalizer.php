@@ -12,7 +12,8 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -56,7 +57,7 @@ final class ReviewedPreprintNormalizer implements NormalizerInterface, Denormali
                     return $reviewedPreprint['indexContent'] ?? null;
                 });
         } else {
-            $data['indexContent'] = promise_for($data['indexContent'] ?? null);
+            $data['indexContent'] = Create::promiseFor($data['indexContent'] ?? null);
         }
 
         if (!empty($data['published'])) {

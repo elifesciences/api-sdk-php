@@ -16,7 +16,8 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeSource;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -69,9 +70,9 @@ final class PodcastEpisodeNormalizer implements NormalizerInterface, Denormalize
         } else {
             $data['chapters'] = new ArraySequence($data['chapters']);
 
-            $data['image']['banner'] = promise_for($data['image']['banner']);
+            $data['image']['banner'] = Create::promiseFor($data['image']['banner']);
 
-            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
+            $data['image']['social'] = Create::promiseFor($data['image']['social'] ?? null);
         }
 
         $data['chapters'] = $data['chapters']

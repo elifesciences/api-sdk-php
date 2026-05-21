@@ -27,7 +27,8 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Reviewer;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -157,19 +158,19 @@ abstract class ArticleVersionNormalizer implements NormalizerInterface, Denormal
 
             $data['authors'] = new ArraySequence($data['authors'] ?? []);
 
-            $data['copyright'] = promise_for($data['copyright']);
+            $data['copyright'] = Create::promiseFor($data['copyright']);
 
-            $data['dataSets'] = promise_for($data['dataSets'] ?? null);
+            $data['dataSets'] = Create::promiseFor($data['dataSets'] ?? null);
 
             $data['ethics'] = new ArraySequence($data['ethics'] ?? []);
 
-            $data['funding'] = promise_for($data['funding'] ?? null);
+            $data['funding'] = Create::promiseFor($data['funding'] ?? null);
 
-            $data['issue'] = promise_for($data['issue'] ?? null);
+            $data['issue'] = Create::promiseFor($data['issue'] ?? null);
 
             $data['reviewers'] = new ArraySequence($data['reviewers'] ?? []);
 
-            $data['xml'] = promise_for($data['xml'] ?? null);
+            $data['xml'] = Create::promiseFor($data['xml'] ?? null);
         }
 
         if (!empty($data['abstract'])) {

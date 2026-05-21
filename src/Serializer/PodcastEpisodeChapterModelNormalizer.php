@@ -2,6 +2,7 @@
 
 namespace eLife\ApiSdk\Serializer;
 
+use GuzzleHttp\Promise\Create;
 use eLife\ApiSdk\Collection\PromiseSequence;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\Model;
@@ -9,7 +10,7 @@ use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\ApiSdk\Model\PodcastEpisodeChapter;
 use eLife\ApiSdk\Model\PodcastEpisodeChapterModel;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use function GuzzleHttp\Promise\promise_for;
+
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
@@ -30,7 +31,7 @@ final class PodcastEpisodeChapterModelNormalizer implements NormalizerInterface,
         $data['chapter'] = new PodcastEpisodeChapter($data['chapter']['number'], $data['chapter']['title'], $data['chapter']['longTitle'] ?? null, $data['chapter']['time'],
             $data['chapter']['impactStatement'] ?? null,
             new PromiseSequence(
-                promise_for($data['episode']->getChapters())
+                Create::promiseFor($data['episode']->getChapters())
                     ->then(function (Sequence $chapters) use ($data) {
                         foreach ($chapters as $chapter) {
                             if ($data['chapter']['number'] === $chapter->getNumber()) {

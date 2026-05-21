@@ -16,7 +16,8 @@ use eLife\ApiSdk\Model\PersonDetails;
 use eLife\ApiSdk\Model\PersonResearch;
 use eLife\ApiSdk\Model\Place;
 use eLife\ApiSdk\Model\Subject;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -89,17 +90,17 @@ final class PersonNormalizer implements NormalizerInterface, DenormalizerInterfa
         } else {
             $data['affiliations'] = new ArraySequence($data['affiliations'] ?? []);
 
-            $data['competingInterests'] = promise_for($data['competingInterests'] ?? null);
+            $data['competingInterests'] = Create::promiseFor($data['competingInterests'] ?? null);
 
             $data['emailAddresses'] = new ArraySequence($data['emailAddresses'] ?? []);
 
-            $data['name']['givenNames'] = promise_for($data['name']['givenNames'] ?? null);
+            $data['name']['givenNames'] = Create::promiseFor($data['name']['givenNames'] ?? null);
 
-            $data['name']['surname'] = promise_for($data['name']['surname'] ?? null);
+            $data['name']['surname'] = Create::promiseFor($data['name']['surname'] ?? null);
 
             $data['profile'] = new ArraySequence($data['profile'] ?? []);
 
-            $data['research'] = promise_for($data['research'] ?? []);
+            $data['research'] = Create::promiseFor($data['research'] ?? []);
         }
 
         $data['affiliations'] = $data['affiliations']->map(function (array $place) use ($format, $context) {

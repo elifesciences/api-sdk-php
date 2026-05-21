@@ -15,7 +15,8 @@ use eLife\ApiSdk\Model\Image;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\ApiSdk\Model\Model;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use function GuzzleHttp\Promise\promise_for;
+
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -63,7 +64,7 @@ final class LabsPostNormalizer implements NormalizerInterface, DenormalizerInter
         } else {
             $data['content'] = new ArraySequence($data['content']);
 
-            $data['image']['social'] = promise_for($data['image']['social'] ?? null);
+            $data['image']['social'] = Create::promiseFor($data['image']['social'] ?? null);
         }
 
         $data['content'] = $data['content']->map(function (array $block) use ($format, $context) {

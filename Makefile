@@ -1,5 +1,5 @@
 PROJECT_NAME = api-sdk-php
-PHP_VERSION = 7.1
+PHP_VERSION = 8.5
 
 .PHONY: clean
 clean:
@@ -30,30 +30,12 @@ lint-fix:
 test-ci: build lint
 	docker run --rm $(PROJECT_NAME):$(PHP_VERSION) bash -c './project_tests.sh'
 
-.PHONY: test-ci-7.1
-test-ci-7.1:
-	@$(MAKE) PHP_VERSION=7.1 test-ci
-.PHONY: test-ci-7.2
-test-ci-7.2:
-	@$(MAKE) PHP_VERSION=7.2 test-ci
-.PHONY: test-ci-7.3
-test-ci-7.3:
-	@$(MAKE) PHP_VERSION=7.3 test-ci
-.PHONY: test-ci-7.4
-test-ci-7.4:
-	@$(MAKE) PHP_VERSION=7.4 test-ci
-.PHONY: test-ci-8.0
-test-ci-8.0:
-	@$(MAKE) PHP_VERSION=8.0 test-ci
-.PHONY: test-ci-8.1
-test-ci-8.1:
-	@$(MAKE) PHP_VERSION=8.1 test-ci
-.PHONY: test-ci-8.2
-test-ci-8.2:
-	@$(MAKE) PHP_VERSION=8.2 test-ci
-.PHONY: test-ci-8.3
-test-ci-8.3:
-	@$(MAKE) PHP_VERSION=8.3 test-ci
+.PHONY: test-ci-8.4
+test-ci-8.4:
+	@$(MAKE) PHP_VERSION=8.4 test-ci
+.PHONY: test-ci-8.5
+test-ci-8.5:
+	@$(MAKE) PHP_VERSION=8.5 test-ci
 
 .PHONY: test-ci-all
-test-ci-all: test-ci-7.1 test-ci-7.2 test-ci-7.3 test-ci-7.4 test-ci-8.0 test-ci-8.1 test-ci-8.2 test-ci-8.3
+test-ci-all: test-ci-8.4 test-ci-8.5

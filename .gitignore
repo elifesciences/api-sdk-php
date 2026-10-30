@@ -2,5 +2,6 @@
 /.php_cs.cache
 /vendor/
 /.phpunit.result.cache
-/.idea/
-/.phpunit.cache/
+.idea/
+.phpunit.result.cache
+.phpunit.cache

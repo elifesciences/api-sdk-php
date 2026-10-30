@@ -3,5 +3,5 @@
 /vendor/
 /.phpunit.result.cache
 .idea/
-.phpunit.result.cache
 .phpunit.cache
+.phpunit.result.cache

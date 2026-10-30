@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-abstract class AuthorTest extends TestCase
+abstract class AuthorTestCase extends TestCase
 {
     #[Test]
     final public function it_is_an_author_entry()

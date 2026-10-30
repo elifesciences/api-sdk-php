@@ -25,7 +25,7 @@ use eLife\ApiSdk\Model\Reference\BookReference;
 use PHPUnit\Framework\Attributes\Test;
 use test\eLife\ApiSdk\Builder;
 
-final class ArticleVoRTest extends ArticleVersionTest
+final class ArticleVoRTestCase extends ArticleVersionTestCase
 {
     public function setUp(): void
     {

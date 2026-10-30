@@ -35,7 +35,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use test\eLife\ApiSdk\Builder;
 
-abstract class ArticleVersionTest extends TestCase
+abstract class ArticleVersionTestCase extends TestCase
 {
     /** @var Builder */
     protected $builder;

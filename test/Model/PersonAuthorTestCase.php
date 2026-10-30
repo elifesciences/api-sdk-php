@@ -10,7 +10,7 @@ use eLife\ApiSdk\Model\PersonAuthor;
 use eLife\ApiSdk\Model\PersonDetails;
 use PHPUnit\Framework\Attributes\Test;
 
-final class PersonAuthorTest extends AuthorTest
+final class PersonAuthorTestCase extends AuthorTestCase
 {
     #[Test]
     public function it_has_a_preferred_name()

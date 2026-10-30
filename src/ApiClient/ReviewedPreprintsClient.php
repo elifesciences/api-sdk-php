@@ -19,13 +19,13 @@ class ReviewedPreprintsClient
     }
 
     public function listReviewedPreprints(
-        array $headers = [],
-        int $page = 1,
-        int $perPage = 20,
-        bool $descendingOrder = true,
-        string $useDate = 'default',
-        DateTimeImmutable $starts = null,
-        DateTimeImmutable $ends = null
+        array              $headers = [],
+        int                $page = 1,
+        int                $perPage = 20,
+        bool               $descendingOrder = true,
+        string             $useDate = 'default',
+        ?DateTimeImmutable $starts = null,
+        ?DateTimeImmutable $ends = null
     ) : PromiseInterface {
         return $this->getRequest(
             $this->createUri([

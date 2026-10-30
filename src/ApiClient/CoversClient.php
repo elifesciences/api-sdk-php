@@ -13,14 +13,14 @@ class CoversClient
     use ApiClient;
 
     public function listCovers(
-        array $headers = [],
-        int $page = 1,
-        int $perPage = 20,
-        string $sort = 'date',
-        bool $descendingOrder = true,
-        string $useDate = 'default',
-        DateTimeImmutable $starts = null,
-        DateTimeImmutable $ends = null
+        array              $headers = [],
+        int                $page = 1,
+        int                $perPage = 20,
+        string             $sort = 'date',
+        bool               $descendingOrder = true,
+        string             $useDate = 'default',
+        ?DateTimeImmutable $starts = null,
+        ?DateTimeImmutable $ends = null
     ) : PromiseInterface {
         return $this->getRequest(
             $this->createUri([

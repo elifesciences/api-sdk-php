@@ -15,18 +15,18 @@ class SearchClient
 
     public function query(
         array $headers = [],
-        string $query = '',
-        int $page = 1,
-        int $perPage = 20,
-        string $sort = 'relevance',
-        bool $descendingOrder = true,
-        array $subjects = [],
-        array $elifeAssessmentSignificance = [],
-        array $elifeAssessmentStrength = [],
-        array $types = [],
-        string $useDate = 'default',
-        DateTimeImmutable $starts = null,
-        DateTimeImmutable $ends = null
+        string             $query = '',
+        int                $page = 1,
+        int                $perPage = 20,
+        string             $sort = 'relevance',
+        bool               $descendingOrder = true,
+        array              $subjects = [],
+        array              $elifeAssessmentSignificance = [],
+        array              $elifeAssessmentStrength = [],
+        array              $types = [],
+        string             $useDate = 'default',
+        ?DateTimeImmutable $starts = null,
+        ?DateTimeImmutable $ends = null
     ) : PromiseInterface {
         $uri = $this->createUri([
             'path' => 'search',
